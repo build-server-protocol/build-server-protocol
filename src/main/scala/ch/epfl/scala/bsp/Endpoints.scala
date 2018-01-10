@@ -1,6 +1,8 @@
 package ch.epfl.scala.bsp
 
+import ch.epfl.scala.bsp.schema._
 import org.langmeta.jsonrpc.Endpoint
+import scalapb_circe.JsonFormat._
 
 object Build extends Build
 trait Build {
