@@ -1,5 +1,11 @@
 # 1. Build Server Protocol
 
+This document is a draft version of the Build Server Protocol (BSP).
+The Build Server Protocol takes inspiration from the Language Server
+Protocol (LSP). Unlike in the Language Server Protocol, the language
+server is referred to as the “client” and a build tool such as
+sbt/pants/gradle/bazel is referred to as the “server”.
+
 <!-- TOC -->
 
 * [1. Build Server Protocol](#1-build-server-protocol)
@@ -20,18 +26,14 @@
     * [1.3.6. Text Document Build Targets Request](#136-text-document-build-targets-request)
     * [1.3.7. Dependency Sources Request](#137-dependency-sources-request)
     * [1.3.8. Compile Request](#138-compile-request)
+    * [1.3.9. Test Request](#139-test-request)
   * [1.4. Extensions](#14-extensions)
     * [1.4.1. Scala](#141-scala)
       * [1.4.1.1. Scala Build Target](#1411-scala-build-target)
       * [1.4.1.2. Scalac Options Request](#1412-scalac-options-request)
+      * [1.4.1.3. Scala Test Classes Request](#1413-scala-test-classes-request)
 
 <!-- /TOC -->
-
-This document describes version 0.x of the build server protocol (BSP).
-The build server protocol takes inspiration from the language server
-protocol (LSP). Unlike in the language server protocol, the language
-server is referred to as the “client” and a build tool such as
-sbt/pants/gradle/bazel is referred to as the “server”.
 
 ## 1.1. Base protocol
 
@@ -74,11 +76,24 @@ trait BuildTarget {
   /** A human readable name for this target. May be presented in the user interface. Should be unique if possible. The id.uri is used if None. */
   def name: Option[String]
 
+  /** The category of this build target. */
+  def kind: List[BuildTargetKind]
+
   /** The set of languages that this target contains */
   def languageIds: List[String]
 
   /** Language-specific metadata about this target. See ScalaBuildTarget as an example. */
   def data: Option[Json] // Note, `Json` is represented as any in the LSP.
+}
+
+object BuildTargetKind {
+  val Library = 1
+  /** This target can be compiled and tested via method buildTarget/test */
+  val Test = 2
+  /** This target can be tested via method buildTarget/test and may run slower compared to a Test. */
+  val IntegrationTest = 3
+  /** This target can be run via method buildTarget/run */
+  val Main = 4
 }
 ```
 
@@ -160,6 +175,8 @@ trait InitializeBuildResult {
 trait BuildServerCapabilities {
   /** The server can compile targets via method buildTarget/compile */
   compileProvider: Boolean
+  /** The server can test targets via method buildTarget/test */
+  testProvider: Boolean
   /** The server can provide a list of targets that contain a single text document via the method textDocument/buildTargets */
   textDocumentBuildTargetsProvider: Boolean
   /** The server provides sources for library dependencies via method buildTarget/dependencySources */
@@ -227,10 +244,10 @@ The workspace build targets request is sent from the client to the server to ask
 Request:
 
 * method: 'workspace/buildTargets'
-* params: `WorkspaceBuildTargetsRequest`, defined as follows
+* params: `WorkspaceBuildTargetsParams`, defined as follows
 
 ```scala
-trait WorkspaceBuildTargetsRequest {
+trait WorkspaceBuildTargetsParams {
   /* The result should only contain targets for these languages. Language ID strings are defined by the LSP. */
   def languageIds: List[String]
 }
@@ -279,10 +296,10 @@ object BuildTargetEventKind {
 The dependency classpath request is sent from the client to the server to query for the classpath entries of a given list of build targets.
 
 * method: `buildTarget/dependencyClasspath`
-* params: `DependencyClasspathRequest`, defined as follows
+* params: `DependencyClasspathParams`, defined as follows
 
 ```scala
-trait DependencyClasspathRequest {
+trait DependencyClasspathParams {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -307,10 +324,10 @@ trait DependencyClasspathItem {
 The build target text documents request is sent from the client to the server to query for the list of source files that are part of a given list of build targets.
 
 * method: `buildTarget/textDocuments`
-* params: `BuildTargetTextDocumentsRequest`
+* params: `BuildTargetTextDocumentsParams`
 
 ```scala
-trait BuildTargetTextDocumentsRequest {
+trait BuildTargetTextDocumentsParams {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -336,13 +353,11 @@ This method can be used by a language server on `textDocument/didOpen` to lookup
 In the case there are multiple targets (for example JVM/JS) containing the same source file, the language server can may present in the editor multiple options via `textDocument/codeLens` to configure how to dis-ambiguate.
 
 * method: `textDocument/buildTargets`
-* params: `TextDocumentBuildTargetsRequest`, defined as follows
+* params: `TextDocumentBuildTargetsParams`, defined as follows
 
 ```scala
-trait TextDocumentBuildTargetsRequest {
+trait TextDocumentBuildTargetsParams {
   def textDocument: TextDocumentIdentifier
-  /** If defined, only return a subset of these targets. If empty, all targets containing this document are returned. */
-  def targets: Option[List[BuildTargetIdentifier]]
 }
 ```
 
@@ -363,10 +378,10 @@ The server communicates during the initialize handshake whether this method is s
 This method can be used by a language server on `textDocument/definition` to "Go to definition" from project sources to dependency sources.
 
 * method: `buildTarget/dependencySources`
-* params: `DependencySourcesRequest`
+* params: `DependencySourcesParams`
 
 ```scala
-trait DependencySourcesRequest {
+trait DependencySourcesParams {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -393,31 +408,77 @@ The server communicates during the initialize handshake whether this method is s
 This method can for example be used by a language server before `textDocument/rename` to ensure that all workspace sources typecheck correctly and are up-to-date.
 
 * method: `buildTarget/compile`
-* params: `CompileRequest`
+* params: `CompileParams`
 
 ```scala
-trait CompileRequest {
+trait CompileParams {
   def targets: List[BuildTargetIdentifier]
+
+  /** Optional arguments to the compilation process. */
+  def arguments: List[Json]
 }
 ```
 
 Response:
 
-* result: `CompileResult`, defined as follows
+* result: `CompileReport`, defined as follows
 
 ```scala
-trait CompileResult {
-  def items: List[CompileResultItem]
+trait CompileReport {
+  def items: List[CompileReportItem]
 }
-trait CompileResultItem {
+trait CompileReportItem {
   /** The total number of reported errors compiling this target. */
-  def errors: Int
+  def errors: Long
   /** The total number of reported warnings compiling the target. */
-  def warnings: Int
+  def warnings: Long
   /** The total number of milliseconds it took to compile the target. */
-  def totalTime: Option[Long]
+  def time: Option[Long]
   /** The total number of lines of code in the given target. */
-  def totalLines: Option[Long]
+  def linesOfCode: Option[Long]
+}
+```
+
+The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
+The client is free to forward these messages to the LSP editor client.
+
+### 1.3.9. Test Request
+
+The test build target request is sent from the client to the server to test the given list of build targets.
+The server communicates during the initialize handshake whether this method is supported or not.
+
+* method: `buildTarget/Test`
+* params: `TestParams`
+
+```scala
+trait TestParams {
+  def targets: List[BuildTargetIdentifier]
+  /** Optional arguments to the test execution. */
+  def arguments: List[Json]
+}
+```
+
+Response:
+
+* result: `TestReport`, defined as follows
+
+```scala
+trait TestReport {
+  def items: List[TestReportItem]
+}
+trait TestReportItem {
+
+  /** The compile times before executing tests if the target. An empty field means the target may have already been compiled beforehand. */
+  def compileReport: Option[CompileReportItem]
+
+  /** The total number of successful tests. */
+  def passed: Long
+
+  /** The total number of failed tests. */
+  def failed: Long
+
+  /** The total number of milliseconds it took to run the tests. Should not include compile times. */
+  def time: Option[Long]
 }
 ```
 
@@ -449,20 +510,27 @@ trait ScalaBuildTarget {
   /** The binary version of scalaVersion. For example, 2.12 if scalaVersion is 2.12.4. */
   def scalaBinaryVersion: String
 
-  /** The output directory for classfiles produced by this target */
-  def classDirectory: URI
+  /** The target platform for this target */
+  def platform: ScalaPlatform
+
+}
+
+object ScalaPlatform {
+  val JVM = 1
+  val JS = 2
+  val Native = 3
 }
 ```
 
 #### 1.4.1.2. Scalac Options Request
 
-The build target scalac options request is sent from the client to the server to query for the list of compiler options necessessary to compile this target.
+The build target scalac options request is sent from the client to the server to query for the list of compiler options necessary to compile in a given list of targets.
 
 * method: `buildTarget/scalacOptions`
-* params: `ScalacOptionsRequest`
+* params: `ScalacOptionsParams`
 
 ```scala
-trait ScalacOptionsRequest {
+trait ScalacOptionsParams {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -476,8 +544,40 @@ trait ScalacOptionsResult {
   def items: List[ScalcOptionItem]
 }
 trait ScalacOptionsItem {
-  def target: BuildTargetIdentifier
-  /** The flags passed to the compiler to compile this target. Should include compiler plugins. */
-  def options: List[String]
+    def target: BuildTargetIdentifier
+    def options: List[String]
+    def classpath: List[String]
+    /** The output directory for classfiles produced by this target */
+    def classDirectory: String
+}
+```
+
+#### 1.4.1.3. Scala Test Classes Request
+
+The build target scalac options request is sent from the client to the server to query for the list of fully qualified names of test clases in a given list of targets.
+This method can for example be used by a language server by using `textDocument/codeLens` to attach a "Run test suite" button above the definition of a test suite.
+By clicking on the button, the language server can pass the fully qualified name of the test class as an argument to the `buildTarget/test` request.
+
+* method: `buildTarget/scalaTestClasses`
+* params: `ScalaTestClassesParams`
+
+```scala
+trait ScalaTestClassesParams {
+  def targets: List[BuildTargetIdentifier]
+}
+```
+
+Response:
+
+* result: `ScalaTestClassesResult`, defined as follows
+
+```scala
+trait ScalaTestClassesResult {
+  def items: List[ScalaTestClassesItem]
+}
+trait ScalaTestClassesItem {
+    def target: BuildTargetIdentifier
+    /** The fully qualified names of the test classes in this target */
+    def classes: List[String]
 }
 ```
