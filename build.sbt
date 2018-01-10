@@ -12,6 +12,6 @@ val bsp = project
       "org.scalameta" %% "lsp4s" % "34f9d1e3",
     ),
     PB.targets in Compile := Seq(
-      scalapb.gen() -> (sourceManaged in Compile).value
+      scalapb.gen(flatPackage = true) -> (sourceManaged in Compile).value
     )
   )
