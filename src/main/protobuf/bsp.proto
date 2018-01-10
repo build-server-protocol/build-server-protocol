@@ -51,6 +51,7 @@ message InitializedBuildParams {}
 // Request: 'build/shutdown', C -> S
 // Notification: 'build/exit'
 
+// Request: 'workspace/buildTargets'
 message WorkspaceBuildTargetsRequest {
     // NOTE: We may want filtering capabilities here, but in that case we should go for a general,
     // standard solution like graphql or SQL to allow both simple and complex queries. We should be

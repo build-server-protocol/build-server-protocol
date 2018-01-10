@@ -16,3 +16,10 @@ object BuildTarget extends BuildTarget
 trait BuildTarget {
   object compile extends Endpoint[CompileParams, CompileReport]("buildTarget/compile")
 }
+
+object Workspace extends Workspace
+trait Workspace {
+  object buildTargets
+      extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargets](
+        "workspace/buildTargets")
+}
