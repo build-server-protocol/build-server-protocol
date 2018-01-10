@@ -9,7 +9,8 @@ val bsp = project
   .settings(
     resolvers += Resolver.bintrayRepo("scalameta", "maven"),
     libraryDependencies ++= List(
-      "org.scalameta" %% "lsp4s" % "34f9d1e3",
+      "io.github.scalapb-json" %% "scalapb-circe" % "0.1.1",
+      "org.scalameta" %% "lsp4s" % "34f9d1e3"
     ),
     PB.targets in Compile := Seq(
       scalapb.gen(flatPackage = true) -> (sourceManaged in Compile).value
