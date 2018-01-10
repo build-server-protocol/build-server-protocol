@@ -21,7 +21,6 @@ sbt/pants/gradle/bazel is referred to as the “server”.
       * [1.3.1.4. Exit Build Notification](#1314-exit-build-notification)
     * [1.3.2. Workspace Build Targets Request](#132-workspace-build-targets-request)
     * [1.3.3. Build Target Changed Notification](#133-build-target-changed-notification)
-    * [1.3.4. Dependency Classpath Request](#134-dependency-classpath-request)
     * [1.3.5. Build Target Text Documents Request](#135-build-target-text-documents-request)
     * [1.3.6. Text Document Build Targets Request](#136-text-document-build-targets-request)
     * [1.3.7. Dependency Sources Request](#137-dependency-sources-request)
@@ -73,24 +72,31 @@ trait BuildTarget {
   /** The target’s unique identifier */
   def id: BuildTargetIdentifier
 
-  /** A human readable name for this target. May be presented in the user interface. Should be unique if possible. The id.uri is used if None. */
-  def name: Option[String]
+  /** A human readable name for this target.
+    * May be presented in the user interface.
+    * Should be unique if possible.
+    * The id.uri is used if None. */
+  def displayName: Option[String]
 
   /** The category of this build target. */
   def kind: List[BuildTargetKind]
 
-  /** The set of languages that this target contains */
+  /** The set of languages that this target contains.
+    * The ID string for each language is defined in the LSP. */
   def languageIds: List[String]
 
-  /** Language-specific metadata about this target. See ScalaBuildTarget as an example. */
-  def data: Option[Json] // Note, `Json` is represented as any in the LSP.
+  /** Language-specific metadata about this target.
+    * See ScalaBuildTarget as an example. */
+  def data: Option[Json] // Note, matches `any` in the LSP.
 }
 
 object BuildTargetKind {
   val Library = 1
-  /** This target can be compiled and tested via method buildTarget/test */
+  /** This target can be compiled and tested via
+    * method buildTarget/test */
   val Test = 2
-  /** This target can be tested via method buildTarget/test and may run slower compared to a Test. */
+  /** This target can be tested via method
+    * buildTarget/test and may run slower compared to a Test. */
   val IntegrationTest = 3
   /** This target can be run via method buildTarget/run */
   val Main = 4
@@ -159,6 +165,11 @@ trait InitializeBuildParams {
 }
 
 trait BuildClientCapabilities {
+    /** The languages that this client supports.
+      * The ID strings for each language is defined in the LSP.
+      * The server must never respond with build targets that
+      * don't contains these languages. */
+    def languageIds: List[String]
 }
 ```
 
@@ -177,11 +188,14 @@ trait BuildServerCapabilities {
   compileProvider: Boolean
   /** The server can test targets via method buildTarget/test */
   testProvider: Boolean
-  /** The server can provide a list of targets that contain a single text document via the method textDocument/buildTargets */
+  /** The server can provide a list of targets that contain a
+    * single text document via the method textDocument/buildTargets */
   textDocumentBuildTargetsProvider: Boolean
-  /** The server provides sources for library dependencies via method buildTarget/dependencySources */
+  /** The server provides sources for library dependencies
+    * via method buildTarget/dependencySources */
   dependencySourcesProvider: Boolean
-  /** The server sends notifications to the client on build target change events via buildTarget/didChange */
+  /** The server sends notifications to the client on build
+    * target change events via buildTarget/didChange */
   buildTargetChangedProvider: Boolean
 }
 ```
@@ -248,8 +262,6 @@ Request:
 
 ```scala
 trait WorkspaceBuildTargetsParams {
-  /* The result should only contain targets for these languages. Language ID strings are defined by the LSP. */
-  def languageIds: List[String]
 }
 ```
 
@@ -259,7 +271,8 @@ Response:
 
 ```scala
 trait WorkspaceBuildTargetsResult {
-  /* The build targets in this workspace that contain sources with the given language ids. */
+  /** The build targets in this workspace that
+    * contain sources with the given language ids. */
   def targets: List[BuildTarget]
 }
 ```
@@ -288,34 +301,6 @@ object BuildTargetEventKind {
   val Created = 1
   val Changed = 2
   val Deleted = 3
-}
-```
-
-### 1.3.4. Dependency Classpath Request
-
-The dependency classpath request is sent from the client to the server to query for the classpath entries of a given list of build targets.
-
-* method: `buildTarget/dependencyClasspath`
-* params: `DependencyClasspathParams`, defined as follows
-
-```scala
-trait DependencyClasspathParams {
-  def targets: List[BuildTargetIdentifier]
-}
-```
-
-Response:
-
-* result: `DependencyClasspathResult`, defined as follows
-
-```scala
-trait DependencyClasspathResult {
-  def items: List[DependencyClasspathItem]
-}
-trait DependencyClasspathItem {
-  def target: BuildTargetIdentifier
-  /** The -classpath passed to the Scala compiler. */
-  def classpath: List[URI]
 }
 ```
 
@@ -396,7 +381,9 @@ trait DependencySourcesResult {
 }
 trait DependencySourcesItem {
   def target: BuildTargetIdentifier
-  /**  List of resources containing source files of the target's dependencies. Can be jar files, zip files, or directories. */
+  /** List of resources containing source files of the
+    * target's dependencies.
+    * Can be jar files, zip files, or directories. */
   def sources: List[URI]
 }
 ```
@@ -428,14 +415,19 @@ trait CompileReport {
   def items: List[CompileReportItem]
 }
 trait CompileReportItem {
+
   /** The total number of reported errors compiling this target. */
   def errors: Long
+
   /** The total number of reported warnings compiling the target. */
   def warnings: Long
+
   /** The total number of milliseconds it took to compile the target. */
   def time: Option[Long]
+
   /** The total number of lines of code in the given target. */
   def linesOfCode: Option[Long]
+
 }
 ```
 
@@ -468,7 +460,9 @@ trait TestReport {
 }
 trait TestReportItem {
 
-  /** The compile times before executing tests if the target. An empty field means the target may have already been compiled beforehand. */
+  /** The compile times before executing tests if the target.
+    * An empty field means the target may have already
+    * been compiled beforehand. */
   def compileReport: Option[CompileReportItem]
 
   /** The total number of successful tests. */
@@ -477,7 +471,8 @@ trait TestReportItem {
   /** The total number of failed tests. */
   def failed: Long
 
-  /** The total number of milliseconds it took to run the tests. Should not include compile times. */
+  /** The total number of milliseconds it took to run the tests.
+    * Should not include compile times. */
   def time: Option[Long]
 }
 ```
@@ -507,7 +502,8 @@ trait ScalaBuildTarget {
   /** The scala version to compile this target */
   def scalaVersion: String
 
-  /** The binary version of scalaVersion. For example, 2.12 if scalaVersion is 2.12.4. */
+  /** The binary version of scalaVersion.
+    * For example, 2.12 if scalaVersion is 2.12.4. */
   def scalaBinaryVersion: String
 
   /** The target platform for this target */
@@ -545,7 +541,13 @@ trait ScalacOptionsResult {
 }
 trait ScalacOptionsItem {
     def target: BuildTargetIdentifier
+    /** Additional arguments to the compiler.
+      * For example, -deprecation. */
     def options: List[String]
+    /** The dependency classpath for this target, must be
+      * identical to what is passed as arguments to
+      * the -classpath flag in the command line interface
+      * of scalac. */
     def classpath: List[String]
     /** The output directory for classfiles produced by this target */
     def classDirectory: String
