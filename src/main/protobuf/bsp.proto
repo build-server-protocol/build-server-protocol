@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ch.epfl.scala;
+package ch.epfl.scala.bsp;
 
 // LSP data structures
 
