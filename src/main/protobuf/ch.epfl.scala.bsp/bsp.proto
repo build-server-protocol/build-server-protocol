@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package ch.epfl.scala;
+
 // LSP data structures
 
 message TextDocumentIdentifier {
