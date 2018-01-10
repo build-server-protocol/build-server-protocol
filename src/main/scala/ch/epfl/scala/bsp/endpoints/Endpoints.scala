@@ -1,17 +1,18 @@
-package ch.epfl.scala.bsp
+package ch.epfl.scala.bsp.endpoints
 
 import ch.epfl.scala.bsp.schema._
 import org.langmeta.jsonrpc.Endpoint
+
 import scalapb_circe.JsonFormat._
 
 object Build extends Build
 trait Build {
   object initialize
       extends Endpoint[InitializeBuildParams, InitializeBuildResult]("build/initialize")
-  val initialized: Endpoint[InitializedBuildParams, Unit] =
-    Endpoint.notification[InitializedBuildParams]("build/initialized")
+  object initialized extends Endpoint[InitializedBuildParams, Unit]("build/initialized")
 }
 
+object BuildTarget extends BuildTarget
 trait BuildTarget {
   object compile extends Endpoint[CompileParams, CompileReport]("buildTarget/compile")
 }
