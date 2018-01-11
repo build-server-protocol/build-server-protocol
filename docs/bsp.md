@@ -2,7 +2,7 @@
 
 This document is a draft version of the Build Server Protocol (BSP),
 written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback
-from Guillaume Martres.
+from Guillaume Martres and Eugene Burmako.
 The Build Server Protocol takes inspiration from the Language Server
 Protocol (LSP). Unlike in the Language Server Protocol, the language
 server is referred to as the “client” and a build tool such as
@@ -356,7 +356,7 @@ The server communicates during the initialize handshake whether this method is s
 
 This request may be considered as the inverse of `buildTarget/textDocuments`.
 This method can be used by a language server on `textDocument/didOpen` to lookup which compiler instance to use to compile that given text document.
-In the case there are multiple targets (for example JVM/JS) containing the same source file, the language server can may present in the editor multiple options via `textDocument/codeLens` to configure how to dis-ambiguate.
+In the case there are multiple targets (for example different platforms: JVM/JS, or x86/ARM) containing the same source file, the language server may present in the editor multiple options via `textDocument/codeLens` to configure how to dis-ambiguate.
 
 * method: `textDocument/buildTargets`
 * params: `TextDocumentBuildTargetsParams`, defined as follows

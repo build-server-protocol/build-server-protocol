@@ -71,7 +71,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </head>
 <body>
 <h1 id="1-build-server-protocol">1. Build Server Protocol</h1>
-<p>This document is a draft version of the Build Server Protocol (BSP), written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback from Guillaume Martres. The Build Server Protocol takes inspiration from the Language Server Protocol (LSP). Unlike in the Language Server Protocol, the language server is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.</p>
+<p>This document is a draft version of the Build Server Protocol (BSP), written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback from Guillaume Martres and Eugene Burmako. The Build Server Protocol takes inspiration from the Language Server Protocol (LSP). Unlike in the Language Server Protocol, the language server is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.</p>
 <p>The best way to read this document is by considering it as a wishlist from the perspective of a language server developer. A proof-of-concept integration between scalameta/language-server and scalacenter/bloop using the Build Server Protocol is in the works. Everything in this document is subject to change and open for discussions. Including core data structures. Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server should look like.</p>
 <p>The code listings in this document are written using Scala syntax. Every data strucuture in this document has a direct translation to JSON and Protocol Buffers. See <a href="#15-appendix">Appendix</a> for schema definitions that can be used to automatically generate bindings for different target languages.</p>
 <!-- TOC -->
@@ -326,7 +326,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <div class="sourceLine" id="cb10-4" data-line-number="4">}</div></code></pre>
 <h3 id="135-text-document-build-targets-request">1.3.5. Text Document Build Targets Request</h3>
 <p>The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document. The server communicates during the initialize handshake whether this method is supported or not.</p>
-<p>This request may be considered as the inverse of <code>buildTarget/textDocuments</code>. This method can be used by a language server on <code>textDocument/didOpen</code> to lookup which compiler instance to use to compile that given text document. In the case there are multiple targets (for example JVM/JS) containing the same source file, the language server can may present in the editor multiple options via <code>textDocument/codeLens</code> to configure how to dis-ambiguate.</p>
+<p>This request may be considered as the inverse of <code>buildTarget/textDocuments</code>. This method can be used by a language server on <code>textDocument/didOpen</code> to lookup which compiler instance to use to compile that given text document. In the case there are multiple targets (for example different platforms: JVM/JS, or x86/ARM) containing the same source file, the language server may present in the editor multiple options via <code>textDocument/codeLens</code> to configure how to dis-ambiguate.</p>
 <ul>
 <li>method: <code>textDocument/buildTargets</code></li>
 <li>params: <code>TextDocumentBuildTargetsParams</code>, defined as follows</li>
