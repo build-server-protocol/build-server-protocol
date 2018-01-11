@@ -1,10 +1,17 @@
 # 1. Build Server Protocol
 
-This document is a draft version of the Build Server Protocol (BSP).
+This document is a draft version of the Build Server Protocol (BSP),
+written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback
+from Guillaume Martres.
 The Build Server Protocol takes inspiration from the Language Server
 Protocol (LSP). Unlike in the Language Server Protocol, the language
 server is referred to as the “client” and a build tool such as
 sbt/pants/gradle/bazel is referred to as the “server”.
+
+The best way to read this document is by considering it as a wishlist
+from the perspective of a language server developer.
+Nothing has been implemented yet and everything is subject to change.
+Consider this document as a starting point for discussions.
 
 <!-- TOC -->
 
