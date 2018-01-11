@@ -40,9 +40,10 @@ message InitializeBuildResult {
 
 message BuildServerCapabilities {
     bool compileProvider = 1;
-    bool textDocumentBuildTargetsProvider = 2;
-    bool dependencySourcesProvider = 3;
-    bool buildTargetChangedProvider = 4;
+    bool testProvider = 2;
+    bool textDocumentBuildTargetsProvider = 3;
+    bool dependencySourcesProvider = 4;
+    bool buildTargetChangedProvider = 5;
 }
 
 // Notification: 'build/initialized', C -> S

@@ -10,8 +10,16 @@ sbt/pants/gradle/bazel is referred to as the “server”.
 
 The best way to read this document is by considering it as a wishlist
 from the perspective of a language server developer.
-Nothing has been implemented yet and everything is subject to change.
-Consider this document as a starting point for discussions.
+A proof-of-concept integration between scalameta/language-server and scalacenter/bloop
+using the Build Server Protocol is in the works.
+Everything in this document is subject to change and open for discussions.
+Including core data structures.
+Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server should look like.
+
+The code listings in this document are written using Scala syntax.
+Every data strucuture in this document has a direct translation to JSON and Protocol Buffers.
+See [Appendix](#15-appendix) for schema definitions that can be used to automatically generate
+bindings for different target languages.
 
 <!-- TOC -->
 
@@ -28,16 +36,19 @@ Consider this document as a starting point for discussions.
       * [1.3.1.4. Exit Build Notification](#1314-exit-build-notification)
     * [1.3.2. Workspace Build Targets Request](#132-workspace-build-targets-request)
     * [1.3.3. Build Target Changed Notification](#133-build-target-changed-notification)
-    * [1.3.5. Build Target Text Documents Request](#135-build-target-text-documents-request)
-    * [1.3.6. Text Document Build Targets Request](#136-text-document-build-targets-request)
-    * [1.3.7. Dependency Sources Request](#137-dependency-sources-request)
-    * [1.3.8. Compile Request](#138-compile-request)
-    * [1.3.9. Test Request](#139-test-request)
+    * [1.3.4. Build Target Text Documents Request](#134-build-target-text-documents-request)
+    * [1.3.5. Text Document Build Targets Request](#135-text-document-build-targets-request)
+    * [1.3.6. Dependency Sources Request](#136-dependency-sources-request)
+    * [1.3.7. Compile Request](#137-compile-request)
+    * [1.3.8. Test Request](#138-test-request)
   * [1.4. Extensions](#14-extensions)
     * [1.4.1. Scala](#141-scala)
       * [1.4.1.1. Scala Build Target](#1411-scala-build-target)
       * [1.4.1.2. Scalac Options Request](#1412-scalac-options-request)
       * [1.4.1.3. Scala Test Classes Request](#1413-scala-test-classes-request)
+  * [1.5. Appendix](#15-appendix)
+    * [1.5.1. Protobuf schema definitions](#151-protobuf-schema-definitions)
+    * [1.5.2. Scala Bindings](#152-scala-bindings)
 
 <!-- /TOC -->
 
@@ -59,8 +70,8 @@ structures.
 
 ### 1.2.1. Build Target
 
-Build target contains static metadata about an artifact (for example library, test, or binary artifact).
-Compared to the build tools:
+Build target contains metadata about an artifact (for example library, test, or binary artifact).
+Using vocabulary of other build tools:
 
 * sbt: a build target is a combined project + config. Example:
   * a regular JVM project with main and test configurations will have
@@ -126,7 +137,7 @@ trait BuildTargetIdentifer {
 Unlike the language server protocol, the build server protocol does not
 support dynamic registration of capabilities.
 The motivation for this change is simplicity.
-If a motivating example for dynamic registration comes this difference can be reconsidered.
+If a motivating example for dynamic registration comes up this decision can be reconsidered.
 The server and client capabilities must be communicated through the initialize request.
 
 ### 1.3.1. Server Lifetime
@@ -174,8 +185,8 @@ trait InitializeBuildParams {
 trait BuildClientCapabilities {
     /** The languages that this client supports.
       * The ID strings for each language is defined in the LSP.
-      * The server must never respond with build targets that
-      * don't contains these languages. */
+      * The server must never respond with build targets for other
+      * languages than those that appear in this list. */
     def languageIds: List[String]
 }
 ```
@@ -303,6 +314,9 @@ trait BuildTargetEvent {
   def uri: URI
   /** The kind of change for this build target */
   def kind: Option[BuildTargetEventKind]
+
+  /** Any additional metadata about what information changed. */
+  def data: Option[Json]
 }
 object BuildTargetEventKind {
   val Created = 1
@@ -311,7 +325,7 @@ object BuildTargetEventKind {
 }
 ```
 
-### 1.3.5. Build Target Text Documents Request
+### 1.3.4. Build Target Text Documents Request
 
 The build target text documents request is sent from the client to the server to query for the list of source files that are part of a given list of build targets.
 
@@ -335,7 +349,7 @@ trait BuildTargetTextDocumentsResponse {
 }
 ```
 
-### 1.3.6. Text Document Build Targets Request
+### 1.3.5. Text Document Build Targets Request
 
 The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -363,7 +377,7 @@ trait TextDocumentBuildTargetsResult {
 }
 ```
 
-### 1.3.7. Dependency Sources Request
+### 1.3.6. Dependency Sources Request
 
 The build target dependency sources request is sent from the client to the server to query for the list of sources for the dependency classpath of a given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -395,7 +409,7 @@ trait DependencySourcesItem {
 }
 ```
 
-### 1.3.8. Compile Request
+### 1.3.7. Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -441,7 +455,7 @@ trait CompileReportItem {
 The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
-### 1.3.9. Test Request
+### 1.3.8. Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -590,3 +604,21 @@ trait ScalaTestClassesItem {
     def classes: List[String]
 }
 ```
+
+## 1.5. Appendix
+
+### 1.5.1. Protobuf schema definitions
+
+The data structures presented in this document are accompanied by Protocol Buffers schema definitions.
+See [bsp.proto](src/main/protobuf/bsp.proto).
+
+### 1.5.2. Scala Bindings
+
+A Scala library implementation of this communication protocol is available in this repository.
+The public API of this library currently has three direct Scala dependencies:
+
+* ScalaPB - for generation of Scala sources from protobuf schema
+* Monix - for asynchronous programming primitives
+* Circe - for JSON serialization and parsing of protocol data structures
+
+If there is demand, it should be possible to refactor out all three dependencies to provide a zero dependency core module.
