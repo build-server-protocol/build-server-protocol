@@ -4,21 +4,21 @@ title: Build Server Protocol
 
 # 1. Build Server Protocol
 
-This document is a draft version of the Build Server Protocol (BSP),
-written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback
-from Guillaume Martres and Eugene Burmako.
-The Build Server Protocol takes inspiration from the Language Server
-Protocol (LSP). Unlike in the Language Server Protocol, the language
-server is referred to as the “client” and a build tool such as
-sbt/pants/gradle/bazel is referred to as the “server”.
+This document is a thought experiment for how a potential Build Server Protocol (BSP) would look like.
+The document is written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback from Guillaume Martres and Eugene Burmako.
 
-The best way to read this document is by considering it as a wishlist
-from the perspective of a language server developer.
-A proof-of-concept integration between scalameta/language-server and scalacenter/bloop
-using the Build Server Protocol is in the works.
+The best way to read this document is by considering it as a wishlist from the perspective of a language server developer.
+This is not an approved standard.
+Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server should look like.
 Everything in this document is subject to change and open for discussions.
 Including core data structures.
-Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server should look like.
+
+The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
+Unlike in the Language Server Protocol, the language server is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
+
+A protocol is only worth as much as the quality of the available clients and servers that implement the protocol.
+A proof-of-concept integration between [scalameta/metals](https://github.com/scalameta/metals) and [scalacenter/bloop](https://github.com/scalacenter/bloop) using the Build Server Protocol is in the works.
+See [sbt/sbt#3890](https://github.com/sbt/sbt/issues/3890) for a discussion on the next steps for adding BSP support in sbt.
 
 The code listings in this document are written using Scala syntax.
 Every data strucuture in this document has a direct translation to JSON and Protocol Buffers.
@@ -27,32 +27,32 @@ bindings for different target languages.
 
 <!-- TOC -->
 
-* [1. Build Server Protocol](#1-build-server-protocol)
-  * [1.1. Base protocol](#11-base-protocol)
-  * [1.2. Basic Json Structures](#12-basic-json-structures)
-    * [1.2.1. Build Target](#121-build-target)
-    * [1.2.2. Build Target Identifier](#122-build-target-identifier)
-  * [1.3. Actual Protocol](#13-actual-protocol)
-    * [1.3.1. Server Lifetime](#131-server-lifetime)
-      * [1.3.1.1. Initialize Build Request](#1311-initialize-build-request)
-      * [1.3.1.2. Initialized Build Notification](#1312-initialized-build-notification)
-      * [1.3.1.3. Shutdown Build Request](#1313-shutdown-build-request)
-      * [1.3.1.4. Exit Build Notification](#1314-exit-build-notification)
-    * [1.3.2. Workspace Build Targets Request](#132-workspace-build-targets-request)
-    * [1.3.3. Build Target Changed Notification](#133-build-target-changed-notification)
-    * [1.3.4. Build Target Text Documents Request](#134-build-target-text-documents-request)
-    * [1.3.5. Text Document Build Targets Request](#135-text-document-build-targets-request)
-    * [1.3.6. Dependency Sources Request](#136-dependency-sources-request)
-    * [1.3.7. Compile Request](#137-compile-request)
-    * [1.3.8. Test Request](#138-test-request)
-  * [1.4. Extensions](#14-extensions)
-    * [1.4.1. Scala](#141-scala)
-      * [1.4.1.1. Scala Build Target](#1411-scala-build-target)
-      * [1.4.1.2. Scalac Options Request](#1412-scalac-options-request)
-      * [1.4.1.3. Scala Test Classes Request](#1413-scala-test-classes-request)
-  * [1.5. Appendix](#15-appendix)
-    * [1.5.1. Protobuf schema definitions](#151-protobuf-schema-definitions)
-    * [1.5.2. Scala Bindings](#152-scala-bindings)
+- [1. Build Server Protocol](#1-build-server-protocol)
+    - [1.1. Base protocol](#11-base-protocol)
+    - [1.2. Basic Json Structures](#12-basic-json-structures)
+        - [1.2.1. Build Target](#121-build-target)
+        - [1.2.2. Build Target Identifier](#122-build-target-identifier)
+    - [1.3. Actual Protocol](#13-actual-protocol)
+        - [1.3.1. Server Lifetime](#131-server-lifetime)
+            - [1.3.1.1. Initialize Build Request](#1311-initialize-build-request)
+            - [1.3.1.2. Initialized Build Notification](#1312-initialized-build-notification)
+            - [1.3.1.3. Shutdown Build Request](#1313-shutdown-build-request)
+            - [1.3.1.4. Exit Build Notification](#1314-exit-build-notification)
+        - [1.3.2. Workspace Build Targets Request](#132-workspace-build-targets-request)
+        - [1.3.3. Build Target Changed Notification](#133-build-target-changed-notification)
+        - [1.3.4. Build Target Text Documents Request](#134-build-target-text-documents-request)
+        - [1.3.5. Text Document Build Targets Request](#135-text-document-build-targets-request)
+        - [1.3.6. Dependency Sources Request](#136-dependency-sources-request)
+        - [1.3.7. Compile Request](#137-compile-request)
+        - [1.3.8. Test Request](#138-test-request)
+    - [1.4. Extensions](#14-extensions)
+        - [1.4.1. Scala](#141-scala)
+            - [1.4.1.1. Scala Build Target](#1411-scala-build-target)
+            - [1.4.1.2. Scalac Options Request](#1412-scalac-options-request)
+            - [1.4.1.3. Scala Test Classes Request](#1413-scala-test-classes-request)
+    - [1.5. Appendix](#15-appendix)
+        - [1.5.1. Protobuf schema definitions](#151-protobuf-schema-definitions)
+        - [1.5.2. Scala Bindings](#152-scala-bindings)
 
 <!-- /TOC -->
 
