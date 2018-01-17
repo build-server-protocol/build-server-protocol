@@ -98,10 +98,10 @@ Using vocabulary of other build tools:
 
 * sbt: a build target is a combined project + config. Example:
   * a regular JVM project with main and test configurations will have
-    two build targets, one for main and one for test.
+    2 build targets, one for main and one for test.
   * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
-  * a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have four build targets.
-  * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have six build targets.
+  * a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+  * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
 * pants: a pants target corresponds one-to-one with a BuildTarget
 * bazel: a bazel target corresponds one-to-one with a BuildTarget
 
