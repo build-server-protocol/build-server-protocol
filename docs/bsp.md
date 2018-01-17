@@ -7,56 +7,75 @@ title: Build Server Protocol
 This document is a thought experiment for how a potential Build Server Protocol (BSP) would look like.
 The document is written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback from Guillaume Martres and Eugene Burmako.
 
-The best way to read this document is by considering it as a wishlist from the perspective of a language server developer.
-This is not an approved standard.
-Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server should look like.
+The Build Server Protocol is not an official Scala Center project nor is it an approved standard.
 Everything in this document is subject to change and open for discussions.
 Including core data structures.
+
+## 1.1. Motivation
+
+The problem this document aims to address is the multiplied effort required to integrate between available Scala language servers and build tools.
+Currently, every language server must implement custom integrations for the most popular Scala Build tools in order to extract compilation information such as classpaths and source directories.
+Likewise, new Scala build tools are expected to integrate with all available Scala IDEs.
+This explosion of integrations is a growing problem due to the recent proliferation of both Scala language servers and build tools supporting Scala.
+
+## 1.2. Background
 
 The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
 Unlike in the Language Server Protocol, the language server is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
 
-A protocol is only worth as much as the quality of the available clients and servers that implement the protocol.
-A proof-of-concept integration between [scalameta/metals](https://github.com/scalameta/metals) and [scalacenter/bloop](https://github.com/scalacenter/bloop) using the Build Server Protocol is in the works.
-See [sbt/sbt#3890](https://github.com/sbt/sbt/issues/3890) for a discussion on the next steps for adding BSP support in sbt.
+The best way to read this document is by considering it as a wishlist from the perspective of an IDE developer.
+Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server could look like.
 
 The code listings in this document are written using Scala syntax.
-Every data strucuture in this document has a direct translation to JSON and Protocol Buffers.
+Every data strucuture in this document has a direct translation to JSON and Protobuf.
 See [Appendix](#15-appendix) for schema definitions that can be used to automatically generate
 bindings for different target languages.
 
 <!-- TOC -->
 
 - [1. Build Server Protocol](#1-build-server-protocol)
-    - [1.1. Base protocol](#11-base-protocol)
-    - [1.2. Basic Json Structures](#12-basic-json-structures)
-        - [1.2.1. Build Target](#121-build-target)
-        - [1.2.2. Build Target Identifier](#122-build-target-identifier)
-    - [1.3. Actual Protocol](#13-actual-protocol)
-        - [1.3.1. Server Lifetime](#131-server-lifetime)
-            - [1.3.1.1. Initialize Build Request](#1311-initialize-build-request)
-            - [1.3.1.2. Initialized Build Notification](#1312-initialized-build-notification)
-            - [1.3.1.3. Shutdown Build Request](#1313-shutdown-build-request)
-            - [1.3.1.4. Exit Build Notification](#1314-exit-build-notification)
-        - [1.3.2. Workspace Build Targets Request](#132-workspace-build-targets-request)
-        - [1.3.3. Build Target Changed Notification](#133-build-target-changed-notification)
-        - [1.3.4. Build Target Text Documents Request](#134-build-target-text-documents-request)
-        - [1.3.5. Text Document Build Targets Request](#135-text-document-build-targets-request)
-        - [1.3.6. Dependency Sources Request](#136-dependency-sources-request)
-        - [1.3.7. Compile Request](#137-compile-request)
-        - [1.3.8. Test Request](#138-test-request)
-    - [1.4. Extensions](#14-extensions)
-        - [1.4.1. Scala](#141-scala)
-            - [1.4.1.1. Scala Build Target](#1411-scala-build-target)
-            - [1.4.1.2. Scalac Options Request](#1412-scalac-options-request)
-            - [1.4.1.3. Scala Test Classes Request](#1413-scala-test-classes-request)
-    - [1.5. Appendix](#15-appendix)
-        - [1.5.1. Protobuf schema definitions](#151-protobuf-schema-definitions)
-        - [1.5.2. Scala Bindings](#152-scala-bindings)
+    - [1.1. Motivation](#11-motivation)
+    - [1.2. Background](#12-background)
+    - [1.3. Status](#13-status)
+    - [1.4. Base protocol](#14-base-protocol)
+    - [1.5. Basic Json Structures](#15-basic-json-structures)
+        - [1.5.1. Build Target](#151-build-target)
+        - [1.5.2. Build Target Identifier](#152-build-target-identifier)
+    - [1.6. Actual Protocol](#16-actual-protocol)
+        - [1.6.1. Server Lifetime](#161-server-lifetime)
+            - [1.6.1.1. Initialize Build Request](#1611-initialize-build-request)
+            - [1.6.1.2. Initialized Build Notification](#1612-initialized-build-notification)
+            - [1.6.1.3. Shutdown Build Request](#1613-shutdown-build-request)
+            - [1.6.1.4. Exit Build Notification](#1614-exit-build-notification)
+        - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
+        - [1.6.3. Build Target Changed Notification](#163-build-target-changed-notification)
+        - [1.6.4. Build Target Text Documents Request](#164-build-target-text-documents-request)
+        - [1.6.5. Text Document Build Targets Request](#165-text-document-build-targets-request)
+        - [1.6.6. Dependency Sources Request](#166-dependency-sources-request)
+        - [1.6.7. Compile Request](#167-compile-request)
+        - [1.6.8. Test Request](#168-test-request)
+    - [1.7. Extensions](#17-extensions)
+        - [1.7.1. Scala](#171-scala)
+            - [1.7.1.1. Scala Build Target](#1711-scala-build-target)
+            - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
+            - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
+    - [1.8. Appendix](#18-appendix)
+        - [1.8.1. Protobuf schema definitions](#181-protobuf-schema-definitions)
+        - [1.8.2. Scala Bindings](#182-scala-bindings)
 
 <!-- /TOC -->
 
-## 1.1. Base protocol
+
+
+## 1.3. Status
+
+A protocol is only worth as much as the quality of the available clients and servers that implement the protocol.
+A proof-of-concept integration between [scalameta/metals](https://github.com/scalameta/metals) and [scalacenter/bloop](https://github.com/scalacenter/bloop) using the Build Server Protocol is in the works.
+See [sbt/sbt#3890](https://github.com/sbt/sbt/issues/3890) for a discussion on the next steps for adding BSP support in sbt.
+
+The best way to share your thoughts on the Build Server Protocol is to open an issue or pull request to this repository.
+
+## 1.4. Base protocol
 
 The base protocol is identical to the language server base protocol. See
 <https://microsoft.github.io/language-server-protocol/specification> for
@@ -66,13 +85,13 @@ Like the language server protocol, the build server protocol defines a
 set of JSON-RPC request, response and notification messages which are
 exchanged using the base protocol.
 
-## 1.2. Basic Json Structures
+## 1.5. Basic Json Structures
 
 In addition to basic data structures in the language server protocol,
 the build server protocol defines the following additional data
 structures.
 
-### 1.2.1. Build Target
+### 1.5.1. Build Target
 
 Build target contains metadata about an artifact (for example library, test, or binary artifact).
 Using vocabulary of other build tools:
@@ -125,7 +144,7 @@ object BuildTargetKind {
 }
 ```
 
-### 1.2.2. Build Target Identifier
+### 1.5.2. Build Target Identifier
 
 A unique identifier for a target.
 
@@ -136,7 +155,7 @@ trait BuildTargetIdentifer {
 }
 ```
 
-## 1.3. Actual Protocol
+## 1.6. Actual Protocol
 
 Unlike the language server protocol, the build server protocol does not
 support dynamic registration of capabilities.
@@ -144,14 +163,14 @@ The motivation for this change is simplicity.
 If a motivating example for dynamic registration comes up this decision can be reconsidered.
 The server and client capabilities must be communicated through the initialize request.
 
-### 1.3.1. Server Lifetime
+### 1.6.1. Server Lifetime
 
 Like the language server protocol, the current protocol specification
 defines that the lifetime of a build server is managed by the client
 (e.g. a language server like Dotty IDE). It is up to the client to
 decide when to start (process-wise) and when to shutdown a server.
 
-#### 1.3.1.1. Initialize Build Request
+#### 1.6.1.1. Initialize Build Request
 
 Like the language server protocol, the initialize request is sent as the
 first request from the client to the server. If the server receives a
@@ -222,7 +241,7 @@ trait BuildServerCapabilities {
 }
 ```
 
-#### 1.3.1.2. Initialized Build Notification
+#### 1.6.1.2. Initialized Build Notification
 
 Like the language server protocol, the initialized notification is sent
 from the client to the server after the client received the result of
@@ -243,7 +262,7 @@ trait InitializedBuildParams {
 }
 ```
 
-#### 1.3.1.3. Shutdown Build Request
+#### 1.6.1.3. Shutdown Build Request
 
 Like the language server protocol, the shutdown build request is sent
 from the client to the server. It asks the server to shut down, but to
@@ -262,7 +281,7 @@ Response:
 * error: code and message set in case an exception happens during
   shutdown request.
 
-#### 1.3.1.4. Exit Build Notification
+#### 1.6.1.4. Exit Build Notification
 
 Like the language server protocol, a notification to ask the server to
 exit its process. The server should exit with success code 0 if the
@@ -273,7 +292,7 @@ Notification:
 * method: ‘exit’
 * params: `null`
 
-### 1.3.2. Workspace Build Targets Request
+### 1.6.2. Workspace Build Targets Request
 
 The workspace build targets request is sent from the client to the server to ask for the list of all available build targets in the workspace.
 
@@ -299,7 +318,7 @@ trait WorkspaceBuildTargetsResult {
 }
 ```
 
-### 1.3.3. Build Target Changed Notification
+### 1.6.3. Build Target Changed Notification
 
 The build target changed notification is sent from the server to the client to signal a change in a build target.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -329,7 +348,7 @@ object BuildTargetEventKind {
 }
 ```
 
-### 1.3.4. Build Target Text Documents Request
+### 1.6.4. Build Target Text Documents Request
 
 The build target text documents request is sent from the client to the server to query for the list of source files that are part of a given list of build targets.
 
@@ -353,7 +372,7 @@ trait BuildTargetTextDocumentsResponse {
 }
 ```
 
-### 1.3.5. Text Document Build Targets Request
+### 1.6.5. Text Document Build Targets Request
 
 The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -381,7 +400,7 @@ trait TextDocumentBuildTargetsResult {
 }
 ```
 
-### 1.3.6. Dependency Sources Request
+### 1.6.6. Dependency Sources Request
 
 The build target dependency sources request is sent from the client to the server to query for the list of sources for the dependency classpath of a given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -413,7 +432,7 @@ trait DependencySourcesItem {
 }
 ```
 
-### 1.3.7. Compile Request
+### 1.6.7. Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -459,7 +478,7 @@ trait CompileReportItem {
 The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
-### 1.3.8. Test Request
+### 1.6.8. Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -505,15 +524,15 @@ trait TestReportItem {
 The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
-## 1.4. Extensions
+## 1.7. Extensions
 
 The build server protocol is designed to be extended with language specific data structures and methods.
 
-### 1.4.1. Scala
+### 1.7.1. Scala
 
 The following section contains Scala-specific extensions to the build server protocol.
 
-#### 1.4.1.1. Scala Build Target
+#### 1.7.1.1. Scala Build Target
 
 `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling a target containing Scala sources.
 This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition.
@@ -543,7 +562,7 @@ object ScalaPlatform {
 }
 ```
 
-#### 1.4.1.2. Scalac Options Request
+#### 1.7.1.2. Scalac Options Request
 
 The build target scalac options request is sent from the client to the server to query for the list of compiler options necessary to compile in a given list of targets.
 
@@ -579,7 +598,7 @@ trait ScalacOptionsItem {
 }
 ```
 
-#### 1.4.1.3. Scala Test Classes Request
+#### 1.7.1.3. Scala Test Classes Request
 
 The build target scalac options request is sent from the client to the server to query for the list of fully qualified names of test clases in a given list of targets.
 This method can for example be used by a language server by using `textDocument/codeLens` to attach a "Run test suite" button above the definition of a test suite.
@@ -609,14 +628,14 @@ trait ScalaTestClassesItem {
 }
 ```
 
-## 1.5. Appendix
+## 1.8. Appendix
 
-### 1.5.1. Protobuf schema definitions
+### 1.8.1. Protobuf schema definitions
 
-The data structures presented in this document are accompanied by Protocol Buffers schema definitions.
+The data structures presented in this document are accompanied by protobuf schema definitions.
 See [bsp.proto](src/main/protobuf/bsp.proto).
 
-### 1.5.2. Scala Bindings
+### 1.8.2. Scala Bindings
 
 A Scala library implementation of this communication protocol is available in this repository.
 The public API of this library currently has three direct Scala dependencies:
