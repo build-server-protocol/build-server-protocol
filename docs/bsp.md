@@ -1,3 +1,7 @@
+---
+title: Build Server Protocol
+---
+
 # 1. Build Server Protocol
 
 This document is a draft version of the Build Server Protocol (BSP),
