@@ -157,3 +157,17 @@ message ScalacOptions {
     string classDirectory = 4;
 }
 
+// Request: 'buildTarget/scalaTestClasses', C -> S
+message ScalaTestClassesParams {
+  repeated BuildTargetIdentifier target = 1;
+}
+
+message ScalaTestClassResult {
+    repeated ScalaTestClassesItem items = 1;
+}
+
+message ScalaTestClassesItem {
+    BuildTargetIdentifier target = 1;
+    repeated string classes = 2; // Fully qualified names of test classes
+}
+
