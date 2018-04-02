@@ -135,6 +135,13 @@ message ScalaBuildTarget {
     string scalaOrganization = 1;
     string scalaVersion = 2;
     string scalaBinaryVersion = 3;
+    ScalaPlatform platform = 4;
+
+    enum ScalaPlatform {
+        JVM = 0;
+        JS = 1;
+        Native = 2;
+    }
 }
 
 // Request: 'buildTarget/scalacOptions', C -> S
@@ -149,3 +156,4 @@ message ScalacOptions {
     repeated string classpath = 3;
     string classDirectory = 4;
 }
+
