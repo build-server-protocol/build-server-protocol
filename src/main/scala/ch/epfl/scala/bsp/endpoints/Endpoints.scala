@@ -15,6 +15,12 @@ trait Build {
 object BuildTarget extends BuildTarget
 trait BuildTarget {
   object compile extends Endpoint[CompileParams, CompileReport]("buildTarget/compile")
+  object dependencySources
+      extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
+  object scalacOptions
+      extends Endpoint[ScalacOptionsParams, ScalacOptions]("buildTarget/scalacOptions")
+  object scalaTestClasses
+      extends Endpoint[ScalaTestClassesParams, ScalaTestClasses]("buildTarget/scalaTestClasses")
 }
 
 object Workspace extends Workspace

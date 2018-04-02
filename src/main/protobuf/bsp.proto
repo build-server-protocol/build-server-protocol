@@ -162,7 +162,7 @@ message ScalaTestClassesParams {
   repeated BuildTargetIdentifier target = 1;
 }
 
-message ScalaTestClassResult {
+message ScalaTestClasses {
     repeated ScalaTestClassesItem items = 1;
 }
 
