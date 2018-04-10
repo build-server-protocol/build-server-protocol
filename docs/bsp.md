@@ -428,7 +428,7 @@ trait DependencySourcesItem {
   def target: BuildTargetIdentifier
   /** List of resources containing source files of the
     * target's dependencies.
-    * Can be jar files, zip files, or directories. */
+    * Can be source files, jar files, zip files, or directories. */
   def sources: List[URI]
 }
 ```
@@ -582,18 +582,20 @@ Response:
 
 ```scala
 trait ScalacOptionsResult {
-  def items: List[ScalcOptionItem]
+  def items: List[ScalacOptionsItem]
 }
 trait ScalacOptionsItem {
     def target: BuildTargetIdentifier
     /** Additional arguments to the compiler.
       * For example, -deprecation. */
     def options: List[String]
+    
     /** The dependency classpath for this target, must be
       * identical to what is passed as arguments to
       * the -classpath flag in the command line interface
       * of scalac. */
     def classpath: List[String]
+    
     /** The output directory for classfiles produced by this target */
     def classDirectory: String
 }
