@@ -149,8 +149,11 @@ message ScalacOptionsParams {
     repeated BuildTargetIdentifier targets = 1;
 }
 
-// One could feed these options in to the compiler
 message ScalacOptions {
+    repeated ScalacOptionsItem items = 1;
+}
+
+message ScalacOptionsItem {
     BuildTargetIdentifier target = 1;
     repeated string options = 2;
     repeated string classpath = 3;
