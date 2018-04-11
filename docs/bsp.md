@@ -604,8 +604,9 @@ trait ScalacOptionsItem {
 #### 1.7.1.3. Scala Test Classes Request
 
 The build target scalac options request is sent from the client to the server to query for the list of fully qualified names of test clases in a given list of targets.
-This method can for example be used by a language server by using `textDocument/codeLens` to attach a "Run test suite" button above the definition of a test suite.
-By clicking on the button, the language server can pass the fully qualified name of the test class as an argument to the `buildTarget/test` request.
+This method can for example be used by a language server to attach a "Run test suite" button above the definition of a test suite via `textDocument/codeLens`.
+To render the code lens, the language server needs to map the fully qualified names of the test targets to the defining source file via `textDocument/definition`.
+Then, once users click on the button, the language server can pass the fully qualified name of the test class as an argument to the `buildTarget/test` request.
 
 * method: `buildTarget/scalaTestClasses`
 * params: `ScalaTestClassesParams`
