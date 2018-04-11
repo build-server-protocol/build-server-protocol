@@ -34,35 +34,36 @@ bindings for different target languages.
 <!-- TOC -->
 
 - [1. Build Server Protocol](#1-build-server-protocol)
-    - [1.1. Motivation](#11-motivation)
-    - [1.2. Background](#12-background)
-    - [1.3. Status](#13-status)
-    - [1.4. Base protocol](#14-base-protocol)
-    - [1.5. Basic Json Structures](#15-basic-json-structures)
-        - [1.5.1. Build Target](#151-build-target)
-        - [1.5.2. Build Target Identifier](#152-build-target-identifier)
-    - [1.6. Actual Protocol](#16-actual-protocol)
-        - [1.6.1. Server Lifetime](#161-server-lifetime)
-            - [1.6.1.1. Initialize Build Request](#1611-initialize-build-request)
-            - [1.6.1.2. Initialized Build Notification](#1612-initialized-build-notification)
-            - [1.6.1.3. Shutdown Build Request](#1613-shutdown-build-request)
-            - [1.6.1.4. Exit Build Notification](#1614-exit-build-notification)
-        - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
-        - [1.6.3. Build Target Changed Notification](#163-build-target-changed-notification)
-        - [1.6.4. Build Target Text Documents Request](#164-build-target-text-documents-request)
-        - [1.6.5. Text Document Build Targets Request](#165-text-document-build-targets-request)
-        - [1.6.6. Dependency Sources Request](#166-dependency-sources-request)
-        - [1.6.7. Compile Request](#167-compile-request)
-        - [1.6.8. Test Request](#168-test-request)
-    - [1.7. Extensions](#17-extensions)
-        - [1.7.1. Scala](#171-scala)
-            - [1.7.1.1. Scala Build Target](#1711-scala-build-target)
-            - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
-            - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
-    - [1.8. Appendix](#18-appendix)
-        - [1.8.1. Protobuf schema definitions](#181-protobuf-schema-definitions)
-        - [1.8.2. Scala Bindings](#182-scala-bindings)
-        - [1.8.3. FAQ](#183-faq)
+  - [1.1. Motivation](#11-motivation)
+  - [1.2. Background](#12-background)
+  - [1.3. Status](#13-status)
+  - [1.4. Base protocol](#14-base-protocol)
+  - [1.5. Basic Json Structures](#15-basic-json-structures)
+    - [1.5.1. Build Target](#151-build-target)
+    - [1.5.2. Build Target Identifier](#152-build-target-identifier)
+  - [1.6. Actual Protocol](#16-actual-protocol)
+    - [1.6.1. Server Lifetime](#161-server-lifetime)
+      - [1.6.1.1. Initialize Build Request](#1611-initialize-build-request)
+      - [1.6.1.2. Initialized Build Notification](#1612-initialized-build-notification)
+      - [1.6.1.3. Shutdown Build Request](#1613-shutdown-build-request)
+      - [1.6.1.4. Exit Build Notification](#1614-exit-build-notification)
+    - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
+    - [1.6.3. Build Target Changed Notification](#163-build-target-changed-notification)
+    - [1.6.4. Build Target Text Documents Request](#164-build-target-text-documents-request)
+    - [1.6.5. Text Document Build Targets Request](#165-text-document-build-targets-request)
+    - [1.6.6. Dependency Sources Request](#166-dependency-sources-request)
+    - [1.6.7. Resources Request](#167-resources-request)
+    - [1.6.8. Compile Request](#168-compile-request)
+    - [1.6.9. Test Request](#169-test-request)
+  - [1.7. Extensions](#17-extensions)
+    - [1.7.1. Scala](#171-scala)
+      - [1.7.1.1. Scala Build Target](#1711-scala-build-target)
+      - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
+      - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
+  - [1.8. Appendix](#18-appendix)
+    - [1.8.1. Protobuf schema definitions](#181-protobuf-schema-definitions)
+    - [1.8.2. Scala Bindings](#182-scala-bindings)
+    - [1.8.3. FAQ](#183-faq)
 
 <!-- /TOC -->
 
@@ -236,6 +237,9 @@ trait BuildServerCapabilities {
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
   def dependencySourcesProvider: Boolean
+  /** The server provides all the resource dependencies
+    * via method buildTarget/resources */
+  def resourcesProvider: Boolean
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
   def buildTargetChangedProvider: Boolean
@@ -433,7 +437,38 @@ trait DependencySourcesItem {
 }
 ```
 
-### 1.6.7. Compile Request
+### 1.6.7. Resources Request
+
+The build target resources request is sent from the client to the server to query for the list of resources of a given list of build targets.
+A resource is a data dependency required to be present in the runtime classpath when a build target is run or executed.
+The server communicates during the initialize handshake whether this method is supported or not.
+This method can be used by a client 
+
+* method: `buildTarget/resources`
+* params: `ResourcesParams`
+
+```scala
+trait ResourcesParams {
+  def targets: List[BuildTargetIdentifier]
+}
+```
+
+Response:
+
+* result: `ResourcesResult`, defined as follows
+
+```scala
+trait ResourcesResult {
+  def items: List[ResourceItem]
+}
+trait ResourceItem {
+  def target: BuildTargetIdentifier
+  /** List of resource files. */
+  def resources: List[URI]
+}
+```
+
+### 1.6.8. Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -479,7 +514,7 @@ trait CompileReportItem {
 The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
-### 1.6.8. Test Request
+### 1.6.9. Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
