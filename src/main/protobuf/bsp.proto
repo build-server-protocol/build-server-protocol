@@ -112,6 +112,20 @@ message DependencySourcesItem {
     repeated string uri = 2;
 }
 
+// Request: 'buildTarget/resources', C -> S
+message ResourcesParams {
+    repeated BuildTargetIdentifier targets = 1;
+}
+
+message Resources {
+    repeated ResourcesItem items = 1;
+}
+
+message ResourcesItem {
+    BuildTargetIdentifier target = 1;
+    repeated string uri = 2;
+}
+
 // Request: 'buildTarget/compile', C -> S
 message CompileParams {
     repeated BuildTargetIdentifier targets = 1;
