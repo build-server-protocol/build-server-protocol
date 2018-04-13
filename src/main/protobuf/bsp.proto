@@ -14,7 +14,8 @@ message BuildTarget {
     BuildTargetIdentifier id = 1;
     string displayName = 2;
     repeated string languageIds = 3;
-    bytes data = 4;
+    repeated BuildTargetIdentifier dependencies = 4;
+    bytes data = 5;
 }
 
 message BuildTargetIdentifier {
