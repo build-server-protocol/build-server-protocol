@@ -150,6 +150,7 @@ message ScalaBuildTarget {
     string scalaVersion = 2;
     string scalaBinaryVersion = 3;
     ScalaPlatform platform = 4;
+    repeated string jars = 5;
 
     enum ScalaPlatform {
         JVM = 0;
