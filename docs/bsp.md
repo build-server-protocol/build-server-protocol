@@ -326,10 +326,10 @@ The server communicates during the initialize handshake whether this method is s
 Notification:
 
 * method: 'buildTarget/didChange'
-* params: `DidChangeBuildTarget` defined as follows:
+* params: `DidChangeBuildTargetParams` defined as follows:
 
 ```scala
-trait DidChangeBuildTarget {
+trait DidChangeBuildTargetParams {
   def changes: List[BuildTargetEvent]
 }
 trait BuildTargetEvent {
