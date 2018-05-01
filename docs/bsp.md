@@ -461,16 +461,16 @@ trait CompileReport {
 trait CompileReportItem {
 
   /** The total number of reported errors compiling this target. */
-  def errors: Long
+  def errors: Int
 
   /** The total number of reported warnings compiling the target. */
-  def warnings: Long
+  def warnings: Int
 
   /** The total number of milliseconds it took to compile the target. */
-  def time: Option[Long]
+  def time: Option[Int]
 
   /** The total number of lines of code in the given target. */
-  def linesOfCode: Option[Long]
+  def linesOfCode: Option[Int]
 
 }
 ```
@@ -510,14 +510,14 @@ trait TestReportItem {
   def compileReport: Option[CompileReportItem]
 
   /** The total number of successful tests. */
-  def passed: Long
+  def passed: Int
 
   /** The total number of failed tests. */
-  def failed: Long
+  def failed: Int
 
   /** The total number of milliseconds it took to run the tests.
     * Should not include compile times. */
-  def time: Option[Long]
+  def time: Option[Int]
 }
 ```
 
