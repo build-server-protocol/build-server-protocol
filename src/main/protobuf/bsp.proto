@@ -123,10 +123,10 @@ message CompileReport {
 
 message CompileReportItem {
     BuildTargetIdentifier target = 1;
-    int64 errors = 2;
-    int64 warnings = 3;
-    int64 time = 4;
-    int64 linesOfCode = 5;
+    int32 errors = 2;
+    int32 warnings = 3;
+    int32 time = 4;
+    int32 linesOfCode = 5;
 }
 
 // Scala extension
