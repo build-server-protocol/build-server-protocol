@@ -221,23 +221,23 @@ Response:
 ```scala
 trait InitializeBuildResult {
   /** The capabilities of the build server */
-  capabilities: BuildServerCapabilities
+  def capabilities: BuildServerCapabilities
 }
 
 trait BuildServerCapabilities {
   /** The server can compile targets via method buildTarget/compile */
-  compileProvider: Boolean
+  def compileProvider: Boolean
   /** The server can test targets via method buildTarget/test */
-  testProvider: Boolean
+  def testProvider: Boolean
   /** The server can provide a list of targets that contain a
     * single text document via the method textDocument/buildTargets */
-  textDocumentBuildTargetsProvider: Boolean
+  def textDocumentBuildTargetsProvider: Boolean
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
-  dependencySourcesProvider: Boolean
+  def dependencySourcesProvider: Boolean
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
-  buildTargetChangedProvider: Boolean
+  def buildTargetChangedProvider: Boolean
 }
 ```
 
