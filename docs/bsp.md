@@ -633,7 +633,7 @@ trait ScalaTestClassesItem {
 ### 1.8.1. Protobuf schema definitions
 
 The data structures presented in this document are accompanied by protobuf schema definitions.
-See [bsp.proto](src/main/protobuf/bsp.proto).
+See [bsp.proto](../src/main/protobuf/bsp.proto).
 
 ### 1.8.2. Scala Bindings
 
