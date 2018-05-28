@@ -661,7 +661,7 @@ For example, in order to respond to a `textDocument/definition` request from an 
 [Metals](https://github.com/scalameta/metals)?
 
 **A**: Currently, those language servers each implement custom integrations for each supported build tool to extract build metadata.
-Those language servers could instead implement a BSP client to extract build metadata from any build tools that implements BSP, sharing a single BSP server implementation.
+Those language servers could instead implement a BSP client to extract build metadata from any build tools that implement BSP, sharing a single BSP server implementation.
 Likewise, a new build tool could implement a BSP server and support a wide range of language servers out-of-the-box.
 
 **Q**: Should non-Scala participants in the protocol generate data types from `bsp.proto` or is it preferable to use pre-generated artifacts in maven (or other repos)?
