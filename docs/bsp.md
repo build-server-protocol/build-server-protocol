@@ -4,32 +4,26 @@ title: Build Server Protocol
 
 # 1. Build Server Protocol
 
-This document is a thought experiment for how a potential Build Server Protocol (BSP) would look like.
-The document is written by Ólafur Páll Geirsson, Jorge Vicente Cantero with feedback from Guillaume Martres and Eugene Burmako.
-
-The Build Server Protocol is not an official Scala Center project nor is it an approved standard.
-Everything in this document is subject to change and open for discussions.
-Including core data structures.
+The document is written by Ólafur Páll Geirsson, Jorge Vicente Cantero with
+feedback from Justin Kaeser, Guillaume Martres and Eugene Burmako.
 
 ## 1.1. Motivation
 
-The problem this document aims to address is the multiplied effort required to integrate between available Scala language servers and build tools.
-Currently, every language server must implement custom integrations for the most popular Scala Build tools in order to extract compilation information such as classpaths and source directories.
-Likewise, new Scala build tools are expected to integrate with all available Scala IDEs.
-This explosion of integrations is a growing problem due to the recent proliferation of both Scala language servers and build tools supporting Scala.
+The problem this document aims to address is the multiplied effort required
+to integrate between available language servers/editors and build tools.
+Currently, every language server must implement custom integrations for the
+most popular build tools in order to extract compilation information such as
+classpaths, source directories or compiler diagnostics. Likewise, new build
+tools are expected to integrate with all available IDEs.
 
-## 1.2. Background
+This explosion of integrations is a growing problem due to the recent
+proliferation of both language servers and build tools.
 
-The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
-Unlike in the Language Server Protocol, the language server is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
-
-The best way to read this document is by considering it as a wishlist from the perspective of an IDE developer.
-Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server could look like.
-
-The code listings in this document are written using Scala syntax.
-Every data strucuture in this document has a direct translation to JSON and Protobuf.
-See [Appendix](#15-appendix) for schema definitions that can be used to automatically generate
-bindings for different target languages.
+The Build Server Protocol aims to define a common subset of these
+integrations in a protocol that both build tools (servers) and language
+servers/editors (clients) can understand. The goal is to simplify
+integrations between these tools to provide the best experience to end users
+(developers).
 
 <!-- TOC -->
 
@@ -67,15 +61,47 @@ bindings for different target languages.
 
 <!-- /TOC -->
 
+## 1.2. Background
+
+The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
+Unlike in the Language Server Protocol, the language server or editor is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
+
+The best way to read this document is by considering it as a wishlist from the perspective of an IDE developer.
+Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server could look like.
+
+The code listings in this document are written using Scala syntax.
+Every data strucuture in this document has a direct translation to JSON and Protobuf.
+See [Appendix](#15-appendix) for schema definitions that can be used to automatically generate
+bindings for different target languages.
 
 
 ## 1.3. Status
 
-A protocol is only worth as much as the quality of the available clients and servers that implement the protocol.
-A proof-of-concept integration between [scalameta/metals](https://github.com/scalameta/metals) and [scalacenter/bloop](https://github.com/scalacenter/bloop) using the Build Server Protocol is in the works.
-See [sbt/sbt#3890](https://github.com/sbt/sbt/issues/3890) for a discussion on the next steps for adding BSP support in sbt.
+The Build Server Protocol is not an approved standard. Everything in this
+document is subject to change and open for discussions, including core data
+structures.
 
-The best way to share your thoughts on the Build Server Protocol is to open an issue or pull request to this repository.
+A protocol is only worth as much as the quality of the available clients and
+servers that implement the protocol. There is a lot of activity in this area.
+
+On the client side, IntelliJ is the first client of the Build Server
+Protocol. There are several other language servers, like [Dotty
+IDE](https://github.com/lampepfl/dotty) and
+[scalameta/metals](https://github.com/scalameta/metals), that are working on
+integrations with BSP servers. There are future editor integrations under
+way.
+
+On the server side, [bloop](https://github.com/scalacenter/bloop) is the
+first server to implement BSP. There are ongoing efforts to implement BSP
+in popular build tools like [sbt] (https://github.com/sbt/sbt/issues/3890).
+
+The Build Server Protocol has been designed to be language-agnostic. We're
+looking for ways to collaborate with other programming language communities
+and build tool authors.
+
+The best way to share your thoughts on the Build Server Protocol or to get
+involved in its development is to open an issue or pull request to this
+repository. Any help on developing integrations will be much appreciated.
 
 ## 1.4. Base protocol
 
