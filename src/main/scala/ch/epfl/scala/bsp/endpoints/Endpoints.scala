@@ -9,6 +9,8 @@ trait Build {
   object initialize
       extends Endpoint[InitializeBuildParams, InitializeBuildResult]("build/initialize")
   object initialized extends Endpoint[InitializedBuildParams, Unit]("build/initialized")
+  object showMessage extends Endpoint[ShowMessageParams, Unit]("build/showMessage")
+  object logMessage extends Endpoint[LogMessageParams, Unit]("build/logMessage")
 }
 
 object BuildTarget extends BuildTarget

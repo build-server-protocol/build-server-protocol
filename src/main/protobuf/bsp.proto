@@ -39,6 +39,34 @@ message InitializeBuildResult {
     BuildServerCapabilities capabilities = 1;
 }
 
+message ShowMessageParams {
+    enum MessageType {
+        UNKNOWN = 0;
+        CREATED = 1;
+        CHANGED = 2;
+        DELETED = 3;
+    }
+
+    MessageType type = 1;
+    int64 id = 2;
+    int64 parentId = 3;
+    string message = 4;
+}
+
+message LogMessageParams {
+    enum MessageType {
+        UNKNOWN = 0;
+        CREATED = 1;
+        CHANGED = 2;
+        DELETED = 3;
+    }
+
+    MessageType type = 1;
+    int64 id = 2;
+    int64 parentId = 3;
+    string message = 4;
+}
+
 message BuildServerCapabilities {
     bool compileProvider = 1;
     bool testProvider = 2;
@@ -189,4 +217,3 @@ message ScalaTestClassesItem {
     BuildTargetIdentifier target = 1;
     repeated string classes = 2; // Fully qualified names of test classes
 }
-

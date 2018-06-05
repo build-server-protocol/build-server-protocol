@@ -323,6 +323,86 @@ Notification:
 * method: ‘exit’
 * params: `null`
 
+#### 1.6.1.5. Show message
+
+The show message notification is sent from a server to a client to ask the
+client to display a particular message in the user interface.
+
+A show message in BSP is identical to LSP's `window/logMessage` except for the
+fact that it has a number id and an optional `parentId` field that allows
+client to better structure the logs (for example, a client can show a tree of
+logs with dropdowns where the children logs are by default hidden to ease
+readability).
+
+Notification:
+
+* method: ‘build/showMessage’
+* params: ShowMessageParams defined as follows:
+
+```scala
+trait ShowMessageParams {
+	/** The message type. See {@link MessageType}. */
+	def type: Int
+
+  /** The message id. */
+  def id: Long
+
+  /** The parent id if any. */
+  def parentId: Option[Long]
+
+	/** The actual message. */
+	def message: String
+}
+```
+
+where `MessageType` is defined as follows:
+
+```scala
+object MessageType {
+	/** An error message. */
+  final val Error = 1
+	/** A warning message. */
+  final val Warning = 2
+	/** An information message. */
+  final val Info = 3
+	/** A log message. */
+  final val Log = 4
+}
+```
+
+#### 1.6.1.6. Log message
+
+The log message notification is sent from the server to the client to ask the
+client to log a particular message.
+
+A `build/logMessage` notification is similar to LSP's `window/logMessage` but
+adds a number id and an optional `parentId` field. These two new fields allow
+clients to structure the logs in a hierarchical way. For example, clients can
+show logs in the UI as trees where the children are hidden to ease readability.
+
+Notification:
+
+* method: ‘build/logMessage’
+* params: LogMessageParams defined as follows:
+
+```scala
+trait LogMessageParams {
+	/** The message type. See {@link MessageType} */
+	def type: Int
+  
+  /** The message id. */
+  def id: Long
+
+  /** The parent id if any. */
+  def parentId: Option[Long]
+
+	/** The actual message */
+	def message: String
+}
+```
+
+Where type is defined as above.
+
 ### 1.6.2. Workspace Build Targets Request
 
 The workspace build targets request is sent from the client to the server to ask for the list of all available build targets in the workspace.
