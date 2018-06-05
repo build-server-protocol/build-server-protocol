@@ -93,7 +93,7 @@ way.
 
 On the server side, [bloop](https://github.com/scalacenter/bloop) is the
 first server to implement BSP. There are ongoing efforts to implement BSP
-in popular build tools like [sbt] (https://github.com/sbt/sbt/issues/3890).
+in popular build tools like [sbt](https://github.com/sbt/sbt/issues/3890).
 
 The Build Server Protocol has been designed to be language-agnostic. We're
 looking for ways to collaborate with other programming language communities

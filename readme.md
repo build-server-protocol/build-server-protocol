@@ -1,6 +1,6 @@
 # Build Server Protocol
 
-This project is a work-in-progress effort to to improve the integration
+This project is a work-in-progress effort to improve the integration
 between language server/editors and build tools. This effort is led by the
 Scala Center and Jetbrains, together with the help of other tool developers
 in the Scala ecosystem.
