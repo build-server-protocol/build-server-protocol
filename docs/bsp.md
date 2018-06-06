@@ -839,8 +839,10 @@ Response:
 trait ScalacOptionsResult {
   def items: List[ScalacOptionsItem]
 }
+
 trait ScalacOptionsItem {
     def target: BuildTargetIdentifier
+
     /** Additional arguments to the compiler.
       * For example, -deprecation. */
     def options: List[String]
@@ -858,15 +860,18 @@ trait ScalacOptionsItem {
 
 #### 1.7.1.3. Scala Test Classes Request
 
-The build target scalac options request is sent from the client to the server to query for the list
-of fully qualified names of test clases in a given list of targets. This method can for example be
-used by a language server to attach a "Run test suite" button above the definition of a test suite
-via `textDocument/codeLens`.
+The build target scala test options request is sent from the client to the server to query for the
+list of fully qualified names of test clases in a given list of targets.
 
-To render the code lens, the language server needs to map the fully qualified names of the test
+This method can for example be used by a client to:
+  
+* Show a list of the discovered classes that can be tested.
+* Attach a "Run test suite" button above the definition of a test suite via `textDocument/codeLens`.
+
+(To render the code lens, the language server needs to map the fully qualified names of the test
 targets to the defining source file via `textDocument/definition`. Then, once users click on the
 button, the language server can pass the fully qualified name of the test class as an argument to
-the `buildTarget/test` request.
+the `buildTarget/test` request.)
 
 * method: `buildTarget/scalaTestClasses`
 * params: `ScalaTestClassesParams`
@@ -901,6 +906,65 @@ trait ScalaTestClassesItem {
   /** The fully qualified names of the test classes in this target */
   def classes: List[String]
 }
+```
+
+This request may trigger a compilation on the selected build targets. The server is free to send any
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
+
+The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
+`CompileParams` is defined.
+
+#### 1.7.1.4. Scala Main Classes Request
+
+The build target scalac options request is sent from the client to the server to query for the list
+of main classes that can be fed as arguments to `buildTarget/run`. This method can be used for the
+same use cases than the [Scala Test Classes Request](#1.7.1.3.-scala-test-classes-request) enables.
+
+* method: `buildTarget/scalaMainClasses`
+* params: `ScalaMainClassesParams`
+
+```scala
+trait ScalaMainClassesParams {
+  def targets: List[BuildTargetIdentifier]
+  
+  /** An optional number uniquely identifying a client request. */
+  def requestId: Option[String]
+}
+```
+
+Response:
+
+* result: `ScalaMainClassesResult`, defined as follows
+* error: code and message set in case an exception happens during shutdown request.
+
+```scala
+trait ScalaMainClassesResult {
+  def items: List[ScalaMainClassesItem]
+}
+
+trait ScalaMainClassesItem {
+  /** The build target that contains the test classes. */
+  def target: BuildTargetIdentifier
+
+  /** An optional id of the request that triggered this result. */
+  def requestId: Option[String]
+
+  /** The main class item. */
+  def mainClass: ScalaMainClass
+}
+
+trait ScalaMainClass {
+  /** The main class to run. */
+  def `class`: String
+
+  /** The user arguments to the main entrypoint. */
+  def arguments: List[String]
+  
+  /** The java options the application. */
+  def javaOptions: List[String]
+}
+
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
