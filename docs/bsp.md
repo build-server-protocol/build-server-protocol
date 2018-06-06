@@ -147,8 +147,8 @@ trait BuildTarget {
     * The id.uri is used if None. */
   def displayName: Option[String]
 
-  /** The category of this build target. */
-  def kind: List[BuildTargetKind]
+  /** The capabilities of this build target. */
+  def capabilities: BuildTargetCapabilities
 
   /** The set of languages that this target contains.
     * The ID string for each language is defined in the LSP. */
@@ -159,16 +159,11 @@ trait BuildTarget {
   def data: Option[Json] // Note, matches `any` in the LSP.
 }
 
-object BuildTargetKind {
-  val Library = 1
-  /** This target can be compiled and tested via
-    * method buildTarget/test */
-  val Test = 2
-  /** This target can be tested via method
-    * buildTarget/test and may run slower compared to a Test. */
-  val IntegrationTest = 3
-  /** This target can be run via method buildTarget/run */
-  val Main = 4
+trait BuildTargetCapabilities {
+  /** This target can be compiled by the BSP server. */
+  def canCompile: Boolean
+  /** This target can be tested by the BSP server. */
+  def canTest: Boolean
 }
 ```
 
@@ -253,24 +248,36 @@ trait InitializeBuildResult {
 }
 
 trait BuildServerCapabilities {
-  /** The server can compile targets via method buildTarget/compile */
-  def compileProvider: Boolean
-  /** The server can test targets via method buildTarget/test */
-  def testProvider: Boolean
+  /** The languages the server supports compilation via method buildTarget/compile. */
+  def compileProvider: {
+    val languageIds: List[String]
+  }
+  
+  /** The languages the server supports test execution via method buildTarget/test */
+  def testProvider: {
+    val languageIds: List[String]
+  }
+  
   /** The server can provide a list of targets that contain a
     * single text document via the method textDocument/buildTargets */
   def textDocumentBuildTargetsProvider: Boolean
+  
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
   def dependencySourcesProvider: Boolean
+  
   /** The server provides all the resource dependencies
     * via method buildTarget/resources */
   def resourcesProvider: Boolean
+  
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
   def buildTargetChangedProvider: Boolean
 }
 ```
+
+Clients can use these capabilities to notify users what BSP endpoints can
+and cannot be used and why.
 
 #### 1.6.1.2. Initialized Build Notification
 
@@ -341,8 +348,8 @@ Notification:
 
 ```scala
 trait ShowMessageParams {
-	/** The message type. See {@link MessageType}. */
-	def type: Int
+  /** The message type. See {@link MessageType}. */
+  def `type`: Int
 
   /** The message id. */
   def id: Long
@@ -350,8 +357,8 @@ trait ShowMessageParams {
   /** The parent id if any. */
   def parentId: Option[Long]
 
-	/** The actual message. */
-	def message: String
+  /** The actual message. */
+  def message: String
 }
 ```
 
@@ -359,13 +366,13 @@ where `MessageType` is defined as follows:
 
 ```scala
 object MessageType {
-	/** An error message. */
+  /** An error message. */
   final val Error = 1
-	/** A warning message. */
+  /** A warning message. */
   final val Warning = 2
-	/** An information message. */
+  /** An information message. */
   final val Info = 3
-	/** A log message. */
+  /** A log message. */
   final val Log = 4
 }
 ```
@@ -387,8 +394,8 @@ Notification:
 
 ```scala
 trait LogMessageParams {
-	/** The message type. See {@link MessageType} */
-	def type: Int
+  /** The message type. See {@link MessageType} */
+  def `type`: Int
   
   /** The message id. */
   def id: Long
@@ -396,8 +403,8 @@ trait LogMessageParams {
   /** The parent id if any. */
   def parentId: Option[Long]
 
-	/** The actual message */
-	def message: String
+  /** The actual message */
+  def message: String
 }
 ```
 
@@ -446,12 +453,18 @@ trait DidChangeBuildTargetParams {
 trait BuildTargetEvent {
   /** The identifier for the changed build target */
   def uri: URI
+  
   /** The kind of change for this build target */
-  def kind: Option[BuildTargetEventKind]
+  def kind: Option[Int]
 
   /** Any additional metadata about what information changed. */
   def data: Option[Json]
 }
+```
+
+where the `kind` is defined as follows:
+
+```scala
 object BuildTargetEventKind {
   val Created = 1
   val Changed = 2

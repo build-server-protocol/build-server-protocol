@@ -15,7 +15,13 @@ message BuildTarget {
     string displayName = 2;
     repeated string languageIds = 3;
     repeated BuildTargetIdentifier dependencies = 4;
-    bytes data = 5;
+    BuildTargetCapabilities capabilities = 5;
+    bytes data = 6;
+}
+
+message BuildTargetCapabilities {
+    bool canCompile = 1;
+    bool canTest = 2;
 }
 
 message BuildTargetIdentifier {
@@ -68,11 +74,19 @@ message LogMessageParams {
 }
 
 message BuildServerCapabilities {
-    bool compileProvider = 1;
-    bool testProvider = 2;
+    CompileProvider compileProvider = 1;
+    TestProvider testProvider = 2;
     bool textDocumentBuildTargetsProvider = 3;
     bool dependencySourcesProvider = 4;
     bool buildTargetChangedProvider = 5;
+}
+
+message CompileProvider {
+    repeated string languageIds = 1;
+}
+
+message TestProvider {
+    repeated string languageIds = 1;
 }
 
 // Notification: 'build/initialized', C -> S
