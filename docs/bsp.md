@@ -621,10 +621,14 @@ trait DependencySourcesItem {
 
 ### 1.6.7. Resources Request
 
-The build target resources request is sent from the client to the server to query for the list of resources of a given list of build targets.
-A resource is a data dependency required to be present in the runtime classpath when a build target is run or executed.
-The server communicates during the initialize handshake whether this method is supported or not.
-This method can be used by a client 
+The build target resources request is sent from the client to the server to query for the list of
+resources of a given list of build targets.
+
+A resource is a data dependency required to be present in the runtime classpath when a build target
+is run or executed. The server communicates during the initialize handshake whether this method is
+supported or not.
+
+This request can be used by a client to highlight the resources in a project view, for example.
 
 * method: `buildTarget/resources`
 * params: `ResourcesParams`
