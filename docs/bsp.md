@@ -608,12 +608,21 @@ trait CompileParams {
 Response:
 
 * result: `CompileReport`, defined as follows
+* error: JSON-RPC code and message set in case an exception happens during the request.
+
+```scala
+trait CompileResult {}
+```
+
+Notification:
+
+* method: `buildTarget/compileReport`
+* params: `CompileReport` defined as follows:
 
 ```scala
 trait CompileReport {
-  def items: List[CompileReportItem]
-}
-trait CompileReportItem {
+  /** The build target that was compiled. */
+  def target: BuildTargetIdentifier
 
   /** The total number of reported errors compiling this target. */
   def errors: Int
@@ -623,15 +632,12 @@ trait CompileReportItem {
 
   /** The total number of milliseconds it took to compile the target. */
   def time: Option[Int]
-
-  /** The total number of lines of code in the given target. */
-  def linesOfCode: Option[Int]
-
 }
 ```
 
-The server is free to send any number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before completing the response.
-The client is free to forward these messages to the LSP editor client.
+The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
+notifications during compilation before completing the response. The client is free to forward these
+messages to the LSP editor client.
 
 ### 1.6.9. Test Request
 
@@ -652,32 +658,38 @@ trait TestParams {
 Response:
 
 * result: `TestReport`, defined as follows
+* error: JSON-RPC code and message set in case an exception happens during the request.
+
+```scala
+trait TestResult {}
+```
+
+Notification:
+
+* method: `buildTarget/testReport`
+* params: `TestReport` defined as follows:
 
 ```scala
 trait TestReport {
-  def items: List[TestReportItem]
-}
-trait TestReportItem {
-
-  /** The compile times before executing tests if the target.
-    * An empty field means the target may have already
-    * been compiled beforehand. */
-  def compileReport: Option[CompileReportItem]
-
+  /** The build target that was compiled. */
+  def target: BuildTargetIdentifier
+  
   /** The total number of successful tests. */
   def passed: Int
 
   /** The total number of failed tests. */
   def failed: Int
 
-  /** The total number of milliseconds it took to run the tests.
-    * Should not include compile times. */
+  /** The total number of milliseconds it took to only run the tests. */
   def time: Option[Int]
 }
 ```
 
-The server is free to send any number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before completing the response.
-The client is free to forward these messages to the LSP editor client.
+The `TestReport` notification will be sent as the test execution of build targets completes.
+
+This request may trigger a compilation on the selected build targets. The server is free to send any
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
 
 ## 1.7. Extensions
 
@@ -779,12 +791,19 @@ Response:
 trait ScalaTestClassesResult {
   def items: List[ScalaTestClassesItem]
 }
+
 trait ScalaTestClassesItem {
+    /** The build target that contains the test classes. */
     def target: BuildTargetIdentifier
+    
     /** The fully qualified names of the test classes in this target */
     def classes: List[String]
 }
 ```
+
+This request may trigger a compilation on the selected build targets. The server is free to send any
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
 
 ## 1.8. Appendix
 
