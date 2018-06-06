@@ -342,12 +342,6 @@ Notification:
 The show message notification is sent from a server to a client to ask the
 client to display a particular message in the user interface.
 
-A show message in BSP is identical to LSP's `window/logMessage` except for the
-fact that it has a number and an optional `parentId` field that allows
-client to better structure the logs (for example, a client can show a tree of
-logs with dropdowns where the children logs are by default hidden to ease
-readability).
-
 Notification:
 
 * method: ‘build/showMessage’
@@ -443,7 +437,7 @@ defined it in the request that triggered this notification.
 The Diagnostics notification are sent from the server to the client to signal results of validation
 runs.
 
-Unlike the language serve protocol, diagnostics are “owned” by the client so it is the client's
+Unlike the language server protocol, diagnostics are “owned” by the client so it is the client's
 responsibility to manage their lifetime and clear them if necessary. Clients generate new
 diagnostics by calling `buildTarget/compile`.
 
