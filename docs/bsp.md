@@ -350,11 +350,8 @@ trait ShowMessageParams {
   /** The message type. See {@link MessageType}. */
   def type: Int
 
-  /** The message id. */
-  def id: string
-
-  /** The parent id if any. */
-  def parentId: Option[String]
+  /** The structure of the message if supported by the server. */
+  def structure: Option[TreeStructure]
   
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -370,20 +367,36 @@ where `MessageType` is defined as follows:
 object MessageType {
   /** An error message. */
   final val Error = 1
+
   /** A warning message. */
   final val Warning = 2
+
   /** An information message. */
   final val Info = 3
+
   /** A log message. */
   final val Log = 4
+}
+```
+
+and a `TreeStructure` is defined as:
+
+```scala
+trait TreeStructure {
+  /** The id of the node. */
+  def nodeId: String
+
+  /** The parent node id if any. */
+  def parentId: Option[String]
 }
 ```
 
 A `build/showMessage` notification is similar to LSP's `window/showMessage`, except for a few new
 additions.
 
-The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
-tree fashion, with dropdowns, ...) to ease readability.
+The `id` and optional `parentId` fields of `TreeStructure` allow clients to structure logs in a
+hierarchical way (in a tree fashion, with dropdowns, ...) to ease readability in case the server
+supports it.
 
 The `requestId` field helps clients know which request originated a notification in case several
 requests are handled by the client at the same time. It will only be populated if the client
@@ -404,11 +417,8 @@ trait LogMessageParams {
   /** The message type. See {@link MessageType} */
   def type: Int
   
-  /** The message id. */
-  def id: String
-
-  /** The parent id if any. */
-  def parentId: Option[String]
+  /** The structure of the message if supported by the server. */
+  def structure: Option[TreeStructure]
   
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -418,13 +428,10 @@ trait LogMessageParams {
 }
 ```
 
-Where type is defined as `build/showMessage`.
+Where `type` and `TreeStructure` is defined as `build/showMessage`.
 
 A `build/logMessage` notification is similar to LSP's `window/logMessage`, except for a few new
 additions.
-
-The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
-tree fashion, with dropdowns, et cetera) to ease readability.
 
 The `requestId` field helps clients know which request originated a notification in case several
 requests are handled by the client at the same time. It will only be populated if the client
