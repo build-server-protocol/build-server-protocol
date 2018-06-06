@@ -54,6 +54,8 @@ tools to provide the best experience to end users (developers).
       - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
       - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
       - [1.7.1.4. Scala Main Classes Request](#1714-scala-main-classes-request)
+    - [1.7.2. Sbt](#172-sbt)
+      - [1.7.2.1. Sbt Build Target](#1721-sbt-build-target)
   - [1.8. Appendix](#18-appendix)
     - [1.8.1. Protobuf schema definitions](#181-protobuf-schema-definitions)
     - [1.8.2. Scala Bindings](#182-scala-bindings)
