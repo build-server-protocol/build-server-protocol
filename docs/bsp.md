@@ -617,7 +617,7 @@ trait CompileReportItem {
 }
 ```
 
-The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
+The server is free to send any number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
 ### 1.6.9. Test Request
@@ -663,7 +663,7 @@ trait TestReportItem {
 }
 ```
 
-The server is free to send any number of `textDocument/publishDiagnostics` and `window/logMessage` notifications during compilation before completing the response.
+The server is free to send any number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before completing the response.
 The client is free to forward these messages to the LSP editor client.
 
 ## 1.7. Extensions
