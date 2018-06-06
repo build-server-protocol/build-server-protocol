@@ -864,6 +864,9 @@ trait ScalaBuildTarget {
 
   /** The target platform for this target */
   def platform: Int
+  
+  /** A sequence of Scala jars. */
+  def scalaJars: List[String]
 }
 
 object ScalaPlatform {
@@ -1030,6 +1033,36 @@ during compilation before completing the response.
 
 The client will get a `requestId` field in `ScalaMainClassesResult` if the `requestId` field in the
 `ScalaMainClassesParams` is defined.
+
+### 1.7.2. Sbt
+
+The following section contains sbt-specific extensions to the build server protocol. This extension
+allows BSP clients to provide language support for sbt build files.
+
+`SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing editor
+support for sbt build files. This metadata is embedded in the `data: Option[Json]` field of the
+`BuildTarget` definition.
+
+```scala
+trait SbtBuildTarget {
+  /** An optional parent if the target has an sbt meta project. */
+  def parent: Option[BuildTargetIdentifier]
+  
+  /** A sequence of Scala imports that are automatically imported in the sbt build files. */
+  def autoImports: List[String]
+  
+  /** The classpath for the sbt build (including sbt jars). */
+  def classpath: List[String]
+  
+  /** The scala version to compile this target */
+  def scalaVersion: String
+
+  /** A sequence of Scala jars. */
+  def scalaJars: List[String]
+}
+```
+
+#### 1.7.2.1. Sbt Build Target
 
 ## 1.8. Appendix
 
