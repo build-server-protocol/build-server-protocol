@@ -336,7 +336,7 @@ The show message notification is sent from a server to a client to ask the
 client to display a particular message in the user interface.
 
 A show message in BSP is identical to LSP's `window/logMessage` except for the
-fact that it has a number id and an optional `parentId` field that allows
+fact that it has a number and an optional `parentId` field that allows
 client to better structure the logs (for example, a client can show a tree of
 logs with dropdowns where the children logs are by default hidden to ease
 readability).
@@ -352,10 +352,13 @@ trait ShowMessageParams {
   def `type`: Int
 
   /** The message id. */
-  def id: Long
+  def id: string
 
   /** The parent id if any. */
-  def parentId: Option[Long]
+  def parentId: Option[String]
+  
+  /** The request id that originated this notification. */
+  def requestId: Option[String]
 
   /** The actual message. */
   def message: String
@@ -377,15 +380,20 @@ object MessageType {
 }
 ```
 
+A `build/showMessage` notification is similar to LSP's `window/showMessage`, except for a few new
+additions.
+
+The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
+tree fashion, with dropdowns, et cetera) to ease readability.
+
+The `requestId` field helps clients know which request originated a notification in case several
+requests are handled by the client at the same time. It will only be populated if the client
+defined it in the request that triggered this notification.
+
 #### 1.6.1.6. Log message
 
 The log message notification is sent from the server to the client to ask the
 client to log a particular message.
-
-A `build/logMessage` notification is similar to LSP's `window/logMessage` but
-adds a number id and an optional `parentId` field. These two new fields allow
-clients to structure the logs in a hierarchical way. For example, clients can
-show logs in the UI as trees where the children are hidden to ease readability.
 
 Notification:
 
@@ -398,17 +406,30 @@ trait LogMessageParams {
   def `type`: Int
   
   /** The message id. */
-  def id: Long
+  def id: String
 
   /** The parent id if any. */
-  def parentId: Option[Long]
+  def parentId: Option[String]
+  
+  /** The request id that originated this notification. */
+  def requestId: Option[String]
 
   /** The actual message */
   def message: String
 }
 ```
 
-Where type is defined as above.
+Where type is defined as `build/showMessage`.
+
+A `build/logMessage` notification is similar to LSP's `window/logMessage`, except for a few new
+additions.
+
+The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
+tree fashion, with dropdowns, et cetera) to ease readability.
+
+The `requestId` field helps clients know which request originated a notification in case several
+requests are handled by the client at the same time. It will only be populated if the client
+defined it in the request that triggered this notification.
 
 #### 1.6.1.7. Publish Diagnostics
 
@@ -429,12 +450,18 @@ trait PublishDiagnosticsParams {
   /** The uri of the document where diagnostics are published. */
   def uri: DocumentUri
   
+  /** The request id that originated this notification. */
+  def requestId: Option[String]
+  
   /** The diagnostics to be published by the client. */
   def diagnostics: List[Diagnostic]
 }
 ```
 
-The definition of `PublishDiagnosticsParams` is identical to LSP's.
+The definition of `PublishDiagnosticsParams` is similar to LSP's but contains the addition of an
+optional `requestId` field. Clients can use this id to know which request originated the
+notification. This field will be defined if the client defined it in the original request that
+triggered this notification.
 
 ### 1.6.2. Workspace Build Targets Request
 
@@ -633,7 +660,11 @@ This method can for example be used by a language server before `textDocument/re
 
 ```scala
 trait CompileParams {
+  /** A sequence of build targets to compile. */
   def targets: List[BuildTargetIdentifier]
+  
+  /** An optional number uniquely identifying a client request. */
+  def requestId: Option[String]
 
   /** Optional arguments to the compilation process. */
   def arguments: List[Json]
@@ -646,8 +677,12 @@ Response:
 * error: JSON-RPC code and message set in case an exception happens during the request.
 
 ```scala
-trait CompileResult {}
+trait CompileResult {
+  def data: Option[Json] // Note, matches `any | null` in the LSP.
+}
 ```
+
+The field `data` may contain language-specific information, like the products of compilation.
 
 Notification:
 
@@ -658,6 +693,9 @@ Notification:
 trait CompileReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
+  
+  /** An optional request id to know the origin of this report. */
+  def requestId: Option[String]
 
   /** The total number of reported errors compiling this target. */
   def errors: Int
@@ -670,9 +708,12 @@ trait CompileReport {
 }
 ```
 
-The server is free to send any number of `buildTarget/publishDiagnostics` and `build/logMessage`
+The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
 notifications during compilation before completing the response. The client is free to forward these
 messages to the LSP editor client.
+
+The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
+`CompileParams` is defined.
 
 ### 1.6.9. Test Request
 
@@ -684,7 +725,12 @@ The server communicates during the initialize handshake whether this method is s
 
 ```scala
 trait TestParams {
+  /** A sequence of build targets to test. */
   def targets: List[BuildTargetIdentifier]
+  
+  /** An optional number uniquely identifying a client request. */
+  def requestId: Option[String]
+  
   /** Optional arguments to the test execution. */
   def arguments: List[Json]
 }
@@ -696,8 +742,12 @@ Response:
 * error: JSON-RPC code and message set in case an exception happens during the request.
 
 ```scala
-trait TestResult {}
+trait TestResult {
+  def data: Option[Json] // Note, matches `any | null` in the LSP.
+}
 ```
+
+The field `data` may contain language-specific information, like the products of compilation.
 
 Notification:
 
@@ -708,6 +758,9 @@ Notification:
 trait TestReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
+  
+  /** An optional request id to know the origin of this report. */
+  def requestId: Option[String]
   
   /** The total number of successful tests. */
   def passed: Int
@@ -723,9 +776,11 @@ trait TestReport {
 The `TestReport` notification will be sent as the test execution of build targets completes.
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `buildTarget/publishDiagnostics` and `build/logMessage` notifications during compilation
-before completing the response. The client is free to forward these messages to the LSP editor
-client.
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
+
+The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
+`CompileParams` is defined.
 
 ## 1.7. Extensions
 
@@ -803,10 +858,15 @@ trait ScalacOptionsItem {
 
 #### 1.7.1.3. Scala Test Classes Request
 
-The build target scalac options request is sent from the client to the server to query for the list of fully qualified names of test clases in a given list of targets.
-This method can for example be used by a language server to attach a "Run test suite" button above the definition of a test suite via `textDocument/codeLens`.
-To render the code lens, the language server needs to map the fully qualified names of the test targets to the defining source file via `textDocument/definition`.
-Then, once users click on the button, the language server can pass the fully qualified name of the test class as an argument to the `buildTarget/test` request.
+The build target scalac options request is sent from the client to the server to query for the list
+of fully qualified names of test clases in a given list of targets. This method can for example be
+used by a language server to attach a "Run test suite" button above the definition of a test suite
+via `textDocument/codeLens`.
+
+To render the code lens, the language server needs to map the fully qualified names of the test
+targets to the defining source file via `textDocument/definition`. Then, once users click on the
+button, the language server can pass the fully qualified name of the test class as an argument to
+the `buildTarget/test` request.
 
 * method: `buildTarget/scalaTestClasses`
 * params: `ScalaTestClassesParams`
@@ -814,12 +874,17 @@ Then, once users click on the button, the language server can pass the fully qua
 ```scala
 trait ScalaTestClassesParams {
   def targets: List[BuildTargetIdentifier]
+  
+  /** An optional number uniquely identifying a client request. */
+  def requestId: Option[String]
 }
 ```
 
 Response:
 
 * result: `ScalaTestClassesResult`, defined as follows
+* error: code and message set in case an exception happens during
+  shutdown request.
 
 ```scala
 trait ScalaTestClassesResult {
@@ -827,18 +892,23 @@ trait ScalaTestClassesResult {
 }
 
 trait ScalaTestClassesItem {
-    /** The build target that contains the test classes. */
-    def target: BuildTargetIdentifier
-    
-    /** The fully qualified names of the test classes in this target */
-    def classes: List[String]
+  /** The build target that contains the test classes. */
+  def target: BuildTargetIdentifier
+
+  /** An optional id of the request that triggered this result. */
+  def requestId: Option[String]
+
+  /** The fully qualified names of the test classes in this target */
+  def classes: List[String]
 }
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `buildTarget/publishDiagnostics` and `build/logMessage` notifications during compilation
-before completing the response. The client is free to forward these messages to the LSP editor
-client.
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
+
+The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
+`CompileParams` is defined.
 
 ## 1.8. Appendix
 
