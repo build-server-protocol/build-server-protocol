@@ -410,6 +410,32 @@ trait LogMessageParams {
 
 Where type is defined as above.
 
+#### 1.6.1.7. Publish Diagnostics
+
+The Diagnostics notification are sent from the server to the client to signal results of validation
+runs.
+
+Unlike the language serve protocol, diagnostics are “owned” by the client so it is the client's
+responsibility to manage their lifetime and clear them if necessary. Clients generate new
+diagnostics by calling `buildTarget/compile`.
+
+Notification:
+
+* method: `build/publishDiagnostics`
+* params: `PublishDiagnosticsParams` defined as follows:
+
+```scala
+trait PublishDiagnosticsParams {
+  /** The uri of the document where diagnostics are published. */
+  def uri: DocumentUri
+  
+  /** The diagnostics to be published by the client. */
+  def diagnostics: List[Diagnostic]
+}
+```
+
+The definition of `PublishDiagnosticsParams` is identical to LSP's.
+
 ### 1.6.2. Workspace Build Targets Request
 
 The workspace build targets request is sent from the client to the server to ask for the list of all available build targets in the workspace.
@@ -644,7 +670,7 @@ trait CompileReport {
 }
 ```
 
-The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
+The server is free to send any number of `buildTarget/publishDiagnostics` and `build/logMessage`
 notifications during compilation before completing the response. The client is free to forward these
 messages to the LSP editor client.
 
@@ -697,8 +723,9 @@ trait TestReport {
 The `TestReport` notification will be sent as the test execution of build targets completes.
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+number of `buildTarget/publishDiagnostics` and `build/logMessage` notifications during compilation
+before completing the response. The client is free to forward these messages to the LSP editor
+client.
 
 ## 1.7. Extensions
 
@@ -809,8 +836,9 @@ trait ScalaTestClassesItem {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+number of `buildTarget/publishDiagnostics` and `build/logMessage` notifications during compilation
+before completing the response. The client is free to forward these messages to the LSP editor
+client.
 
 ## 1.8. Appendix
 
