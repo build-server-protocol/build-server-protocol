@@ -164,6 +164,8 @@ trait BuildTargetCapabilities {
   def canCompile: Boolean
   /** This target can be tested by the BSP server. */
   def canTest: Boolean
+  /** This target can be run by the BSP server. */
+  def canRun: Boolean
 }
 ```
 
@@ -255,6 +257,11 @@ trait BuildServerCapabilities {
   
   /** The languages the server supports test execution via method buildTarget/test */
   def testProvider: {
+    def languageIds: List[String]
+  }
+  
+  /** The languages the server supports run via method buildTarget/run */
+  def runProvider: {
     def languageIds: List[String]
   }
   
@@ -679,6 +686,9 @@ Response:
 ```scala
 trait CompileResult {
   def data: Option[Json] // Note, matches `any | null` in the LSP.
+  
+  /** An optional request id to know the origin of this report. */
+  def requestId: Option[String]
 }
 ```
 
@@ -712,15 +722,15 @@ The server is free to send any number of `build/publishDiagnostics` and `build/l
 notifications during compilation before completing the response. The client is free to forward these
 messages to the LSP editor client.
 
-The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
-`CompileParams` is defined.
+The client will get a `requestId` field in `CompileReport` or `CompileResult` if the `requestId`
+field in the `CompileParams` is defined.
 
 ### 1.6.9. Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
 
-* method: `buildTarget/Test`
+* method: `buildTarget/test`
 * params: `TestParams`
 
 ```scala
@@ -738,16 +748,19 @@ trait TestParams {
 
 Response:
 
-* result: `TestReport`, defined as follows
+* result: `TestResult`, defined as follows
 * error: JSON-RPC code and message set in case an exception happens during the request.
 
 ```scala
 trait TestResult {
   def data: Option[Json] // Note, matches `any | null` in the LSP.
+    
+  /** An optional request id to know the origin of this report. */
+  def requestId: Option[String]
 }
 ```
 
-The field `data` may contain language-specific information, like the products of compilation.
+The field `data` may contain test-related language-specific information.
 
 Notification:
 
@@ -779,8 +792,51 @@ This request may trigger a compilation on the selected build targets. The server
 number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
 completing the response. The client is free to forward these messages to the LSP editor client.
 
-The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
-`CompileParams` is defined.
+The client will get a `requestId` field in the `TestReport` or `TestResult` if the `requestId` field
+in the `TestParams` is defined.
+
+### 1.6.10. Run Request
+
+The run request is sent from the client to the server to run a build target. The server communicates
+during the initialize handshake whether this method is supported or not.
+
+* method: `buildTarget/run`
+* params: `RunParams`
+
+```scala
+trait RunParams {
+  /** The build target to run. */
+  def target: BuildTargetIdentifier
+  
+  /** An optional number uniquely identifying a client request. */
+  def requestId: Option[String]
+  
+  /** Optional arguments to the test execution. */
+  def arguments: Option[Json]
+}
+```
+
+Note that an empty run request is valid. Run will be executed in the target as specified in the
+build tool.
+
+Response:
+
+* result: `RunResult`, defined as follows
+* error: JSON-RPC code and message set in case an exception happens during the request.
+
+```scala
+trait RunResult {
+  /** An optional request id to know the origin of this report. */
+  def requestId: Option[String] 
+}
+```
+
+This request may trigger a compilation on the build target to run. The server is free to send any
+number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
+completing the response. The client is free to forward these messages to the LSP editor client.
+
+The client will get a `requestId` field in `RunResult` if the `requestId` field in the
+`RunParams` is defined.
 
 ## 1.7. Extensions
 
@@ -894,14 +950,15 @@ Response:
 ```scala
 trait ScalaTestClassesResult {
   def items: List[ScalaTestClassesItem]
+  
+  /** An optional id of the request that triggered this result. */
+  def requestId: Option[String]
+
 }
 
 trait ScalaTestClassesItem {
   /** The build target that contains the test classes. */
   def target: BuildTargetIdentifier
-
-  /** An optional id of the request that triggered this result. */
-  def requestId: Option[String]
 
   /** The fully qualified names of the test classes in this target */
   def classes: List[String]
@@ -912,8 +969,8 @@ This request may trigger a compilation on the selected build targets. The server
 number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
 completing the response. The client is free to forward these messages to the LSP editor client.
 
-The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
-`CompileParams` is defined.
+The client will get a `requestId` field in `ScalaTestClassesResult` if the `requestId` field in the
+`ScalaTestClassesParams` is defined.
 
 #### 1.7.1.4. Scala Main Classes Request
 
@@ -941,14 +998,15 @@ Response:
 ```scala
 trait ScalaMainClassesResult {
   def items: List[ScalaMainClassesItem]
+  
+  /** An optional id of the request that triggered this result. */
+  def requestId: Option[String]
+
 }
 
 trait ScalaMainClassesItem {
   /** The build target that contains the test classes. */
   def target: BuildTargetIdentifier
-
-  /** An optional id of the request that triggered this result. */
-  def requestId: Option[String]
 
   /** The main class item. */
   def mainClass: ScalaMainClass
@@ -971,8 +1029,8 @@ This request may trigger a compilation on the selected build targets. The server
 number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
 completing the response. The client is free to forward these messages to the LSP editor client.
 
-The client will get a `requestId` field in the `CompileReport` if the `requestId` field in the
-`CompileParams` is defined.
+The client will get a `requestId` field in `ScalaMainClassesResult` if the `requestId` field in the
+`ScalaMainClassesParams` is defined.
 
 ## 1.8. Appendix
 
