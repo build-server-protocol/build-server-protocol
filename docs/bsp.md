@@ -250,12 +250,12 @@ trait InitializeBuildResult {
 trait BuildServerCapabilities {
   /** The languages the server supports compilation via method buildTarget/compile. */
   def compileProvider: {
-    val languageIds: List[String]
+    def languageIds: List[String]
   }
   
   /** The languages the server supports test execution via method buildTarget/test */
   def testProvider: {
-    val languageIds: List[String]
+    def languageIds: List[String]
   }
   
   /** The server can provide a list of targets that contain a
@@ -450,6 +450,7 @@ Notification:
 trait DidChangeBuildTargetParams {
   def changes: List[BuildTargetEvent]
 }
+
 trait BuildTargetEvent {
   /** The identifier for the changed build target */
   def uri: URI
@@ -466,11 +467,19 @@ where the `kind` is defined as follows:
 
 ```scala
 object BuildTargetEventKind {
+  /** The build target is new. */
   val Created = 1
+  
+  /** The build target has changed. */
   val Changed = 2
+  
+  /** The build target has been deleted. */
   val Deleted = 3
 }
 ```
+
+The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update the
+user interface with the new information.
 
 ### 1.6.4. Build Target Text Documents Request
 
@@ -706,7 +715,6 @@ This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget`
 
 ```scala
 trait ScalaBuildTarget {
-
   /** The Scala organization that is used for a target. */
   def scalaOrganization: String
 
@@ -718,8 +726,7 @@ trait ScalaBuildTarget {
   def scalaBinaryVersion: String
 
   /** The target platform for this target */
-  def platform: ScalaPlatform
-
+  def platform: Int
 }
 
 object ScalaPlatform {
