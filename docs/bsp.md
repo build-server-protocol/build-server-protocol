@@ -4,28 +4,23 @@ title: Build Server Protocol
 
 # 1. Build Server Protocol
 
-The document is written by Ólafur Páll Geirsson, Jorge Vicente Cantero with
-feedback from Justin Kaeser, Guillaume Martres and Eugene Burmako.
+This document describes version 1.0 of the build server protocol.
+
+Edits to this specification can be made via a pull request against this markdown document.
 
 ## 1.1. Motivation
 
-The problem this document aims to address is the multiplied effort required
-to integrate between available language servers/editors and build tools.
-Currently, every language server must implement custom integrations for the
-most popular build tools in order to extract compilation information such as
-classpaths, source directories or compiler diagnostics. Likewise, new build
-tools are expected to integrate with all available IDEs.
+The problem this document aims to address is the multiplied effort required to integrate between
+available language servers/editors and build tools. Currently, every language server must implement
+a custom integration for each supported build tool in order to extract compilation information such
+as classpaths, source directories or compiler diagnostics. Likewise, new build tools are expected to
+integrate with all available IDEs. The growing number of language servers and build tools in the
+wider programming community means tooling developers spend a lot of time working on these
+integrations.
 
-This explosion of integrations is a growing problem due to the recent
-proliferation of both language servers and build tools.
-
-The Build Server Protocol aims to define a common subset of these
-integrations in a protocol that both build tools (servers) and language
-servers/editors (clients) can understand. The goal is to simplify
-integrations between these tools to provide the best experience to end users
-(developers).
-
-<!-- TOC -->
+The Build Server Protocol aims to define common functionality that both build tools (servers) and
+language servers/editors (clients) understand The goal is to simplify integrations between these
+tools to provide the best experience to end users (developers).
 
 - [1. Build Server Protocol](#1-build-server-protocol)
   - [1.1. Motivation](#11-motivation)
@@ -41,6 +36,9 @@ integrations between these tools to provide the best experience to end users
       - [1.6.1.2. Initialized Build Notification](#1612-initialized-build-notification)
       - [1.6.1.3. Shutdown Build Request](#1613-shutdown-build-request)
       - [1.6.1.4. Exit Build Notification](#1614-exit-build-notification)
+      - [1.6.1.5. Show message](#1615-show-message)
+      - [1.6.1.6. Log message](#1616-log-message)
+      - [1.6.1.7. Publish Diagnostics](#1617-publish-diagnostics)
     - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
     - [1.6.3. Build Target Changed Notification](#163-build-target-changed-notification)
     - [1.6.4. Build Target Text Documents Request](#164-build-target-text-documents-request)
@@ -49,17 +47,17 @@ integrations between these tools to provide the best experience to end users
     - [1.6.7. Resources Request](#167-resources-request)
     - [1.6.8. Compile Request](#168-compile-request)
     - [1.6.9. Test Request](#169-test-request)
+    - [1.6.10. Run Request](#1610-run-request)
   - [1.7. Extensions](#17-extensions)
     - [1.7.1. Scala](#171-scala)
       - [1.7.1.1. Scala Build Target](#1711-scala-build-target)
       - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
       - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
+      - [1.7.1.4. Scala Main Classes Request](#1714-scala-main-classes-request)
   - [1.8. Appendix](#18-appendix)
     - [1.8.1. Protobuf schema definitions](#181-protobuf-schema-definitions)
     - [1.8.2. Scala Bindings](#182-scala-bindings)
     - [1.8.3. FAQ](#183-faq)
-
-<!-- /TOC -->
 
 ## 1.2. Background
 
@@ -81,8 +79,8 @@ The Build Server Protocol is not an approved standard. Everything in this
 document is subject to change and open for discussions, including core data
 structures.
 
-A protocol is only worth as much as the quality of the available clients and
-servers that implement the protocol. There is a lot of activity in this area.
+A protocol is only worth as much as the quality of the clients and servers that implement the
+protocol. There is a lot of activity in this area.
 
 On the client side, IntelliJ is the first client of the Build Server
 Protocol. There are several other language servers, like [Dotty
@@ -350,7 +348,7 @@ Notification:
 ```scala
 trait ShowMessageParams {
   /** The message type. See {@link MessageType}. */
-  def `type`: Int
+  def type: Int
 
   /** The message id. */
   def id: string
@@ -385,7 +383,7 @@ A `build/showMessage` notification is similar to LSP's `window/showMessage`, exc
 additions.
 
 The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
-tree fashion, with dropdowns, et cetera) to ease readability.
+tree fashion, with dropdowns, ...) to ease readability.
 
 The `requestId` field helps clients know which request originated a notification in case several
 requests are handled by the client at the same time. It will only be populated if the client
@@ -404,7 +402,7 @@ Notification:
 ```scala
 trait LogMessageParams {
   /** The message type. See {@link MessageType} */
-  def `type`: Int
+  def type: Int
   
   /** The message id. */
   def id: String
@@ -668,7 +666,8 @@ trait CompileParams {
   /** A sequence of build targets to compile. */
   def targets: List[BuildTargetIdentifier]
   
-  /** An optional number uniquely identifying a client request. */
+  /** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */
   def requestId: Option[String]
 
   /** Optional arguments to the compilation process. */
@@ -736,7 +735,8 @@ trait TestParams {
   /** A sequence of build targets to test. */
   def targets: List[BuildTargetIdentifier]
   
-  /** An optional number uniquely identifying a client request. */
+  /** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */
   def requestId: Option[String]
   
   /** Optional arguments to the test execution. */
@@ -779,7 +779,7 @@ trait TestReport {
   /** The total number of failed tests. */
   def failed: Int
 
-  /** The total number of milliseconds it took to only run the tests. */
+  /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
   def time: Option[Int]
 }
 ```
@@ -787,8 +787,8 @@ trait TestReport {
 The `TestReport` notification will be sent as the test execution of build targets completes.
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+during compilation before completing the response.
 
 The client will get a `requestId` field in the `TestReport` or `TestResult` if the `requestId` field
 in the `TestParams` is defined.
@@ -806,7 +806,8 @@ trait RunParams {
   /** The build target to run. */
   def target: BuildTargetIdentifier
   
-  /** An optional number uniquely identifying a client request. */
+  /** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */
   def requestId: Option[String]
   
   /** Optional arguments to the test execution. */
@@ -829,9 +830,9 @@ trait RunResult {
 }
 ```
 
-This request may trigger a compilation on the build target to run. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+This request may trigger a compilation on the selected build targets. The server is free to send any
+number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+during compilation before completing the response.
 
 The client will get a `requestId` field in `RunResult` if the `requestId` field in the
 `RunParams` is defined.
@@ -964,17 +965,17 @@ trait ScalaTestClassesItem {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+during compilation before completing the response.
 
 The client will get a `requestId` field in `ScalaTestClassesResult` if the `requestId` field in the
 `ScalaTestClassesParams` is defined.
 
 #### 1.7.1.4. Scala Main Classes Request
 
-The build target scalac options request is sent from the client to the server to query for the list
-of main classes that can be fed as arguments to `buildTarget/run`. This method can be used for the
-same use cases than the [Scala Test Classes Request](#1.7.1.3.-scala-test-classes-request) enables.
+The build target main classes request is sent from the client to the server to query for the list of
+main classes that can be fed as arguments to `buildTarget/run`. This method can be used for the same
+use cases than the [Scala Test Classes Request](#1.7.1.3.-scala-test-classes-request) enables.
 
 * method: `buildTarget/scalaMainClasses`
 * params: `ScalaMainClassesParams`
@@ -1012,7 +1013,7 @@ trait ScalaMainClassesItem {
 
 trait ScalaMainClass {
   /** The main class to run. */
-  def `class`: String
+  def class: String
 
   /** The user arguments to the main entrypoint. */
   def arguments: List[String]
@@ -1024,8 +1025,8 @@ trait ScalaMainClass {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-completing the response. The client is free to forward these messages to the LSP editor client.
+number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+during compilation before completing the response.
 
 The client will get a `requestId` field in `ScalaMainClassesResult` if the `requestId` field in the
 `ScalaMainClassesParams` is defined.
