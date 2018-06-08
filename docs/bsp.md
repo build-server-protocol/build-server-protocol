@@ -166,8 +166,9 @@ trait BuildTarget {
 object BuildTargetKind {
   final val Library = 1
   final val Test = 2
-  final val IntegrationTest = 3
-  final val Bench = 4
+  final val App = 3
+  final val IntegrationTest = 4
+  final val Bench = 5
 }
 
 trait BuildTargetCapabilities {
