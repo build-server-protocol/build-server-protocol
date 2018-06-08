@@ -14,7 +14,14 @@ message BuildTarget {
     BuildTargetIdentifier id = 1;
     string displayName = 2;
     repeated string languageIds = 3;
-    bytes data = 4;
+    repeated BuildTargetIdentifier dependencies = 4;
+    BuildTargetCapabilities capabilities = 5;
+    bytes data = 6;
+}
+
+message BuildTargetCapabilities {
+    bool canCompile = 1;
+    bool canTest = 2;
 }
 
 message BuildTargetIdentifier {
@@ -38,12 +45,48 @@ message InitializeBuildResult {
     BuildServerCapabilities capabilities = 1;
 }
 
+message ShowMessageParams {
+    enum MessageType {
+        UNKNOWN = 0;
+        CREATED = 1;
+        CHANGED = 2;
+        DELETED = 3;
+    }
+
+    MessageType type = 1;
+    int64 id = 2;
+    int64 parentId = 3;
+    string message = 4;
+}
+
+message LogMessageParams {
+    enum MessageType {
+        UNKNOWN = 0;
+        CREATED = 1;
+        CHANGED = 2;
+        DELETED = 3;
+    }
+
+    MessageType type = 1;
+    int64 id = 2;
+    int64 parentId = 3;
+    string message = 4;
+}
+
 message BuildServerCapabilities {
-    bool compileProvider = 1;
-    bool testProvider = 2;
+    CompileProvider compileProvider = 1;
+    TestProvider testProvider = 2;
     bool textDocumentBuildTargetsProvider = 3;
     bool dependencySourcesProvider = 4;
     bool buildTargetChangedProvider = 5;
+}
+
+message CompileProvider {
+    repeated string languageIds = 1;
+}
+
+message TestProvider {
+    repeated string languageIds = 1;
 }
 
 // Notification: 'build/initialized', C -> S
@@ -112,6 +155,20 @@ message DependencySourcesItem {
     repeated string uri = 2;
 }
 
+// Request: 'buildTarget/resources', C -> S
+message ResourcesParams {
+    repeated BuildTargetIdentifier targets = 1;
+}
+
+message Resources {
+    repeated ResourcesItem items = 1;
+}
+
+message ResourcesItem {
+    BuildTargetIdentifier target = 1;
+    repeated string uri = 2;
+}
+
 // Request: 'buildTarget/compile', C -> S
 message CompileParams {
     repeated BuildTargetIdentifier targets = 1;
@@ -135,6 +192,14 @@ message ScalaBuildTarget {
     string scalaOrganization = 1;
     string scalaVersion = 2;
     string scalaBinaryVersion = 3;
+    ScalaPlatform platform = 4;
+    repeated string jars = 5;
+
+    enum ScalaPlatform {
+        JVM = 0;
+        JS = 1;
+        Native = 2;
+    }
 }
 
 // Request: 'buildTarget/scalacOptions', C -> S
@@ -142,10 +207,27 @@ message ScalacOptionsParams {
     repeated BuildTargetIdentifier targets = 1;
 }
 
-// One could feed these options in to the compiler
 message ScalacOptions {
+    repeated ScalacOptionsItem items = 1;
+}
+
+message ScalacOptionsItem {
     BuildTargetIdentifier target = 1;
     repeated string options = 2;
     repeated string classpath = 3;
     string classDirectory = 4;
+}
+
+// Request: 'buildTarget/scalaTestClasses', C -> S
+message ScalaTestClassesParams {
+  repeated BuildTargetIdentifier target = 1;
+}
+
+message ScalaTestClasses {
+    repeated ScalaTestClassesItem items = 1;
+}
+
+message ScalaTestClassesItem {
+    BuildTargetIdentifier target = 1;
+    repeated string classes = 2; // Fully qualified names of test classes
 }
