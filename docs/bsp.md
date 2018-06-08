@@ -1074,8 +1074,11 @@ trait SbtBuildTarget {
   /** The classpath for the sbt build (including sbt jars). */
   def classpath: List[String]
   
-  /** The scala version to compile this target */
+  /** The scala version to compile this target. */
   def scalaVersion: String
+  
+  /** The sbt version. Useful to support version-dependent syntax. */
+  def sbtVersion: String
 
   /** A sequence of Scala jars. */
   def scalaJars: List[String]
