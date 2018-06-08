@@ -147,6 +147,10 @@ trait BuildTarget {
     * The id.uri is used if None. */
   def displayName: Option[String]
 
+  /** The type of build target. Useful for an IDE to show
+    * targets with different kinds in the UI. */
+  def kind: Int
+  
   /** The capabilities of this build target. */
   def capabilities: BuildTargetCapabilities
 
@@ -157,6 +161,13 @@ trait BuildTarget {
   /** Language-specific metadata about this target.
     * See ScalaBuildTarget as an example. */
   def data: Option[Json] // Note, matches `any` in the LSP.
+}
+
+object BuildTargetKind {
+  final val Library = 1
+  final val Test = 2
+  final val IntegrationTest = 3
+  final val Bench = 4
 }
 
 trait BuildTargetCapabilities {
