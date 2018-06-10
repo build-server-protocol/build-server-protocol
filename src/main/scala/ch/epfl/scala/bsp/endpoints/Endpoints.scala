@@ -1,7 +1,6 @@
-package ch.epfl.scala.bsp.endpoints
+package ch.epfl.scala.bsp
+package endpoints
 
-import ch.epfl.scala.bsp.schema._
-import scalapb_circe.JsonFormat._
 import scala.meta.jsonrpc.Endpoint
 
 object Build extends Build
@@ -19,7 +18,7 @@ trait BuildTarget {
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
   object resources
-    extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
+      extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptions]("buildTarget/scalacOptions")
   object scalaTestClasses
