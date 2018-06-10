@@ -31,6 +31,7 @@ servers with less effort and time.
   - [1.5. Basic Json Structures](#15-basic-json-structures)
     - [1.5.1. Build Target](#151-build-target)
     - [1.5.2. Build Target Identifier](#152-build-target-identifier)
+    - [1.5.3. Hierarchical Id](#153-hierarchical-id)
   - [1.6. Actual Protocol](#16-actual-protocol)
     - [1.6.1. Server Lifetime](#161-server-lifetime)
       - [1.6.2 Initialize Build Request](#162-initialize-build-request)
@@ -192,6 +193,25 @@ trait BuildTargetIdentifer {
 }
 ```
 
+### 1.5.3. Hierarchical Id 
+
+The Hierarchical Id allows clients to uniquely identify a resource and establish a client-parent
+relationship with another id.
+
+```scala
+trait HierarchicalId {
+  /** The id */
+  def id: String
+
+  /** The parent id. */
+  def parentId: String
+}
+```
+
+An example of use of hierarchical ids is logs, where BSP clients can use the hierarchical id of logs
+to improve their readability in the user interface. Clients can show logs in a tree fashion, for
+example, or with dropdowns.
+
 ## 1.6. Actual Protocol
 
 Unlike the language server protocol, the build server protocol does not
@@ -251,6 +271,8 @@ trait BuildClientCapabilities {
 }
 ```
 
+where `type DocumentUri = String` across all document.
+
 Response:
 
 * result: InitializeBuildResult defined as follows
@@ -279,19 +301,19 @@ trait BuildServerCapabilities {
   
   /** The server can provide a list of targets that contain a
     * single text document via the method textDocument/buildTargets */
-  def textDocumentBuildTargetsProvider: Boolean
+  def providesTextDocumentBuildTargets: Boolean
   
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
-  def dependencySourcesProvider: Boolean
+  def providesDependencySources: Boolean
   
   /** The server provides all the resource dependencies
     * via method buildTarget/resources */
-  def resourcesProvider: Boolean
+  def providesResources: Boolean
   
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
-  def buildTargetChangedProvider: Boolean
+  def providesBuildTargetChanged: Boolean
 }
 ```
 
@@ -329,7 +351,7 @@ exit.
 
 Request:
 
-* method: ‘shutdown’
+* method: `build/shutdown`
 * params: `null`
 
 Response:
@@ -346,7 +368,7 @@ shutdown request has been received before; otherwise with error code 1.
 
 Notification:
 
-* method: ‘exit’
+* method: `build/exit`
 * params: `null`
 
 #### 1.6.6. Show message
@@ -356,20 +378,17 @@ client to display a particular message in the user interface.
 
 Notification:
 
-* method: ‘build/showMessage’
-* params: ShowMessageParams defined as follows:
+* method: `build/showMessage`
+* params: `ShowMessageParams` defined as follows:
 
 ```scala
 trait ShowMessageParams {
   /** The message type. See {@link MessageType}. */
   def type: Int
 
-  /** The message id. */
-  def id: string
+  /** The message hierarchical id. */
+  def id: Option[HierarchicalId]
 
-  /** The parent id if any. */
-  def parentId: Option[String]
-  
   /** The request id that originated this notification. */
   def requestId: Option[String]
 
@@ -393,11 +412,8 @@ object MessageType {
 }
 ```
 
-A `build/showMessage` notification is similar to LSP's `window/showMessage`, except for a few new
-additions.
-
-The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
-tree fashion, with dropdowns, ...) to ease readability.
+A `build/showMessage` notification is similar to LSP's `window/showMessage`, except for a few
+additions like `id` and `requestId`.
 
 The `requestId` field helps clients know which request originated a notification in case several
 requests are handled by the client at the same time. It will only be populated if the client
@@ -418,11 +434,8 @@ trait LogMessageParams {
   /** The message type. See {@link MessageType} */
   def type: Int
   
-  /** The message id. */
-  def id: String
-
-  /** The parent id if any. */
-  def parentId: Option[String]
+  /** The message hierarchical id. */
+  def id: Option[HierarchicalId]
   
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -434,11 +447,8 @@ trait LogMessageParams {
 
 Where type is defined as `build/showMessage`.
 
-A `build/logMessage` notification is similar to LSP's `window/logMessage`, except for a few new
-additions.
-
-The `id` and optional `parentId` fields allow clients to structure logs in a hierarchical way (in a
-tree fashion, with dropdowns, et cetera) to ease readability.
+A `build/logMessage` notification is similar to LSP's `window/logMessage`, except for a few
+additions like `id` and `requestId`.
 
 The `requestId` field helps clients know which request originated a notification in case several
 requests are handled by the client at the same time. It will only be populated if the client
@@ -513,7 +523,7 @@ Notification:
 * params: `DidChangeBuildTargetParams` defined as follows:
 
 ```scala
-trait DidChangeBuildTargetParams {
+trait DidChangeBuildTarget {
   def changes: List[BuildTargetEvent]
 }
 
@@ -594,7 +604,7 @@ Response:
 * result: `TextDocumentBuildTargetsResult`, defined as follows
 
 ```scala
-trait TextDocumentBuildTargetsResult {
+trait TextDocumentBuildTargets {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -619,7 +629,7 @@ Response:
 * result: `DependencySourcesResult`, defined as follows
 
 ```scala
-trait DependencySourcesResult {
+trait DependencySources {
   def items: List[DependencySourcesItem]
 }
 trait DependencySourcesItem {
@@ -656,10 +666,10 @@ Response:
 * result: `ResourcesResult`, defined as follows
 
 ```scala
-trait ResourcesResult {
-  def items: List[ResourceItem]
+trait Resources {
+  def items: List[ResourcesItem]
 }
-trait ResourceItem {
+trait ResourcesItem {
   def target: BuildTargetIdentifier
   /** List of resource files. */
   def resources: List[URI]
@@ -691,19 +701,19 @@ trait CompileParams {
 
 Response:
 
-* result: `CompileReport`, defined as follows
+* result: `CompileResult`, defined as follows
 * error: JSON-RPC code and message set in case an exception happens during the request.
 
 ```scala
 trait CompileResult {
-  def data: Option[Json] // Note, matches `any | null` in the LSP.
-  
   /** An optional request id to know the origin of this report. */
   def requestId: Option[String]
+  /** A field containing language-specific information, like products
+    * of compilation or compiler-specific metadata the client needs to know. */
+  def data: Option[Json] // Note, matches `any | null` in the LSP.
+  
 }
 ```
-
-The field `data` may contain language-specific information, like the products of compilation.
 
 Notification:
 
@@ -725,7 +735,7 @@ trait CompileReport {
   def warnings: Int
 
   /** The total number of milliseconds it took to compile the target. */
-  def time: Option[Int]
+  def time: Option[Long]
 }
 ```
 
@@ -792,9 +802,21 @@ trait TestReport {
 
   /** The total number of failed tests. */
   def failed: Int
+  
+  /** The total number of ignored tests. */
+  def ignored: Int
+
+  /** The total number of cancelled tests. */
+  def cancelled: Int
+
+  /** The total number of skipped tests. */
+  def skipped: Int
+
+  /** The total number of pending tests. */
+  def pending: Int
 
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
-  def time: Option[Int]
+  def time: Option[Long]
 }
 ```
 
@@ -841,7 +863,17 @@ Response:
 trait RunResult {
   /** An optional request id to know the origin of this report. */
   def requestId: Option[String] 
+  
+  /** An status code for the execution. Allows to use POSIX run c */
+  def statusCode: Int
 }
+
+object StatusCode {
+  val Ok = 0
+  val Error = 1
+  val Cancelled = -1
+}
+
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
@@ -1062,22 +1094,25 @@ trait SbtBuildTarget {
   /** An optional parent if the target has an sbt meta project. */
   def parent: Option[BuildTargetIdentifier]
   
+  /** The sbt version. Useful to support version-dependent syntax. */
+  def sbtVersion: String
+  
+  /** The scala version to compile this target. */
+  def scalaVersion: String
+  
+  /** A sequence of Scala jars. */
+  def scalaJars: List[String]
+  
   /** A sequence of Scala imports that are automatically imported in the sbt build files. */
   def autoImports: List[String]
   
   /** The classpath for the sbt build (including sbt jars). */
   def classpath: List[String]
   
-  /** The scala version to compile this target. */
-  def scalaVersion: String
-  
-  /** The sbt version. Useful to support version-dependent syntax. */
-  def sbtVersion: String
-
-  /** A sequence of Scala jars. */
-  def scalaJars: List[String]
 }
 ```
+
+where `parent` points to the sbt metabuild of this target (if any).
 
 #### 1.7.2.1. Sbt Build Target
 

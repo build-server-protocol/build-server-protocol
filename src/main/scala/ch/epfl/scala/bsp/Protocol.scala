@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp
 
-import io.circe.{Decoder, ObjectEncoder}
+import io.circe.{Decoder, Json, ObjectEncoder}
 import io.circe.generic.JsonCodec
 
 @JsonCodec final case class TextDocumentIdentifier(
@@ -23,18 +23,25 @@ import io.circe.generic.JsonCodec
     languageIds: List[String],
     dependencies: BuildTargetIdentifier,
     capabilities: BuildTargetCapabilities,
-    data: Array[Byte]
+    data: Option[Json]
 )
 
 @JsonCodec final case class BuildClientCapabilities(
     languageIds: List[String]
 )
 
+// Notification: 'build/initialized', C -> S
+@JsonCodec final case class InitializedBuildParams()
+
 // Request: 'build/initialize', C -> S
 @JsonCodec final case class InitializeBuildParams(
     rootUri: String,
     capabilities: BuildClientCapabilities
 )
+
+@JsonCodec final case class Shutdown()
+
+@JsonCodec final case class Exit()
 
 @JsonCodec final case class CompileProvider(
     languageIds: List[String]
@@ -44,12 +51,18 @@ import io.circe.generic.JsonCodec
     languageIds: List[String]
 )
 
+@JsonCodec final case class RunProvider(
+    languageIds: List[String]
+)
+
 @JsonCodec final case class BuildServerCapabilities(
     compileProvider: CompileProvider,
     testProvider: TestProvider,
-    textDocumentBuildTargetsProvider: Boolean,
-    dependencySourcesProvider: Boolean,
-    buildTargetChangedProvider: Boolean
+    runProvider: RunProvider,
+    providesTextDocumentBuildTargets: Boolean,
+    providesDependencySources: Boolean,
+    providesResources: Boolean,
+    providesBuildTargetChanged: Boolean
 )
 
 @JsonCodec final case class InitializeBuildResult(
@@ -58,7 +71,6 @@ import io.circe.generic.JsonCodec
 
 sealed trait MessageType
 object MessageType {
-  case object Unknown extends MessageType
   case object Created extends MessageType
   case object Changed extends MessageType
   case object Deleted extends MessageType
@@ -67,22 +79,30 @@ object MessageType {
   implicit val messageTypeDecoder: Decoder[MessageType] = ???
 }
 
+@JsonCodec final case class HierarchicalId(
+    id: String,
+    parentId: String
+)
+
 @JsonCodec final case class ShowMessageParams(
     `type`: MessageType,
-    id: Option[String],
-    parentId: Option[String],
+    id: Option[HierarchicalId],
+    requestId: Option[String],
     message: String
 )
 
 @JsonCodec final case class LogMessageParams(
     `type`: MessageType,
-    id: Option[String],
-    parentId: Option[String],
+    id: Option[HierarchicalId],
+    requestId: Option[String],
     message: String
 )
 
-// Notification: 'build/initialized', C -> S
-@JsonCodec final case class InitializedBuildParams()
+@JsonCodec final case class PublishDiagnosticsParams(
+    uri: String,
+    requestId: Option[String],
+    message: String
+)
 
 @JsonCodec final case class WorkspaceBuildTargetsRequest()
 
@@ -93,7 +113,6 @@ object MessageType {
 
 sealed trait BuildTargetEventKind
 case object BuildTargetEventKind {
-  case object Unknown extends BuildTargetEventKind
   case object Created extends BuildTargetEventKind
   case object Changed extends BuildTargetEventKind
   case object Deleted extends BuildTargetEventKind
@@ -104,11 +123,12 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class BuildTargetEvent(
     id: BuildTargetIdentifier,
-    kind: BuildTargetEventKind
+    kind: Option[BuildTargetEventKind],
+    data: Option[Json]
 )
 
 // Notification: 'buildTarget/didChange', S -> C
-@JsonCodec final case class DidChangeBuildTargetParams(
+@JsonCodec final case class DidChangeBuildTarget(
     changes: List[BuildTargetEvent]
 )
 
@@ -117,7 +137,7 @@ case object BuildTargetEventKind {
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class BuildTargetTextDocuments(
+@JsonCodec final case class BuildTargetTextDocumentsResult(
     textDocuments: List[TextDocumentIdentifier]
 )
 
@@ -126,7 +146,7 @@ case object BuildTargetEventKind {
     textDocument: TextDocumentIdentifier
 )
 
-@JsonCodec final case class TextDocumentBuildTargets(
+@JsonCodec final case class TextDocumentBuildTargetsResult(
     targets: List[BuildTarget]
 )
 
@@ -140,7 +160,7 @@ case object BuildTargetEventKind {
     uris: List[String]
 )
 
-@JsonCodec final case class DependencySources(
+@JsonCodec final case class DependencySourcesResult(
     items: List[DependencySourcesItem]
 )
 
@@ -154,31 +174,79 @@ case object BuildTargetEventKind {
     uris: List[String]
 )
 
-@JsonCodec final case class Resources(
+@JsonCodec final case class ResourcesResult(
     targets: List[ResourcesItem]
 )
 
 // Request: 'buildTarget/compile', C -> S
 @JsonCodec final case class CompileParams(
-    targets: List[BuildTargetIdentifier]
+    targets: List[BuildTargetIdentifier],
+    requestId: Option[String],
+    arguments: List[Json]
 )
 
-@JsonCodec final case class CompileReportItem(
-    target: BuildTargetIdentifier,
-    errors: Int,
-    warnings: Int,
-    time: Long
+@JsonCodec final case class CompileResult(
+    requestId: Option[String],
+    data: Option[Json]
 )
 
 @JsonCodec final case class CompileReport(
-    items: List[CompileReportItem]
+    target: BuildTargetIdentifier,
+    requestId: Option[String],
+    errors: Int,
+    warnings: Int,
+    time: Option[Long]
 )
 
-sealed trait ScalaPlatform
+@JsonCodec final case class TestParams(
+    targets: List[BuildTargetIdentifier],
+    requestId: Option[String],
+    arguments: List[Json]
+)
+
+@JsonCodec final case class TestResult(
+    requestId: Option[String],
+    data: Option[Json]
+)
+
+@JsonCodec final case class TestReport(
+    target: BuildTargetIdentifier,
+    requestId: Option[String],
+    passed: Int,
+    failed: Int,
+    ignored: Int,
+    cancelled: Int,
+    skipped: Int,
+    pending: Int,
+    time: Option[Long]
+)
+
+@JsonCodec final case class RunParams(
+    target: BuildTargetIdentifier,
+    requestId: Option[String],
+    arguments: List[Json]
+)
+
+sealed abstract class ExitStatus(code: Int)
+object ExitStatus {
+  case object Ok extends ExitStatus(0)
+  case object Error extends ExitStatus(1)
+  case object Cancelled extends ExitStatus(-1)
+
+  implicit val exitStatusEncoder: ObjectEncoder[ExitStatus] = ???
+  implicit val exitStatusDecoder: Decoder[ExitStatus] = ???
+}
+
+@JsonCodec final case class RunResult(
+    requestId: Option[String],
+    exitStatus: ExitStatus
+)
+
+sealed abstract class ScalaPlatform(id: Int)
 object ScalaPlatform {
-  case object Jvm extends ScalaPlatform
-  case object Js extends ScalaPlatform
-  case object Native extends ScalaPlatform
+  case object Jvm extends ScalaPlatform(1)
+  case object Js extends ScalaPlatform(2)
+  case object Native extends ScalaPlatform(3)
 
   implicit val scalaPlatformEncoder: ObjectEncoder[ScalaPlatform] = ???
   implicit val scalaPlatformDecoder: Decoder[ScalaPlatform] = ???
@@ -204,13 +272,14 @@ object ScalaPlatform {
     classDirectory: String,
 )
 
-@JsonCodec final case class ScalacOptions(
+@JsonCodec final case class ScalacOptionsResult(
     items: List[ScalacOptionsItem]
 )
 
 // Request: 'buildTarget/scalaTestClasses', C -> S
 @JsonCodec final case class ScalaTestClassesParams(
-    target: BuildTargetIdentifier
+    targets: List[BuildTargetIdentifier],
+    requestId: Option[String],
 )
 
 @JsonCodec final case class ScalaTestClassesItem(
@@ -219,6 +288,37 @@ object ScalaPlatform {
     classes: List[String]
 )
 
-@JsonCodec final case class ScalaTestClasses(
+@JsonCodec final case class ScalaTestClassesResult(
     items: List[ScalaTestClassesItem]
+)
+
+// Request: 'buildTarget/scalaMainClasses', C -> S
+@JsonCodec final case class ScalaMainClassesParams(
+    targets: List[BuildTargetIdentifier],
+    requestId: Option[String],
+)
+
+@JsonCodec final case class ScalaMainClass(
+    `class`: String,
+    arguments: List[String],
+    javaOptions: List[String]
+)
+
+@JsonCodec final case class ScalaMainClassesItem(
+    target: BuildTargetIdentifier,
+    // Fully qualified names of test classes
+    classes: List[ScalaMainClass]
+)
+
+@JsonCodec final case class ScalaMainClassesResult(
+    items: List[ScalaMainClassesItem]
+)
+
+@JsonCodec final case class SbtBuildTarget(
+    parent: Option[BuildTargetIdentifier],
+    sbtVersion: String,
+    scalaVersion: String,
+    scalaJars: List[String],
+    autoImports: List[String],
+    classpath: List[String],
 )
