@@ -19,8 +19,9 @@ wider programming community means tooling developers spend a lot of time working
 integrations.
 
 The Build Server Protocol aims to define common functionality that both build tools (servers) and
-language servers/editors (clients) understand The goal is to simplify integrations between these
-tools to provide the best experience to end users (developers).
+language servers/editors (clients) understand. This common functionality enables tooling developers
+to provide their end users the best developer experience while supporting build tools and language
+servers with less effort and time.
 
 - [1. Build Server Protocol](#1-build-server-protocol)
   - [1.1. Motivation](#11-motivation)
@@ -32,13 +33,13 @@ tools to provide the best experience to end users (developers).
     - [1.5.2. Build Target Identifier](#152-build-target-identifier)
   - [1.6. Actual Protocol](#16-actual-protocol)
     - [1.6.1. Server Lifetime](#161-server-lifetime)
-      - [1.6.1.1. Initialize Build Request](#1611-initialize-build-request)
-      - [1.6.1.2. Initialized Build Notification](#1612-initialized-build-notification)
-      - [1.6.1.3. Shutdown Build Request](#1613-shutdown-build-request)
-      - [1.6.1.4. Exit Build Notification](#1614-exit-build-notification)
-      - [1.6.1.5. Show message](#1615-show-message)
-      - [1.6.1.6. Log message](#1616-log-message)
-      - [1.6.1.7. Publish Diagnostics](#1617-publish-diagnostics)
+      - [1.6.2 Initialize Build Request](#162-initialize-build-request)
+      - [1.6.3. Initialized Build Notification](#163-initialized-build-notification)
+      - [1.6.4. Shutdown Build Request](#164-shutdown-build-request)
+      - [1.6.5. Exit Build Notification](#165-exit-build-notification)
+      - [1.6.6. Show message](#166-show-message)
+      - [1.6.7. Log message](#167-log-message)
+      - [1.6.8. Publish Diagnostics](#168-publish-diagnostics)
     - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
     - [1.6.3. Build Target Changed Notification](#163-build-target-changed-notification)
     - [1.6.4. Build Target Text Documents Request](#164-build-target-text-documents-request)
@@ -66,8 +67,8 @@ tools to provide the best experience to end users (developers).
 The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
 Unlike in the Language Server Protocol, the language server or editor is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
 
-The best way to read this document is by considering it as a wishlist from the perspective of an IDE developer.
-Consider this document as our personal vision for how a bi-directional communication protocol between a build tool and language server could look like.
+The best way to read this document is by considering it as a wishlist from the perspective of an IDE
+developer.
 
 The code listings in this document are written using Scala syntax.
 Every data strucuture in this document has a direct translation to JSON and Protobuf.
@@ -81,27 +82,26 @@ The Build Server Protocol is not an approved standard. Everything in this
 document is subject to change and open for discussions, including core data
 structures.
 
-A protocol is only worth as much as the quality of the clients and servers that implement the
-protocol. There is a lot of activity in this area.
+The creation of BSP clients and servers is under active development.
 
-On the client side, IntelliJ is the first client of the Build Server
-Protocol. There are several other language servers, like [Dotty
-IDE](https://github.com/lampepfl/dotty) and
-[scalameta/metals](https://github.com/scalameta/metals), that are working on
-integrations with BSP servers. There are future editor integrations under
-way.
+In the clients space, IntelliJ has been the first language server to implement BSP. The integration
+is available in the nightly releases of the Scala plugin. Other language servers, like [Dotty
+IDE](https://github.com/lampepfl/dotty) and [scalameta/metals](https://github.com/scalameta/metals),
+are currently working or planning to work on a BSP integrations.
 
 On the server side, [bloop](https://github.com/scalacenter/bloop) is the
 first server to implement BSP. There are ongoing efforts to implement BSP
 in popular build tools like [sbt](https://github.com/sbt/sbt/issues/3890).
 
-The Build Server Protocol has been designed to be language-agnostic. We're
-looking for ways to collaborate with other programming language communities
-and build tool authors.
+We're looking for third parties that implement BSP natively in other build tools like Gradle, Bazel
+or Pants.
 
-The best way to share your thoughts on the Build Server Protocol or to get
-involved in its development is to open an issue or pull request to this
-repository. Any help on developing integrations will be much appreciated.
+The Build Server Protocol has been designed to be language-agnostic. We're looking for ways to
+collaborate with other programming language communities and build tool authors.
+
+The best way to share your thoughts on the Build Server Protocol or to get involved in its
+development is to open an issue or pull request to this repository. Any help on developing
+integrations will be much appreciated.
 
 ## 1.4. Base protocol
 
@@ -115,9 +115,9 @@ exchanged using the base protocol.
 
 ## 1.5. Basic Json Structures
 
-In addition to basic data structures in the language server protocol,
-the build server protocol defines the following additional data
-structures.
+In addition to basic data structures in the [General section of the Language Server
+Protocol](https://microsoft.github.io/language-server-protocol/specification#general), the Build
+Server Protocol defines the following additional data structures.
 
 ### 1.5.1. Build Target
 
@@ -207,7 +207,7 @@ defines that the lifetime of a build server is managed by the client
 (e.g. a language server like Dotty IDE). It is up to the client to
 decide when to start (process-wise) and when to shutdown a server.
 
-#### 1.6.1.1. Initialize Build Request
+#### 1.6.2 Initialize Build Request
 
 Like the language server protocol, the initialize request is sent as the
 first request from the client to the server. If the server receives a
@@ -298,7 +298,7 @@ trait BuildServerCapabilities {
 Clients can use these capabilities to notify users what BSP endpoints can
 and cannot be used and why.
 
-#### 1.6.1.2. Initialized Build Notification
+#### 1.6.3. Initialized Build Notification
 
 Like the language server protocol, the initialized notification is sent
 from the client to the server after the client received the result of
@@ -319,7 +319,7 @@ trait InitializedBuildParams {
 }
 ```
 
-#### 1.6.1.3. Shutdown Build Request
+#### 1.6.4. Shutdown Build Request
 
 Like the language server protocol, the shutdown build request is sent
 from the client to the server. It asks the server to shut down, but to
@@ -338,7 +338,7 @@ Response:
 * error: code and message set in case an exception happens during
   shutdown request.
 
-#### 1.6.1.4. Exit Build Notification
+#### 1.6.5. Exit Build Notification
 
 Like the language server protocol, a notification to ask the server to
 exit its process. The server should exit with success code 0 if the
@@ -349,7 +349,7 @@ Notification:
 * method: ‘exit’
 * params: `null`
 
-#### 1.6.1.5. Show message
+#### 1.6.6. Show message
 
 The show message notification is sent from a server to a client to ask the
 client to display a particular message in the user interface.
@@ -403,7 +403,7 @@ The `requestId` field helps clients know which request originated a notification
 requests are handled by the client at the same time. It will only be populated if the client
 defined it in the request that triggered this notification.
 
-#### 1.6.1.6. Log message
+#### 1.6.7. Log message
 
 The log message notification is sent from the server to the client to ask the
 client to log a particular message.
@@ -444,7 +444,7 @@ The `requestId` field helps clients know which request originated a notification
 requests are handled by the client at the same time. It will only be populated if the client
 defined it in the request that triggered this notification.
 
-#### 1.6.1.7. Publish Diagnostics
+#### 1.6.8. Publish Diagnostics
 
 The Diagnostics notification are sent from the server to the client to signal results of validation
 runs.
