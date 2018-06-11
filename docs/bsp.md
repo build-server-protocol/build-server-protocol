@@ -31,9 +31,8 @@ servers with less effort and time.
   5. [Basic Json Structures](#basic-json-structures)
     1. [Build Target](#build-target)
     2. [Build Target Identifier](#build-target-identifier)
-    3. [Hierarchical Id](#hierarchical-id)
-    4. [DocumentUri](#documenturi)
-    5. [Uri](#uri)
+    3. [Task Id](#task-id)
+    4. [Uri](#uri)
   6. [Actual Protocol](#actual-protocol)
     1. [Server Lifetime](#server-lifetime)
       1. [Initialize Build Request](#initialize-build-request)
@@ -194,40 +193,32 @@ trait BuildTargetIdentifer {
 }
 ```
 
-### Hierarchical Id 
+### Task Id 
 
-The Hierarchical Id allows clients to uniquely identify a resource and establish a client-parent
+The task Id allows clients to uniquely identify a resource and establish a client-parent
 relationship with another id.
 
 ```scala
-trait HierarchicalId {
+trait TaskId {
   /** The id */
   def id: String
 
   /** The parent id. */
-  def parentId: String
+  def parent: String
 }
 ```
 
-An example of use of hierarchical ids is logs, where BSP clients can use the hierarchical id of logs
+A task id can represent any child-parent relationship established by the build tool.
+
+An example of use of task ids is logs, where BSP clients can use the hierarchical id of logs
 to improve their readability in the user interface. Clients can show logs in a tree fashion, for
 example, or with dropdowns.
 
-### DocumentUri
-
-A document URI uniquely identifies a document.
-
-```scala
-/** A id that is a valid URI. https://tools.ietf.org/html/rfc3986 */
-type DocumentUri = String
-```
-
 ### Uri
 
-A URI uniquely identifies a resource.
-
 ```scala
-/** A id that is a valid URI. https://tools.ietf.org/html/rfc3986 */
+/**  A resource identifier that is a valid URI according
+  * to rfc3986: * https://tools.ietf.org/html/rfc3986 */
 type Uri = String
 ```
 
@@ -274,7 +265,7 @@ Request:
 trait InitializeBuildParams {
 
   /** The rootUri of the workspace */
-  def rootUri: DocumentUri
+  def rootUri: Uri
 
   /** The capabilities of the client */
   def capabilities: BuildClientCapabilities
@@ -347,7 +338,8 @@ where `FileSystemWatcher` is described as follows:
 
 ```scala
 trait FileSystemWatcher {
-   /** The glob pattern to watch in all the workspace. */
+   /** The glob pattern to watch in all the workspace.
+     * Syntax is implementation specific. */
    def globPattern: String
    
    /** The kind of events of interest.
@@ -435,7 +427,7 @@ trait ShowMessageParams {
   def type: Int
 
   /** The message hierarchical id. */
-  def id: Option[HierarchicalId]
+  def id: Option[TaskId]
 
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -483,7 +475,7 @@ trait LogMessageParams {
   def type: Int
   
   /** The message hierarchical id. */
-  def id: Option[HierarchicalId]
+  def id: Option[TaskId]
   
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -519,7 +511,7 @@ Notification:
 ```scala
 trait PublishDiagnosticsParams {
   /** The uri of the document where diagnostics are published. */
-  def uri: DocumentUri
+  def uri: Uri
   
   /** The request id that originated this notification. */
   def requestId: Option[String]
@@ -586,7 +578,7 @@ Where `FileEvent`s are described as follows:
 ```scala
 trait FileEvent {
   /** The file's URI. */
-  def uri: DocumentUri
+  def uri: uri
 
   /** The kind of file event. @link FileChangeType */
   def type: Int
