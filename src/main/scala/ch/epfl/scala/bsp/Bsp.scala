@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp
 
-import io.circe.{Decoder, Json, ObjectEncoder}
+import io.circe.Decoder.Result
+import io.circe.{Decoder, DecodingFailure, HCursor, Json, JsonObject, ObjectEncoder, RootEncoder}
 import io.circe.generic.JsonCodec
 
 @JsonCodec final case class TextDocumentIdentifier(
@@ -69,14 +70,28 @@ import io.circe.generic.JsonCodec
     capabilities: BuildServerCapabilities
 )
 
-sealed trait MessageType
+sealed abstract class MessageType(val id: Int)
 object MessageType {
-  case object Created extends MessageType
-  case object Changed extends MessageType
-  case object Deleted extends MessageType
+  case object Error extends MessageType(1)
+  case object Warning extends MessageType(2)
+  case object Info extends MessageType(3)
+  case object Log extends MessageType(4)
 
-  implicit val messageTypeEncoder: ObjectEncoder[MessageType] = ???
-  implicit val messageTypeDecoder: Decoder[MessageType] = ???
+  implicit val messageTypeEncoder: RootEncoder[MessageType] = new RootEncoder[MessageType] {
+    override def apply(a: MessageType): Json = Json.fromInt(a.id)
+  }
+
+  implicit val messageTypeDecoder: Decoder[MessageType] = new Decoder[MessageType] {
+    override def apply(c: HCursor): Result[MessageType] = {
+      c.as[Int].flatMap {
+        case 1 => Right(Error)
+        case 2 => Right(Warning)
+        case 3 => Right(Info)
+        case 4 => Right(Log)
+        case n => Left(DecodingFailure(s"Unknown message type id for $n", c.history))
+      }
+    }
+  }
 }
 
 @JsonCodec final case class HierarchicalId(
@@ -111,14 +126,28 @@ object MessageType {
     targets: List[BuildTarget]
 )
 
-sealed trait BuildTargetEventKind
+sealed abstract class BuildTargetEventKind(val id: Int)
 case object BuildTargetEventKind {
-  case object Created extends BuildTargetEventKind
-  case object Changed extends BuildTargetEventKind
-  case object Deleted extends BuildTargetEventKind
+  case object Created extends BuildTargetEventKind(1)
+  case object Changed extends BuildTargetEventKind(2)
+  case object Deleted extends BuildTargetEventKind(3)
 
-  implicit val buildTargetEventKindEncoder: ObjectEncoder[BuildTargetEventKind] = ???
-  implicit val buildTargetEventKindDecoder: Decoder[BuildTargetEventKind] = ???
+  implicit val buildTargetEventKindEncoder: RootEncoder[BuildTargetEventKind] =
+    new RootEncoder[BuildTargetEventKind] {
+      override def apply(a: BuildTargetEventKind): Json = Json.fromInt(a.id)
+    }
+
+  implicit val buildTargetEventKindDecoder: Decoder[BuildTargetEventKind] =
+    new Decoder[BuildTargetEventKind] {
+      override def apply(c: HCursor): Result[BuildTargetEventKind] = {
+        c.as[Int].flatMap {
+          case 1 => Right(Created)
+          case 2 => Right(Changed)
+          case 3 => Right(Deleted)
+          case n => Left(DecodingFailure(s"Unknown build target event kind id for $n", c.history))
+        }
+      }
+    }
 }
 
 @JsonCodec final case class BuildTargetEvent(
@@ -227,14 +256,26 @@ case object BuildTargetEventKind {
     arguments: List[Json]
 )
 
-sealed abstract class ExitStatus(code: Int)
+sealed abstract class ExitStatus(val code: Int)
 object ExitStatus {
-  case object Ok extends ExitStatus(0)
   case object Error extends ExitStatus(1)
-  case object Cancelled extends ExitStatus(-1)
+  case object Ok extends ExitStatus(2)
+  case object Cancelled extends ExitStatus(3)
 
-  implicit val exitStatusEncoder: ObjectEncoder[ExitStatus] = ???
-  implicit val exitStatusDecoder: Decoder[ExitStatus] = ???
+  implicit val exitStatusEncoder: RootEncoder[ExitStatus] = new RootEncoder[ExitStatus] {
+    override def apply(a: ExitStatus): Json = Json.fromInt(a.code)
+  }
+
+  implicit val exitStatusDecoder: Decoder[ExitStatus] = new Decoder[ExitStatus] {
+    override def apply(c: HCursor): Result[ExitStatus] = {
+      c.as[Int].flatMap {
+        case 1 => Right(Error)
+        case 2 => Right(Ok)
+        case 3 => Right(Cancelled)
+        case n => Left(DecodingFailure(s"Unknown exit status for code $n", c.history))
+      }
+    }
+  }
 }
 
 @JsonCodec final case class RunResult(
@@ -242,14 +283,26 @@ object ExitStatus {
     exitStatus: ExitStatus
 )
 
-sealed abstract class ScalaPlatform(id: Int)
+sealed abstract class ScalaPlatform(val id: Int)
 object ScalaPlatform {
   case object Jvm extends ScalaPlatform(1)
   case object Js extends ScalaPlatform(2)
   case object Native extends ScalaPlatform(3)
 
-  implicit val scalaPlatformEncoder: ObjectEncoder[ScalaPlatform] = ???
-  implicit val scalaPlatformDecoder: Decoder[ScalaPlatform] = ???
+  implicit val scalaPlatformEncoder: RootEncoder[ScalaPlatform] = new RootEncoder[ScalaPlatform] {
+    override def apply(a: ScalaPlatform): Json = Json.fromInt(a.id)
+  }
+
+  implicit val scalaPlatformDecoder: Decoder[ScalaPlatform] = new Decoder[ScalaPlatform] {
+    override def apply(c: HCursor): Result[ScalaPlatform] = {
+      c.as[Int].flatMap {
+        case 1 => Right(Jvm)
+        case 2 => Right(Js)
+        case 3 => Right(Native)
+        case n => Left(DecodingFailure(s"Unknown platform id for $n", c.history))
+      }
+    }
+  }
 }
 
 @JsonCodec final case class ScalaBuildTarget(
