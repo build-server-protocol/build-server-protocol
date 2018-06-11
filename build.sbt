@@ -1,11 +1,9 @@
 val bsp = project
   .in(file("."))
   .settings(
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
     libraryDependencies ++= List(
-      "io.github.scalapb-json" %% "scalapb-circe" % "0.1.1",
+      "io.circe" %% "circe-core" % "0.9.0",
       "org.scalameta" %% "lsp4s" % "0.1.0"
-    ),
-    PB.targets in Compile := Seq(
-      scalapb.gen(flatPackage = true) -> (sourceManaged in Compile).value
     )
   )

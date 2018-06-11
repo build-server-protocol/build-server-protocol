@@ -1,7 +1,6 @@
-package ch.epfl.scala.bsp.endpoints
+package ch.epfl.scala.bsp
+package endpoints
 
-import ch.epfl.scala.bsp.schema._
-import scalapb_circe.JsonFormat._
 import scala.meta.jsonrpc.Endpoint
 
 object Build extends Build
@@ -9,21 +8,44 @@ trait Build {
   object initialize
       extends Endpoint[InitializeBuildParams, InitializeBuildResult]("build/initialize")
   object initialized extends Endpoint[InitializedBuildParams, Unit]("build/initialized")
+  object exit extends Endpoint[Exit, Unit]("build/exit")
+  object shutdown extends Endpoint[Shutdown, Unit]("build/shutdown")
   object showMessage extends Endpoint[ShowMessageParams, Unit]("build/showMessage")
   object logMessage extends Endpoint[LogMessageParams, Unit]("build/logMessage")
+  object publishDiagnostics
+      extends Endpoint[PublishDiagnosticsParams, Unit]("build/publishDiagnostics")
+  object registerFileWatcher
+      extends Endpoint[RegisterFileWatcherParams, RegisterFileWatcherResult](
+        "build/registerFileWatcher")
+  object cancelFileWatcher
+      extends Endpoint[CancelFileWatcherParams, CancelFileWatcherResult](
+        "build/cancelFileWatcher")
 }
 
 object BuildTarget extends BuildTarget
 trait BuildTarget {
-  object compile extends Endpoint[CompileParams, CompileReport]("buildTarget/compile")
+  object compile extends Endpoint[CompileParams, CompileResult]("buildTarget/compile")
+  object compileReport extends Endpoint[CompileReport, Unit]("buildTarget/compileReport")
+  object test extends Endpoint[TestParams, TestResult]("buildTarget/test")
+  object testReport extends Endpoint[TestReport, Unit]("buildTarget/testReport")
+  object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
+
   object dependencySources
-      extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
+      extends Endpoint[DependencySourcesParams, DependencySourcesResult](
+        "buildTarget/dependencySources")
   object resources
-    extends Endpoint[DependencySourcesParams, DependencySources]("buildTarget/dependencySources")
+      extends Endpoint[DependencySourcesParams, DependencySourcesResult](
+        "buildTarget/dependencySources")
+
+  // Scala specific endpoints
   object scalacOptions
-      extends Endpoint[ScalacOptionsParams, ScalacOptions]("buildTarget/scalacOptions")
+      extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
   object scalaTestClasses
-      extends Endpoint[ScalaTestClassesParams, ScalaTestClasses]("buildTarget/scalaTestClasses")
+      extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult](
+        "buildTarget/scalaTestClasses")
+  object scalaMainClasses
+      extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
+        "buildTarget/scalaMainClasses")
 }
 
 object Workspace extends Workspace
