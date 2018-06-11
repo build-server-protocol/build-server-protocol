@@ -572,10 +572,10 @@ trait BuildTargetTextDocumentsParams {
 
 Response:
 
-* result: `BuildTargetTextDocumentsResponse`, defined as follows
+* result: `BuildTargetTextDocumentsResult`, defined as follows
 
 ```scala
-trait BuildTargetTextDocumentsResponse {
+trait BuildTargetTextDocumentsResponseResult {
   /** The source files used by this target */
   def textDocuments: List[TextDocumentIdentifier]
 }
@@ -604,7 +604,7 @@ Response:
 * result: `TextDocumentBuildTargetsResult`, defined as follows
 
 ```scala
-trait TextDocumentBuildTargets {
+trait TextDocumentBuildTargetsResult {
   def targets: List[BuildTargetIdentifier]
 }
 ```
@@ -629,7 +629,7 @@ Response:
 * result: `DependencySourcesResult`, defined as follows
 
 ```scala
-trait DependencySources {
+trait DependencySourcesResult {
   def items: List[DependencySourcesItem]
 }
 trait DependencySourcesItem {
@@ -666,7 +666,7 @@ Response:
 * result: `ResourcesResult`, defined as follows
 
 ```scala
-trait Resources {
+trait ResourcesResult {
   def items: List[ResourcesItem]
 }
 trait ResourcesItem {
@@ -869,8 +869,11 @@ trait RunResult {
 }
 
 object StatusCode {
+  /** Execution was successful. */
   val Ok = 0
+  /** Execution failed. */
   val Error = 1
+  /** Execution was cancelled. */
   val Cancelled = -1
 }
 
@@ -955,10 +958,10 @@ trait ScalacOptionsItem {
       * identical to what is passed as arguments to
       * the -classpath flag in the command line interface
       * of scalac. */
-    def classpath: List[String]
+    def classpath: List[URI]
     
     /** The output directory for classfiles produced by this target */
-    def classDirectory: String
+    def classDirectory: URI
 }
 ```
 
@@ -1067,8 +1070,8 @@ trait ScalaMainClass {
   /** The user arguments to the main entrypoint. */
   def arguments: List[String]
   
-  /** The java options the application. */
-  def javaOptions: List[String]
+  /** The jvm options the application. */
+  def jvmOptions: List[String]
 }
 
 ```
@@ -1097,18 +1100,14 @@ trait SbtBuildTarget {
   /** The sbt version. Useful to support version-dependent syntax. */
   def sbtVersion: String
   
-  /** The scala version to compile this target. */
-  def scalaVersion: String
-  
-  /** A sequence of Scala jars. */
-  def scalaJars: List[String]
-  
   /** A sequence of Scala imports that are automatically imported in the sbt build files. */
   def autoImports: List[String]
   
   /** The classpath for the sbt build (including sbt jars). */
-  def classpath: List[String]
+  def classpath: List[URI]
   
+  /** The Scala build target for this sbt build target. */
+  def scalaBuildTarget: ScalaBuildTarget
 }
 ```
 

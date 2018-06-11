@@ -1,15 +1,40 @@
 package ch.epfl.scala.bsp
 
+import java.net.{URI, URISyntaxException}
+
 import io.circe.Decoder.Result
-import io.circe.{Decoder, DecodingFailure, HCursor, Json, JsonObject, ObjectEncoder, RootEncoder}
+import io.circe.{Decoder, DecodingFailure, HCursor, Json, RootEncoder}
 import io.circe.generic.JsonCodec
 
+final case class Uri private[Uri](val s: String)
+object Uri {
+  // This is the only valid way to create a URI
+  def apply(u: URI): Uri = Uri(u.toString)
+
+  implicit val uriEncoder: RootEncoder[Uri] = new RootEncoder[Uri] {
+    override def apply(a: Uri): Json = Json.fromString(a.s)
+  }
+
+  implicit val uriDecoder: Decoder[Uri] = new Decoder[Uri] {
+    // Should we add validation here
+    override def apply(c: HCursor): Result[Uri] = {
+      c.as[String].flatMap { str =>
+        try Right(Uri(URI.create(str).toString))
+        catch {
+          case _: IllegalArgumentException | _: URISyntaxException =>
+            Left(DecodingFailure(s"String $str is not a valid URI.", c.history))
+        }
+      }
+    }
+  }
+}
+
 @JsonCodec final case class TextDocumentIdentifier(
-    uri: String
+    uri: Uri
 )
 
 @JsonCodec final case class BuildTargetIdentifier(
-    uri: String
+    uri: Uri
 )
 
 @JsonCodec final case class BuildTargetCapabilities(
@@ -36,7 +61,7 @@ import io.circe.generic.JsonCodec
 
 // Request: 'build/initialize', C -> S
 @JsonCodec final case class InitializeBuildParams(
-    rootUri: String,
+    rootUri: Uri,
     capabilities: BuildClientCapabilities
 )
 
@@ -114,7 +139,7 @@ object MessageType {
 )
 
 @JsonCodec final case class PublishDiagnosticsParams(
-    uri: String,
+    uri: Uri,
     requestId: Option[String],
     message: String
 )
@@ -186,7 +211,7 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class DependencySourcesItem(
     target: BuildTargetIdentifier,
-    uris: List[String]
+    uris: List[Uri]
 )
 
 @JsonCodec final case class DependencySourcesResult(
@@ -200,7 +225,7 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class ResourcesItem(
     target: BuildTargetIdentifier,
-    uris: List[String]
+    uris: List[Uri]
 )
 
 @JsonCodec final case class ResourcesResult(
@@ -310,7 +335,7 @@ object ScalaPlatform {
     scalaVersion: String,
     scalaBinaryVersion: String,
     platform: ScalaPlatform,
-    jars: List[String]
+    jars: List[Uri]
 )
 
 // Request: 'buildTarget/scalacOptions', C -> S
@@ -321,8 +346,8 @@ object ScalaPlatform {
 @JsonCodec final case class ScalacOptionsItem(
     target: BuildTargetIdentifier,
     options: List[String],
-    classpath: List[String],
-    classDirectory: String,
+    classpath: List[Uri],
+    classDirectory: Uri,
 )
 
 @JsonCodec final case class ScalacOptionsResult(
@@ -354,7 +379,7 @@ object ScalaPlatform {
 @JsonCodec final case class ScalaMainClass(
     `class`: String,
     arguments: List[String],
-    javaOptions: List[String]
+    jvmOptions: List[String]
 )
 
 @JsonCodec final case class ScalaMainClassesItem(
@@ -370,8 +395,7 @@ object ScalaPlatform {
 @JsonCodec final case class SbtBuildTarget(
     parent: Option[BuildTargetIdentifier],
     sbtVersion: String,
-    scalaVersion: String,
-    scalaJars: List[String],
     autoImports: List[String],
-    classpath: List[String],
+    classpath: List[Uri],
+    scalaBuildTarget: ScalaBuildTarget
 )
