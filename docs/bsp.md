@@ -193,8 +193,6 @@ trait BuildTargetIdentifer {
 }
 ```
 
-where `type Uri = String`.
-
 ### 1.5.3. Hierarchical Id 
 
 The Hierarchical Id allows clients to uniquely identify a resource and establish a client-parent
@@ -213,6 +211,24 @@ trait HierarchicalId {
 An example of use of hierarchical ids is logs, where BSP clients can use the hierarchical id of logs
 to improve their readability in the user interface. Clients can show logs in a tree fashion, for
 example, or with dropdowns.
+
+### 1.5.4. DocumentUri
+
+A document URI uniquely identifies a document.
+
+```scala
+/** A id that is a valid URI. https://tools.ietf.org/html/rfc3986 */
+type DocumentUri = String
+```
+
+### 1.5.5. Uri
+
+A URI uniquely identifies a resource.
+
+```scala
+/** A id that is a valid URI. https://tools.ietf.org/html/rfc3986 */
+type Uri = String
+```
 
 ## 1.6. Actual Protocol
 
@@ -265,15 +281,18 @@ trait InitializeBuildParams {
 }
 
 trait BuildClientCapabilities {
-    /** The languages that this client supports.
-      * The ID strings for each language is defined in the LSP.
-      * The server must never respond with build targets for other
-      * languages than those that appear in this list. */
-    def languageIds: List[String]
+  /** The languages that this client supports.
+    * The ID strings for each language is defined in the LSP.
+    * The server must never respond with build targets for other
+    * languages than those that appear in this list. */
+  def languageIds: List[String]
+  
+  /** The client can provide support for the file watching
+    * notifications to the server. A language server can forward
+    * these notifications from the editor. */
+  def providesFileWatching: Boolean
 }
 ```
-
-where `type DocumentUri = String` across all document.
 
 Response:
 
@@ -316,6 +335,32 @@ trait BuildServerCapabilities {
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
   def providesBuildTargetChanged: Boolean
+  
+  /** The file system watchers that the server wants the client
+    * to notify events about via `workspace/didChangeWatchedFiles`. */
+  def watchers: List[FileSystemWatcher]
+}
+```
+
+where `FileSystemWatcher` is described as follows:
+
+```scala
+trait FileSystemWatcher {
+   /** The glob pattern to watch in all the workspace. */
+   def globPattern: String
+   
+   /** The kind of events of interest.
+    * If omitted, all events will be watched. */
+   def kind: Option[Int]
+}
+
+object WatchKind {
+  /** Interested in create events. */
+  val Create = 1
+  /** Interested in change events. */
+  val Change = 2
+  /** Interested in delete events. */
+  val Delete = 3
 }
 ```
 
@@ -514,7 +559,49 @@ trait WorkspaceBuildTargetsResult {
 }
 ```
 
-### 1.6.3. Build Target Changed Notification
+## 1.6.3. `DidChangeWatchedFiles` Notification
+
+The watched files notification is sent from the client to the server when the client detects changes
+to files watched by the language client. It is recommended that servers register for these file
+events using the registration mechanism.
+
+For a motivation of this feature, check [the LSP `workspace/didChangedWatchedFiles`
+description](https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles).
+
+Notification:
+
+* method: `workspace/didChangeWatchedFiles`
+* params: `DidChangeWatchedFilesParams` defined as follows:
+
+```scala
+trait DidChangeWatchedFiles {
+  /** The actual file events. */
+  def changes: List[FileEvent]
+}
+```
+
+Where `FileEvent`s are described as follows:
+
+```scala
+trait FileEvent {
+  /** The file's URI. */
+  def uri: DocumentUri
+
+  /** The kind of file event. @link FileChangeType */
+  def type: Int
+}
+
+object FileChangeType {
+  /** The file was just created. */
+  val Created = 1
+  /** The file was just changed. */
+  val Changed = 2
+  /** The file was just deleted. */
+  val Deleted = 3
+}
+```
+
+### 1.6.4. Build Target Changed Notification
 
 The build target changed notification is sent from the server to the client to signal a change in a build target.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -559,7 +646,7 @@ object BuildTargetEventKind {
 The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update the
 user interface with the new information.
 
-### 1.6.4. Build Target Text Documents Request
+### 1.6.5. Build Target Text Documents Request
 
 The build target text documents request is sent from the client to the server to query for the list of source files that are part of a given list of build targets.
 
@@ -583,7 +670,7 @@ trait BuildTargetTextDocumentsResponseResult {
 }
 ```
 
-### 1.6.5. Text Document Build Targets Request
+### 1.6.6. Text Document Build Targets Request
 
 The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -611,7 +698,7 @@ trait TextDocumentBuildTargetsResult {
 }
 ```
 
-### 1.6.6. Dependency Sources Request
+### 1.6.7. Dependency Sources Request
 
 The build target dependency sources request is sent from the client to the server to query for the list of sources for the dependency classpath of a given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -643,7 +730,7 @@ trait DependencySourcesItem {
 }
 ```
 
-### 1.6.7. Resources Request
+### 1.6.8. Resources Request
 
 The build target resources request is sent from the client to the server to query for the list of
 resources of a given list of build targets.
@@ -678,7 +765,7 @@ trait ResourcesItem {
 }
 ```
 
-### 1.6.8. Compile Request
+### 1.6.9. Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -748,7 +835,7 @@ messages to the LSP editor client.
 The client will get a `requestId` field in `CompileReport` or `CompileResult` if the `requestId`
 field in the `CompileParams` is defined.
 
-### 1.6.9. Test Request
+### 1.6.10. Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -831,7 +918,7 @@ during compilation before completing the response.
 The client will get a `requestId` field in the `TestReport` or `TestResult` if the `requestId` field
 in the `TestParams` is defined.
 
-### 1.6.10. Run Request
+### 1.6.11. Run Request
 
 The run request is sent from the client to the server to run a build target. The server communicates
 during the initialize handshake whether this method is supported or not.
