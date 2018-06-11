@@ -2,13 +2,13 @@
 title: Build Server Protocol
 ---
 
-# 1. Build Server Protocol
+# Build Server Protocol
 
 This document describes version 1.0 of the build server protocol.
 
 Edits to this specification can be made via a pull request against this markdown document.
 
-## 1.1. Motivation
+## Motivation
 
 The problem this document aims to address is the multiplied effort required to integrate between
 available language servers/editors and build tools. Currently, every language server must implement
@@ -23,48 +23,48 @@ language servers/editors (clients) understand. This common functionality enables
 to provide their end users the best developer experience while supporting build tools and language
 servers with less effort and time.
 
-- [1. Build Server Protocol](#1-build-server-protocol)
-  - [1.1. Motivation](#11-motivation)
-  - [1.2. Background](#12-background)
-  - [1.3. Status](#13-status)
-  - [1.4. Base protocol](#14-base-protocol)
-  - [1.5. Basic Json Structures](#15-basic-json-structures)
-    - [1.5.1. Build Target](#151-build-target)
-    - [1.5.2. Build Target Identifier](#152-build-target-identifier)
-    - [1.5.3. Hierarchical Id](#153-hierarchical-id)
-    - [1.5.4. DocumentUri](#154-documenturi)
-    - [1.5.5. Uri](#155-uri)
-  - [1.6. Actual Protocol](#16-actual-protocol)
-    - [1.6.1. Server Lifetime](#161-server-lifetime)
-      - [1.6.2 Initialize Build Request](#162-initialize-build-request)
-      - [1.6.3. Initialized Build Notification](#163-initialized-build-notification)
-      - [1.6.4. Shutdown Build Request](#164-shutdown-build-request)
-      - [1.6.5. Exit Build Notification](#165-exit-build-notification)
-      - [1.6.6. Show message](#166-show-message)
-      - [1.6.7. Log message](#167-log-message)
-      - [1.6.8. Publish Diagnostics](#168-publish-diagnostics)
-    - [1.6.2. Workspace Build Targets Request](#162-workspace-build-targets-request)
-  - [1.6.3. `DidChangeWatchedFiles` Notification](#163-didchangewatchedfiles-notification)
-    - [1.6.4. Build Target Changed Notification](#164-build-target-changed-notification)
-    - [1.6.5. Build Target Text Documents Request](#165-build-target-text-documents-request)
-    - [1.6.6. Text Document Build Targets Request](#166-text-document-build-targets-request)
-    - [1.6.7. Dependency Sources Request](#167-dependency-sources-request)
-    - [1.6.8. Resources Request](#168-resources-request)
-    - [1.6.9. Compile Request](#169-compile-request)
-    - [1.6.10. Test Request](#1610-test-request)
-    - [1.6.11. Run Request](#1611-run-request)
-  - [1.7. Extensions](#17-extensions)
-    - [1.7.1. Scala](#171-scala)
-      - [1.7.1.1. Scala Build Target](#1711-scala-build-target)
-      - [1.7.1.2. Scalac Options Request](#1712-scalac-options-request)
-      - [1.7.1.3. Scala Test Classes Request](#1713-scala-test-classes-request)
-      - [1.7.1.4. Scala Main Classes Request](#1714-scala-main-classes-request)
-    - [1.7.2. Sbt](#172-sbt)
-  - [1.8. Appendix](#18-appendix)
-    - [1.8.1. Scala Bindings](#181-scala-bindings)
-    - [1.8.2. FAQ](#182-faq)
+1. [Build Server Protocol](#build-server-protocol)
+  1. [Motivation](#motivation)
+  2. [Background](#background)
+  3. [Status](#status)
+  4. [Base protocol](#base-protocol)
+  5. [Basic Json Structures](#basic-json-structures)
+    1. [Build Target](#build-target)
+    2. [Build Target Identifier](#build-target-identifier)
+    3. [Hierarchical Id](#hierarchical-id)
+    4. [DocumentUri](#documenturi)
+    5. [Uri](#uri)
+  6. [Actual Protocol](#actual-protocol)
+    1. [Server Lifetime](#server-lifetime)
+      1. [Initialize Build Request](#initialize-build-request)
+      2. [Initialized Build Notification](#initialized-build-notification)
+      3. [Shutdown Build Request](#shutdown-build-request)
+      4. [Exit Build Notification](#exit-build-notification)
+      5. [Show message](#show-message)
+      6. [Log message](#log-message)
+      7. [Publish Diagnostics](#publish-diagnostics)
+    2. [Workspace Build Targets Request](#workspace-build-targets-request)
+  7. [`DidChangeWatchedFiles` Notification](#didchangewatchedfiles-notification)
+    1. [Build Target Changed Notification](#build-target-changed-notification)
+    2. [Build Target Text Documents Request](#build-target-text-documents-request)
+    3. [Text Document Build Targets Request](#text-document-build-targets-request)
+    4. [Dependency Sources Request](#dependency-sources-request)
+    5. [Resources Request](#resources-request)
+    6. [Compile Request](#compile-request)
+    7. [Test Request](#test-request)
+    8. [Run Request](#run-request)
+  8. [Extensions](#extensions)
+    1. [Scala](#scala)
+      1. [Scala Build Target](#scala-build-target)
+      2. [Scalac Options Request](#scalac-options-request)
+      3. [Scala Test Classes Request](#scala-test-classes-request)
+      4. [Scala Main Classes Request](#scala-main-classes-request)
+    2. [Sbt](#sbt)
+  9. [Appendix](#appendix)
+    1. [Scala Bindings](#scala-bindings)
+    2. [FAQ](#faq)
 
-## 1.2. Background
+## Background
 
 The Build Server Protocol takes inspiration from the Language Server Protocol (LSP).
 Unlike in the Language Server Protocol, the language server or editor is referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is referred to as the “server”.
@@ -78,7 +78,7 @@ See [Appendix](#15-appendix) for schema definitions that can be used to automati
 bindings for different target languages.
 
 
-## 1.3. Status
+## Status
 
 The Build Server Protocol is not an approved standard. Everything in this
 document is subject to change and open for discussions, including core data
@@ -105,7 +105,7 @@ The best way to share your thoughts on the Build Server Protocol or to get invol
 development is to open an issue or pull request to this repository. Any help on developing
 integrations will be much appreciated.
 
-## 1.4. Base protocol
+## Base protocol
 
 The base protocol is identical to the language server base protocol. See
 <https://microsoft.github.io/language-server-protocol/specification> for
@@ -115,13 +115,13 @@ Like the language server protocol, the build server protocol defines a
 set of JSON-RPC request, response and notification messages which are
 exchanged using the base protocol.
 
-## 1.5. Basic Json Structures
+## Basic Json Structures
 
 In addition to basic data structures in the [General section of the Language Server
 Protocol](https://microsoft.github.io/language-server-protocol/specification#general), the Build
 Server Protocol defines the following additional data structures.
 
-### 1.5.1. Build Target
+### Build Target
 
 Build target contains metadata about an artifact (for example library, test, or binary artifact).
 Using vocabulary of other build tools:
@@ -183,7 +183,7 @@ trait BuildTargetCapabilities {
 }
 ```
 
-### 1.5.2. Build Target Identifier
+### Build Target Identifier
 
 A unique identifier for a target.
 
@@ -194,7 +194,7 @@ trait BuildTargetIdentifer {
 }
 ```
 
-### 1.5.3. Hierarchical Id 
+### Hierarchical Id 
 
 The Hierarchical Id allows clients to uniquely identify a resource and establish a client-parent
 relationship with another id.
@@ -213,7 +213,7 @@ An example of use of hierarchical ids is logs, where BSP clients can use the hie
 to improve their readability in the user interface. Clients can show logs in a tree fashion, for
 example, or with dropdowns.
 
-### 1.5.4. DocumentUri
+### DocumentUri
 
 A document URI uniquely identifies a document.
 
@@ -222,7 +222,7 @@ A document URI uniquely identifies a document.
 type DocumentUri = String
 ```
 
-### 1.5.5. Uri
+### Uri
 
 A URI uniquely identifies a resource.
 
@@ -231,7 +231,7 @@ A URI uniquely identifies a resource.
 type Uri = String
 ```
 
-## 1.6. Actual Protocol
+## Actual Protocol
 
 Unlike the language server protocol, the build server protocol does not
 support dynamic registration of capabilities.
@@ -239,14 +239,14 @@ The motivation for this change is simplicity.
 If a motivating example for dynamic registration comes up this decision can be reconsidered.
 The server and client capabilities must be communicated through the initialize request.
 
-### 1.6.1. Server Lifetime
+### Server Lifetime
 
 Like the language server protocol, the current protocol specification
 defines that the lifetime of a build server is managed by the client
 (e.g. a language server like Dotty IDE). It is up to the client to
 decide when to start (process-wise) and when to shutdown a server.
 
-#### 1.6.2 Initialize Build Request
+#### Initialize Build Request
 
 Like the language server protocol, the initialize request is sent as the
 first request from the client to the server. If the server receives a
@@ -368,7 +368,7 @@ object WatchKind {
 Clients can use these capabilities to notify users what BSP endpoints can
 and cannot be used and why.
 
-#### 1.6.3. Initialized Build Notification
+#### Initialized Build Notification
 
 Like the language server protocol, the initialized notification is sent
 from the client to the server after the client received the result of
@@ -389,7 +389,7 @@ trait InitializedBuildParams {
 }
 ```
 
-#### 1.6.4. Shutdown Build Request
+#### Shutdown Build Request
 
 Like the language server protocol, the shutdown build request is sent
 from the client to the server. It asks the server to shut down, but to
@@ -408,7 +408,7 @@ Response:
 * error: code and message set in case an exception happens during
   shutdown request.
 
-#### 1.6.5. Exit Build Notification
+#### Exit Build Notification
 
 Like the language server protocol, a notification to ask the server to
 exit its process. The server should exit with success code 0 if the
@@ -419,7 +419,7 @@ Notification:
 * method: `build/exit`
 * params: `null`
 
-#### 1.6.6. Show message
+#### Show message
 
 The show message notification is sent from a server to a client to ask the
 client to display a particular message in the user interface.
@@ -467,7 +467,7 @@ The `requestId` field helps clients know which request originated a notification
 requests are handled by the client at the same time. It will only be populated if the client
 defined it in the request that triggered this notification.
 
-#### 1.6.7. Log message
+#### Log message
 
 The log message notification is sent from the server to the client to ask the
 client to log a particular message.
@@ -502,7 +502,7 @@ The `requestId` field helps clients know which request originated a notification
 requests are handled by the client at the same time. It will only be populated if the client
 defined it in the request that triggered this notification.
 
-#### 1.6.8. Publish Diagnostics
+#### Publish Diagnostics
 
 The Diagnostics notification are sent from the server to the client to signal results of validation
 runs.
@@ -534,7 +534,7 @@ optional `requestId` field. Clients can use this id to know which request origin
 notification. This field will be defined if the client defined it in the original request that
 triggered this notification.
 
-### 1.6.2. Workspace Build Targets Request
+### Workspace Build Targets Request
 
 The workspace build targets request is sent from the client to the server to ask for the list of all available build targets in the workspace.
 
@@ -560,7 +560,7 @@ trait WorkspaceBuildTargetsResult {
 }
 ```
 
-## 1.6.3. `DidChangeWatchedFiles` Notification
+## `DidChangeWatchedFiles` Notification
 
 The watched files notification is sent from the client to the server when the client detects changes
 to files watched by the language client. It is recommended that servers register for these file
@@ -602,7 +602,7 @@ object FileChangeType {
 }
 ```
 
-### 1.6.4. Build Target Changed Notification
+### Build Target Changed Notification
 
 The build target changed notification is sent from the server to the client to signal a change in a build target.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -647,7 +647,7 @@ object BuildTargetEventKind {
 The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update the
 user interface with the new information.
 
-### 1.6.5. Build Target Text Documents Request
+### Build Target Text Documents Request
 
 The build target text documents request is sent from the client to the server to query for the list of source files that are part of a given list of build targets.
 
@@ -671,7 +671,7 @@ trait BuildTargetTextDocumentsResponseResult {
 }
 ```
 
-### 1.6.6. Text Document Build Targets Request
+### Text Document Build Targets Request
 
 The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -699,7 +699,7 @@ trait TextDocumentBuildTargetsResult {
 }
 ```
 
-### 1.6.7. Dependency Sources Request
+### Dependency Sources Request
 
 The build target dependency sources request is sent from the client to the server to query for the list of sources for the dependency classpath of a given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -731,7 +731,7 @@ trait DependencySourcesItem {
 }
 ```
 
-### 1.6.8. Resources Request
+### Resources Request
 
 The build target resources request is sent from the client to the server to query for the list of
 resources of a given list of build targets.
@@ -766,7 +766,7 @@ trait ResourcesItem {
 }
 ```
 
-### 1.6.9. Compile Request
+### Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -836,7 +836,7 @@ messages to the LSP editor client.
 The client will get a `requestId` field in `CompileReport` or `CompileResult` if the `requestId`
 field in the `CompileParams` is defined.
 
-### 1.6.10. Test Request
+### Test Request
 
 The test build target request is sent from the client to the server to test the given list of build targets.
 The server communicates during the initialize handshake whether this method is supported or not.
@@ -919,7 +919,7 @@ during compilation before completing the response.
 The client will get a `requestId` field in the `TestReport` or `TestResult` if the `requestId` field
 in the `TestParams` is defined.
 
-### 1.6.11. Run Request
+### Run Request
 
 The run request is sent from the client to the server to run a build target. The server communicates
 during the initialize handshake whether this method is supported or not.
@@ -976,15 +976,15 @@ during compilation before completing the response.
 The client will get a `requestId` field in `RunResult` if the `requestId` field in the
 `RunParams` is defined.
 
-## 1.7. Extensions
+## Extensions
 
 The build server protocol is designed to be extended with language specific data structures and methods.
 
-### 1.7.1. Scala
+### Scala
 
 The following section contains Scala-specific extensions to the build server protocol.
 
-#### 1.7.1.1. Scala Build Target
+#### Scala Build Target
 
 `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling a target containing Scala sources.
 This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition.
@@ -1015,7 +1015,7 @@ object ScalaPlatform {
 }
 ```
 
-#### 1.7.1.2. Scalac Options Request
+#### Scalac Options Request
 
 The build target scalac options request is sent from the client to the server to query for the list of compiler options necessary to compile in a given list of targets.
 
@@ -1055,7 +1055,7 @@ trait ScalacOptionsItem {
 }
 ```
 
-#### 1.7.1.3. Scala Test Classes Request
+#### Scala Test Classes Request
 
 The build target scala test options request is sent from the client to the server to query for the
 list of fully qualified names of test clases in a given list of targets.
@@ -1113,7 +1113,7 @@ during compilation before completing the response.
 The client will get a `requestId` field in `ScalaTestClassesResult` if the `requestId` field in the
 `ScalaTestClassesParams` is defined.
 
-#### 1.7.1.4. Scala Main Classes Request
+#### Scala Main Classes Request
 
 The build target main classes request is sent from the client to the server to query for the list of
 main classes that can be fed as arguments to `buildTarget/run`. This method can be used for the same
@@ -1173,7 +1173,7 @@ during compilation before completing the response.
 The client will get a `requestId` field in `ScalaMainClassesResult` if the `requestId` field in the
 `ScalaMainClassesParams` is defined.
 
-### 1.7.2. Sbt
+### Sbt
 
 The following section contains sbt-specific extensions to the build server protocol. This extension
 allows BSP clients to provide language support for sbt build files.
@@ -1204,9 +1204,9 @@ trait SbtBuildTarget {
 
 where `parent` points to the sbt metabuild of this target (if any).
 
-## 1.8. Appendix
+## Appendix
 
-### 1.8.1. Scala Bindings
+### Scala Bindings
 
 A Scala library implementation of this communication protocol is available in this repository.
 The public API of this library currently has three direct Scala dependencies:
@@ -1215,7 +1215,7 @@ The public API of this library currently has three direct Scala dependencies:
 * Monix - for asynchronous programming primitives
 * Circe - for JSON serialization and parsing of protocol data structures
 
-### 1.8.2. FAQ
+### FAQ
 
 **Q**: What's the relationship between BSP and LSP?
 
