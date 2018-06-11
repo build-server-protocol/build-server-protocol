@@ -936,9 +936,6 @@ trait TestReport {
   /** The total number of skipped tests. */
   def skipped: Int
 
-  /** The total number of pending tests. */
-  def pending: Int
-
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
   def time: Option[Int]
 }
@@ -988,7 +985,7 @@ trait RunResult {
   /** An optional request id to know the origin of this report. */
   def requestId: Option[String] 
   
-  /** An status code for the execution. Allows to use POSIX run c */
+  /** An status code for the execution. */
   def statusCode: Int
 }
 
@@ -1194,7 +1191,7 @@ trait ScalaMainClass {
   /** The user arguments to the main entrypoint. */
   def arguments: List[String]
   
-  /** The jvm options the application. */
+  /** The jvm options for the application. */
   def jvmOptions: List[String]
 }
 
