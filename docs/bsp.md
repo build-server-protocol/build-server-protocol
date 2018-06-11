@@ -204,7 +204,7 @@ trait TaskId {
   def id: String
 
   /** The parent id. */
-  def parent: String
+  def parent: Option[String]
 }
 ```
 
@@ -603,7 +603,7 @@ Where `FileEvent`s are described as follows:
 ```scala
 trait FileEvent {
   /** The file's URI. */
-  def uri: uri
+  def uri: Uri
 
   /** The kind of file event. @link FileChangeType */
   def type: Int
