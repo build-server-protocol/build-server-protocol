@@ -542,8 +542,7 @@ Request:
 
 ```scala
 trait RegisterFileWatcherParams {
-   /** The glob pattern to watch in all the workspace.
-     * Syntax is implementation specific. */
+   /** The glob pattern to watch in all the workspace. */
    def globPattern: String
    
    /** The kind of events of interest. If omitted, all
@@ -560,6 +559,18 @@ object WatchKind {
   val Delete = 3
 }
 ```
+
+The glob pattern to watch in the workspace has the following descriptors:
+
+* `*` Matches 0 or more characters in a single path portion
+* `**` matches zero or more path portions
+* `*.{scala,js}` expands to two patterns: `*.scala` and `*.js`
+* Forward slashes `/` are always treated as path separators, even on Windows.
+
+Further details are implementation defined.
+
+An example of a glob patttern is `src/**/*.{scala,js}`, which describes any javascript or scala file
+under the `src/` directory.
 
 Response:
 
