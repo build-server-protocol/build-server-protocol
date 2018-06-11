@@ -210,7 +210,7 @@ trait TaskId {
 
 A task id can represent any child-parent relationship established by the build tool.
 
-An example of use of task ids is logs, where BSP clients can use the hierarchical id of logs
+An example of use of task ids is logs, where BSP clients can use the task ids of logs
 to improve their readability in the user interface. Clients can show logs in a tree fashion, for
 example, or with dropdowns.
 
@@ -399,7 +399,7 @@ trait ShowMessageParams {
   /** The message type. See {@link MessageType}. */
   def type: Int
 
-  /** The message hierarchical id. */
+  /** The task id if any. */
   def id: Option[TaskId]
 
   /** The request id that originated this notification. */
@@ -447,7 +447,7 @@ trait LogMessageParams {
   /** The message type. See {@link MessageType} */
   def type: Int
   
-  /** The message hierarchical id. */
+  /** The task id if any. */
   def id: Option[TaskId]
   
   /** The request id that originated this notification. */
@@ -985,7 +985,7 @@ trait RunResult {
   /** An optional request id to know the origin of this report. */
   def requestId: Option[String] 
   
-  /** An status code for the execution. */
+  /** A status code for the execution. */
   def statusCode: Int
 }
 
