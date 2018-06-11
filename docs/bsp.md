@@ -870,11 +870,11 @@ trait RunResult {
 
 object StatusCode {
   /** Execution was successful. */
-  val Ok = 0
+  val Ok = 1
   /** Execution failed. */
-  val Error = 1
+  val Error = 2
   /** Execution was cancelled. */
-  val Cancelled = -1
+  val Cancelled = 2
 }
 
 ```
@@ -1106,34 +1106,25 @@ trait SbtBuildTarget {
   /** The classpath for the sbt build (including sbt jars). */
   def classpath: List[URI]
   
-  /** The Scala build target for this sbt build target. */
+  /** The Scala build target associated with this sbt build.
+    * It contains the scala version and the scala jars used. */
   def scalaBuildTarget: ScalaBuildTarget
 }
 ```
 
 where `parent` points to the sbt metabuild of this target (if any).
 
-#### 1.7.2.1. Sbt Build Target
-
 ## 1.8. Appendix
 
-### 1.8.1. Protobuf schema definitions
-
-The data structures presented in this document are accompanied by protobuf schema definitions.
-See [bsp.proto](../src/main/protobuf/bsp.proto).
-
-### 1.8.2. Scala Bindings
+### 1.8.1. Scala Bindings
 
 A Scala library implementation of this communication protocol is available in this repository.
-The public API of this library currently has three direct Scala dependencies:
+The public API of this library currently has two direct Scala dependencies:
 
-* ScalaPB - for generation of Scala sources from protobuf schema
 * Monix - for asynchronous programming primitives
 * Circe - for JSON serialization and parsing of protocol data structures
 
-If there is demand, it should be possible to refactor out all three dependencies to provide a zero dependency core module.
-
-### 1.8.3. FAQ
+### 1.8.2. FAQ
 
 **Q**: What's the relationship between BSP and LSP?
 

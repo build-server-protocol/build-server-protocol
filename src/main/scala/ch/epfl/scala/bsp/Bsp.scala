@@ -6,13 +6,13 @@ import io.circe.Decoder.Result
 import io.circe.{Decoder, DecodingFailure, HCursor, Json, RootEncoder}
 import io.circe.generic.JsonCodec
 
-final case class Uri private[Uri](val s: String)
+final case class Uri private[Uri] (val value: String)
 object Uri {
   // This is the only valid way to create a URI
   def apply(u: URI): Uri = Uri(u.toString)
 
   implicit val uriEncoder: RootEncoder[Uri] = new RootEncoder[Uri] {
-    override def apply(a: Uri): Json = Json.fromString(a.s)
+    override def apply(a: Uri): Json = Json.fromString(a.value)
   }
 
   implicit val uriDecoder: Decoder[Uri] = new Decoder[Uri] {
@@ -85,10 +85,10 @@ object Uri {
     compileProvider: CompileProvider,
     testProvider: TestProvider,
     runProvider: RunProvider,
-    providesTextDocumentBuildTargets: Boolean,
-    providesDependencySources: Boolean,
-    providesResources: Boolean,
-    providesBuildTargetChanged: Boolean
+    textDocumentBuildTargetsProvider: Boolean,
+    dependencySourcesProvider: Boolean,
+    resourcesProvider: Boolean,
+    buildTargetChangedProvider: Boolean
 )
 
 @JsonCodec final case class InitializeBuildResult(
@@ -119,21 +119,21 @@ object MessageType {
   }
 }
 
-@JsonCodec final case class HierarchicalId(
+@JsonCodec final case class TaskId(
     id: String,
-    parentId: String
+    parent: Option[String]
 )
 
 @JsonCodec final case class ShowMessageParams(
     `type`: MessageType,
-    id: Option[HierarchicalId],
+    task: Option[TaskId],
     requestId: Option[String],
     message: String
 )
 
 @JsonCodec final case class LogMessageParams(
     `type`: MessageType,
-    id: Option[HierarchicalId],
+    task: Option[TaskId],
     requestId: Option[String],
     message: String
 )
