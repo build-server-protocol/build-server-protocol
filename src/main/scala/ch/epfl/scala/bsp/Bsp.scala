@@ -82,33 +82,6 @@ object Uri {
     languageIds: List[String]
 )
 
-sealed abstract class WatchKind(val id: Int)
-object WatchKind {
-  case object Create extends WatchKind(1)
-  case object Change extends WatchKind(2)
-  case object Delete extends WatchKind(3)
-
-  implicit val watchKindEncoder: RootEncoder[WatchKind] = new RootEncoder[WatchKind] {
-    override def apply(w: WatchKind): Json = Json.fromInt(w.id)
-  }
-
-  implicit val watchKindDecoder: Decoder[WatchKind] = new Decoder[WatchKind] {
-    override def apply(c: HCursor): Result[WatchKind] = {
-      c.as[Int].flatMap {
-        case 1 => Right(Create)
-        case 2 => Right(Change)
-        case 3 => Right(Delete)
-        case n => Left(DecodingFailure(s"Unknown watch kind for $n", c.history))
-      }
-    }
-  }
-}
-
-@JsonCodec final case class FileSystemWatcher(
-    globPattern: String,
-    kind: Option[WatchKind]
-)
-
 @JsonCodec final case class BuildServerCapabilities(
     compileProvider: CompileProvider,
     testProvider: TestProvider,
@@ -116,8 +89,7 @@ object WatchKind {
     textDocumentBuildTargetsProvider: Boolean,
     dependencySourcesProvider: Boolean,
     resourcesProvider: Boolean,
-    buildTargetChangedProvider: Boolean,
-    watchers: List[FileSystemWatcher]
+    buildTargetChangedProvider: Boolean
 )
 
 @JsonCodec final case class InitializeBuildResult(
@@ -180,6 +152,37 @@ object MessageType {
     targets: List[BuildTarget]
 )
 
+sealed abstract class WatchKind(val id: Int)
+object WatchKind {
+  case object Create extends WatchKind(1)
+  case object Change extends WatchKind(2)
+  case object Delete extends WatchKind(3)
+
+  implicit val watchKindEncoder: RootEncoder[WatchKind] = new RootEncoder[WatchKind] {
+    override def apply(w: WatchKind): Json = Json.fromInt(w.id)
+  }
+
+  implicit val watchKindDecoder: Decoder[WatchKind] = new Decoder[WatchKind] {
+    override def apply(c: HCursor): Result[WatchKind] = {
+      c.as[Int].flatMap {
+        case 1 => Right(Create)
+        case 2 => Right(Change)
+        case 3 => Right(Delete)
+        case n => Left(DecodingFailure(s"Unknown watch kind for $n", c.history))
+      }
+    }
+  }
+}
+
+@JsonCodec final case class RegisterFileWatcherParams(
+    globPattern: String,
+    kind: Option[WatchKind]
+)
+
+@JsonCodec final case class RegisterFileWatcherResult(
+    id: String
+)
+
 sealed abstract class FileEvent(val id: Int)
 object FileEvent {
   case object Created extends FileEvent(1)
@@ -204,6 +207,14 @@ object FileEvent {
 
 @JsonCodec final case class DidChangeWatchedFiles(
     changes: List[FileEvent]
+)
+
+@JsonCodec final case class CancelFileWatcherParams(
+    id: String
+)
+
+@JsonCodec final case class CancelFileWatcherResult(
+    cancelled: Boolean
 )
 
 sealed abstract class BuildTargetEventKind(val id: Int)

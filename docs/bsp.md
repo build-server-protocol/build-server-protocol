@@ -327,33 +327,6 @@ trait BuildServerCapabilities {
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
   def providesBuildTargetChanged: Boolean
-  
-  /** The file system watchers that the server wants the client
-    * to notify events about via `workspace/didChangeWatchedFiles`. */
-  def watchers: List[FileSystemWatcher]
-}
-```
-
-where `FileSystemWatcher` is described as follows:
-
-```scala
-trait FileSystemWatcher {
-   /** The glob pattern to watch in all the workspace.
-     * Syntax is implementation specific. */
-   def globPattern: String
-   
-   /** The kind of events of interest.
-    * If omitted, all events will be watched. */
-   def kind: Option[Int]
-}
-
-object WatchKind {
-  /** Interested in create events. */
-  val Create = 1
-  /** Interested in change events. */
-  val Change = 2
-  /** Interested in delete events. */
-  val Delete = 3
 }
 ```
 
@@ -552,18 +525,59 @@ trait WorkspaceBuildTargetsResult {
 }
 ```
 
-## `DidChangeWatchedFiles` Notification
+### Register File Watcher Request
 
-The watched files notification is sent from the client to the server when the client detects changes
-to files watched by the language client. It is recommended that servers register for these file
-events using the registration mechanism.
+The file watching request is sent from the server to the client to notify that the server is
+interested in watching file changes coming from the client (the editor, or a language server
+forwarding `workspace/didChangeWatchedFiles`). These file changes can be used to invalidate tasks
+(like compilation) or caches in the build tool.
 
 For a motivation of this feature, check [the LSP `workspace/didChangedWatchedFiles`
 description](https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles).
 
+Request:
+
+* method: `build/registerFileWatcher`
+* params: `RegisterFileWatcherParams`, defined as follows
+
+```scala
+trait RegisterFileWatcherParams {
+   /** The glob pattern to watch in all the workspace.
+     * Syntax is implementation specific. */
+   def globPattern: String
+   
+   /** The kind of events of interest. If omitted, all
+     * events will be watched. @link WatchKind */
+   def kind: Option[Int]
+}
+
+object WatchKind {
+  /** Interested in create events. */
+  val Create = 1
+  /** Interested in change events. */
+  val Change = 2
+  /** Interested in delete events. */
+  val Delete = 3
+}
+```
+
+Response:
+
+* result: `RegisterFileWatcherResult`, defined as follows
+
+```scala
+trait RegisterFileWatcherResult {
+  /** The id associated with the watching request. */
+  def id: String
+}
+```
+
+When the watcher is registered, the client can send any number of `build/didChangedWatcheFiles` to
+the server.
+
 Notification:
 
-* method: `workspace/didChangeWatchedFiles`
+* method: `build/didChangeWatchedFiles`
 * params: `DidChangeWatchedFilesParams` defined as follows:
 
 ```scala
@@ -591,6 +605,34 @@ object FileChangeType {
   val Changed = 2
   /** The file was just deleted. */
   val Deleted = 3
+}
+```
+
+### Cancel File Watcher Request
+
+A cancel file watcher request is sent from the server to the client to cancel file watching events.
+The cancellation is done using the `id` of returned by `RegisterFileWatcherResult`.
+
+Request:
+
+* method: `build/cancelFileWatcher`
+* params: `CancelFileWatcherParams`, defined as follows
+
+```scala
+trait CancelFileWatcherParams {
+  /** The identifier of the registered file watcher. */
+  def id: String
+}
+```
+
+Response:
+
+* result: `CancelFileWatcherResult` defined as follows
+
+```scala
+trait CancelFileWatcherResult {
+  /** Whether file watching was cancelled. */
+  def cancelled: Boolean
 }
 ```
 

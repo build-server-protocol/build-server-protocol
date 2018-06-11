@@ -14,6 +14,12 @@ trait Build {
   object logMessage extends Endpoint[LogMessageParams, Unit]("build/logMessage")
   object publishDiagnostics
       extends Endpoint[PublishDiagnosticsParams, Unit]("build/publishDiagnostics")
+  object registerFileWatcher
+      extends Endpoint[RegisterFileWatcherParams, RegisterFileWatcherResult](
+        "build/registerFileWatcher")
+  object cancelFileWatcher
+      extends Endpoint[CancelFileWatcherParams, CancelFileWatcherResult](
+        "build/cancelFileWatcher")
 }
 
 object BuildTarget extends BuildTarget
@@ -35,9 +41,11 @@ trait BuildTarget {
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
   object scalaTestClasses
-      extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult]("buildTarget/scalaTestClasses")
+      extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult](
+        "buildTarget/scalaTestClasses")
   object scalaMainClasses
-    extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult]("buildTarget/scalaMainClasses")
+      extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
+        "buildTarget/scalaMainClasses")
 }
 
 object Workspace extends Workspace
