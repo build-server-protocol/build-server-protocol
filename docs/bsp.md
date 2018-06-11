@@ -188,10 +188,12 @@ A unique identifier for a target.
 
 ```scala
 trait BuildTargetIdentifer {
-  /** The target’s URI */
-  def uri: URI
+  /** The target’s Uri */
+  def uri: Uri
 }
 ```
+
+where `type Uri = String`.
 
 ### 1.5.3. Hierarchical Id 
 
@@ -529,7 +531,7 @@ trait DidChangeBuildTarget {
 
 trait BuildTargetEvent {
   /** The identifier for the changed build target */
-  def uri: URI
+  def uri: Uri
   
   /** The kind of change for this build target */
   def kind: Option[Int]
@@ -637,7 +639,7 @@ trait DependencySourcesItem {
   /** List of resources containing source files of the
     * target's dependencies.
     * Can be source files, jar files, zip files, or directories. */
-  def sources: List[URI]
+  def sources: List[Uri]
 }
 ```
 
@@ -672,7 +674,7 @@ trait ResourcesResult {
 trait ResourcesItem {
   def target: BuildTargetIdentifier
   /** List of resource files. */
-  def resources: List[URI]
+  def resources: List[Uri]
 }
 ```
 
@@ -735,7 +737,7 @@ trait CompileReport {
   def warnings: Int
 
   /** The total number of milliseconds it took to compile the target. */
-  def time: Option[Long]
+  def time: Option[Int]
 }
 ```
 
@@ -816,7 +818,7 @@ trait TestReport {
   def pending: Int
 
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
-  def time: Option[Long]
+  def time: Option[Int]
 }
 ```
 
@@ -958,10 +960,10 @@ trait ScalacOptionsItem {
       * identical to what is passed as arguments to
       * the -classpath flag in the command line interface
       * of scalac. */
-    def classpath: List[URI]
+    def classpath: List[Uri]
     
     /** The output directory for classfiles produced by this target */
-    def classDirectory: URI
+    def classDirectory: Uri
 }
 ```
 
@@ -1104,7 +1106,7 @@ trait SbtBuildTarget {
   def autoImports: List[String]
   
   /** The classpath for the sbt build (including sbt jars). */
-  def classpath: List[URI]
+  def classpath: List[Uri]
   
   /** The Scala build target associated with this sbt build.
     * It contains the scala version and the scala jars used. */
@@ -1119,8 +1121,9 @@ where `parent` points to the sbt metabuild of this target (if any).
 ### 1.8.1. Scala Bindings
 
 A Scala library implementation of this communication protocol is available in this repository.
-The public API of this library currently has two direct Scala dependencies:
+The public API of this library currently has three direct Scala dependencies:
 
+* Scribe - for logging
 * Monix - for asynchronous programming primitives
 * Circe - for JSON serialization and parsing of protocol data structures
 
