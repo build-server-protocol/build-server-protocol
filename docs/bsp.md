@@ -494,6 +494,8 @@ trait PublishDiagnosticsParams {
 }
 ```
 
+where `Diagnostic` is defined as it is in LSP.
+
 The definition of `PublishDiagnosticsParams` is similar to LSP's but contains the addition of an
 optional `requestId` field. Clients can use this id to know which request originated the
 notification. This field will be defined if the client defined it in the original request that

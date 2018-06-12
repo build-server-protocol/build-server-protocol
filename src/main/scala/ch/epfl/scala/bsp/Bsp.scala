@@ -43,15 +43,43 @@ object Uri {
     canRun: Boolean,
 )
 
+sealed abstract class BuildTargetKind(val id: Int)
+case object BuildTargetKind {
+  case object Library extends BuildTargetKind(1)
+  case object Test extends BuildTargetKind(2)
+  case object App extends BuildTargetKind(3)
+  case object IntegrationTest extends BuildTargetKind(4)
+  case object Bench extends BuildTargetKind(5)
+
+  implicit val buildTargetKindEncoder: RootEncoder[BuildTargetKind] =
+    new RootEncoder[BuildTargetKind] {
+      override def apply(a: BuildTargetKind): Json = Json.fromInt(a.id)
+    }
+
+  implicit val buildTargetKindDecoder: Decoder[BuildTargetKind] =
+    new Decoder[BuildTargetKind] {
+      override def apply(c: HCursor): Result[BuildTargetKind] = {
+        c.as[Int].flatMap {
+          case 1 => Right(Library)
+          case 2 => Right(Test)
+          case 3 => Right(App)
+          case 4 => Right(IntegrationTest)
+          case 5 => Right(Bench)
+          case n => Left(DecodingFailure(s"Unknown build target kind id for $n", c.history))
+        }
+      }
+    }
+}
+
 @JsonCodec final case class BuildTarget(
     id: BuildTargetIdentifier,
     displayName: String,
+    kind: BuildTargetKind,
     languageIds: List[String],
-    dependencies: BuildTargetIdentifier,
+    dependencies: List[BuildTargetIdentifier],
     capabilities: BuildTargetCapabilities,
     data: Option[Json]
 )
-
 @JsonCodec final case class BuildClientCapabilities(
     languageIds: List[String],
     providesFileWatching: Boolean
@@ -139,10 +167,67 @@ object MessageType {
     message: String
 )
 
+@JsonCodec final case class Position(
+    line: Int,
+    character: Int
+)
+
+@JsonCodec final case class Range(
+    start: Position,
+    end: Position
+)
+
+@JsonCodec case class Location(
+    uri: Uri,
+    range: Range
+)
+
+sealed abstract class DiagnosticSeverity(val id: Int)
+object DiagnosticSeverity {
+  case object Error extends DiagnosticSeverity(1)
+  case object Warning extends DiagnosticSeverity(2)
+  case object Information extends DiagnosticSeverity(3)
+  case object Hint extends DiagnosticSeverity(4)
+
+  implicit val diagnosticSeverityEncoder: RootEncoder[DiagnosticSeverity] = {
+    new RootEncoder[DiagnosticSeverity] {
+      override def apply(a: DiagnosticSeverity): Json = Json.fromInt(a.id)
+    }
+  }
+
+  implicit val diagnosticSeverityDecoder: Decoder[DiagnosticSeverity] = {
+    new Decoder[DiagnosticSeverity] {
+      override def apply(c: HCursor): Result[DiagnosticSeverity] = {
+        c.as[Int].flatMap {
+          case 1 => Right(Error)
+          case 2 => Right(Warning)
+          case 3 => Right(Information)
+          case 4 => Right(Hint)
+          case n => Left(DecodingFailure(s"Unknown diagnostic severity id for $n", c.history))
+        }
+      }
+    }
+  }
+}
+
+@JsonCodec final case class DiagnosticRelatedInformation(
+    location: Location,
+    message: String
+)
+
+@JsonCodec final case class Diagnostic(
+    range: Range,
+    severity: Option[DiagnosticSeverity],
+    code: Option[String],
+    source: Option[String],
+    message: String,
+    relatedInformation: Option[DiagnosticRelatedInformation]
+)
+
 @JsonCodec final case class PublishDiagnosticsParams(
     uri: Uri,
     requestId: Option[String],
-    message: String
+    diagnostics: List[Diagnostic]
 )
 
 @JsonCodec final case class WorkspaceBuildTargetsRequest()
