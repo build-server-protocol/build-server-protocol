@@ -1,8 +1,7 @@
-publishArtifact in Test in Global := false
-
 val bsp = project
   .in(file("."))
   .settings(
+    publishArtifact in Test := false,
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
     libraryDependencies ++= List(
       "io.circe" %% "circe-core" % "0.9.0",
