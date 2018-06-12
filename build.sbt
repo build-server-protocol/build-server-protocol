@@ -1,3 +1,5 @@
+publishArtifact in Test in Global := false
+
 val bsp = project
   .in(file("."))
   .settings(
