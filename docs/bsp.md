@@ -1247,7 +1247,7 @@ trait SbtBuildTarget {
   /** The build targets defined by the sbt build represented
     * in this target. It can contain normal project targets or sbt
     * build targets if this target represents an sbt meta-meta build. */
-  def definedTargets: List[BuildTargetIdentifier]
+  def children: List[BuildTargetIdentifier]
 }
 ```
 
@@ -1258,7 +1258,7 @@ The sbt build target for `M1` will have `A` and `B` as the defined targets and `
 Similarly, the sbt build target for `M2` will have `M1` as the defined target and no parent.
 
 Clients can use this information to reconstruct the tree of sbt meta builds. The
-`parent` information can be defined from `definedTargets` but it's provided by the server to
+`parent` information can be defined from `children` but it's provided by the server to
 simplify the data processing on the client side.
 
 ## Appendix
