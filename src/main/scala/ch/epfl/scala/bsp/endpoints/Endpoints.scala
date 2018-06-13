@@ -35,7 +35,7 @@ trait BuildTarget {
         "buildTarget/dependencySources")
   object resources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
-        "buildTarget/dependencySources")
+        "buildTarget/resources")
 
   // Scala specific endpoints
   object scalacOptions

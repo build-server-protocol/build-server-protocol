@@ -184,7 +184,7 @@ trait BuildTargetCapabilities {
 
 ### Build Target Identifier
 
-A unique identifier for a target.
+A unique identifier for a target, usually the project base directory.
 
 ```scala
 trait BuildTargetIdentifer {
@@ -1228,9 +1228,6 @@ support for sbt build files. This metadata is embedded in the `data: Option[Json
 
 ```scala
 trait SbtBuildTarget {
-  /** An optional parent if the target has an sbt meta project. */
-  def parent: Option[BuildTargetIdentifier]
-  
   /** The sbt version. Useful to support version-dependent syntax. */
   def sbtVersion: String
   
@@ -1240,13 +1237,23 @@ trait SbtBuildTarget {
   /** The classpath for the sbt build (including sbt jars). */
   def classpath: List[Uri]
   
-  /** The Scala build target associated with this sbt build.
-    * It contains the scala version and the scala jars used. */
+  /** The Scala build target describing the scala
+   * version and scala jars used by this sbt version. */
   def scalaBuildTarget: ScalaBuildTarget
+  
+  /** An optional parent if the target has an sbt meta project. */
+  def parent: Option[BuildTargetIdentifier]
+  
+  /** The build targets defined by the sbt build represented
+    * in this target. It can contain scala targets or sbt build
+    * targets if this target represents an sbt meta-meta build. */
+  def definedTargets: List[Json]
 }
 ```
 
-where `parent` points to the sbt metabuild of this target (if any).
+Clients can use this information to reconstruct the tree of sbt meta builds in a simple way. The
+`parent` information can be defined from `definedTargets` but it's provided by the server to
+simplify the data processing on the client side.
 
 ## Appendix
 
