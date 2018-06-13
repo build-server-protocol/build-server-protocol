@@ -549,5 +549,5 @@ object ScalaPlatform {
     classpath: List[Uri],
     scalaBuildTarget: ScalaBuildTarget,
     parent: Option[BuildTargetIdentifier],
-    definedTargets: List[Json],
+    definedTargets: List[BuildTargetIdentifier],
 )
