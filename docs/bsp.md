@@ -1244,9 +1244,9 @@ trait SbtBuildTarget {
   /** An optional parent if the target has an sbt meta project. */
   def parent: Option[BuildTargetIdentifier]
   
-  /** The build targets defined by the sbt build represented
-    * in this target. It can contain normal project targets or sbt
-    * build targets if this target represents an sbt meta-meta build. */
+  /** The inverse of parent, list of targets that have this build target
+    * defined as their parent. It can contain normal project targets or
+    * sbt build targets if this target represents an sbt meta-meta build. */
   def children: List[BuildTargetIdentifier]
 }
 ```
