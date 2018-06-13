@@ -184,7 +184,7 @@ trait BuildTargetCapabilities {
 
 ### Build Target Identifier
 
-A unique identifier for a target.
+A unique identifier for a target, usually the project base directory.
 
 ```scala
 trait BuildTargetIdentifer {
@@ -1228,9 +1228,6 @@ support for sbt build files. This metadata is embedded in the `data: Option[Json
 
 ```scala
 trait SbtBuildTarget {
-  /** An optional parent if the target has an sbt meta project. */
-  def parent: Option[BuildTargetIdentifier]
-  
   /** The sbt version. Useful to support version-dependent syntax. */
   def sbtVersion: String
   
@@ -1240,13 +1237,29 @@ trait SbtBuildTarget {
   /** The classpath for the sbt build (including sbt jars). */
   def classpath: List[Uri]
   
-  /** The Scala build target associated with this sbt build.
-    * It contains the scala version and the scala jars used. */
+  /** The Scala build target describing the scala
+   * version and scala jars used by this sbt version. */
   def scalaBuildTarget: ScalaBuildTarget
+  
+  /** An optional parent if the target has an sbt meta project. */
+  def parent: Option[BuildTargetIdentifier]
+  
+  /** The inverse of parent, list of targets that have this build target
+    * defined as their parent. It can contain normal project targets or
+    * sbt build targets if this target represents an sbt meta-meta build. */
+  def children: List[BuildTargetIdentifier]
 }
 ```
 
-where `parent` points to the sbt metabuild of this target (if any).
+For example, say we have a project in `/foo/bar` defining projects `A` and `B` and two meta builds
+`M1` (defined in `/foo/bar/project`) and `M2` (defined in `/foo/bar/project/project`).
+
+The sbt build target for `M1` will have `A` and `B` as the defined targets and `M2` as the parent.
+Similarly, the sbt build target for `M2` will have `M1` as the defined target and no parent.
+
+Clients can use this information to reconstruct the tree of sbt meta builds. The
+`parent` information can be defined from `children` but it's provided by the server to
+simplify the data processing on the client side.
 
 ## Appendix
 
