@@ -6,7 +6,11 @@ import io.circe.Decoder.Result
 import io.circe.{Decoder, DecodingFailure, HCursor, Json, RootEncoder}
 import io.circe.generic.JsonCodec
 
-final case class Uri private[Uri] (val value: String)
+final case class Uri private[Uri] (val value: String) {
+  def toPath: java.nio.file.Path =
+    java.nio.file.Paths.get(new java.net.URI(value))
+}
+
 object Uri {
   // This is the only valid way to create a URI
   def apply(u: URI): Uri = Uri(u.toString)
