@@ -400,7 +400,7 @@ trait ShowMessageParams {
   def type: Int
 
   /** The task id if any. */
-  def id: Option[TaskId]
+  def task: Option[TaskId]
 
   /** The request id that originated this notification. */
   def originId: Option[String]
@@ -448,7 +448,7 @@ trait LogMessageParams {
   def type: Int
   
   /** The task id if any. */
-  def id: Option[TaskId]
+  def task: Option[TaskId]
   
   /** The request id that originated this notification. */
   def originId: Option[String]
