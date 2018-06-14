@@ -160,14 +160,14 @@ object MessageType {
 @JsonCodec final case class ShowMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    requestId: Option[String],
+    originId: Option[String],
     message: String
 )
 
 @JsonCodec final case class LogMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    requestId: Option[String],
+    originId: Option[String],
     message: String
 )
 
@@ -230,7 +230,7 @@ object DiagnosticSeverity {
 
 @JsonCodec final case class PublishDiagnosticsParams(
     uri: Uri,
-    requestId: Option[String],
+    originId: Option[String],
     diagnostics: List[Diagnostic]
 )
 
@@ -390,18 +390,18 @@ case object BuildTargetEventKind {
 // Request: 'buildTarget/compile', C -> S
 @JsonCodec final case class CompileParams(
     targets: List[BuildTargetIdentifier],
-    requestId: Option[String],
+    originId: Option[String],
     arguments: List[Json]
 )
 
 @JsonCodec final case class CompileResult(
-    requestId: Option[String],
+    originId: Option[String],
     data: Option[Json]
 )
 
 @JsonCodec final case class CompileReport(
     target: BuildTargetIdentifier,
-    requestId: Option[String],
+    originId: Option[String],
     errors: Int,
     warnings: Int,
     time: Option[Long]
@@ -409,18 +409,18 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class TestParams(
     targets: List[BuildTargetIdentifier],
-    requestId: Option[String],
+    originId: Option[String],
     arguments: List[Json]
 )
 
 @JsonCodec final case class TestResult(
-    requestId: Option[String],
+    originId: Option[String],
     data: Option[Json]
 )
 
 @JsonCodec final case class TestReport(
     target: BuildTargetIdentifier,
-    requestId: Option[String],
+    originId: Option[String],
     passed: Int,
     failed: Int,
     ignored: Int,
@@ -432,7 +432,7 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class RunParams(
     target: BuildTargetIdentifier,
-    requestId: Option[String],
+    originId: Option[String],
     arguments: List[Json]
 )
 
@@ -459,7 +459,7 @@ object ExitStatus {
 }
 
 @JsonCodec final case class RunResult(
-    requestId: Option[String],
+    originId: Option[String],
     exitStatus: ExitStatus
 )
 
@@ -512,7 +512,7 @@ object ScalaPlatform {
 // Request: 'buildTarget/scalaTestClasses', C -> S
 @JsonCodec final case class ScalaTestClassesParams(
     targets: List[BuildTargetIdentifier],
-    requestId: Option[String],
+    originId: Option[String],
 )
 
 @JsonCodec final case class ScalaTestClassesItem(
@@ -528,7 +528,7 @@ object ScalaPlatform {
 // Request: 'buildTarget/scalaMainClasses', C -> S
 @JsonCodec final case class ScalaMainClassesParams(
     targets: List[BuildTargetIdentifier],
-    requestId: Option[String],
+    originId: Option[String],
 )
 
 @JsonCodec final case class ScalaMainClass(
