@@ -1,5 +1,7 @@
 # Build Server Protocol
 
+[![Join the chat at https://gitter.im/scalacenter/bsp](https://badges.gitter.im/scalacenter/bsp.svg)](https://gitter.im/scalacenter/bsp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This project is a work-in-progress effort to improve the integration
 between language server/editors and build tools. This effort is led by the
 Scala Center and Jetbrains, together with the help of other tool developers
