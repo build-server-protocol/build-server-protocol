@@ -4,7 +4,7 @@ import java.net.{URI, URISyntaxException}
 
 import io.circe.Decoder.Result
 import io.circe.{Decoder, DecodingFailure, HCursor, Json, RootEncoder}
-import io.circe.generic.JsonCodec
+import io.circe.derivation.JsonCodec
 
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
