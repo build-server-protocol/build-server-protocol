@@ -1047,9 +1047,9 @@ trait ScalaBuildTarget {
 
   /** The target platform for this target */
   def platform: Int
-  
-  /** A sequence of Scala jars. */
-  def scalaJars: List[String]
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  def jars: List[String]
 }
 
 object ScalaPlatform {
