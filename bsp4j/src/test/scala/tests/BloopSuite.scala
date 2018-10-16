@@ -33,15 +33,15 @@ class BloopClient extends BuildClient {
     diagnostics.clear()
     compileReports.clear()
   }
-  override def onShowMessage(params: ShowMessageParams): Unit = showMessages += params
-  override def onLogMessage(params: LogMessageParams): Unit = logMessages += params
-  override def onPublishDiagnostics(params: PublishDiagnosticsParams): Unit = diagnostics += params
-  override def onBuildTargetChanged(params: DidChangeBuildTarget): Unit = pprint.log(params)
-  override def registerFileWatcher(
+  override def onBuildShowMessage(params: ShowMessageParams): Unit = showMessages += params
+  override def onBuildLogMessage(params: LogMessageParams): Unit = logMessages += params
+  override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit = diagnostics += params
+  override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = pprint.log(params)
+  override def buildRegisterFileWatcher(
       params: RegisterFileWatcherParams): CompletableFuture[RegisterFileWatcherResult] = null
-  override def cancelFileWatcher(
+  override def buildCancelFileWatcher(
       params: CancelFileWatcherParams): CompletableFuture[CancelFileWatcherResult] = null
-  override def onCompileReport(params: CompileReport): Unit = compileReports += params
+  override def onBuildTargetCompileReport(params: CompileReport): Unit = compileReports += params
 }
 
 class BloopSuite extends FunSuite {
@@ -140,7 +140,7 @@ class BloopSuite extends FunSuite {
 
   def assertWorkspaceBuildTargets(server: BloopServer): Unit = {
     // workspace/buildTargets
-    val buildTargets = server.listWorkspaceBuildTargets().get().getTargets.asScala
+    val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
     assert(buildTargets.length == 6)
     val scalaBuildTargets = buildTargets.map(_.asScalaBuildTarget)
     scalaBuildTargets.foreach { scalaBuildTarget =>
@@ -155,7 +155,7 @@ class BloopSuite extends FunSuite {
   }
 
   def getBuildTargets(server: BloopServer): util.List[BuildTargetIdentifier] =
-    server.listWorkspaceBuildTargets().get().getTargets.asScala.map(_.getId).asJava
+    server.workspaceBuildTargets().get().getTargets.asScala.map(_.getId).asJava
   def assertScalacOptions(server: BloopServer): Unit = {
     val scalacOptionsParams = new ScalacOptionsParams(getBuildTargets(server))
     val scalacOptionsResult = server.buildTargetScalacOptions(scalacOptionsParams).get
@@ -183,7 +183,7 @@ class BloopSuite extends FunSuite {
     client.reset()
     val params = new CompileParams(getBuildTargets(server))
     params.setArguments(new JsonArray)
-    val compileResult = server.compileBuildTarget(params).get()
+    val compileResult = server.buildTargetCompile(params).get()
     // FIXME: originId should be non-null https://github.com/scalacenter/bloop/issues/679
     assert(compileResult.getOriginId == null)
     assert(client.logMessages.nonEmpty)
@@ -220,14 +220,14 @@ class BloopSuite extends FunSuite {
     try {
       val capabilities = new BuildClientCapabilities(Collections.singletonList("scala"), false)
       val initializeParams = new InitializeBuildParams(bloopDirectory.toUri.toString, capabilities)
-      val serverCapabilities = server.initialize(initializeParams).get().getCapabilities
-      server.onInitialized()
+      val serverCapabilities = server.buildInitialize(initializeParams).get().getCapabilities
+      server.onBuildInitialized()
       try {
         assertServerCapabilities(serverCapabilities)
         assertServerEndpoints(server, client)
       } finally {
-        try server.shutdown().get()
-        finally server.onExit()
+        try server.buildShutdown().get()
+        finally server.onBuildExit()
       }
     } finally {
       Thread.sleep(1000) // complete server.exit()

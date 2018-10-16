@@ -8,43 +8,43 @@ import java.util.concurrent.CompletableFuture;
 public interface BuildServer {
 
     @JsonRequest("build/initialize")
-    CompletableFuture<InitializeBuildResult> initialize(InitializeBuildParams params);
+    CompletableFuture<InitializeBuildResult> buildInitialize(InitializeBuildParams params);
 
     @JsonNotification("build/initialized")
-    void onInitialized();
+    void onBuildInitialized();
 
     @JsonRequest("build/shutdown")
-    CompletableFuture<Object> shutdown();
+    CompletableFuture<Object> buildShutdown();
 
     @JsonNotification("build/exit")
-    void onExit();
+    void onBuildExit();
 
     @JsonRequest("workspace/buildTargets")
-    CompletableFuture<WorkspaceBuildTargetsResult> listWorkspaceBuildTargets();
+    CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
 
     @JsonNotification("build/didChangeWatchedFiles")
-    void onWatchedFileChanged(DidChangeWatchedFiles params);
+    void onBuildDidChangeWatchedFiles(DidChangeWatchedFiles params);
 
     @JsonRequest("buildTarget/textDocuments")
-    CompletableFuture<BuildTargetTextDocumentsResult> listBuildTargetTextDocuments(BuildTargetTextDocumentsParams params);
+    CompletableFuture<BuildTargetTextDocumentsResult> buildTargetTextDocuments(BuildTargetTextDocumentsParams params);
 
-    @JsonRequest("textDocuments/buildTargets")
-    CompletableFuture<TextDocumentBuildTargetsResult> listTextDocumentBuildTargets(TextDocumentBuildTargetsParams params);
+    @JsonRequest("textDocument/buildTargets")
+    CompletableFuture<TextDocumentBuildTargetsResult> textDocumentBuildTargets(TextDocumentBuildTargetsParams params);
 
     @JsonRequest("buildTarget/dependencySources")
-    CompletableFuture<DependencySourcesResult> listBuildTargetDependencySources(DependencySourcesParams params);
+    CompletableFuture<DependencySourcesResult> buildTargetDependencySources(DependencySourcesParams params);
 
     @JsonRequest("buildTarget/resources")
-    CompletableFuture<ResourcesResult> listBuildTargetResources(ResourcesParams params);
+    CompletableFuture<ResourcesResult> buildTargetResources(ResourcesParams params);
 
     @JsonRequest("buildTarget/compile")
-    CompletableFuture<CompileResult> compileBuildTarget(CompileParams params);
+    CompletableFuture<CompileResult> buildTargetCompile(CompileParams params);
 
     @JsonRequest("buildTarget/test")
-    CompletableFuture<TestResult> testBuildTarget(TestParams params);
+    CompletableFuture<TestResult> buildTargetTest(TestParams params);
 
     @JsonRequest("buildTarget/run")
-    CompletableFuture<RunResult> runBuildTarget(RunParams params);
+    CompletableFuture<RunResult> buildTargetRun(RunParams params);
 
     default void onConnectWithClient(BuildClient server) {
 
