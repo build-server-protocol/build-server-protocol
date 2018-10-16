@@ -11,42 +11,42 @@ public interface BuildServer {
     CompletableFuture<InitializeBuildResult> initialize(InitializeBuildParams params);
 
     @JsonNotification("build/initialized")
-    void initialized();
+    void onInitialized();
 
     @JsonRequest("build/shutdown")
     CompletableFuture<Object> shutdown();
 
     @JsonNotification("build/exit")
-    void exit();
+    void onExit();
 
     @JsonRequest("workspace/buildTargets")
-    CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
+    CompletableFuture<WorkspaceBuildTargetsResult> listWorkspaceBuildTargets();
 
     @JsonNotification("build/didChangeWatchedFiles")
-    void didChangeWatchedFiles(DidChangeWatchedFiles params);
+    void onWatchedFileChanged(DidChangeWatchedFiles params);
 
     @JsonRequest("buildTarget/textDocuments")
-    CompletableFuture<BuildTargetTextDocumentsResult> buildTargetTextDocuments(BuildTargetTextDocumentsParams params);
+    CompletableFuture<BuildTargetTextDocumentsResult> listBuildTargetTextDocuments(BuildTargetTextDocumentsParams params);
 
     @JsonRequest("textDocuments/buildTargets")
-    CompletableFuture<TextDocumentBuildTargetsResult> textDocumentBuildTargets(TextDocumentBuildTargetsParams params);
+    CompletableFuture<TextDocumentBuildTargetsResult> listTextDocumentBuildTargets(TextDocumentBuildTargetsParams params);
 
     @JsonRequest("buildTarget/dependencySources")
-    CompletableFuture<DependencySourcesResult> buildTargetDependencySources(DependencySourcesParams params);
+    CompletableFuture<DependencySourcesResult> listBuildTargetDependencySources(DependencySourcesParams params);
 
     @JsonRequest("buildTarget/resources")
-    CompletableFuture<ResourcesResult> buildTargetResources(ResourcesParams params);
+    CompletableFuture<ResourcesResult> listBuildTargetResources(ResourcesParams params);
 
     @JsonRequest("buildTarget/compile")
-    CompletableFuture<CompileResult> buildTargetCompile(CompileParams params);
+    CompletableFuture<CompileResult> compileBuildTarget(CompileParams params);
 
     @JsonRequest("buildTarget/test")
-    CompletableFuture<TestResult> buildTargetTest(TestParams params);
+    CompletableFuture<TestResult> testBuildTarget(TestParams params);
 
     @JsonRequest("buildTarget/run")
-    CompletableFuture<RunResult> buildTargetRun(RunParams params);
+    CompletableFuture<RunResult> runBuildTarget(RunParams params);
 
-    default void connect(BuildClient server) {
+    default void onConnectWithClient(BuildClient server) {
 
     }
 }

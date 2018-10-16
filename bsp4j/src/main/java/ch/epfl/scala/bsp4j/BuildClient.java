@@ -8,16 +8,16 @@ import java.util.concurrent.CompletableFuture;
 public interface BuildClient {
 
     @JsonNotification("build/showMessage")
-    void showMessage(ShowMessageParams params);
+    void onShowMessage(ShowMessageParams params);
 
     @JsonNotification("build/logMessage")
-    void logMessage(LogMessageParams params);
+    void onLogMessage(LogMessageParams params);
 
     @JsonNotification("build/publishDiagnostics")
-    void publishDiagnostics(PublishDiagnosticsParams params);
+    void onPublishDiagnostics(PublishDiagnosticsParams params);
 
     @JsonNotification("buildTarget/didChange")
-    void didChangeBuildTarget(DidChangeBuildTarget params);
+    void onBuildTargetChanged(DidChangeBuildTarget params);
 
     @JsonRequest("build/registerFileWatcher")
     CompletableFuture<RegisterFileWatcherResult> registerFileWatcher(RegisterFileWatcherParams params);
@@ -26,9 +26,9 @@ public interface BuildClient {
     CompletableFuture<CancelFileWatcherResult> cancelFileWatcher(CancelFileWatcherParams params);
 
     @JsonNotification("buildTarget/compileReport")
-    void compileReport(CompileReport params);
+    void onCompileReport(CompileReport params);
 
-    default void connect(BuildServer server) {
+    default void onConnectWithServer(BuildServer server) {
 
     }
 
