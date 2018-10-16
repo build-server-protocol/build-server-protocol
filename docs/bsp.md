@@ -712,7 +712,7 @@ Response:
 * result: `BuildTargetTextDocumentsResult`, defined as follows
 
 ```scala
-trait BuildTargetTextDocumentsResponseResult {
+trait BuildTargetTextDocumentsResult {
   /** The source files used by this target */
   def textDocuments: List[TextDocumentIdentifier]
 }
@@ -912,10 +912,10 @@ Response:
 
 ```scala
 trait TestResult {
-  def data: Option[Json] // Note, matches `any | null` in the LSP.
-    
   /** An optional request id to know the origin of this report. */
   def originId: Option[String]
+
+  def data: Option[Json] // Note, matches `any | null` in the LSP.
 }
 ```
 
@@ -1194,7 +1194,7 @@ trait ScalaMainClassesItem {
   def target: BuildTargetIdentifier
 
   /** The main class item. */
-  def mainClass: ScalaMainClass
+  def classes: List[ScalaMainClass]
 }
 
 trait ScalaMainClass {

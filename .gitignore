@@ -1,17 +1,29 @@
-.idea
-bin/.coursier
-bin/.scalafmt*
+*.class
+*.log
 
-# Required because these are the proxies for the sourcedeps
-.bridge
-.zinc
-.nailgun
-
-# zinc uses this local cache for publishing stuff
-.ivy2/
-
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
 target/
-*.config
-test-config.sbt
-test
-base-directory
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+.idea
+
+# ENSIME specific
+.ensime_cache/
+.ensime
+
+node_modules
+
+out/
+
+*._trace
