@@ -1,3 +1,9 @@
+inThisBuild(List(
+  scmInfo := Some(ScmInfo(
+    browseUrl = url("https://github.com/scalacenter/bsp"),
+    connection = "scm:git:git@github.com:scalacenter/bsp.git"
+  ))
+))
 import java.io.File
 import org.eclipse.xtend.core.XtendInjectorSingleton
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
