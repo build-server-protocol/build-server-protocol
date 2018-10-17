@@ -40,7 +40,7 @@ lazy val bsp4j = project
     javacOptions.in(Compile, doc) := List("-Xdoclint:none"),
     javaHome.in(Compile) := inferJavaHome(),
     javaHome.in(Compile, doc) := inferJavaHome(),
-    TaskKey[Unit]("codegen") := {
+    TaskKey[Unit]("xtend") := {
       val compiler = XtendInjectorSingleton.INJECTOR.getInstance(classOf[XtendBatchCompiler])
       val classpath = dependencyClasspath.in(Compile).value.map(_.data).mkString(File.pathSeparator)
       compiler.setClassPath(classpath)
