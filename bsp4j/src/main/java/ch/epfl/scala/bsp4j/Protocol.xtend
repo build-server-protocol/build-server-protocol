@@ -339,10 +339,10 @@ class DependencySourcesResult {
 }
 @JsonRpcData
 class DependencySourcesItem {
-  @NonNull List<BuildTargetIdentifier> targets
+  @NonNull BuildTargetIdentifier target
   @NonNull List<String> sources
-  new(@NonNull List<BuildTargetIdentifier> targets, @NonNull List<String> sources) {
-    this.targets = targets
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> sources) {
+    this.target = target
     this.sources = sources
   }
 }

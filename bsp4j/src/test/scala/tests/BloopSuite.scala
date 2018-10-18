@@ -183,6 +183,19 @@ class BloopSuite extends FunSuite {
     }
   }
 
+  def assertDependencySources(server: BloopServer, client: BloopClient): Unit = {
+    val params = new DependencySourcesParams(getBuildTargets(server))
+    val result = server.buildTargetDependencySources(params).get()
+    val items = result.getItems.asScala.toList
+    assert(items.nonEmpty)
+    items.foreach { item =>
+      val sources = item.getSources.asScala.toList
+      assert(sources.nonEmpty)
+      assert(sources.filter(_.endsWith(".jar")).nonEmpty)
+      assert(item.getTarget() != null)
+    }
+  }
+
   def assertCompile(server: BloopServer, client: BloopClient): Unit = {
     client.reset()
     val params = new CompileParams(getBuildTargets(server))
@@ -218,9 +231,9 @@ class BloopSuite extends FunSuite {
   def assertServerEndpoints(server: BloopServer, client: BloopClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
+    assertDependencySources(server, client)
     assertCompile(server, client)
     assertTest(server, client)
-    // - buildTarget/test
     // - buildTarget/run
     // - buildTarget/mainClasses
     // - buildTarget/scalaMainClasses
