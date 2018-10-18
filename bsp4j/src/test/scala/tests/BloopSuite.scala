@@ -14,9 +14,11 @@ import java.util
 import java.util.Collections
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
+
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalasbt.ipcsocket.UnixDomainSocket
 import org.scalatest.FunSuite
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
@@ -27,6 +29,7 @@ class BloopClient extends BuildClient {
   val logMessages = ListBuffer.empty[LogMessageParams]
   val diagnostics = ListBuffer.empty[PublishDiagnosticsParams]
   val compileReports = ListBuffer.empty[CompileReport]
+  val testReports = ListBuffer.empty[TestReport]
   def reset(): Unit = {
     showMessages.clear()
     logMessages.clear()
@@ -35,13 +38,15 @@ class BloopClient extends BuildClient {
   }
   override def onBuildShowMessage(params: ShowMessageParams): Unit = showMessages += params
   override def onBuildLogMessage(params: LogMessageParams): Unit = logMessages += params
-  override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit = diagnostics += params
-  override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = pprint.log(params)
+  override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
+    diagnostics += params
+  override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = ()
   override def buildRegisterFileWatcher(
       params: RegisterFileWatcherParams): CompletableFuture[RegisterFileWatcherResult] = null
   override def buildCancelFileWatcher(
       params: CancelFileWatcherParams): CompletableFuture[CancelFileWatcherResult] = null
   override def onBuildTargetCompileReport(params: CompileReport): Unit = compileReports += params
+  override def onBuildTargetTest(params: TestReport): Unit = testReports += params
 }
 
 class BloopSuite extends FunSuite {
@@ -149,8 +154,7 @@ class BloopSuite extends FunSuite {
       List("scala-compiler", "scala-reflect", "scala-library").foreach { scalaJar =>
         assert(scalaJars.exists(_.contains(scalaJar)), (scalaJars, scalaJar))
       }
-      // FIXME: scalaBinaryVersion should be 2.12 https://github.com/scalacenter/bloop/issues/677
-      assert(scalaBuildTarget.getScalaBinaryVersion == "2.12.7")
+      assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
     }
   }
 
@@ -191,6 +195,17 @@ class BloopSuite extends FunSuite {
     assert(client.compileReports.nonEmpty)
   }
 
+  def assertTest(server: BloopServer, client: BloopClient): Unit = {
+    client.reset()
+    val params = new TestParams(getBuildTargets(server))
+    params.setArguments(new JsonArray)
+    val testResult = server.buildTargetTest(params).get()
+    assert(testResult.getOriginId == null)
+    // Compilation was triggered by `assertCompile`, so no diagnostics are found this time
+    assert(client.logMessages.nonEmpty)
+    assert(client.testReports.nonEmpty)
+  }
+
   def assertServerCapabilities(serverCapabilities: BuildServerCapabilities): Unit = {
     val compiles = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
@@ -204,7 +219,7 @@ class BloopSuite extends FunSuite {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
     assertCompile(server, client)
-    // FIXME: not yet implemented
+    assertTest(server, client)
     // - buildTarget/test
     // - buildTarget/run
     // - buildTarget/mainClasses
