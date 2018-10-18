@@ -366,7 +366,7 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class DependencySourcesItem(
     target: BuildTargetIdentifier,
-    uris: List[Uri]
+    sources: List[Uri]
 )
 
 @JsonCodec final case class DependencySourcesResult(
