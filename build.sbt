@@ -2,7 +2,12 @@ inThisBuild(List(
   scmInfo := Some(ScmInfo(
     browseUrl = url("https://github.com/scalacenter/bsp"),
     connection = "scm:git:git@github.com:scalacenter/bsp.git"
-  ))
+  )),
+  Keys.resolvers := {
+    val oldResolvers = Keys.resolvers.value
+    val scalacenterResolver = Resolver.bintrayRepo("scalacenter", "releases")
+    (oldResolvers :+ scalacenterResolver).distinct
+  },
 ))
 import java.io.File
 import org.eclipse.xtend.core.XtendInjectorSingleton
@@ -17,6 +22,10 @@ cancelable.in(Global) := true
 
 lazy val bsp = project
   .in(file("."))
+  .aggregate(bsp4s, bsp4j)
+
+lazy val bsp4s = project
+  .in(file("bsp4s"))
   .settings(
     publishArtifact in Test := false,
     sources in (Compile, doc) := Nil,
@@ -68,7 +77,7 @@ lazy val bsp4j = project
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.5.0",
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.5.0",
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0" % Test,
-      "ch.epfl.scala" % "bloop-frontend_2.12" % "1.0.0" % Test,
+      "ch.epfl.scala" % "bloop-frontend_2.12" % "1.0.0+300-91d821fa" % Test,
       "org.scalatest" % "scalatest_2.12" % "3.0.5" % Test
     )
   )
