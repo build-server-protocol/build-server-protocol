@@ -23,6 +23,9 @@ cancelable.in(Global) := true
 lazy val bsp = project
   .in(file("."))
   .aggregate(bsp4s, bsp4j)
+  .settings(
+    skip in publish := true,
+  )
 
 lazy val bsp4s = project
   .in(file("bsp4s"))
