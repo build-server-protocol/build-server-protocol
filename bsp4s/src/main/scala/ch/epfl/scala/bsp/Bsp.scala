@@ -436,23 +436,23 @@ case object BuildTargetEventKind {
     arguments: List[Json]
 )
 
-sealed abstract class ExitStatus(val code: Int)
-object ExitStatus {
-  case object Error extends ExitStatus(1)
-  case object Ok extends ExitStatus(2)
-  case object Cancelled extends ExitStatus(3)
+sealed abstract class StatusCode(val code: Int)
+object StatusCode {
+  case object Ok extends StatusCode(1)
+  case object Error extends StatusCode(2)
+  case object Cancelled extends StatusCode(3)
 
-  implicit val exitStatusEncoder: RootEncoder[ExitStatus] = new RootEncoder[ExitStatus] {
-    override def apply(a: ExitStatus): Json = Json.fromInt(a.code)
+  implicit val statusCodeEncoder: RootEncoder[StatusCode] = new RootEncoder[StatusCode] {
+    override def apply(a: StatusCode): Json = Json.fromInt(a.code)
   }
 
-  implicit val exitStatusDecoder: Decoder[ExitStatus] = new Decoder[ExitStatus] {
-    override def apply(c: HCursor): Result[ExitStatus] = {
+  implicit val statusCodeDecoder: Decoder[StatusCode] = new Decoder[StatusCode] {
+    override def apply(c: HCursor): Result[StatusCode] = {
       c.as[Int].flatMap {
-        case 1 => Right(Error)
-        case 2 => Right(Ok)
+        case 1 => Right(Ok)
+        case 2 => Right(Error)
         case 3 => Right(Cancelled)
-        case n => Left(DecodingFailure(s"Unknown exit status for code $n", c.history))
+        case n => Left(DecodingFailure(s"Unknown status code $n", c.history))
       }
     }
   }
@@ -460,7 +460,7 @@ object ExitStatus {
 
 @JsonCodec final case class RunResult(
     originId: Option[String],
-    exitStatus: ExitStatus
+    statusCode: StatusCode
 )
 
 sealed abstract class ScalaPlatform(val id: Int)

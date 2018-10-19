@@ -441,11 +441,11 @@ class TestReport {
 
 @JsonRpcData
 class RunParams {
-  @NonNull List<BuildTargetIdentifier> targets
+  @NonNull BuildTargetIdentifier target
   String originId
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
-  new(@NonNull List<BuildTargetIdentifier> targets) {
-    this.targets = targets
+  new(@NonNull BuildTargetIdentifier target) {
+    this.target = target
   }
 }
 

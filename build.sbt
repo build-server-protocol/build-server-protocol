@@ -77,7 +77,7 @@ lazy val bsp4j = project
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.5.0",
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.5.0",
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0" % Test,
-      "ch.epfl.scala" % "bloop-frontend_2.12" % "1.0.0+300-91d821fa" % Test,
+      "ch.epfl.scala" % "bloop-frontend_2.12" % "1.0.0+304-2521a1ad+20181018-2213" % Test,
       "org.scalatest" % "scalatest_2.12" % "3.0.5" % Test
     )
   )

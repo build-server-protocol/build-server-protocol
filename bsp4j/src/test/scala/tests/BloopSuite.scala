@@ -219,6 +219,19 @@ class BloopSuite extends FunSuite {
     assert(client.testReports.nonEmpty)
   }
 
+  def assertRun(server: BloopServer, client: BloopClient): Unit = {
+    client.reset()
+    val targetToRun = getBuildTargets(server).asScala.find(_.getUri.endsWith("a")).get
+    val params = new RunParams(targetToRun)
+    params.setArguments(new JsonArray)
+    val runResult = server.buildTargetRun(params).get()
+    assert(client.logMessages.find(_.getMessage == "Hello world!").nonEmpty)
+    assert(runResult.getOriginId == null)
+    assert(runResult.getStatusCode() == StatusCode.OK)
+    // Compilation was triggered by `assertCompile`, so no diagnostics are found this time
+    assert(client.logMessages.nonEmpty)
+  }
+
   def assertServerCapabilities(serverCapabilities: BuildServerCapabilities): Unit = {
     val compiles = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
@@ -234,7 +247,7 @@ class BloopSuite extends FunSuite {
     assertDependencySources(server, client)
     assertCompile(server, client)
     assertTest(server, client)
-    // - buildTarget/run
+    assertRun(server, client)
     // - buildTarget/mainClasses
     // - buildTarget/scalaMainClasses
   }
