@@ -1,1 +1,2 @@
-addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.0.0")
+resolvers += sbt.Resolver.bintrayRepo("scalacenter", "releases")
+addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "46e63fc3")

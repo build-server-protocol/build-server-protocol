@@ -1008,7 +1008,7 @@ object StatusCode {
   /** Execution failed. */
   val Error = 2
   /** Execution was cancelled. */
-  val Cancelled = 2
+  val Cancelled = 3
 }
 
 ```

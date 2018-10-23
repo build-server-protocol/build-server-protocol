@@ -1,32 +1,32 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
-import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import java.util.List;
+
 @SuppressWarnings("all")
 public class DependencySourcesItem {
   @NonNull
-  private List<BuildTargetIdentifier> targets;
+  private BuildTargetIdentifier target;
   
   @NonNull
   private List<String> sources;
   
-  public DependencySourcesItem(@NonNull final List<BuildTargetIdentifier> targets, @NonNull final List<String> sources) {
-    this.targets = targets;
+  public DependencySourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> sources) {
+    this.target = target;
     this.sources = sources;
   }
   
   @Pure
   @NonNull
-  public List<BuildTargetIdentifier> getTargets() {
-    return this.targets;
+  public BuildTargetIdentifier getTarget() {
+    return this.target;
   }
   
-  public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
-    this.targets = targets;
+  public void setTarget(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
   }
   
   @Pure
@@ -43,7 +43,7 @@ public class DependencySourcesItem {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("targets", this.targets);
+    b.add("target", this.target);
     b.add("sources", this.sources);
     return b.toString();
   }
@@ -58,10 +58,10 @@ public class DependencySourcesItem {
     if (getClass() != obj.getClass())
       return false;
     DependencySourcesItem other = (DependencySourcesItem) obj;
-    if (this.targets == null) {
-      if (other.targets != null)
+    if (this.target == null) {
+      if (other.target != null)
         return false;
-    } else if (!this.targets.equals(other.targets))
+    } else if (!this.target.equals(other.target))
       return false;
     if (this.sources == null) {
       if (other.sources != null)
@@ -76,7 +76,7 @@ public class DependencySourcesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
     return prime * result + ((this.sources== null) ? 0 : this.sources.hashCode());
   }
 }

@@ -50,7 +50,10 @@ object BuildImplementation {
 
   val buildSettings: Seq[Def.Setting[_]] = List(
     Keys.organization := "ch.epfl.scala",
-    Keys.resolvers += sbt.Resolver.bintrayRepo("scalameta", "maven"),
+    Keys.resolvers ++= List(
+      sbt.Resolver.bintrayRepo("scalameta", "maven"),
+      sbt.Resolver.bintrayRepo("scalacenter", "releases")
+    ),
     ReleaseEarlyKeys.releaseEarlyWith := ReleaseEarlyKeys.SonatypePublisher,
     BuildKeys.ourDynVerInstance :=
       sbtdynver.DynVer(Some(Keys.baseDirectory.in(sbt.ThisBuild).value)),

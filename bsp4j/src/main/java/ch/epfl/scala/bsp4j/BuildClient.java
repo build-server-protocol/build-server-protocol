@@ -28,6 +28,9 @@ public interface BuildClient {
     @JsonNotification("buildTarget/compileReport")
     void onBuildTargetCompileReport(CompileReport params);
 
+    @JsonNotification("buildTarget/testReport")
+    void onBuildTargetTest(TestReport params);
+
     default void onConnectWithServer(BuildServer server) {
 
     }
