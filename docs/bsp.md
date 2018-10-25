@@ -940,7 +940,7 @@ Response:
 ```scala
 trait CleanCacheResult {
   /** Indicates whether the clean cache request was performed or not. */
-  def cleaned: Int
+  def cleaned: Boolean
 }
 ```
 
