@@ -22,8 +22,8 @@ public interface BuildServer {
     @JsonRequest("workspace/buildTargets")
     CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
 
-    @JsonRequest("buildTarget/textDocuments")
-    CompletableFuture<BuildTargetTextDocumentsResult> buildTargetTextDocuments(BuildTargetTextDocumentsParams params);
+    @JsonRequest("buildTarget/sources")
+    CompletableFuture<SourcesResult> buildTargetSources(SourcesParams params);
 
     @JsonRequest("textDocument/buildTargets")
     CompletableFuture<TextDocumentBuildTargetsResult> textDocumentBuildTargets(TextDocumentBuildTargetsParams params);

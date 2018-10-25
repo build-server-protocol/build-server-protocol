@@ -242,7 +242,7 @@ class BuildTargetEvent {
 }
 
 @JsonRpcData
-class BuildTargetTextDocumentsParams {
+class SourcesParams {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
@@ -250,10 +250,30 @@ class BuildTargetTextDocumentsParams {
 }
 
 @JsonRpcData
-class BuildTargetTextDocumentsResult {
-  @NonNull List<TextDocumentIdentifier> textDocuments
-  new(@NonNull List<TextDocumentIdentifier> textDocuments) {
-    this.textDocuments = textDocuments
+class SourcesResult {
+  @NonNull List<SourcesItem> items
+  new(@NonNull List<SourcesItem> items) {
+    this.items = items
+  }
+}
+
+@JsonRpcData
+class SourcesItem {
+  @NonNull BuildTargetIdentifier target
+  @NonNull List<SourceItem> sources
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<SourceItem> sources) {
+    this.target = target
+    this.sources = sources
+  }
+}
+
+@JsonRpcData
+class SourceItem {
+  @NonNull String uri
+  @NonNull SourceItemKind kind
+  new(@NonNull String uri, @NonNull SourceItemKind kind) {
+    this.uri = uri
+    this.kind = kind
   }
 }
 
@@ -288,6 +308,7 @@ class DependencySourcesResult {
     this.items = items
   }
 }
+
 @JsonRpcData
 class DependencySourcesItem {
   @NonNull BuildTargetIdentifier target

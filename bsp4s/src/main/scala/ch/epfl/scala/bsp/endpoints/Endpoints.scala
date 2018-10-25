@@ -25,6 +25,9 @@ trait BuildTarget {
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
   object cleanCache extends Endpoint[CleanCacheParams, CleanCacheResult]("buildTarget/cleanCache")
 
+  object sources
+    extends Endpoint[DependencySourcesParams, DependencySourcesResult](
+      "buildTarget/sources")
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
         "buildTarget/dependencySources")

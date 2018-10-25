@@ -186,8 +186,8 @@ class BloopSuite extends FunSuite {
     items.foreach { item =>
       val sources = item.getSources.asScala.toList
       assert(sources.nonEmpty)
-      assert(sources.filter(_.endsWith(".jar")).nonEmpty)
-      assert(item.getTarget() != null)
+      assert(sources.exists(_.endsWith(".jar")))
+      assert(item.getTarget != null)
     }
   }
 
