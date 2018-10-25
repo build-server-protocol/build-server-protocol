@@ -229,7 +229,8 @@ object DiagnosticSeverity {
 )
 
 @JsonCodec final case class PublishDiagnosticsParams(
-    uri: Uri,
+    textDocument: TextDocumentIdentifier,
+    buildTarget: BuildTargetIdentifier,
     originId: Option[String],
     diagnostics: List[Diagnostic]
 )

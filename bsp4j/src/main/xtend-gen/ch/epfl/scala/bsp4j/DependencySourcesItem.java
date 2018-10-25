@@ -1,10 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
-
-import java.util.List;
 
 @SuppressWarnings("all")
 public class DependencySourcesItem {
@@ -76,7 +76,7 @@ public class DependencySourcesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     return prime * result + ((this.sources== null) ? 0 : this.sources.hashCode());
   }
 }

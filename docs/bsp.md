@@ -483,8 +483,14 @@ Notification:
 
 ```scala
 trait PublishDiagnosticsParams {
-  /** The uri of the document where diagnostics are published. */
-  def uri: Uri
+  /** The document where the diagnostics are published. */
+  def textDocument: TextDocumentIdentifier
+
+  /** The build target where the diagnostics origin.
+    * It is valid for one text document to belong to multiple
+    * build targets, for example sources that are compiled against multiple 
+    * platforms (JVM, JavaScript). */
+  def buildTarget: BuildTargetIdentifier
   
   /** The request id that originated this notification. */
   def originId: Option[String]
