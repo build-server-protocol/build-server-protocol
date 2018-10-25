@@ -43,16 +43,19 @@ servers with less effort and time.
             6. [Log message](#log-message)
             7. [Publish Diagnostics](#publish-diagnostics)
         2. [Workspace Build Targets Request](#workspace-build-targets-request)
-    7. [`DidChangeWatchedFiles` Notification](#didchangewatchedfiles-notification)
-        1. [Build Target Changed Notification](#build-target-changed-notification)
-        2. [Build Target Source Request](#build-target-sources-request)
-        3. [Text Document Build Targets Request](#text-document-build-targets-request)
-        4. [Dependency Sources Request](#dependency-sources-request)
-        5. [Resources Request](#resources-request)
-        6. [Compile Request](#compile-request)
-        7. [Test Request](#test-request)
-        8. [Run Request](#run-request)
-        9. [Clean Cache Request](#clean-cache-request)
+        3. [Build Target Changed Notification](#build-target-changed-notification)
+        4. [Build Target Source Request](#build-target-sources-request)
+        5. [Text Document Build Targets Request](#text-document-build-targets-request)
+        6. [Dependency Sources Request](#dependency-sources-request)
+        7. [Resources Request](#resources-request)
+        8. [Task Notifications](#task-notifications)
+            1. [Task Started](#task-started)
+            2. [Task Progress](#task-progress)
+            3. [Task Finished](#task-finished)
+        9. [Compile Request](#compile-request)
+        10. [Test Request](#test-request)
+        11. [Run Request](#run-request)
+        12. [Clean Cache Request](#clean-cache-request)
     8. [Extensions](#extensions)
         1. [Scala](#scala)
             1. [Scala Build Target](#scala-build-target)
@@ -74,7 +77,7 @@ developer.
 
 The code listings in this document are written using Scala syntax.
 Every data strucuture in this document has a direct translation to JSON and Protobuf.
-See [Appendix](#15-appendix) for schema definitions that can be used to automatically generate
+See [Appendix](#appendix) for schema definitions that can be used to automatically generate
 bindings for different target languages.
 
 
@@ -228,7 +231,7 @@ trait BuildTargetIdentifer {
 
 ### Task Id 
 
-The task Id allows clients to uniquely identify a resource and establish a client-parent
+The Task Id allows clients to uniquely identify a resource and establish a client-parent
 relationship with another id.
 
 ```scala
@@ -246,6 +249,21 @@ A task id can represent any child-parent relationship established by the build t
 An example of use of task ids is logs, where BSP clients can use the task ids of logs
 to improve their readability in the user interface. Clients can show logs in a tree fashion, for
 example, or with dropdowns.
+
+### Status Code
+
+Included in notifications of tasks or requests to signal the completion state.
+
+```scala
+object StatusCode {
+  /** Execution was successful. */
+  val Ok = 1
+  /** Execution failed. */
+  val Error = 2
+  /** Execution was cancelled. */
+  val Cancelled = 3
+}
+```
 
 ### Uri
 
@@ -614,7 +632,7 @@ object BuildTargetEventKind {
 The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update the
 user interface with the new information.
 
-### Sources Request
+### Build Target Sources Request
 
 The build target sources request is sent from the client to the server to query for the list of text documents and directories that are belong to a build target.
 The sources response must not include sources that are external to the workspace, see `buildTarget/dependencySources`.
@@ -748,6 +766,106 @@ trait ResourcesItem {
 }
 ```
 
+### Task Notifications
+
+The server may inform the client on the state of running tasks, such as compilation or tests.
+When beginning a task, the server may send `build/taskStart`, intermediate updates may be sent in
+`build/taskProgress`.
+
+If a `build/taskStart` notification has been sent, the server must send `build/taskFinish`
+on completion of the same task.
+
+Conversely, a `build/taskFinish` notification may be sent even if `build/taskStart` was not sent.
+
+`build/taskStart`, `build/taskProgress` and `build/taskFinished` notifications for the same task must use the same `taskId`.
+
+Tasks that are spawned by another task should reference the originating task's `taskId` in their own `taskId`'s
+`parent` field. Tasks spawned directly by a request should reference the request's `originId` parent.
+
+#### Task Started
+
+Notification:
+
+* method: `build/taskStart`
+* params: `TaskStartParams` defined as follows:
+
+```scala
+trait TaskStartParams {
+    /** Unique id of the task with reference to parent task id */
+    def taskId: TaskId
+
+    /** Timestamp of the event in milliseconds. */
+    def eventTime: Long
+
+    /** Message describing the task. */
+    def message: String
+
+    /** Optional metadata about the task.
+      * For compilation tasks, this should be a CompileTask object.
+      * For test tasks, this should be a TestTask object. */
+    def data: Option[Json]
+}
+```
+
+#### Task Progress
+
+After a `taskStart` and before `taskFinished` for a `taskId`, the server may send any number of progress notifications.
+
+* method: `build/taskProgress`
+* params: `TaskProgressParams` defined as follows:
+
+```scala
+trait TaskProgressParams {
+    /** Unique id of the task with reference to parent task id */
+    def taskId: TaskId
+
+    /** Timestamp of the event in milliseconds. */
+    def eventTime: Long
+
+    /** Message describing the task. */
+    def message: String
+
+    /** If known, total amount of work units in this task. */
+    def total: Option[Long]
+
+    /** If known, completed amount of work units in this task. */
+    progress: Option[Long]
+
+    /** Name of a work unit. For example, "files" or "tests". May be empty. */
+    unit: String
+
+    /** Optional metadata about the task progress. */
+    data: Option[Json]
+}
+
+```
+
+#### Task Finished
+
+* method: `build/taskFinish`
+* params: `TaskFinishParams` defined as follows:
+
+```scala
+trait TaskFinishParams {
+    /** Unique id of the task with reference to parent task id */
+    def taskId: TaskId
+
+    /** Timestamp of the event in milliseconds. */
+    def eventTime: Long
+
+    /** Message describing the task. */
+    def message: String
+
+    /** Task completion status. */
+    def status: StatusCode
+
+    /** Optional metadata about the task result.
+      * For compilation tasks, this should be a CompileReport object.
+      * For test tasks, this should be a TestReport object. */
+    def data: Option[Json]
+}
+```
+
 ### Compile Request
 
 The compile build target request is sent from the client to the server to compile the given list of build targets.
@@ -790,23 +908,19 @@ trait CompileResult {
 }
 ```
 
-where `StatusCode` is defined as follows
+Notifications:
+
+The beginning of a compilation unit may be signalled to the client with a `build/taskStart` notification.
+For compilation of a build target, the notification params should include `CompileTask` object:
 
 ```scala
-object StatusCode {
-  /** Execution was successful. */
-  val Ok = 1
-  /** Execution failed. */
-  val Error = 2
-  /** Execution was cancelled. */
-  val Cancelled = 3
+trait CompileTask {
+  def compileTarget: BuildTargetIdentifier
 }
 ```
 
-Notification:
-
-* method: `buildTarget/compileReport`
-* params: `CompileReport` defined as follows:
+The completion of a compilation task should be signalled with a `build/taskFinish` notification.
+The `data` field should contain a `CompileReport` object:
 
 ```scala
 trait CompileReport {
@@ -828,11 +942,8 @@ trait CompileReport {
 ```
 
 The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
-notifications during compilation before completing the response. The client is free to forward these
-messages to the LSP editor client.
-
-The client will get a `originId` field in `CompileReport` or `CompileResult` if the `originId`
-field in the `CompileParams` is defined.
+notifications during compilation before completing the response. Any number of subtasks may be communicated
+with `build/task*` notifications. The client is free to forward these messages to the LSP editor client.
 
 ### Test Request
 
@@ -875,18 +986,24 @@ trait TestResult {
 
 The field `data` may contain test-related language-specific information.
 
-Notification:
+Notifications:
 
-* method: `buildTarget/testReport`
-* params: `TestReport` defined as follows:
+The beginning of a testing unit may be signalled to the client with a `build/taskStart` notification.
+For testing of a build target, the notification params should include a `TestTask` object:
+
+```scala
+trait TestTask {
+  def testTarget: BuildTargetIdentifier
+}
+```
+
+The completion of a compilation task should be signalled with a `build/taskFinish` notification.
+The `data` field of a build target test task should contain a `TestReport` object:
 
 ```scala
 trait TestReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
-  
-  /** An optional request id to know the origin of this report. */
-  def originId: Option[String]
   
   /** The total number of successful tests. */
   def passed: Int
@@ -908,14 +1025,54 @@ trait TestReport {
 }
 ```
 
-The `TestReport` notification will be sent as the test execution of build targets completes.
+This request may trigger a compilation or other tasks on the selected build targets.
 
-This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
-during compilation before completing the response.
+The server may send any number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
+to communicate about tasks triggered by the request to the client.
 
-The client will get a `originId` field in the `TestReport` or `TestResult` if the `originId` field
-in the `TestParams` is defined.
+Subtask notifications:
+
+The server may inform about individual test units in subtask notifications. Individual test notifications should
+include the `TestStarted` and `TestFinished` objects in their params:
+
+```scala
+trait TestStarted {
+  /** Name of description of the test. */
+  def description: String
+}
+
+trait TestFinished {
+  /** Name of description of the test. */
+  def description: String
+
+  /** Information about completion of the test, for example error message. */
+  def message: String
+
+  /** Completion status of the test. */.
+  def status: Int
+
+  /** Optionally, structured metadata about the test completion.
+    * For example: stack traces, expected/actual values. */
+  def data: Option[Json]
+}
+
+trait TestStatus {
+    /** The test passed successfully. */
+    val Passed: Int = 1
+
+    /** The test failed. */
+    val Failed: Int = 2
+
+    /** The test was marked as ignored. */
+    val Ignored: Int = 3
+
+    /** The test execution was cancelled. */
+    val Cancelled: Int = 4
+
+    /** The was not included in execution. */
+    val skipped: Int = 5
+}
+```
 
 ### Run Request
 
@@ -958,7 +1115,7 @@ trait RunResult {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
 during compilation before completing the response.
 
 The client will get a `originId` field in `RunResult` if the `originId` field in the
@@ -1189,8 +1346,8 @@ trait ScalaMainClass {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
-during compilation before completing the response.
+number of `build/taskStart`, `build/taskProgress`, `build/taskFinish`, `build/publishDiagnostics` and
+`build/logMessage` notifications during compilation before completing the response.
 
 The client will get a `originId` field in `ScalaMainClassesResult` if the `originId` field in the
 `ScalaMainClassesParams` is defined.
