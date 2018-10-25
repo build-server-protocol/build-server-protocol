@@ -23,6 +23,7 @@ trait BuildTarget {
   object test extends Endpoint[TestParams, TestResult]("buildTarget/test")
   object testReport extends Endpoint[TestReport, Unit]("buildTarget/testReport")
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
+  object cleanCache extends Endpoint[CleanCacheParams, CleanCacheResult]("buildTarget/cleanCache")
 
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
