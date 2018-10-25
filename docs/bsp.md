@@ -52,6 +52,7 @@ servers with less effort and time.
         6. [Compile Request](#compile-request)
         7. [Test Request](#test-request)
         8. [Run Request](#run-request)
+        9. [Clean Cache Request](#clean-cache-request)
     8. [Extensions](#extensions)
         1. [Scala](#scala)
             1. [Scala Build Target](#scala-build-target)
@@ -917,6 +918,9 @@ The client will get a `originId` field in `RunResult` if the `originId` field in
 
 The clean cache request is sent from the client to the server to remove cached artifacts that are associated with a given build target.
 An example use-case for the clean cache request is to free up disk space or troubleshoot build problems.
+
+After a successful clean cache request, it is expected that cached artifacts created by invoking other requests (compile, run, test) on the build target have been removed and subsequent requests result in a full recompilation.
+The build tool defines the exact semantics of the clean cache request.
 
 * method: `buildTarget/cleanCache`
 * params: `CleanCacheParams`
