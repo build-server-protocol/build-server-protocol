@@ -12,7 +12,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util
 import java.util.Collections
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
 import org.eclipse.lsp4j.jsonrpc.Launcher
@@ -41,10 +40,6 @@ class BloopClient extends BuildClient {
   override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
     diagnostics += params
   override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = ()
-  override def buildRegisterFileWatcher(
-      params: RegisterFileWatcherParams): CompletableFuture[RegisterFileWatcherResult] = null
-  override def buildCancelFileWatcher(
-      params: CancelFileWatcherParams): CompletableFuture[CancelFileWatcherResult] = null
   override def onBuildTargetCompileReport(params: CompileReport): Unit = compileReports += params
   override def onBuildTargetTest(params: TestReport): Unit = testReports += params
 }

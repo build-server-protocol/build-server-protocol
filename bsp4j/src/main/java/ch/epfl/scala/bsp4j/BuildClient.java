@@ -1,9 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
-import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
-
-import java.util.concurrent.CompletableFuture;
 
 public interface BuildClient {
 
@@ -19,12 +16,6 @@ public interface BuildClient {
     @JsonNotification("buildTarget/didChange")
     void onBuildTargetDidChange(DidChangeBuildTarget params);
 
-    @JsonRequest("build/registerFileWatcher")
-    CompletableFuture<RegisterFileWatcherResult> buildRegisterFileWatcher(RegisterFileWatcherParams params);
-
-    @JsonRequest("build/cancelFileWatcher")
-    CompletableFuture<CancelFileWatcherResult> buildCancelFileWatcher(CancelFileWatcherParams params);
-
     @JsonNotification("buildTarget/compileReport")
     void onBuildTargetCompileReport(CompileReport params);
 
@@ -34,5 +25,4 @@ public interface BuildClient {
     default void onConnectWithServer(BuildServer server) {
 
     }
-
 }

@@ -14,12 +14,6 @@ trait Build {
   object logMessage extends Endpoint[LogMessageParams, Unit]("build/logMessage")
   object publishDiagnostics
       extends Endpoint[PublishDiagnosticsParams, Unit]("build/publishDiagnostics")
-  object registerFileWatcher
-      extends Endpoint[RegisterFileWatcherParams, RegisterFileWatcherResult](
-        "build/registerFileWatcher")
-  object cancelFileWatcher
-      extends Endpoint[CancelFileWatcherParams, CancelFileWatcherResult](
-        "build/cancelFileWatcher")
 }
 
 object BuildTarget extends BuildTarget

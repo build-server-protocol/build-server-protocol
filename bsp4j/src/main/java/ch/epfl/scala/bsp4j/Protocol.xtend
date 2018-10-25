@@ -224,57 +224,6 @@ class WorkspaceBuildTargetsResult {
 }
 
 @JsonRpcData
-class RegisterFileWatcherParams {
-  @NonNull String globPattern
-  WatchKind kind
-  new(@NonNull String globPattern) {
-    this.globPattern = globPattern
-  }
-}
-
-@JsonRpcData
-class RegisterFileWatcherResult {
-  @NonNull String id
-  new(@NonNull String id) {
-    this.id = id
-  }
-}
-
-@JsonRpcData
-class DidChangeWatchedFiles {
-  List<FileEvent> changes
-  new(@NonNull List<FileEvent> changes) {
-    this.changes = changes
-  }
-}
-
-@JsonRpcData
-class FileEvent {
-  @NonNull String uri
-  @NonNull FileChangeType type
-  new(@NonNull String uri, @NonNull FileChangeType type) {
-    this.uri = uri
-    this.type = type
-  }
-}
-
-@JsonRpcData
-class CancelFileWatcherParams {
-  @NonNull String id
-  new(@NonNull String id) {
-    this.id = id
-  }
-}
-
-@JsonRpcData
-class CancelFileWatcherResult {
-  @NonNull Boolean cancelled
-  new(@NonNull Boolean cancelled) {
-    this.cancelled = cancelled
-  }
-}
-
-@JsonRpcData
 class DidChangeBuildTarget {
   @NonNull List<BuildTargetEvent> changes
   new(@NonNull List<BuildTargetEvent> changes) {
