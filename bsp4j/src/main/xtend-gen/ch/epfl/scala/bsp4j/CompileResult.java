@@ -1,7 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.StatusCode;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -11,6 +13,13 @@ public class CompileResult {
   
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
+  
+  @NonNull
+  private StatusCode statusCode;
+  
+  public CompileResult(@NonNull final StatusCode statusCode) {
+    this.statusCode = statusCode;
+  }
   
   @Pure
   public String getOriginId() {
@@ -30,12 +39,23 @@ public class CompileResult {
     this.data = data;
   }
   
+  @Pure
+  @NonNull
+  public StatusCode getStatusCode() {
+    return this.statusCode;
+  }
+  
+  public void setStatusCode(@NonNull final StatusCode statusCode) {
+    this.statusCode = statusCode;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
     b.add("data", this.data);
+    b.add("statusCode", this.statusCode);
     return b.toString();
   }
   
@@ -59,6 +79,11 @@ public class CompileResult {
         return false;
     } else if (!this.data.equals(other.data))
       return false;
+    if (this.statusCode == null) {
+      if (other.statusCode != null)
+        return false;
+    } else if (!this.statusCode.equals(other.statusCode))
+      return false;
     return true;
   }
   
@@ -68,6 +93,7 @@ public class CompileResult {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    return prime * result + ((this.statusCode== null) ? 0 : this.statusCode.hashCode());
   }
 }

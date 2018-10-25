@@ -332,7 +332,8 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class CompileResult(
     originId: Option[String],
-    data: Option[Json]
+    statusCode: StatusCode,
+    data: Option[Json],
 )
 
 @JsonCodec final case class CompileReport(
@@ -351,7 +352,8 @@ case object BuildTargetEventKind {
 
 @JsonCodec final case class TestResult(
     originId: Option[String],
-    data: Option[Json]
+    statusCode: StatusCode,
+    data: Option[Json],
 )
 
 @JsonCodec final case class TestReport(
