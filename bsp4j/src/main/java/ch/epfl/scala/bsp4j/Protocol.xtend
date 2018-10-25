@@ -205,11 +205,13 @@ class Diagnostic {
 
 @JsonRpcData
 class PublishDiagnosticsParams {
-  @NonNull String uri
+  @NonNull TextDocumentIdentifier textDocument
+  @NonNull BuildTargetIdentifier buildTarget
   String originId
   List<Diagnostic> diagnostics
-  new(@NonNull String uri) {
-    this.uri = uri
+  new(@NonNull TextDocumentIdentifier textDocument, @NonNull BuildTargetIdentifier buildTarget) {
+    this.textDocument = textDocument
+    this.buildTarget = buildTarget
   }
 }
 

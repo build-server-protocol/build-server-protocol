@@ -1,6 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import ch.epfl.scala.bsp4j.Diagnostic;
+import ch.epfl.scala.bsp4j.TextDocumentIdentifier;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -9,24 +11,38 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class PublishDiagnosticsParams {
   @NonNull
-  private String uri;
+  private TextDocumentIdentifier textDocument;
+  
+  @NonNull
+  private BuildTargetIdentifier buildTarget;
   
   private String originId;
   
   private List<Diagnostic> diagnostics;
   
-  public PublishDiagnosticsParams(@NonNull final String uri) {
-    this.uri = uri;
+  public PublishDiagnosticsParams(@NonNull final TextDocumentIdentifier textDocument, @NonNull final BuildTargetIdentifier buildTarget) {
+    this.textDocument = textDocument;
+    this.buildTarget = buildTarget;
   }
   
   @Pure
   @NonNull
-  public String getUri() {
-    return this.uri;
+  public TextDocumentIdentifier getTextDocument() {
+    return this.textDocument;
   }
   
-  public void setUri(@NonNull final String uri) {
-    this.uri = uri;
+  public void setTextDocument(@NonNull final TextDocumentIdentifier textDocument) {
+    this.textDocument = textDocument;
+  }
+  
+  @Pure
+  @NonNull
+  public BuildTargetIdentifier getBuildTarget() {
+    return this.buildTarget;
+  }
+  
+  public void setBuildTarget(@NonNull final BuildTargetIdentifier buildTarget) {
+    this.buildTarget = buildTarget;
   }
   
   @Pure
@@ -51,7 +67,8 @@ public class PublishDiagnosticsParams {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("uri", this.uri);
+    b.add("textDocument", this.textDocument);
+    b.add("buildTarget", this.buildTarget);
     b.add("originId", this.originId);
     b.add("diagnostics", this.diagnostics);
     return b.toString();
@@ -67,10 +84,15 @@ public class PublishDiagnosticsParams {
     if (getClass() != obj.getClass())
       return false;
     PublishDiagnosticsParams other = (PublishDiagnosticsParams) obj;
-    if (this.uri == null) {
-      if (other.uri != null)
+    if (this.textDocument == null) {
+      if (other.textDocument != null)
         return false;
-    } else if (!this.uri.equals(other.uri))
+    } else if (!this.textDocument.equals(other.textDocument))
+      return false;
+    if (this.buildTarget == null) {
+      if (other.buildTarget != null)
+        return false;
+    } else if (!this.buildTarget.equals(other.buildTarget))
       return false;
     if (this.originId == null) {
       if (other.originId != null)
@@ -90,7 +112,8 @@ public class PublishDiagnosticsParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
+    result = prime * result + ((this.textDocument== null) ? 0 : this.textDocument.hashCode());
+    result = prime * result + ((this.buildTarget== null) ? 0 : this.buildTarget.hashCode());
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
     return prime * result + ((this.diagnostics== null) ? 0 : this.diagnostics.hashCode());
   }
