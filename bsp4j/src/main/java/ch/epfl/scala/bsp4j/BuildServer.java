@@ -22,9 +22,6 @@ public interface BuildServer {
     @JsonRequest("workspace/buildTargets")
     CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
 
-    @JsonNotification("build/didChangeWatchedFiles")
-    void onBuildDidChangeWatchedFiles(DidChangeWatchedFiles params);
-
     @JsonRequest("buildTarget/textDocuments")
     CompletableFuture<BuildTargetTextDocumentsResult> buildTargetTextDocuments(BuildTargetTextDocumentsParams params);
 
