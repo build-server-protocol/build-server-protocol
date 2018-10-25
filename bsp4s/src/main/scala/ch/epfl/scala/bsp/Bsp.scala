@@ -401,6 +401,14 @@ object StatusCode {
     statusCode: StatusCode
 )
 
+@JsonCodec final case class CleanCacheParams(
+    targets: List[BuildTargetIdentifier],
+)
+
+@JsonCodec final case class CleanCacheResult(
+    cleaned: Boolean
+)
+
 sealed abstract class ScalaPlatform(val id: Int)
 object ScalaPlatform {
   case object Jvm extends ScalaPlatform(1)

@@ -913,6 +913,33 @@ during compilation before completing the response.
 The client will get a `originId` field in `RunResult` if the `originId` field in the
 `RunParams` is defined.
 
+### Clean Cache Request
+
+The clean cache request is sent from the client to the server to remove cached artifacts that are associated with a given build target.
+An example use-case for the clean cache request is to free up disk space or troubleshoot build problems.
+
+* method: `buildTarget/cleanCache`
+* params: `CleanCacheParams`
+
+```scala
+trait CleanCacheParams {
+  /** The build targets to clean. */
+  def targets: List[BuildTargetIdentifier]
+}
+```
+
+Response:
+
+* result: `CleanCacheResult`, defined as follows
+* error: JSON-RPC code and message set in case an exception happens during the request.
+
+```scala
+trait CleanCacheResult {
+  /** Indicates whether the clean cache request was performed or not. */
+  def cleaned: Int
+}
+```
+
 ## Extensions
 
 The build server protocol is designed to be extended with language specific data structures and methods.
