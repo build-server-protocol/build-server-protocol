@@ -388,6 +388,11 @@ class CompileParams {
 class CompileResult {
   String originId
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
+  @NonNull StatusCode statusCode
+  new(@NonNull StatusCode statusCode) {
+    this.statusCode = statusCode
+  }
 }
 
 @JsonRpcData
@@ -418,6 +423,11 @@ class TestParams {
 class TestResult {
   String originId
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
+  @NonNull StatusCode statusCode
+  new(@NonNull StatusCode statusCode) {
+    this.statusCode = statusCode
+  }
 }
 
 @JsonRpcData

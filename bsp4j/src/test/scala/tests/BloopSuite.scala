@@ -206,6 +206,8 @@ class BloopSuite extends FunSuite {
     assert(client.logMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
     assert(client.compileReports.nonEmpty)
+    // TODO(jvican): Update the status code to OK when bloop implements it
+    assert(compileResult.getStatusCode() == null)
   }
 
   def assertTest(server: BloopServer, client: BloopClient): Unit = {
@@ -217,6 +219,8 @@ class BloopSuite extends FunSuite {
     // Compilation was triggered by `assertCompile`, so no diagnostics are found this time
     assert(client.logMessages.nonEmpty)
     assert(client.testReports.nonEmpty)
+    // TODO(jvican): Update the status code to OK when bloop implements it
+    assert(testResult.getStatusCode() == null)
   }
 
   def assertRun(server: BloopServer, client: BloopClient): Unit = {

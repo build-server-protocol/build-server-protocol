@@ -851,10 +851,26 @@ Response:
 trait CompileResult {
   /** An optional request id to know the origin of this report. */
   def originId: Option[String]
+  
+  /** A status code for the execution. */
+  def statusCode: Int
+
   /** A field containing language-specific information, like products
     * of compilation or compiler-specific metadata the client needs to know. */
   def data: Option[Json] // Note, matches `any | null` in the LSP.
-  
+}
+```
+
+where `StatusCode` is defined as follows
+
+```scala
+object StatusCode {
+  /** Execution was successful. */
+  val Ok = 1
+  /** Execution failed. */
+  val Error = 2
+  /** Execution was cancelled. */
+  val Cancelled = 3
 }
 ```
 
@@ -920,6 +936,9 @@ Response:
 trait TestResult {
   /** An optional request id to know the origin of this report. */
   def originId: Option[String]
+  
+  /** A status code for the execution. */
+  def statusCode: Int
 
   def data: Option[Json] // Note, matches `any | null` in the LSP.
 }
@@ -1007,16 +1026,6 @@ trait RunResult {
   /** A status code for the execution. */
   def statusCode: Int
 }
-
-object StatusCode {
-  /** Execution was successful. */
-  val Ok = 1
-  /** Execution failed. */
-  val Error = 2
-  /** Execution was cancelled. */
-  val Cancelled = 3
-}
-
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
