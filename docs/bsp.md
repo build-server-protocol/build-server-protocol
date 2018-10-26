@@ -799,11 +799,16 @@ trait TaskStartParams {
 
     /** Message describing the task. */
     def message: String
+    
+    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */
+    def dataKind: Option[String]
 
     /** Optional metadata about the task.
-      * For compilation tasks, this should be a CompileTask object.
-      * For test tasks, this should be a TestTask object. */
-    def data: Option[TaskData]
+      * Objects for specific tasks like compile, test, etc are specified in the protocol. 
+      */
+    def data: Option[Json]
 }
 ```
 
@@ -833,9 +838,16 @@ trait TaskProgressParams {
 
     /** Name of a work unit. For example, "files" or "tests". May be empty. */
     unit: String
+    
+    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */
+    def dataKind: Option[String]
 
-    /** Optional metadata about the task progress. */
-    data: Option[TaskData]
+    /** Optional metadata about the task.
+      * Objects for specific tasks like compile, test, etc are specified in the protocol. 
+      */
+    def data: Option[Json]
 }
 
 ```
@@ -859,24 +871,46 @@ trait TaskFinishParams {
     /** Task completion status. */
     def status: StatusCode
 
-    /** Optional metadata about the task result.
-      * For compilation tasks, this should be a CompileReport object.
-      * For test tasks, this should be a TestReport object. */
-    def report: Option[TaskData]
+    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */
+    def dataKind: Option[String]
+
+    /** Optional metadata about the task.
+      * Objects for specific tasks like compile, test, etc are specified in the protocol. 
+      */
+    def data: Option[Json]
 }
 ```
 
 #### Task Data
 
-Task progress notifications may contain a `TaskData` object in their `data` field.
-There are predefined kinds of `TaskData` for test and compile tasks, as defined in the [Compile Request](#compile-request)
-and [Test Request](#test-request) sections.
+Task progress notifications may contain an arbitrary object in their `data` field. The kind of object that is contained
+in a notification must be specified in the `dataKind` field.
+
+There are predefined kinds of objects for test and compile tasks, as described in the [Compile Request](#compile-request)
+and [Test Request](#test-request) sections. These are declared by predefined `dataKind` strings in task notifications: 
 
 ```scala
-trait TaskData {
-  /** Identifier for the kind of task data encoded in the `data` field. */
-  def kind: String
-  def data: Json
+object DataKind {
+
+  /** `data` field must contain a CompileTask object. */
+  val CompileTask = "compile-task"
+  
+  /** `data` field must contain a CompileReport object. */
+  val CompileReport = "compile-report"
+  
+  /** `data` field must contain a TestTask object. */
+  val TestTask = "test-task"
+  
+  /** `data` field must contain a TestReport object. */
+  val TestReport = "test-report"
+
+  /** `data` field must contain a TestStarted object. */  
+  val TestStarted = "test-started"
+  
+  /** `data` field must contain a TestFinished object. */
+  val TestFinished = "test-finished"
 }
 ```
 
@@ -926,28 +960,20 @@ trait CompileResult {
 #### Compile Notifications
 
 The beginning of a compilation unit may be signalled to the client with a `build/taskStart` notification.
-When the compilation unit is a build target, the notifications `data` field should include `CompileTaskData` object:
+When the compilation unit is a build target, the notification's `dataKind` field should be "compile-task" and the 
+`data` field should include a `CompileTask` object:
 
 ```scala
-trait CompileTaskData {
-  val kind: String = "compile-task"
-  def data: CompileTask
-}
-
 trait CompileTask {
   def target: BuildTargetIdentifier
 }
 ```
 
 The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-The completed compilation unit was a build target, the notification's `data` field should contain a `CompileReportData` object:
+When the compilation unit is a build target, the notification's `dataKind` field should be `compile-report` and the 
+`data` field should include a `CompileReport` object:
 
 ```scala
-trait CompileReportData {
-  val kind: String = "compile-report"
-  def data: CompileReport
-}
-
 trait CompileReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
@@ -1014,28 +1040,20 @@ The field `data` may contain test-related language-specific information.
 #### Test Notifications
 
 The beginning of a testing unit may be signalled to the client with a `build/taskStart` notification.
-When the testing unit is a build target, the notification's `data` field should include a `TestTaskData` object:
+When the testing unit is a build target, the notification's `dataKind` field should be `test-task` and the 
+`data` field should include a `TestTask` object.
 
 ```scala
-trait TestTaskData {
-  val kind = "test-task"
-  def data: TestTask 
-}
-
 trait TestTask {
   def target: BuildTargetIdentifier
 }
 ```
 
 The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-The `data` field of a build target test task should contain a `TestReportData` object:
+When the testing unit is a build target, the notification's `dataKind` field should be `test-report` and the 
+`data` field should include a `TestTask` object:
 
 ```scala
-trait TestReportData {
-  val kind = "test-report"
-  val data: TestReport
-}
-
 trait TestReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
@@ -1065,29 +1083,20 @@ This request may trigger a compilation or other tasks on the selected build targ
 The server may send any number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
 to communicate about tasks triggered by the request to the client.
 
-Test unit notifications:
+#### Test Unit Notifications
 
 The server may inform about individual test units in task notifications that reference the originating task in their `taskId`.
 For example, the server can send a `taskStarted`/`taskCompleted` for each test suite in a target, and likewise for each test in the suite. 
-Individual test notifications should include the `TestStartedData` and `TestFinishedData` objects in their `data` field:
+Individual test start notifications should specify `test-started` in the `dataKind` field and include the `TestStarted` object and
+test finish notifications should specify `test-finished` in the `dataKind` field and include the `TestFinishes` object in the `data` field.
 
 ```scala
-trait TestStartedData {
-  val kind = "test-started"
-  val data: TestStarted
-}
-
 trait TestStarted {
   /** Name or description of the test. */
   def description: String
   
   /** Source location of the test, as LSP location. */
   def location: Option[Location]
-}
-
-trait TestFinishedData {
-  val kind = "test-finished"
-  val data: TestFinished
 }
 
 trait TestFinished {
@@ -1123,7 +1132,7 @@ trait TestStatus {
     val Cancelled: Int = 4
 
     /** The was not included in execution. */
-    val skipped: Int = 5
+    val Skipped: Int = 5
 }
 ```
 
