@@ -795,10 +795,10 @@ trait TaskStartParams {
     def taskId: TaskId
 
     /** Timestamp of when the event started in milliseconds since Epoch. */
-    def eventTime: Long
+    def eventTime: Option[Long]
 
     /** Message describing the task. */
-    def message: String
+    def message: Option[String]
     
     /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
       * Kind names for specific tasks like compile, test, etc are specified in the protocol.
@@ -825,10 +825,10 @@ trait TaskProgressParams {
     def taskId: TaskId
 
     /** Timestamp of when the progress event was generated in milliseconds since Epoch. */
-    def eventTime: Long
+    def eventTime: Option[Long]
 
     /** Message describing the task. */
-    def message: String
+    def message: Option[String]
 
     /** If known, total amount of work units in this task. */
     def total: Option[Long]
@@ -837,7 +837,7 @@ trait TaskProgressParams {
     progress: Option[Long]
 
     /** Name of a work unit. For example, "files" or "tests". May be empty. */
-    unit: String
+    unit: Option[String]
     
     /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
       * Kind names for specific tasks like compile, test, etc are specified in the protocol.
@@ -863,10 +863,10 @@ trait TaskFinishParams {
     def taskId: TaskId
 
     /** Timestamp of the event in milliseconds. */
-    def eventTime: Long
+    def eventTime: Option[Long]
 
     /** Message describing the finish event. */
-    def message: String
+    def message: Option[String]
 
     /** Task completion status. */
     def status: StatusCode
@@ -1103,8 +1103,8 @@ trait TestFinish {
   /** Name or description of the test. */
   def description: String
 
-  /** Information about completion of the test, for example error message. */
-  def message: String
+  /** Information about completion of the test, for example an error message. */
+  def message: Option[String]
 
   /** Completion status of the test. */
   def status: Int
