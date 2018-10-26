@@ -6,11 +6,23 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CleanCacheResult {
+  private String message;
+  
   @NonNull
   private Boolean cleaned;
   
-  public CleanCacheResult(@NonNull final Boolean cleaned) {
+  public CleanCacheResult(final String message, @NonNull final Boolean cleaned) {
+    this.message = message;
     this.cleaned = cleaned;
+  }
+  
+  @Pure
+  public String getMessage() {
+    return this.message;
+  }
+  
+  public void setMessage(final String message) {
+    this.message = message;
   }
   
   @Pure
@@ -27,6 +39,7 @@ public class CleanCacheResult {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
+    b.add("message", this.message);
     b.add("cleaned", this.cleaned);
     return b.toString();
   }
@@ -41,6 +54,11 @@ public class CleanCacheResult {
     if (getClass() != obj.getClass())
       return false;
     CleanCacheResult other = (CleanCacheResult) obj;
+    if (this.message == null) {
+      if (other.message != null)
+        return false;
+    } else if (!this.message.equals(other.message))
+      return false;
     if (this.cleaned == null) {
       if (other.cleaned != null)
         return false;
@@ -52,6 +70,9 @@ public class CleanCacheResult {
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.cleaned== null) ? 0 : this.cleaned.hashCode());
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
+    return prime * result + ((this.cleaned== null) ? 0 : this.cleaned.hashCode());
   }
 }

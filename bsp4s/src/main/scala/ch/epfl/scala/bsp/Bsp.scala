@@ -414,6 +414,7 @@ object StatusCode {
 )
 
 @JsonCodec final case class CleanCacheResult(
+    message: Option[String],
     cleaned: Boolean
 )
 
