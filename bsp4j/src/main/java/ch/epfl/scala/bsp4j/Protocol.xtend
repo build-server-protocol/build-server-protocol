@@ -101,7 +101,7 @@ class BuildServerCapabilities {
   CompileProvider compileProvider
   TestProvider testProvider
   RunProvider runProvider
-  Boolean textDocumentBuildTargetsProvider
+  Boolean inverseSourcesProvider
   Boolean dependencySourcesProvider
   Boolean resourcesProvider
   Boolean buildTargetChangedProvider
@@ -278,7 +278,7 @@ class SourceItem {
 }
 
 @JsonRpcData
-class TextDocumentBuildTargetsParams {
+class InverseSourcesParams {
   @NonNull List<TextDocumentIdentifier> textDocuments
   new(@NonNull List<TextDocumentIdentifier> textDocuments) {
     this.textDocuments = textDocuments
@@ -286,7 +286,7 @@ class TextDocumentBuildTargetsParams {
 }
 
 @JsonRpcData
-class TextDocumentBuildTargetsResult {
+class InverseSourcesResult {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets

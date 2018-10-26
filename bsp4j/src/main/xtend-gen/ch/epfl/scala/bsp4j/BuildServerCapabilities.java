@@ -14,7 +14,7 @@ public class BuildServerCapabilities {
   
   private RunProvider runProvider;
   
-  private Boolean textDocumentBuildTargetsProvider;
+  private Boolean inverseSourcesProvider;
   
   private Boolean dependencySourcesProvider;
   
@@ -50,12 +50,12 @@ public class BuildServerCapabilities {
   }
   
   @Pure
-  public Boolean getTextDocumentBuildTargetsProvider() {
-    return this.textDocumentBuildTargetsProvider;
+  public Boolean getInverseSourcesProvider() {
+    return this.inverseSourcesProvider;
   }
   
-  public void setTextDocumentBuildTargetsProvider(final Boolean textDocumentBuildTargetsProvider) {
-    this.textDocumentBuildTargetsProvider = textDocumentBuildTargetsProvider;
+  public void setInverseSourcesProvider(final Boolean inverseSourcesProvider) {
+    this.inverseSourcesProvider = inverseSourcesProvider;
   }
   
   @Pure
@@ -92,7 +92,7 @@ public class BuildServerCapabilities {
     b.add("compileProvider", this.compileProvider);
     b.add("testProvider", this.testProvider);
     b.add("runProvider", this.runProvider);
-    b.add("textDocumentBuildTargetsProvider", this.textDocumentBuildTargetsProvider);
+    b.add("inverseSourcesProvider", this.inverseSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
@@ -124,10 +124,10 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.runProvider.equals(other.runProvider))
       return false;
-    if (this.textDocumentBuildTargetsProvider == null) {
-      if (other.textDocumentBuildTargetsProvider != null)
+    if (this.inverseSourcesProvider == null) {
+      if (other.inverseSourcesProvider != null)
         return false;
-    } else if (!this.textDocumentBuildTargetsProvider.equals(other.textDocumentBuildTargetsProvider))
+    } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider))
       return false;
     if (this.dependencySourcesProvider == null) {
       if (other.dependencySourcesProvider != null)
@@ -155,7 +155,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.compileProvider== null) ? 0 : this.compileProvider.hashCode());
     result = prime * result + ((this.testProvider== null) ? 0 : this.testProvider.hashCode());
     result = prime * result + ((this.runProvider== null) ? 0 : this.runProvider.hashCode());
-    result = prime * result + ((this.textDocumentBuildTargetsProvider== null) ? 0 : this.textDocumentBuildTargetsProvider.hashCode());
+    result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
     return prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());

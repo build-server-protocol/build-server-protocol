@@ -28,6 +28,9 @@ trait BuildTarget {
   object sources
     extends Endpoint[DependencySourcesParams, DependencySourcesResult](
       "buildTarget/sources")
+  object inverseSources
+    extends Endpoint[InverseSourcesParams, InverseSourcesResult](
+      "buildTarget/inverseSources")
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
         "buildTarget/dependencySources")

@@ -314,8 +314,8 @@ trait BuildServerCapabilities {
   }
   
   /** The server can provide a list of targets that contain a
-    * single text document via the method textDocument/buildTargets */
-  def providesTextDocumentBuildTargets: Boolean
+    * single text document via the method buildTarget/inverseSources */
+  def inverseSourcesProvider: Boolean
   
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
@@ -619,30 +619,27 @@ trait SourceItem {
 }
 ```
 
-### Text Document Build Targets Request
+### Inverse Sources Request
 
-The text document build targets request is sent from the client to the server to query for the list of targets containing the given text document.
+The inverse sources request is sent from the client to the server to query for the list of build targets containing a text document.
 The server communicates during the initialize handshake whether this method is supported or not.
+This request can be viewed as the inverse of `buildTarget/sources`, except it only works for text documents and not directories.
 
-This request may be considered as the inverse of `buildTarget/textDocuments`.
-This method can be used by a language server on `textDocument/didOpen` to lookup which compiler instance to use to compile that given text document.
-In the case there are multiple targets (for example different platforms: JVM/JS, or x86/ARM) containing the same source file, the language server may present in the editor multiple options via `textDocument/codeLens` to configure how to dis-ambiguate.
-
-* method: `textDocument/buildTargets`
-* params: `TextDocumentBuildTargetsParams`, defined as follows
+* method: `textDocument/inverseSources`
+* params: `InverseSourcesParams`, defined as follows
 
 ```scala
-trait TextDocumentBuildTargetsParams {
+trait InverseSourcesParams {
   def textDocument: TextDocumentIdentifier
 }
 ```
 
 Response:
 
-* result: `TextDocumentBuildTargetsResult`, defined as follows
+* result: `InverseSourcesResult`, defined as follows
 
 ```scala
-trait TextDocumentBuildTargetsResult {
+trait InverseSourcesResult {
   def targets: List[BuildTargetIdentifier]
 }
 ```
