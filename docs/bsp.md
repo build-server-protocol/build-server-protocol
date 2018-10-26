@@ -916,11 +916,13 @@ The client will get a `originId` field in `RunResult` if the `originId` field in
 
 ### Clean Cache Request
 
-The clean cache request is sent from the client to the server to remove cached artifacts that are associated with a given build target.
-An example use-case for the clean cache request is to free up disk space or troubleshoot build problems.
+The clean cache request is sent from the client to the server to reset any state associated with a given build target.
+The state can live either in the build tool or in the file system.
 
-After a successful clean cache request, it is expected that cached artifacts created by invoking other requests (compile, run, test) on the build target have been removed and subsequent requests result in a full recompilation.
-The build tool defines the exact semantics of the clean cache request.
+The build tool defines the exact semantics of the clean cache request:
+
+1. Stateless build tools are free to ignore the request and respond with a successful response.
+2. Stateful build tools must ensure that invoking compilation on a target that has been cleaned results in a full compilation.
 
 * method: `buildTarget/cleanCache`
 * params: `CleanCacheParams`
