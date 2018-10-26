@@ -149,9 +149,15 @@ trait BuildTarget {
     * The id.uri is used if None. */
   def displayName: Option[String]
 
-  /** The type of build target. Useful for an IDE to show
-    * targets with different kinds in the UI. */
-  def kind: Int
+  /** Free-form string tags to categorize or label this build target.
+    * For example, can be used by the client to:
+    * - customize how the target should be translated into the client's project model.
+    * - group together different but related targets in the user interface.
+    * - display icons or colors in the user interface.
+    * Pre-defined tags are listed in `BuildTargetTag` but clients and servers
+    * are free to define new tags for custom purposes.
+    */
+  def tags: List[String]
   
   /** The capabilities of this build target. */
   def capabilities: BuildTargetCapabilities
@@ -165,12 +171,12 @@ trait BuildTarget {
   def data: Option[Json] // Note, matches `any` in the LSP.
 }
 
-object BuildTargetKind {
-  final val Library = 1
-  final val Test = 2
-  final val App = 3
-  final val IntegrationTest = 4
-  final val Bench = 5
+object BuildTargetTag {
+  val Library = "library"
+  val Test = "test"
+  val Application = "application"
+  val IntegrationTest = "integration-test"
+  val Benchmark = "benchmark"
 }
 
 trait BuildTargetCapabilities {
