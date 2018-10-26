@@ -1515,7 +1515,10 @@ trait BspConnectionDetails {
 ```
 
 Every build tool supporting BSP must implement a build-tool-specific command to
-generate the BSP connection details.
+generate the BSP connection details. The `argv` field in the connection details
+must be runnable via system process and can use whichever connection protocol
+is desired (UNIX Sockets, Windows Named Pipes, TCP, et cetera). The BSP server
+will write messages to `stdout` and will receive messages via `stdin`.
 
 When such command is invoked, the build tool generates the connection details
 and writes them to a file located in a standard BSP directory
@@ -1540,7 +1543,6 @@ For example, `my-build-tool --bsp-connection-details` writes to
 
 The generated bsp file may contain machine-dependent information and must
 therefore not be checked into version control.
-
 
 ### Connecting to BSP Servers
 
