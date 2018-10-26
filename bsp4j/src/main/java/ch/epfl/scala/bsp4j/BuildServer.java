@@ -43,6 +43,9 @@ public interface BuildServer {
     @JsonRequest("buildTarget/run")
     CompletableFuture<RunResult> buildTargetRun(RunParams params);
 
+    @JsonRequest("buildTarget/cleanCache")
+    CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
+
     default void onConnectWithClient(BuildClient server) {
 
     }

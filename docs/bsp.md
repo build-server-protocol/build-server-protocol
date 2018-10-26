@@ -52,6 +52,7 @@ servers with less effort and time.
         6. [Compile Request](#compile-request)
         7. [Test Request](#test-request)
         8. [Run Request](#run-request)
+        9. [Clean Cache Request](#clean-cache-request)
     8. [Extensions](#extensions)
         1. [Scala](#scala)
             1. [Scala Build Target](#scala-build-target)
@@ -912,6 +913,38 @@ during compilation before completing the response.
 
 The client will get a `originId` field in `RunResult` if the `originId` field in the
 `RunParams` is defined.
+
+### Clean Cache Request
+
+The clean cache request is sent from the client to the server to reset any state associated with a given build target.
+The state can live either in the build tool or in the file system.
+
+The build tool defines the exact semantics of the clean cache request:
+
+1. Stateless build tools are free to ignore the request and respond with a successful response.
+2. Stateful build tools must ensure that invoking compilation on a target that has been cleaned results in a full compilation.
+
+* method: `buildTarget/cleanCache`
+* params: `CleanCacheParams`
+
+```scala
+trait CleanCacheParams {
+  /** The build targets to clean. */
+  def targets: List[BuildTargetIdentifier]
+}
+```
+
+Response:
+
+* result: `CleanCacheResult`, defined as follows
+* error: JSON-RPC code and message set in case an exception happens during the request.
+
+```scala
+trait CleanCacheResult {
+  /** Indicates whether the clean cache request was performed or not. */
+  def cleaned: Boolean
+}
+```
 
 ## Extensions
 

@@ -418,3 +418,19 @@ class RunResult {
     this.statusCode = statusCode
   }
 }
+
+@JsonRpcData
+class CleanCacheParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
+class CleanCacheResult {
+  @NonNull Boolean cleaned
+  new(@NonNull Boolean cleaned) {
+    this.cleaned = cleaned
+  }
+}
