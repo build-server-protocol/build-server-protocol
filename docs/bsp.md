@@ -172,11 +172,34 @@ trait BuildTarget {
 }
 
 object BuildTargetTag {
+
+  /** Target contains re-usable functionality for downstream targets. May have any
+    * combination of capabilities. */
   val Library = "library"
-  val Test = "test"
+
+  /** Target contains source code for producing any kind of application, may have
+    * but does not require the `canRun` capability. */
   val Application = "application"
+
+  /** Target contains source code for testing purposes, may have but does not
+    * require the `canTest` capability. */
+  val Test = "test"
+
+  /** Target contains source code for integration testing purposes, may have
+    * but does not require the `canTest` capability.
+    * The difference between "test" and "integration-test" is that
+    * integration tests traditionally run slower compared to normal tests
+    * and require more computing resources to execute.
+    */
   val IntegrationTest = "integration-test"
+
+  /** Target contains source code to measure performance of a program, may have
+    * but does not require the `canRun` build target capability.
+    */
   val Benchmark = "benchmark"
+
+  /** Target should be ignored by IDEs. */
+  val NoIDE = "no-ide"
 }
 
 trait BuildTargetCapabilities {
