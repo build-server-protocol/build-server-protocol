@@ -941,6 +941,8 @@ Response:
 
 ```scala
 trait CleanCacheResult {
+  /** Optional message to display to the user. */
+  def message: Option[String]
   /** Indicates whether the clean cache request was performed or not. */
   def cleaned: Boolean
 }

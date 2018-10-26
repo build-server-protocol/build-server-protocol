@@ -429,8 +429,10 @@ class CleanCacheParams {
 
 @JsonRpcData
 class CleanCacheResult {
+  String message
   @NonNull Boolean cleaned
-  new(@NonNull Boolean cleaned) {
+  new(String message, @NonNull Boolean cleaned) {
+    this.message = message
     this.cleaned = cleaned
   }
 }
