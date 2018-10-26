@@ -777,7 +777,7 @@ on completion of the same task.
 
 Conversely, a `build/taskFinish` notification may be sent even if `build/taskStart` was not sent.
 
-`build/taskStart`, `build/taskProgress` and `build/taskFinished` notifications for the same task must use the same `taskId`.
+`build/taskStart`, `build/taskProgress` and `build/taskFinish` notifications for the same task must use the same `taskId`.
 
 Tasks that are spawned by another task should reference the originating task's `taskId` in their own `taskId`'s
 `parent` field. Tasks spawned directly by a request should reference the request's `originId` parent.
@@ -814,7 +814,7 @@ trait TaskStartParams {
 
 #### Task Progress
 
-After a `taskStart` and before `taskFinished` for a `taskId`, the server may send any number of progress notifications.
+After a `taskStart` and before `taskFinish` for a `taskId`, the server may send any number of progress notifications.
 
 * method: `build/taskProgress`
 * params: `TaskProgressParams` defined as follows:
@@ -906,11 +906,11 @@ object DataKind {
   /** `data` field must contain a TestReport object. */
   val TestReport = "test-report"
 
-  /** `data` field must contain a TestStarted object. */  
-  val TestStarted = "test-started"
+  /** `data` field must contain a TestStart object. */  
+  val TestStart = "test-start"
   
-  /** `data` field must contain a TestFinished object. */
-  val TestFinished = "test-finished"
+  /** `data` field must contain a TestFinish object. */
+  val TestFinish = "test-finish"
 }
 ```
 
@@ -1086,12 +1086,12 @@ to communicate about tasks triggered by the request to the client.
 #### Test Unit Notifications
 
 The server may inform about individual test units in task notifications that reference the originating task in their `taskId`.
-For example, the server can send a `taskStarted`/`taskCompleted` for each test suite in a target, and likewise for each test in the suite. 
-Individual test start notifications should specify `test-started` in the `dataKind` field and include the `TestStarted` object and
-test finish notifications should specify `test-finished` in the `dataKind` field and include the `TestFinishes` object in the `data` field.
+For example, the server can send a `taskStart`/`taskFinish` for each test suite in a target, and likewise for each test in the suite. 
+Individual test start notifications should specify `test-started` in the `dataKind` field and include the `TestStart` object and
+test finish notifications should specify `test-finished` in the `dataKind` field and include the `TestFinish` object in the `data` field.
 
 ```scala
-trait TestStarted {
+trait TestStart {
   /** Name or description of the test. */
   def description: String
   
@@ -1099,7 +1099,7 @@ trait TestStarted {
   def location: Option[Location]
 }
 
-trait TestFinished {
+trait TestFinish {
   /** Name or description of the test. */
   def description: String
 
