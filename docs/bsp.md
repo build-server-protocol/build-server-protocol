@@ -791,10 +791,10 @@ Notification:
 
 ```scala
 trait TaskStartParams {
-    /** Unique id of the task with reference to parent task id */
+    /** Unique id of the task with optional reference to parent task id */
     def taskId: TaskId
 
-    /** Timestamp of the event in milliseconds. */
+    /** Timestamp of when the event started in milliseconds since Epoch. */
     def eventTime: Long
 
     /** Message describing the task. */
@@ -803,7 +803,7 @@ trait TaskStartParams {
     /** Optional metadata about the task.
       * For compilation tasks, this should be a CompileTask object.
       * For test tasks, this should be a TestTask object. */
-    def data: Option[Json]
+    def data: Option[TaskData]
 }
 ```
 
@@ -816,10 +816,10 @@ After a `taskStart` and before `taskFinished` for a `taskId`, the server may sen
 
 ```scala
 trait TaskProgressParams {
-    /** Unique id of the task with reference to parent task id */
+    /** Unique id of the task with optional reference to parent task id */
     def taskId: TaskId
 
-    /** Timestamp of the event in milliseconds. */
+    /** Timestamp of when the progress event was generated in milliseconds since Epoch. */
     def eventTime: Long
 
     /** Message describing the task. */
@@ -835,7 +835,7 @@ trait TaskProgressParams {
     unit: String
 
     /** Optional metadata about the task progress. */
-    data: Option[Json]
+    data: Option[TaskData]
 }
 
 ```
@@ -847,13 +847,13 @@ trait TaskProgressParams {
 
 ```scala
 trait TaskFinishParams {
-    /** Unique id of the task with reference to parent task id */
+    /** Unique id of the task with optional reference to parent task id */
     def taskId: TaskId
 
     /** Timestamp of the event in milliseconds. */
     def eventTime: Long
 
-    /** Message describing the task. */
+    /** Message describing the finish event. */
     def message: String
 
     /** Task completion status. */
@@ -862,9 +862,24 @@ trait TaskFinishParams {
     /** Optional metadata about the task result.
       * For compilation tasks, this should be a CompileReport object.
       * For test tasks, this should be a TestReport object. */
-    def data: Option[Json]
+    def report: Option[TaskData]
 }
 ```
+
+#### Task Data
+
+Task progress notifications may contain a `TaskData` object in their `data` field.
+There are predefined kinds of `TaskData` for test and compile tasks, as defined in the [Compile Request](#compile-request)
+and [Test Request](#test-request) sections.
+
+```scala
+trait TaskData {
+  /** Identifier for the kind of task data encoded in the `data` field. */
+  def kind: String
+  def data: Json
+}
+```
+
 
 ### Compile Request
 
@@ -908,21 +923,31 @@ trait CompileResult {
 }
 ```
 
-Notifications:
+#### Compile Notifications
 
 The beginning of a compilation unit may be signalled to the client with a `build/taskStart` notification.
-For compilation of a build target, the notification params should include `CompileTask` object:
+When the compilation unit is a build target, the notifications `data` field should include `CompileTaskData` object:
 
 ```scala
+trait CompileTaskData {
+  val kind: String = "compile-task"
+  def data: CompileTask
+}
+
 trait CompileTask {
-  def compileTarget: BuildTargetIdentifier
+  def target: BuildTargetIdentifier
 }
 ```
 
 The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-The `data` field should contain a `CompileReport` object:
+The completed compilation unit was a build target, the notification's `data` field should contain a `CompileReportData` object:
 
 ```scala
+trait CompileReportData {
+  val kind: String = "compile-report"
+  def data: CompileReport
+}
+
 trait CompileReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
@@ -942,8 +967,8 @@ trait CompileReport {
 ```
 
 The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
-notifications during compilation before completing the response. Any number of subtasks may be communicated
-with `build/task*` notifications. The client is free to forward these messages to the LSP editor client.
+notifications during compilation before completing the response. Any number of tasks triggered by the requests 
+may be communicated with `build/task*` notifications. The client is free to forward these messages to the LSP editor client.
 
 ### Test Request
 
@@ -986,21 +1011,31 @@ trait TestResult {
 
 The field `data` may contain test-related language-specific information.
 
-Notifications:
+#### Test Notifications
 
 The beginning of a testing unit may be signalled to the client with a `build/taskStart` notification.
-For testing of a build target, the notification params should include a `TestTask` object:
+When the testing unit is a build target, the notification's `data` field should include a `TestTaskData` object:
 
 ```scala
+trait TestTaskData {
+  val kind = "test-task"
+  def data: TestTask 
+}
+
 trait TestTask {
-  def testTarget: BuildTargetIdentifier
+  def target: BuildTargetIdentifier
 }
 ```
 
 The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-The `data` field of a build target test task should contain a `TestReport` object:
+The `data` field of a build target test task should contain a `TestReportData` object:
 
 ```scala
+trait TestReportData {
+  val kind = "test-report"
+  val data: TestReport
+}
+
 trait TestReport {
   /** The build target that was compiled. */
   def target: BuildTargetIdentifier
@@ -1030,31 +1065,49 @@ This request may trigger a compilation or other tasks on the selected build targ
 The server may send any number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
 to communicate about tasks triggered by the request to the client.
 
-Subtask notifications:
+Test unit notifications:
 
-The server may inform about individual test units in subtask notifications. Individual test notifications should
-include the `TestStarted` and `TestFinished` objects in their params:
+The server may inform about individual test units in task notifications that reference the originating task in their `taskId`.
+For example, the server can send a `taskStarted`/`taskCompleted` for each test suite in a target, and likewise for each test in the suite. 
+Individual test notifications should include the `TestStartedData` and `TestFinishedData` objects in their `data` field:
 
 ```scala
+trait TestStartedData {
+  val kind = "test-started"
+  val data: TestStarted
+}
+
 trait TestStarted {
-  /** Name of description of the test. */
+  /** Name or description of the test. */
   def description: String
+  
+  /** Source location of the test, as LSP location. */
+  def location: Option[Location]
+}
+
+trait TestFinishedData {
+  val kind = "test-finished"
+  val data: TestFinished
 }
 
 trait TestFinished {
-  /** Name of description of the test. */
+  /** Name or description of the test. */
   def description: String
 
   /** Information about completion of the test, for example error message. */
   def message: String
 
-  /** Completion status of the test. */.
+  /** Completion status of the test. */
   def status: Int
+  
+  /** Source location of the test, as LSP location. */
+  def location: Option[Location]
 
   /** Optionally, structured metadata about the test completion.
     * For example: stack traces, expected/actual values. */
   def data: Option[Json]
 }
+
 
 trait TestStatus {
     /** The test passed successfully. */
@@ -1296,7 +1349,7 @@ The client will get a `originId` field in `ScalaTestClassesResult` if the `origi
 
 The build target main classes request is sent from the client to the server to query for the list of
 main classes that can be fed as arguments to `buildTarget/run`. This method can be used for the same
-use cases than the [Scala Test Classes Request](#1.7.1.3.-scala-test-classes-request) enables.
+use cases than the [Scala Test Classes Request](#scala-test-classes-request) enables.
 
 * method: `buildTarget/scalaMainClasses`
 * params: `ScalaMainClassesParams`
