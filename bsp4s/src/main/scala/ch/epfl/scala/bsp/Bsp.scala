@@ -277,13 +277,21 @@ case object BuildTargetEventKind {
     changes: List[BuildTargetEvent]
 )
 
-// Request: 'buildTarget/textDocument', C -> S
-@JsonCodec final case class BuildTargetTextDocumentParams(
+// Request: 'buildTarget/sources', C -> S
+@JsonCodec final case class SourcesParams(
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class BuildTargetTextDocumentsResult(
-    textDocuments: List[TextDocumentIdentifier]
+@JsonCodec final case class SourcesResult(
+    items: List[SourcesItem]
+)
+@JsonCodec final case class SourcesItem(
+    target: BuildTargetIdentifier,
+    sources: List[SourceItem]
+)
+@JsonCodec final case class SourceItem(
+    uri: Uri,
+    generated: Boolean
 )
 
 // Request: 'textDocument/buildTarget', C -> S
