@@ -1,6 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.SourceItemKind;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -11,11 +10,11 @@ public class SourceItem {
   private String uri;
   
   @NonNull
-  private SourceItemKind kind;
+  private Boolean generated;
   
-  public SourceItem(@NonNull final String uri, @NonNull final SourceItemKind kind) {
+  public SourceItem(@NonNull final String uri, @NonNull final Boolean generated) {
     this.uri = uri;
-    this.kind = kind;
+    this.generated = generated;
   }
   
   @Pure
@@ -30,12 +29,12 @@ public class SourceItem {
   
   @Pure
   @NonNull
-  public SourceItemKind getKind() {
-    return this.kind;
+  public Boolean getGenerated() {
+    return this.generated;
   }
   
-  public void setKind(@NonNull final SourceItemKind kind) {
-    this.kind = kind;
+  public void setGenerated(@NonNull final Boolean generated) {
+    this.generated = generated;
   }
   
   @Override
@@ -43,7 +42,7 @@ public class SourceItem {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
-    b.add("kind", this.kind);
+    b.add("generated", this.generated);
     return b.toString();
   }
   
@@ -62,10 +61,10 @@ public class SourceItem {
         return false;
     } else if (!this.uri.equals(other.uri))
       return false;
-    if (this.kind == null) {
-      if (other.kind != null)
+    if (this.generated == null) {
+      if (other.generated != null)
         return false;
-    } else if (!this.kind.equals(other.kind))
+    } else if (!this.generated.equals(other.generated))
       return false;
     return true;
   }
@@ -76,6 +75,6 @@ public class SourceItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
-    return prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    return prime * result + ((this.generated== null) ? 0 : this.generated.hashCode());
   }
 }

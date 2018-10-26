@@ -291,32 +291,8 @@ case object BuildTargetEventKind {
 )
 @JsonCodec final case class SourceItem(
     uri: Uri,
-    kind: SourceItemKind
+    generated: Boolean
 )
-
-sealed abstract class SourceItemKind(val id: Int)
-case object SourceItemKind {
-  case object Source extends SourceItemKind(1)
-  case object Resource extends SourceItemKind(2)
-  case object Excluded extends SourceItemKind(3)
-
-  implicit val buildTargetEventKindEncoder: RootEncoder[SourceItemKind] =
-    new RootEncoder[SourceItemKind] {
-      override def apply(a: SourceItemKind): Json = Json.fromInt(a.id)
-    }
-
-  implicit val buildTargetEventKindDecoder: Decoder[SourceItemKind] =
-    new Decoder[SourceItemKind] {
-      override def apply(c: HCursor): Result[SourceItemKind] = {
-        c.as[Int].flatMap {
-          case 1 => Right(Source)
-          case 2 => Right(Resource)
-          case 3 => Right(Excluded)
-          case n => Left(DecodingFailure(s"Unknown source item kind id for $n", c.history))
-        }
-      }
-    }
-}
 
 // Request: 'textDocument/buildTarget', C -> S
 @JsonCodec final case class TextDocumentBuildTargetsParams(
