@@ -3,8 +3,8 @@ package ch.epfl.scala.bsp
 import java.net.{URI, URISyntaxException}
 
 import io.circe.Decoder.Result
-import io.circe.{Decoder, DecodingFailure, HCursor, Json, RootEncoder}
 import io.circe.derivation.JsonCodec
+import io.circe._
 
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
@@ -332,6 +332,10 @@ case object BuildTargetEventKind {
     time: Option[Long]
 )
 
+@JsonCodec final case class CompileTask(
+    target: BuildTargetIdentifier
+)
+
 @JsonCodec final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
@@ -355,6 +359,50 @@ case object BuildTargetEventKind {
     pending: Int,
     time: Option[Long]
 )
+
+@JsonCodec final case class TestTask(
+    target: BuildTargetIdentifier
+)
+
+@JsonCodec final case class TestStart(
+    description: String,
+    location: Option[Location]
+)
+
+@JsonCodec final case class TestFinish(
+    description: String,
+    message: Option[String],
+    status: TestStatus,
+    location: Option[Location],
+    data: Option[Json]
+)
+
+
+sealed abstract class TestStatus(val code: Int)
+object TestStatus {
+  case object Passed extends TestStatus(1)
+  case object Failed extends TestStatus(2)
+  case object Ignored extends TestStatus(3)
+  case object Cancelled extends TestStatus(4)
+  case object Skipped extends TestStatus(5)
+
+  implicit val testStatusEncoder: RootEncoder[TestStatus] = new RootEncoder[TestStatus] {
+    override def apply(a: TestStatus): Json = Json.fromInt(a.code)
+  }
+
+  implicit val statusCodeDecoder: Decoder[TestStatus] = new Decoder[TestStatus] {
+    override def apply(c: HCursor): Result[TestStatus] = {
+      c.as[Int].flatMap {
+        case 1 => Right(Passed)
+        case 2 => Right(Failed)
+        case 3 => Right(Ignored)
+        case 4 => Right(Cancelled)
+        case 5 => Right(Skipped)
+        case n => Left(DecodingFailure(s"Unknown test status $n", c.history))
+      }
+    }
+  }
+}
 
 @JsonCodec final case class RunParams(
     target: BuildTargetIdentifier,
@@ -397,6 +445,55 @@ object StatusCode {
     message: Option[String],
     cleaned: Boolean
 )
+
+@JsonCodec final case class TaskStartParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    dataKind: Option[String],
+    data: Option[Json]
+)
+
+@JsonCodec final case class TaskProgressParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    total: Option[Long],
+    progress: Option[Long],
+    unit: Option[String],
+    dataKind: Option[String],
+    data: Option[Json]
+)
+
+@JsonCodec final case class TaskFinishParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    status: StatusCode,
+    dataKind: Option[String],
+    data: Option[Json]
+)
+
+object DataKind {
+
+  /** `data` field must contain a CompileTask object. */
+  val CompileTask = "compile-task"
+
+  /** `data` field must contain a CompileReport object. */
+  val CompileReport = "compile-report"
+
+  /** `data` field must contain a TestTask object. */
+  val TestTask = "test-task"
+
+  /** `data` field must contain a TestReport object. */
+  val TestReport = "test-report"
+
+  /** `data` field must contain a TestStart object. */
+  val TestStart = "test-start"
+
+  /** `data` field must contain a TestFinish object. */
+  val TestFinish = "test-finish"
+}
 
 sealed abstract class ScalaPlatform(val id: Int)
 object ScalaPlatform {
