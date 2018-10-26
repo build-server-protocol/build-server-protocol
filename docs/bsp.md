@@ -319,15 +319,15 @@ trait BuildServerCapabilities {
   
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
-  def providesDependencySources: Boolean
+  def dependencySourcesProvider: Boolean
   
   /** The server provides all the resource dependencies
     * via method buildTarget/resources */
-  def providesResources: Boolean
+  def resourcesProvider: Boolean
   
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
-  def providesBuildTargetChanged: Boolean
+  def buildTargetChangedProvider: Boolean
 }
 ```
 
