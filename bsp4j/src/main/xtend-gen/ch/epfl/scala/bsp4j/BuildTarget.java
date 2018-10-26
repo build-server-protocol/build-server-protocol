@@ -2,7 +2,6 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetCapabilities;
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
-import ch.epfl.scala.bsp4j.BuildTargetKind;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
@@ -18,7 +17,7 @@ public class BuildTarget {
   private String displayName;
   
   @NonNull
-  private BuildTargetKind kind;
+  private List<String> tags;
   
   private List<String> languageIds;
   
@@ -30,9 +29,9 @@ public class BuildTarget {
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
-  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final BuildTargetKind kind, @NonNull final BuildTargetCapabilities capabilities) {
+  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final BuildTargetCapabilities capabilities) {
     this.id = id;
-    this.kind = kind;
+    this.tags = tags;
     this.capabilities = capabilities;
   }
   
@@ -57,12 +56,12 @@ public class BuildTarget {
   
   @Pure
   @NonNull
-  public BuildTargetKind getKind() {
-    return this.kind;
+  public List<String> getTags() {
+    return this.tags;
   }
   
-  public void setKind(@NonNull final BuildTargetKind kind) {
-    this.kind = kind;
+  public void setTags(@NonNull final List<String> tags) {
+    this.tags = tags;
   }
   
   @Pure
@@ -108,7 +107,7 @@ public class BuildTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
     b.add("displayName", this.displayName);
-    b.add("kind", this.kind);
+    b.add("tags", this.tags);
     b.add("languageIds", this.languageIds);
     b.add("dependencies", this.dependencies);
     b.add("capabilities", this.capabilities);
@@ -136,10 +135,10 @@ public class BuildTarget {
         return false;
     } else if (!this.displayName.equals(other.displayName))
       return false;
-    if (this.kind == null) {
-      if (other.kind != null)
+    if (this.tags == null) {
+      if (other.tags != null)
         return false;
-    } else if (!this.kind.equals(other.kind))
+    } else if (!this.tags.equals(other.tags))
       return false;
     if (this.languageIds == null) {
       if (other.languageIds != null)
@@ -171,7 +170,7 @@ public class BuildTarget {
     int result = 1;
     result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
     result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
-    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.tags== null) ? 0 : this.tags.hashCode());
     result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
     result = prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
     result = prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());

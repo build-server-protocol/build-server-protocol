@@ -47,38 +47,19 @@ object Uri {
     canRun: Boolean,
 )
 
-sealed abstract class BuildTargetKind(val id: Int)
-case object BuildTargetKind {
-  case object Library extends BuildTargetKind(1)
-  case object Test extends BuildTargetKind(2)
-  case object App extends BuildTargetKind(3)
-  case object IntegrationTest extends BuildTargetKind(4)
-  case object Bench extends BuildTargetKind(5)
-
-  implicit val buildTargetKindEncoder: RootEncoder[BuildTargetKind] =
-    new RootEncoder[BuildTargetKind] {
-      override def apply(a: BuildTargetKind): Json = Json.fromInt(a.id)
-    }
-
-  implicit val buildTargetKindDecoder: Decoder[BuildTargetKind] =
-    new Decoder[BuildTargetKind] {
-      override def apply(c: HCursor): Result[BuildTargetKind] = {
-        c.as[Int].flatMap {
-          case 1 => Right(Library)
-          case 2 => Right(Test)
-          case 3 => Right(App)
-          case 4 => Right(IntegrationTest)
-          case 5 => Right(Bench)
-          case n => Left(DecodingFailure(s"Unknown build target kind id for $n", c.history))
-        }
-      }
-    }
+object BuildTargetTag {
+  val Library = "library"
+  val Test = "test"
+  val Application = "application"
+  val IntegrationTest = "integration-test"
+  val Benchmark = "benchmark"
+  val NoIDE = "no-ide"
 }
 
 @JsonCodec final case class BuildTarget(
     id: BuildTargetIdentifier,
     displayName: String,
-    kind: BuildTargetKind,
+    tags: List[String],
     languageIds: List[String],
     dependencies: List[BuildTargetIdentifier],
     capabilities: BuildTargetCapabilities,

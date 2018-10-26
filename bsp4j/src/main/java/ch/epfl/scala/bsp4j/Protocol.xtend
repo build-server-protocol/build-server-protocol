@@ -45,15 +45,15 @@ class BuildTarget {
 
   @NonNull BuildTargetIdentifier id
   String displayName
-  @NonNull BuildTargetKind kind
+  @NonNull List<String> tags
   List<String> languageIds
   List<BuildTargetIdentifier> dependencies
   @NonNull BuildTargetCapabilities capabilities
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
-  new (@NonNull BuildTargetIdentifier id, @NonNull BuildTargetKind kind, @NonNull BuildTargetCapabilities capabilities) {
+  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
-    this.kind = kind
+    this.tags = tags
     this.capabilities = capabilities
   }
 }
