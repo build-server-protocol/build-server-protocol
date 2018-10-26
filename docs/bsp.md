@@ -1479,9 +1479,8 @@ simplify the data processing on the client side.
 
 ## BSP Connection Protocol
 
-The Build Server Protocol defines a standard connection protocol to simplify
-clients the connection to BSP servers. This protocol has been designed such
-that:
+The Build Server Protocol defines a standard convention for clients to
+connect with BSP servers. This protocol has been designed such that:
 
 1. Clients do not require beforehand knowledge about a specific server
    implementation to be able to connect to it.
