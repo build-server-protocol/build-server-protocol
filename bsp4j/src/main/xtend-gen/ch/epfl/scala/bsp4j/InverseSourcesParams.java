@@ -7,11 +7,11 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class TextDocumentBuildTargetsParams {
+public class InverseSourcesParams {
   @NonNull
   private List<TextDocumentIdentifier> textDocuments;
   
-  public TextDocumentBuildTargetsParams(@NonNull final List<TextDocumentIdentifier> textDocuments) {
+  public InverseSourcesParams(@NonNull final List<TextDocumentIdentifier> textDocuments) {
     this.textDocuments = textDocuments;
   }
   
@@ -42,7 +42,7 @@ public class TextDocumentBuildTargetsParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TextDocumentBuildTargetsParams other = (TextDocumentBuildTargetsParams) obj;
+    InverseSourcesParams other = (InverseSourcesParams) obj;
     if (this.textDocuments == null) {
       if (other.textDocuments != null)
         return false;

@@ -275,12 +275,12 @@ case object BuildTargetEventKind {
     generated: Boolean
 )
 
-// Request: 'textDocument/buildTarget', C -> S
-@JsonCodec final case class TextDocumentBuildTargetsParams(
+// Request: 'buildTarget/inverseSources', C -> S
+@JsonCodec final case class InverseSourcesParams(
     textDocument: TextDocumentIdentifier
 )
 
-@JsonCodec final case class TextDocumentBuildTargetsResult(
+@JsonCodec final case class InverseSourcesResult(
     targets: List[BuildTarget]
 )
 
