@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-public class DataKind {
+public class TaskDataKind {
     public static String COMPILE_TASK ="compile-task";
     public static String TEST_TASK = "test-task";
     public static String TEST_REPORT = "test-report";

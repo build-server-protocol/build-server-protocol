@@ -768,14 +768,18 @@ trait ResourcesItem {
 
 ### Task Notifications
 
-The server may inform the client on the state of running tasks, such as compilation or tests.
+The BSP server can inform the client on the execution state of any task in the build tool. 
+The execution of some tasks, such as compilation or tests, must always be reported by the server.
+
+The server may also send additional task notifications for actions not covered by the protocol, 
+such as resolution or packaging. BSP clients can then display this information to their users at their discretion.
+
 When beginning a task, the server may send `build/taskStart`, intermediate updates may be sent in
 `build/taskProgress`.
 
 If a `build/taskStart` notification has been sent, the server must send `build/taskFinish`
-on completion of the same task.
-
-Conversely, a `build/taskFinish` notification may be sent even if `build/taskStart` was not sent.
+on completion of the same task. Conversely, a `build/taskFinish` notification must always be sent after a 
+`build/taskStart` with the same `taskId` was sent.
 
 `build/taskStart`, `build/taskProgress` and `build/taskFinish` notifications for the same task must use the same `taskId`.
 
@@ -827,17 +831,18 @@ trait TaskProgressParams {
     /** Timestamp of when the progress event was generated in milliseconds since Epoch. */
     def eventTime: Option[Long]
 
-    /** Message describing the task. */
+    /** Message describing the task progress. 
+    * Information about the state of the task at the time the event is sent. */
     def message: Option[String]
 
     /** If known, total amount of work units in this task. */
     def total: Option[Long]
 
     /** If known, completed amount of work units in this task. */
-    progress: Option[Long]
+    def progress: Option[Long]
 
     /** Name of a work unit. For example, "files" or "tests". May be empty. */
-    unit: Option[String]
+    def unit: Option[String]
     
     /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
       * Kind names for specific tasks like compile, test, etc are specified in the protocol.
@@ -892,7 +897,7 @@ There are predefined kinds of objects for test and compile tasks, as described i
 and [Test Request](#test-request) sections. These are declared by predefined `dataKind` strings in task notifications: 
 
 ```scala
-object DataKind {
+object TaskDataKind {
 
   /** `data` field must contain a CompileTask object. */
   val CompileTask = "compile-task"
@@ -969,9 +974,9 @@ trait CompileTask {
 }
 ```
 
-The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-When the compilation unit is a build target, the notification's `dataKind` field should be `compile-report` and the 
-`data` field should include a `CompileReport` object:
+The completion of a compilation task must be signalled with a `build/taskFinish` notification.
+When the compilation unit is a build target, the notification's `dataKind` field must be `compile-report` and the 
+`data` field must include a `CompileReport` object:
 
 ```scala
 trait CompileReport {
@@ -994,7 +999,7 @@ trait CompileReport {
 
 The server is free to send any number of `build/publishDiagnostics` and `build/logMessage`
 notifications during compilation before completing the response. Any number of tasks triggered by the requests 
-may be communicated with `build/task*` notifications. The client is free to forward these messages to the LSP editor client.
+may be communicated with `build/task*` notifications.
 
 ### Test Request
 
@@ -1040,8 +1045,8 @@ The field `data` may contain test-related language-specific information.
 #### Test Notifications
 
 The beginning of a testing unit may be signalled to the client with a `build/taskStart` notification.
-When the testing unit is a build target, the notification's `dataKind` field should be `test-task` and the 
-`data` field should include a `TestTask` object.
+When the testing unit is a build target, the notification's `dataKind` field must be `test-task` and the 
+`data` field must include a `TestTask` object.
 
 ```scala
 trait TestTask {
@@ -1049,9 +1054,9 @@ trait TestTask {
 }
 ```
 
-The completion of a compilation task should be signalled with a `build/taskFinish` notification.
-When the testing unit is a build target, the notification's `dataKind` field should be `test-report` and the 
-`data` field should include a `TestTask` object:
+The completion of a compilation task must be signalled with a `build/taskFinish` notification.
+When the testing unit is a build target, the notification's `dataKind` field must be `test-report` and the 
+`data` field must include a `TestTask` object:
 
 ```scala
 trait TestReport {
@@ -1086,14 +1091,20 @@ to communicate about tasks triggered by the request to the client.
 #### Test Unit Notifications
 
 The server may inform about individual test units in task notifications that reference the originating task in their `taskId`.
-For example, the server can send a `taskStart`/`taskFinish` for each test suite in a target, and likewise for each test in the suite. 
+For example, the server can send a `taskStart`/`taskFinish` for each test suite in a target, and likewise for each test in the suite.
+The server's implementation decides the granularity at which tests are reported. For example, if it only has information 
+about all the tests in a suite at a time, it could report a TestFinish for each test once the suite is done.
+
+Where applicable, notifications about tests should use the `taskId` to reference parent tasks so that the client's user 
+interface can display test execution in a tree view.
+
 Individual test start notifications should specify `test-started` in the `dataKind` field and include the `TestStart` object and
 test finish notifications should specify `test-finished` in the `dataKind` field and include the `TestFinish` object in the `data` field.
 
 ```scala
 trait TestStart {
   /** Name or description of the test. */
-  def description: String
+  def displayName: String
   
   /** Source location of the test, as LSP location. */
   def location: Option[Location]
@@ -1101,7 +1112,7 @@ trait TestStart {
 
 trait TestFinish {
   /** Name or description of the test. */
-  def description: String
+  def displayName: String
 
   /** Information about completion of the test, for example an error message. */
   def message: Option[String]

@@ -474,24 +474,12 @@ object StatusCode {
     data: Option[Json]
 )
 
-object DataKind {
-
-  /** `data` field must contain a CompileTask object. */
+object TaskDataKind {
   val CompileTask = "compile-task"
-
-  /** `data` field must contain a CompileReport object. */
   val CompileReport = "compile-report"
-
-  /** `data` field must contain a TestTask object. */
   val TestTask = "test-task"
-
-  /** `data` field must contain a TestReport object. */
   val TestReport = "test-report"
-
-  /** `data` field must contain a TestStart object. */
   val TestStart = "test-start"
-
-  /** `data` field must contain a TestFinish object. */
   val TestFinish = "test-finish"
 }
 
