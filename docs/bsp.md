@@ -965,8 +965,8 @@ trait CompileResult {
 #### Compile Notifications
 
 The beginning of a compilation unit may be signalled to the client with a `build/taskStart` notification.
-When the compilation unit is a build target, the notification's `dataKind` field should be "compile-task" and the 
-`data` field should include a `CompileTask` object:
+When the compilation unit is a build target, the notification's `dataKind` field must be "compile-task" and the 
+`data` field must include a `CompileTask` object:
 
 ```scala
 trait CompileTask {
@@ -974,7 +974,7 @@ trait CompileTask {
 }
 ```
 
-The completion of a compilation task must be signalled with a `build/taskFinish` notification.
+The completion of a compilation task should be signalled with a `build/taskFinish` notification.
 When the compilation unit is a build target, the notification's `dataKind` field must be `compile-report` and the 
 `data` field must include a `CompileReport` object:
 
@@ -1054,7 +1054,7 @@ trait TestTask {
 }
 ```
 
-The completion of a compilation task must be signalled with a `build/taskFinish` notification.
+The completion of a test task should be signalled with a `build/taskFinish` notification.
 When the testing unit is a build target, the notification's `dataKind` field must be `test-report` and the 
 `data` field must include a `TestTask` object:
 
