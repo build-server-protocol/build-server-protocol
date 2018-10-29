@@ -58,16 +58,15 @@ object BuildTargetTag {
 
 @JsonCodec final case class BuildTarget(
     id: BuildTargetIdentifier,
-    displayName: String,
+    displayName: Option[String],
     tags: List[String],
+    capabilities: BuildTargetCapabilities,
     languageIds: List[String],
     dependencies: List[BuildTargetIdentifier],
-    capabilities: BuildTargetCapabilities,
     data: Option[Json]
 )
 @JsonCodec final case class BuildClientCapabilities(
-    languageIds: List[String],
-    providesFileWatching: Boolean
+    languageIds: List[String]
 )
 
 // Notification: 'build/initialized', C -> S
@@ -96,13 +95,13 @@ object BuildTargetTag {
 )
 
 @JsonCodec final case class BuildServerCapabilities(
-    compileProvider: CompileProvider,
-    testProvider: TestProvider,
-    runProvider: RunProvider,
-    textDocumentBuildTargetsProvider: Boolean,
-    dependencySourcesProvider: Boolean,
-    resourcesProvider: Boolean,
-    buildTargetChangedProvider: Boolean
+    compileProvider: Option[CompileProvider],
+    testProvider: Option[TestProvider],
+    runProvider: Option[RunProvider],
+    inverseSourcesProvider: Option[Boolean],
+    dependencySourcesProvider: Option[Boolean],
+    resourcesProvider: Option[Boolean],
+    buildTargetChangedProvider: Option[Boolean]
 )
 
 @JsonCodec final case class InitializeBuildResult(
@@ -281,7 +280,7 @@ case object BuildTargetEventKind {
 )
 
 @JsonCodec final case class InverseSourcesResult(
-    targets: List[BuildTarget]
+    targets: List[BuildTargetIdentifier]
 )
 
 // Request: 'buildTarget/dependencySources', C -> S
@@ -303,20 +302,20 @@ case object BuildTargetEventKind {
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class ResourcesItem(
-    target: BuildTargetIdentifier,
-    uris: List[Uri]
+@JsonCodec final case class ResourcesResult(
+    items: List[ResourcesItem]
 )
 
-@JsonCodec final case class ResourcesResult(
-    targets: List[ResourcesItem]
+@JsonCodec final case class ResourcesItem(
+    target: BuildTargetIdentifier,
+    resources: List[Uri]
 )
 
 // Request: 'buildTarget/compile', C -> S
 @JsonCodec final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: List[Json]
+    arguments: Option[List[String]]
 )
 
 @JsonCodec final case class CompileResult(
@@ -336,7 +335,7 @@ case object BuildTargetEventKind {
 @JsonCodec final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: List[Json]
+    arguments: Option[List[String]]
 )
 
 @JsonCodec final case class TestResult(
@@ -360,7 +359,7 @@ case object BuildTargetEventKind {
 @JsonCodec final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
-    arguments: List[Json]
+    arguments: Option[List[String]]
 )
 
 sealed abstract class StatusCode(val code: Int)

@@ -25,8 +25,8 @@ public interface BuildServer {
     @JsonRequest("buildTarget/sources")
     CompletableFuture<SourcesResult> buildTargetSources(SourcesParams params);
 
-    @JsonRequest("textDocument/buildTargets")
-    CompletableFuture<InverseSourcesParams> textDocumentBuildTargets(InverseSourcesResult params);
+    @JsonRequest("buildTarget/inverseSources")
+    CompletableFuture<InverseSourcesResult> buildTargetInverseSources(InverseSourcesParams params);
 
     @JsonRequest("buildTarget/dependencySources")
     CompletableFuture<DependencySourcesResult> buildTargetDependencySources(DependencySourcesParams params);

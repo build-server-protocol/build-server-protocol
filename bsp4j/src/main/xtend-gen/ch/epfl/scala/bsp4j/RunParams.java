@@ -1,8 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
-import com.google.gson.annotations.JsonAdapter;
-import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -14,11 +13,12 @@ public class RunParams {
   
   private String originId;
   
-  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
-  private Object arguments;
+  @NonNull
+  private List<String> arguments;
   
-  public RunParams(@NonNull final BuildTargetIdentifier target) {
+  public RunParams(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> arguments) {
     this.target = target;
+    this.arguments = arguments;
   }
   
   @Pure
@@ -41,11 +41,12 @@ public class RunParams {
   }
   
   @Pure
-  public Object getArguments() {
+  @NonNull
+  public List<String> getArguments() {
     return this.arguments;
   }
   
-  public void setArguments(final Object arguments) {
+  public void setArguments(@NonNull final List<String> arguments) {
     this.arguments = arguments;
   }
   

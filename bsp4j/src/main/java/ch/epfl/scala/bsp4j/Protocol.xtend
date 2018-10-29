@@ -46,14 +46,17 @@ class BuildTarget {
   @NonNull BuildTargetIdentifier id
   String displayName
   @NonNull List<String> tags
-  List<String> languageIds
-  List<BuildTargetIdentifier> dependencies
+  @NonNull List<String> languageIds
+  @NonNull List<BuildTargetIdentifier> dependencies
   @NonNull BuildTargetCapabilities capabilities
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
-  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull BuildTargetCapabilities capabilities) {
+  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds,
+       @NonNull List<BuildTargetIdentifier> dependencies,  @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
     this.tags = tags
+    this.dependencies = dependencies
+    this.languageIds = languageIds
     this.capabilities = capabilities
   }
 }
@@ -73,27 +76,34 @@ class InitializeBuildParams {
 @JsonRpcData
 class BuildClientCapabilities {
   @NonNull List<String> languageIds
-  @NonNull Boolean providesFileWatching
-  new(@NonNull List<String> languageIds, @NonNull Boolean providesFileWatching) {
+  new(@NonNull List<String> languageIds) {
     this.languageIds = languageIds
-    this.providesFileWatching = providesFileWatching
   }
 }
 
 
 @JsonRpcData
 class CompileProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
 class TestProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
 class RunProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
@@ -105,6 +115,18 @@ class BuildServerCapabilities {
   Boolean dependencySourcesProvider
   Boolean resourcesProvider
   Boolean buildTargetChangedProvider
+  new(CompileProvider compileProvider, TestProvider testProvider,
+      RunProvider runProvider, Boolean inverseSourcesProvider,
+      Boolean dependencySourcesProvider, Boolean resourcesProvider,
+      Boolean buildTargetChangedProvider) {
+    this.compileProvider = compileProvider
+    this.testProvider = testProvider
+    this.runProvider = runProvider
+    this.inverseSourcesProvider = inverseSourcesProvider
+    this.dependencySourcesProvider = dependencySourcesProvider
+    this.resourcesProvider = resourcesProvider
+    this.buildTargetChangedProvider = buildTargetChangedProvider
+  }
 }
 
 @JsonRpcData
@@ -279,9 +301,9 @@ class SourceItem {
 
 @JsonRpcData
 class InverseSourcesParams {
-  @NonNull List<TextDocumentIdentifier> textDocuments
-  new(@NonNull List<TextDocumentIdentifier> textDocuments) {
-    this.textDocuments = textDocuments
+  @NonNull TextDocumentIdentifier textDocument
+  new(@NonNull TextDocumentIdentifier textDocument) {
+    this.textDocument = textDocument
   }
 }
 
@@ -334,12 +356,13 @@ class ResourcesResult {
     this.items = items
   }
 }
+
 @JsonRpcData
 class ResourcesItem {
-  @NonNull List<BuildTargetIdentifier> targets
+  @NonNull BuildTargetIdentifier target
   @NonNull List<String> resources
-  new(@NonNull List<BuildTargetIdentifier> targets, @NonNull List<String> resources) {
-    this.targets = targets
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> resources) {
+    this.target = target
     this.resources = resources
   }
 }
@@ -348,9 +371,10 @@ class ResourcesItem {
 class CompileParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
-  new(@NonNull List<BuildTargetIdentifier> targets) {
+  List<String> arguments
+  new(@NonNull List<BuildTargetIdentifier> targets, List<String> arguments) {
     this.targets = targets
+    this.arguments = arguments
   }
 }
 
@@ -383,9 +407,10 @@ class CompileReport {
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
-  new(@NonNull List<BuildTargetIdentifier> targets) {
+  List<String> arguments
+  new(@NonNull List<BuildTargetIdentifier> targets, List<String> arguments) {
     this.targets = targets
+    this.arguments = arguments
   }
 }
 
@@ -425,9 +450,10 @@ class TestReport {
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
-  new(@NonNull BuildTargetIdentifier target) {
+  List<String> arguments
+  new(@NonNull BuildTargetIdentifier target, List<String> arguments) {
     this.target = target
+    this.arguments = arguments
   }
 }
 

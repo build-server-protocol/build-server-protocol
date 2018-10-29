@@ -25,18 +25,15 @@ trait BuildTarget {
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
   object cleanCache extends Endpoint[CleanCacheParams, CleanCacheResult]("buildTarget/cleanCache")
 
-  object sources
-    extends Endpoint[DependencySourcesParams, DependencySourcesResult](
-      "buildTarget/sources")
+  object didChange extends Endpoint[DidChangeBuildTarget, Unit]("buildTarget/didChange")
+
+  object sources extends Endpoint[SourcesParams, SourcesResult]("buildTarget/sources")
   object inverseSources
-    extends Endpoint[InverseSourcesParams, InverseSourcesResult](
-      "buildTarget/inverseSources")
+      extends Endpoint[InverseSourcesParams, InverseSourcesResult]("buildTarget/inverseSources")
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
         "buildTarget/dependencySources")
-  object resources
-      extends Endpoint[DependencySourcesParams, DependencySourcesResult](
-        "buildTarget/resources")
+  object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
   // Scala specific endpoints
   object scalacOptions

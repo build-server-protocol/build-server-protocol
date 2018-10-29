@@ -10,12 +10,8 @@ public class BuildClientCapabilities {
   @NonNull
   private List<String> languageIds;
   
-  @NonNull
-  private Boolean providesFileWatching;
-  
-  public BuildClientCapabilities(@NonNull final List<String> languageIds, @NonNull final Boolean providesFileWatching) {
+  public BuildClientCapabilities(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
-    this.providesFileWatching = providesFileWatching;
   }
   
   @Pure
@@ -28,22 +24,11 @@ public class BuildClientCapabilities {
     this.languageIds = languageIds;
   }
   
-  @Pure
-  @NonNull
-  public Boolean getProvidesFileWatching() {
-    return this.providesFileWatching;
-  }
-  
-  public void setProvidesFileWatching(@NonNull final Boolean providesFileWatching) {
-    this.providesFileWatching = providesFileWatching;
-  }
-  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("languageIds", this.languageIds);
-    b.add("providesFileWatching", this.providesFileWatching);
     return b.toString();
   }
   
@@ -62,20 +47,12 @@ public class BuildClientCapabilities {
         return false;
     } else if (!this.languageIds.equals(other.languageIds))
       return false;
-    if (this.providesFileWatching == null) {
-      if (other.providesFileWatching != null)
-        return false;
-    } else if (!this.providesFileWatching.equals(other.providesFileWatching))
-      return false;
     return true;
   }
   
   @Override
   @Pure
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
-    return prime * result + ((this.providesFileWatching== null) ? 0 : this.providesFileWatching.hashCode());
+    return 31 * 1 + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
   }
 }

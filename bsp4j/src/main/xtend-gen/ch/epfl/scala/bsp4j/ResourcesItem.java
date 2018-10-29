@@ -9,24 +9,24 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class ResourcesItem {
   @NonNull
-  private List<BuildTargetIdentifier> targets;
+  private BuildTargetIdentifier target;
   
   @NonNull
   private List<String> resources;
   
-  public ResourcesItem(@NonNull final List<BuildTargetIdentifier> targets, @NonNull final List<String> resources) {
-    this.targets = targets;
+  public ResourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> resources) {
+    this.target = target;
     this.resources = resources;
   }
   
   @Pure
   @NonNull
-  public List<BuildTargetIdentifier> getTargets() {
-    return this.targets;
+  public BuildTargetIdentifier getTarget() {
+    return this.target;
   }
   
-  public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
-    this.targets = targets;
+  public void setTarget(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
   }
   
   @Pure
@@ -43,7 +43,7 @@ public class ResourcesItem {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("targets", this.targets);
+    b.add("target", this.target);
     b.add("resources", this.resources);
     return b.toString();
   }
@@ -58,10 +58,10 @@ public class ResourcesItem {
     if (getClass() != obj.getClass())
       return false;
     ResourcesItem other = (ResourcesItem) obj;
-    if (this.targets == null) {
-      if (other.targets != null)
+    if (this.target == null) {
+      if (other.target != null)
         return false;
-    } else if (!this.targets.equals(other.targets))
+    } else if (!this.target.equals(other.target))
       return false;
     if (this.resources == null) {
       if (other.resources != null)
@@ -76,7 +76,7 @@ public class ResourcesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     return prime * result + ((this.resources== null) ? 0 : this.resources.hashCode());
   }
 }

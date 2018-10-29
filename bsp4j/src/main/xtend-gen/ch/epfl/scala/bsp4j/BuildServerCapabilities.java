@@ -3,85 +3,110 @@ package ch.epfl.scala.bsp4j;
 import ch.epfl.scala.bsp4j.CompileProvider;
 import ch.epfl.scala.bsp4j.RunProvider;
 import ch.epfl.scala.bsp4j.TestProvider;
+import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class BuildServerCapabilities {
+  @NonNull
   private CompileProvider compileProvider;
   
+  @NonNull
   private TestProvider testProvider;
   
+  @NonNull
   private RunProvider runProvider;
   
+  @NonNull
   private Boolean inverseSourcesProvider;
   
+  @NonNull
   private Boolean dependencySourcesProvider;
   
+  @NonNull
   private Boolean resourcesProvider;
   
+  @NonNull
   private Boolean buildTargetChangedProvider;
   
+  public BuildServerCapabilities(@NonNull final CompileProvider compileProvider, @NonNull final TestProvider testProvider, @NonNull final RunProvider runProvider, @NonNull final Boolean inverseSourcesProvider, @NonNull final Boolean dependencySourcesProvider, @NonNull final Boolean resourcesProvider, @NonNull final Boolean buildTargetChangedProvider) {
+    this.compileProvider = compileProvider;
+    this.testProvider = testProvider;
+    this.runProvider = runProvider;
+    this.inverseSourcesProvider = inverseSourcesProvider;
+    this.dependencySourcesProvider = dependencySourcesProvider;
+    this.resourcesProvider = resourcesProvider;
+    this.buildTargetChangedProvider = buildTargetChangedProvider;
+  }
+  
   @Pure
+  @NonNull
   public CompileProvider getCompileProvider() {
     return this.compileProvider;
   }
   
-  public void setCompileProvider(final CompileProvider compileProvider) {
+  public void setCompileProvider(@NonNull final CompileProvider compileProvider) {
     this.compileProvider = compileProvider;
   }
   
   @Pure
+  @NonNull
   public TestProvider getTestProvider() {
     return this.testProvider;
   }
   
-  public void setTestProvider(final TestProvider testProvider) {
+  public void setTestProvider(@NonNull final TestProvider testProvider) {
     this.testProvider = testProvider;
   }
   
   @Pure
+  @NonNull
   public RunProvider getRunProvider() {
     return this.runProvider;
   }
   
-  public void setRunProvider(final RunProvider runProvider) {
+  public void setRunProvider(@NonNull final RunProvider runProvider) {
     this.runProvider = runProvider;
   }
   
   @Pure
+  @NonNull
   public Boolean getInverseSourcesProvider() {
     return this.inverseSourcesProvider;
   }
   
-  public void setInverseSourcesProvider(final Boolean inverseSourcesProvider) {
+  public void setInverseSourcesProvider(@NonNull final Boolean inverseSourcesProvider) {
     this.inverseSourcesProvider = inverseSourcesProvider;
   }
   
   @Pure
+  @NonNull
   public Boolean getDependencySourcesProvider() {
     return this.dependencySourcesProvider;
   }
   
-  public void setDependencySourcesProvider(final Boolean dependencySourcesProvider) {
+  public void setDependencySourcesProvider(@NonNull final Boolean dependencySourcesProvider) {
     this.dependencySourcesProvider = dependencySourcesProvider;
   }
   
   @Pure
+  @NonNull
   public Boolean getResourcesProvider() {
     return this.resourcesProvider;
   }
   
-  public void setResourcesProvider(final Boolean resourcesProvider) {
+  public void setResourcesProvider(@NonNull final Boolean resourcesProvider) {
     this.resourcesProvider = resourcesProvider;
   }
   
   @Pure
+  @NonNull
   public Boolean getBuildTargetChangedProvider() {
     return this.buildTargetChangedProvider;
   }
   
-  public void setBuildTargetChangedProvider(final Boolean buildTargetChangedProvider) {
+  public void setBuildTargetChangedProvider(@NonNull final Boolean buildTargetChangedProvider) {
     this.buildTargetChangedProvider = buildTargetChangedProvider;
   }
   

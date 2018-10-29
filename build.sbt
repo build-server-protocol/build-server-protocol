@@ -23,7 +23,7 @@ cancelable.in(Global) := true
 
 lazy val bsp = project
   .in(file("."))
-  .aggregate(bsp4s, bsp4j)
+  .aggregate(bsp4s, bsp4j, tests)
   .settings(
     skip in publish := true,
   )
@@ -69,6 +69,16 @@ lazy val bsp4j = project
         throw XtendError
     },
     unmanagedSourceDirectories.in(Compile) += sourceDirectory.in(Compile).value / "xtend-gen",
+    libraryDependencies ++= List(
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.5.0",
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.5.0"
+    )
+  )
+
+lazy val tests = project
+  .in(file("tests"))
+  .settings(
+    skip.in(publish) := true,
     resourceGenerators.in(Test) += Def.task {
       val out = managedResourceDirectories.in(Test).value.head / "bsp4j.properties"
       val props = new java.util.Properties()
@@ -78,10 +88,11 @@ lazy val bsp4j = project
       List(out)
     },
     libraryDependencies ++= List(
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.5.0",
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.5.0",
-      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0" % Test,
-      "ch.epfl.scala" % "bloop-frontend_2.12" % "46e63fc3" % Test,
-      "org.scalatest" % "scalatest_2.12" % "3.0.5" % Test
+      "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
+      "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0",
+      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0",
+      "ch.epfl.scala" %% "bloop-frontend" % "46e63fc3",
+      "org.scalatest" %% "scalatest" % "3.0.5"
     )
   )
+  .dependsOn(bsp4s, bsp4j)
