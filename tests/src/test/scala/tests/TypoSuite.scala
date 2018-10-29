@@ -3,15 +3,15 @@ package tests
 import ch.epfl.scala.bsp.{endpoints => s}
 import ch.epfl.scala.bsp4j._
 import difflib.DiffUtils
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.io.PrintWriter
-import java.util
+import java.util.Collections
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import java.util.concurrent.atomic.AtomicInteger
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
 import org.eclipse.lsp4j.jsonrpc.Launcher
@@ -28,74 +28,40 @@ import scala.meta.jsonrpc.JsonRpcClient
 import scala.meta.jsonrpc.Services
 
 class TypoSuite extends FunSuite {
-  // "out" aggregates output requests
-  val out = new StringBuilder
-  var outN = new AtomicInteger()
-  // "in" aggregates incoming requests
-  val in = new StringBuilder
-  var inN = new AtomicInteger()
-  def recordMessage(sb: StringBuilder, e: Any, i: Int): Unit = {
-    sb.append(s"=====\n")
-      .append(s"= $i\n")
-      .append(s"=====\n")
-      .append(e.toString)
-      .append("\n")
-  }
-  def recordIn[T](e: T): T = {
-    recordMessage(in, e, inN.incrementAndGet()); e
-  }
-  def recordOut[T](e: T): T = {
-    recordMessage(out, e, outN.incrementAndGet()); e
-  }
-
-  // Notifications for messages that have no params.
-  case object BuildInitialized
-  case object BuildShutdown
-  case object BuildExit
-  case object WorkspaceBuildTargets
-
-  // java.util.List helpers to construct `ArrayList` like lsp4j.
-  def emptyList[T](): util.List[T] = new util.ArrayList[T]
-  def singletonList[T](e: T): util.List[T] = {
-    val lst = new util.ArrayList[T]
-    lst.add(e)
-    lst
-  }
 
   // Constants for for incoming/outgoing messages.
   val buildTargetUri = new BuildTargetIdentifier("build-target-identifier")
-  val buildTargetUris = singletonList(buildTargetUri)
+  val buildTargetUris = Collections.singletonList(buildTargetUri)
   val textDocumentUri = "file:///Application.scala"
   val textDocumentIdentifier = new TextDocumentIdentifier("tti")
-  val textDocumentIdentifiers = singletonList(textDocumentIdentifier)
+  val textDocumentIdentifiers = Collections.singletonList(textDocumentIdentifier)
 
-  // Java build client that records every notification from the other side.
-  val recordingJavaClient: BuildClient = new BuildClient {
+  // Java build client that ignored all notifications.
+  val silentJavaClient: BuildClient = new BuildClient {
     override def onBuildShowMessage(params: ShowMessageParams): Unit =
-      recordIn(params)
+      ()
     override def onBuildLogMessage(params: LogMessageParams): Unit =
-      recordIn(params)
+      ()
     override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
-      recordIn(params)
+      ()
     override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit =
-      recordIn(params)
+      ()
     override def onBuildTargetCompileReport(params: CompileReport): Unit =
-      recordIn(params)
+      ()
     override def onBuildTargetTestReport(params: TestReport): Unit =
-      recordIn(params)
+      ()
   }
 
-  // Java server client that responds with hardcoded constants and records incoming messages.
+  // Java server client that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
     override def buildInitialize(
         params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         new InitializeBuildResult(
           new BuildServerCapabilities(
-            new CompileProvider(singletonList("scala")),
-            new TestProvider(singletonList("scala")),
-            new RunProvider(singletonList("scala")),
+            new CompileProvider(Collections.singletonList("scala")),
+            new TestProvider(Collections.singletonList("scala")),
+            new RunProvider(Collections.singletonList("scala")),
             true,
             true,
             true,
@@ -105,80 +71,72 @@ class TypoSuite extends FunSuite {
       }
     }
     override def onBuildInitialized(): Unit =
-      recordIn(BuildInitialized)
+      ()
     override def buildShutdown(): CompletableFuture[Object] = {
-      recordIn(BuildShutdown)
       CompletableFuture.completedFuture(null)
     }
     override def onBuildExit(): Unit =
-      recordIn(BuildExit)
+      ()
     override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = {
-      recordIn(WorkspaceBuildTargets)
       CompletableFuture.completedFuture {
         val capabilities = new BuildTargetCapabilities(true, true, true)
         val target = new BuildTarget(
           buildTargetUri,
-          singletonList("tag"),
-          singletonList("scala"),
+          Collections.singletonList("tag"),
+          Collections.singletonList("scala"),
           buildTargetUris,
           capabilities
         )
-        new WorkspaceBuildTargetsResult(singletonList(target))
+        new WorkspaceBuildTargetsResult(Collections.singletonList(target))
       }
     }
     override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         val item =
-          new SourcesItem(buildTargetUri,
-                          singletonList(new SourceItem(textDocumentIdentifier.getUri, true)))
-        new SourcesResult(singletonList(item))
+          new SourcesItem(
+            buildTargetUri,
+            Collections.singletonList(new SourceItem(textDocumentIdentifier.getUri, true)))
+        new SourcesResult(Collections.singletonList(item))
       }
     }
     override def buildTargetInverseSources(
         params: InverseSourcesParams): CompletableFuture[InverseSourcesResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
-        new InverseSourcesResult(singletonList(buildTargetUri))
+        new InverseSourcesResult(Collections.singletonList(buildTargetUri))
       }
     }
     override def buildTargetDependencySources(
         params: DependencySourcesParams): CompletableFuture[DependencySourcesResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
-        val item = new DependencySourcesItem(buildTargetUri, singletonList(textDocumentUri))
-        new DependencySourcesResult(singletonList(item))
+        val item =
+          new DependencySourcesItem(buildTargetUri, Collections.singletonList(textDocumentUri))
+        new DependencySourcesResult(Collections.singletonList(item))
       }
     }
     override def buildTargetResources(
         params: ResourcesParams): CompletableFuture[ResourcesResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
-        val item = new ResourcesItem(buildTargetUri, singletonList(textDocumentUri))
-        new ResourcesResult(singletonList(item))
+        val item = new ResourcesItem(buildTargetUri, Collections.singletonList(textDocumentUri))
+        new ResourcesResult(Collections.singletonList(item))
       }
     }
     override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         new CompileResult(StatusCode.OK)
       }
     }
     override def buildTargetTest(params: TestParams): CompletableFuture[TestResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         new TestResult(StatusCode.CANCELLED)
       }
     }
     override def buildTargetRun(params: RunParams): CompletableFuture[RunResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         new RunResult(StatusCode.ERROR)
       }
     }
     override def buildTargetCleanCache(
         params: CleanCacheParams): CompletableFuture[CleanCacheResult] = {
-      recordIn(params)
       CompletableFuture.completedFuture {
         new CleanCacheResult("clean", true)
       }
@@ -190,8 +148,8 @@ class TypoSuite extends FunSuite {
     def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: JsonRpcClient): Services = {
       services.requestAsync(endpoint)(a => endpoint.request(a))
     }
-    def recordNotification[A](endpoint: Endpoint[A, Unit]): Services = {
-      services.notification(endpoint)(recordIn(_))
+    def ignoreNotification[A](endpoint: Endpoint[A, Unit]): Services = {
+      services.notification(endpoint)(_ => ())
     }
     def forwardNotification[A](endpoint: Endpoint[A, Unit])(
         implicit client: JsonRpcClient): Services = {
@@ -200,15 +158,15 @@ class TypoSuite extends FunSuite {
   }
 
   // Scala build client that records all notifications.
-  def recordingScalaClient(implicit client: JsonRpcClient): Services =
+  def silentScalaClient(implicit client: JsonRpcClient): Services =
     Services
       .empty(scribe.Logger.root)
-      .recordNotification(s.Build.showMessage)
-      .recordNotification(s.Build.logMessage)
-      .recordNotification(s.Build.publishDiagnostics)
-      .recordNotification(s.BuildTarget.didChange)
-      .recordNotification(s.BuildTarget.compileReport)
-      .recordNotification(s.BuildTarget.testReport)
+      .ignoreNotification(s.Build.showMessage)
+      .ignoreNotification(s.Build.logMessage)
+      .ignoreNotification(s.Build.publishDiagnostics)
+      .ignoreNotification(s.BuildTarget.didChange)
+      .ignoreNotification(s.BuildTarget.compileReport)
+      .ignoreNotification(s.BuildTarget.testReport)
 
   // Scala build server that delegates all requests to a client.
   def forwardingScalaServer(implicit client: JsonRpcClient): Services = {
@@ -228,20 +186,18 @@ class TypoSuite extends FunSuite {
       .forwardNotification(s.Build.exit)
   }
 
-  // Uncomment to trace every JSON in/out message to stdout:
-  // System.setProperty("debug", "true")
-  def debugPrintWriter(prefix: String): PrintWriter = {
-    if (System.getProperty("debug") != null) {
-      new PrintWriter(System.out) {
-        override def print(s: String): Unit = {
-          super.print(prefix)
-          super.print(": ")
-          super.print(s)
-        }
+  def traceWriter(baos: ByteArrayOutputStream): PrintWriter = {
+    new PrintWriter(baos) {
+      override def print(s: String): Unit = {
+        // NOTE(olafur): We can parse the string as JSON if regexp search/replace is too hacky.
+        super.print(
+          s.replaceFirst("id\": .*", "id\": 0")
+            .replaceFirst("params\": null", "params\": {}")
+            .replaceFirst("result\": null", "result\": {}")
+        )
       }
-    } else {
-      null
     }
+
   }
 
   /** Fails the test case with a readable unified diff if obtained != expected */
@@ -262,7 +218,6 @@ class TypoSuite extends FunSuite {
         .mkString("\n")
       fail(diff)
     }
-    scribe.info(patch.getDeltas.asScala.toString)
   }
 
   def startScalaConnection(in: InputStream, out: OutputStream)(fn: JsonRpcClient => Services)(
@@ -300,17 +255,20 @@ class TypoSuite extends FunSuite {
     val scala1Connection =
       startScalaConnection(inScala1, outScala1)(_ => forwardingScalaServer(scala2Connection.client))
 
+    val trace1 = new ByteArrayOutputStream()
+    val trace2 = new ByteArrayOutputStream()
+
     val java1Launcher = new Launcher.Builder[BuildServer]()
       .setRemoteInterface(classOf[BuildServer])
-      .setLocalService(recordingJavaClient)
-      .traceMessages(debugPrintWriter("java1"))
+      .setLocalService(silentJavaClient)
+      .traceMessages(traceWriter(trace1))
       .setInput(inJava1)
       .setOutput(outJava1)
       .create()
     val java2Launcher = new Launcher.Builder[BuildClient]()
       .setRemoteInterface(classOf[BuildClient])
       .setLocalService(hardcodedJavaServer)
-      .traceMessages(debugPrintWriter("java2"))
+      .traceMessages(traceWriter(trace2))
       .setInput(inJava2)
       .setOutput(outJava2)
       .create()
@@ -339,53 +297,39 @@ class TypoSuite extends FunSuite {
         initialize <- {
           scala1
             .buildInitialize(
-              recordOut(
-                new InitializeBuildParams(
-                  "file:///workspace/",
-                  new BuildClientCapabilities(
-                    singletonList("scala")
-                  )
+              new InitializeBuildParams(
+                "file:///workspace/",
+                new BuildClientCapabilities(
+                  Collections.singletonList("scala")
                 )
               )
             )
             .toScala
         }
-        _ = {
-          recordOut(BuildInitialized)
-          scala1.onBuildInitialized()
-        }
-        sources <- scala1.buildTargetSources(recordOut(new SourcesParams(buildTargetUris))).toScala
+        _ = scala1.onBuildInitialized()
+        sources <- scala1.buildTargetSources(new SourcesParams(buildTargetUris)).toScala
         inverseSources <- scala1
-          .buildTargetInverseSources(recordOut(new InverseSourcesParams(textDocumentIdentifier)))
+          .buildTargetInverseSources(new InverseSourcesParams(textDocumentIdentifier))
           .toScala
         resources <- scala1
-          .buildTargetResources(recordOut(new ResourcesParams(buildTargetUris)))
+          .buildTargetResources(new ResourcesParams(buildTargetUris))
           .toScala
         clean <- scala1
-          .buildTargetCleanCache(recordOut(new CleanCacheParams(buildTargetUris)))
+          .buildTargetCleanCache(new CleanCacheParams(buildTargetUris))
           .toScala
-        compile <- scala1.buildTargetCompile(recordOut(new CompileParams(buildTargetUris))).toScala
-        run <- scala1.buildTargetRun(recordOut(new RunParams(buildTargetUri, emptyList()))).toScala
+        compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris)).toScala
+        run <- scala1.buildTargetRun(new RunParams(buildTargetUri, Collections.emptyList())).toScala
         test <- scala1
-          .buildTargetTest(recordOut(new TestParams(buildTargetUris, emptyList())))
+          .buildTargetTest(new TestParams(buildTargetUris, Collections.emptyList()))
           .toScala
-        _ <- {
-          recordOut(BuildShutdown)
-          scala1.buildShutdown().toScala
-        }
-        _ = {
-          recordOut(BuildExit)
-          scala1.onBuildExit()
-        }
+        _ <- scala1.buildShutdown().toScala
+        _ = scala1.onBuildExit()
         // NOTE(olafur): important to not finish test with a notification to avoid Thread.sleep
         // for notification to deliver.
-        workspace <- {
-          recordOut(WorkspaceBuildTargets)
-          scala1.workspaceBuildTargets().toScala
-        }
+        workspace <- scala1.workspaceBuildTargets().toScala
       } yield {
-        val obtained = in.toString()
-        val expected = out.toString()
+        val obtained = trace1.toString()
+        val expected = trace2.toString()
         assertNoDiff(obtained, expected)
       }
       Await.result(result, Duration("5s"))
