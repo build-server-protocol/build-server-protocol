@@ -10,7 +10,8 @@ stages:
 jobs:
   include:
     script:
-      - sbt test bsp4j/test
+      - sbt bsp4j/xtend test bsp4j/test
+      - test -z $(git ls-files --modified)
 
 cache:
   directories:
