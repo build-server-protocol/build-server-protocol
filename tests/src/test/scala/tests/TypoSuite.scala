@@ -334,7 +334,7 @@ class TypoSuite extends FunSuite {
         clean <- scala1
           .buildTargetCleanCache(new CleanCacheParams(buildTargetUris))
           .toScala
-        compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris)).toScala
+        compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris, null)).toScala
         run <- scala1.buildTargetRun(new RunParams(buildTargetUri, Collections.emptyList())).toScala
         test <- scala1
           .buildTargetTest(new TestParams(buildTargetUris, Collections.emptyList()))

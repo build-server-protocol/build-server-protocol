@@ -193,8 +193,7 @@ class BloopSuite extends FunSuite {
 
   def assertCompile(server: BloopServer, client: BloopClient): Unit = {
     client.reset()
-    val params = new CompileParams(getBuildTargets(server))
-    params.setArguments(new JsonArray)
+    val params = new CompileParams(getBuildTargets(server), null)
     val compileResult = server.buildTargetCompile(params).get()
     // FIXME: originId should be non-null https://github.com/scalacenter/bloop/issues/679
     assert(compileResult.getOriginId == null)

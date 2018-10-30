@@ -13,10 +13,9 @@ public class TestParams {
   
   private String originId;
   
-  @NonNull
   private List<String> arguments;
   
-  public TestParams(@NonNull final List<BuildTargetIdentifier> targets, @NonNull final List<String> arguments) {
+  public TestParams(@NonNull final List<BuildTargetIdentifier> targets, final List<String> arguments) {
     this.targets = targets;
     this.arguments = arguments;
   }
@@ -41,12 +40,11 @@ public class TestParams {
   }
   
   @Pure
-  @NonNull
   public List<String> getArguments() {
     return this.arguments;
   }
   
-  public void setArguments(@NonNull final List<String> arguments) {
+  public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
   }
   

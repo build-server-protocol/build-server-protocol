@@ -13,10 +13,9 @@ public class RunParams {
   
   private String originId;
   
-  @NonNull
   private List<String> arguments;
   
-  public RunParams(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> arguments) {
+  public RunParams(@NonNull final BuildTargetIdentifier target, final List<String> arguments) {
     this.target = target;
     this.arguments = arguments;
   }
@@ -41,12 +40,11 @@ public class RunParams {
   }
   
   @Pure
-  @NonNull
   public List<String> getArguments() {
     return this.arguments;
   }
   
-  public void setArguments(@NonNull final List<String> arguments) {
+  public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
   }
   

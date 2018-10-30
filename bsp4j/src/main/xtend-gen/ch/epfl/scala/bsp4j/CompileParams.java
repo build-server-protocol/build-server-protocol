@@ -1,9 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
-import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -15,11 +13,11 @@ public class CompileParams {
   
   private String originId;
   
-  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
-  private Object arguments;
+  private List<String> arguments;
   
-  public CompileParams(@NonNull final List<BuildTargetIdentifier> targets) {
+  public CompileParams(@NonNull final List<BuildTargetIdentifier> targets, final List<String> arguments) {
     this.targets = targets;
+    this.arguments = arguments;
   }
   
   @Pure
@@ -42,11 +40,11 @@ public class CompileParams {
   }
   
   @Pure
-  public Object getArguments() {
+  public List<String> getArguments() {
     return this.arguments;
   }
   
-  public void setArguments(final Object arguments) {
+  public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
   }
   
