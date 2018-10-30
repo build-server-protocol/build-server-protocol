@@ -22,16 +22,6 @@ public class BuildServerCapabilities {
   
   private Boolean buildTargetChangedProvider;
   
-  public BuildServerCapabilities(final CompileProvider compileProvider, final TestProvider testProvider, final RunProvider runProvider, final Boolean inverseSourcesProvider, final Boolean dependencySourcesProvider, final Boolean resourcesProvider, final Boolean buildTargetChangedProvider) {
-    this.compileProvider = compileProvider;
-    this.testProvider = testProvider;
-    this.runProvider = runProvider;
-    this.inverseSourcesProvider = inverseSourcesProvider;
-    this.dependencySourcesProvider = dependencySourcesProvider;
-    this.resourcesProvider = resourcesProvider;
-    this.buildTargetChangedProvider = buildTargetChangedProvider;
-  }
-  
   @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;

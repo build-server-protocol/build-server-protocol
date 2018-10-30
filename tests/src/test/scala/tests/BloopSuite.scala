@@ -193,7 +193,7 @@ class BloopSuite extends FunSuite {
 
   def assertCompile(server: BloopServer, client: BloopClient): Unit = {
     client.reset()
-    val params = new CompileParams(getBuildTargets(server), null)
+    val params = new CompileParams(getBuildTargets(server))
     val compileResult = server.buildTargetCompile(params).get()
     // FIXME: originId should be non-null https://github.com/scalacenter/bloop/issues/679
     assert(compileResult.getOriginId == null)
@@ -206,7 +206,7 @@ class BloopSuite extends FunSuite {
 
   def assertTest(server: BloopServer, client: BloopClient): Unit = {
     client.reset()
-    val params = new TestParams(getBuildTargets(server), Collections.emptyList())
+    val params = new TestParams(getBuildTargets(server))
     val testResult = server.buildTargetTest(params).get()
     assert(testResult.getOriginId == null)
     // Compilation was triggered by `assertCompile`, so no diagnostics are found this time
@@ -219,7 +219,7 @@ class BloopSuite extends FunSuite {
   def assertRun(server: BloopServer, client: BloopClient): Unit = {
     client.reset()
     val targetToRun = getBuildTargets(server).asScala.find(_.getUri.endsWith("a")).get
-    val params = new RunParams(targetToRun, Collections.emptyList())
+    val params = new RunParams(targetToRun)
     val runResult = server.buildTargetRun(params).get()
     assert(client.logMessages.exists(_.getMessage == "Hello world!"))
     assert(runResult.getOriginId == null)

@@ -13,11 +13,8 @@ public class TestParams {
   
   private String originId;
   
-  private List<String> arguments;
-  
-  public TestParams(@NonNull final List<BuildTargetIdentifier> targets, final List<String> arguments) {
+  public TestParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
-    this.arguments = arguments;
   }
   
   @Pure
@@ -39,22 +36,12 @@ public class TestParams {
     this.originId = originId;
   }
   
-  @Pure
-  public List<String> getArguments() {
-    return this.arguments;
-  }
-  
-  public void setArguments(final List<String> arguments) {
-    this.arguments = arguments;
-  }
-  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
     b.add("originId", this.originId);
-    b.add("arguments", this.arguments);
     return b.toString();
   }
   
@@ -78,11 +65,6 @@ public class TestParams {
         return false;
     } else if (!this.originId.equals(other.originId))
       return false;
-    if (this.arguments == null) {
-      if (other.arguments != null)
-        return false;
-    } else if (!this.arguments.equals(other.arguments))
-      return false;
     return true;
   }
   
@@ -92,7 +74,6 @@ public class TestParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

@@ -29,7 +29,7 @@ public class TestReport {
   
   private Long time;
   
-  public TestReport(@NonNull final BuildTargetIdentifier target, final Integer passed, final Integer failed, final Integer ignored, final Integer cancelled, final Integer skipped) {
+  public TestReport(@NonNull final BuildTargetIdentifier target, @NonNull final Integer passed, @NonNull final Integer failed, @NonNull final Integer ignored, @NonNull final Integer cancelled, @NonNull final Integer skipped) {
     this.target = target;
     this.passed = passed;
     this.failed = failed;

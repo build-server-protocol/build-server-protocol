@@ -115,18 +115,6 @@ class BuildServerCapabilities {
   Boolean dependencySourcesProvider
   Boolean resourcesProvider
   Boolean buildTargetChangedProvider
-  new(CompileProvider compileProvider, TestProvider testProvider,
-      RunProvider runProvider, Boolean inverseSourcesProvider,
-      Boolean dependencySourcesProvider, Boolean resourcesProvider,
-      Boolean buildTargetChangedProvider) {
-    this.compileProvider = compileProvider
-    this.testProvider = testProvider
-    this.runProvider = runProvider
-    this.inverseSourcesProvider = inverseSourcesProvider
-    this.dependencySourcesProvider = dependencySourcesProvider
-    this.resourcesProvider = resourcesProvider
-    this.buildTargetChangedProvider = buildTargetChangedProvider
-  }
 }
 
 @JsonRpcData
@@ -371,10 +359,8 @@ class ResourcesItem {
 class CompileParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  List<String> arguments
-  new(@NonNull List<BuildTargetIdentifier> targets, List<String> arguments) {
+  new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
-    this.arguments = arguments
   }
 }
 
@@ -396,7 +382,7 @@ class CompileReport {
   @NonNull Integer errors
   @NonNull Integer warnings
   Long time
-  new(@NonNull BuildTargetIdentifier target, Integer errors, Integer warnings) {
+  new(@NonNull BuildTargetIdentifier target, @NonNull Integer errors, @NonNull Integer warnings) {
     this.target = target
     this.errors = errors
     this.warnings = warnings
@@ -407,10 +393,8 @@ class CompileReport {
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  List<String> arguments
-  new(@NonNull List<BuildTargetIdentifier> targets, List<String> arguments) {
+  new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
-    this.arguments = arguments
   }
 }
 
@@ -435,8 +419,8 @@ class TestReport {
   @NonNull Integer cancelled
   @NonNull Integer skipped
   Long time
-  new(@NonNull BuildTargetIdentifier target, Integer passed, Integer failed, Integer ignored,
-      Integer cancelled, Integer skipped) {
+  new(@NonNull BuildTargetIdentifier target, @NonNull Integer passed, @NonNull Integer failed, @NonNull Integer ignored,
+      @NonNull Integer cancelled, @NonNull Integer skipped) {
     this.target = target
     this.passed = passed
     this.failed = failed
@@ -450,10 +434,8 @@ class TestReport {
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
-  List<String> arguments
-  new(@NonNull BuildTargetIdentifier target, List<String> arguments) {
+  new(@NonNull BuildTargetIdentifier target) {
     this.target = target
-    this.arguments = arguments
   }
 }
 

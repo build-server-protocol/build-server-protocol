@@ -63,17 +63,15 @@ class TypoSuite extends FunSuite {
     override def buildInitialize(
         params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = {
       CompletableFuture.completedFuture {
-        new InitializeBuildResult(
-          new BuildServerCapabilities(
-            new CompileProvider(Collections.singletonList("scala")),
-            new TestProvider(Collections.singletonList("scala")),
-            new RunProvider(Collections.singletonList("scala")),
-            true,
-            true,
-            true,
-            true
-          )
-        )
+        val capabilities = new BuildServerCapabilities()
+        capabilities.setCompileProvider(new CompileProvider(Collections.singletonList("scala")))
+        capabilities.setTestProvider(new TestProvider(Collections.singletonList("scala")))
+        capabilities.setRunProvider(new RunProvider(Collections.singletonList("scala")))
+        capabilities.setInverseSourcesProvider(true)
+        capabilities.setDependencySourcesProvider(true)
+        capabilities.setResourcesProvider(true)
+        capabilities.setBuildTargetChangedProvider(true)
+        new InitializeBuildResult(capabilities)
       }
     }
     override def onBuildInitialized(): Unit =
@@ -334,10 +332,10 @@ class TypoSuite extends FunSuite {
         clean <- scala1
           .buildTargetCleanCache(new CleanCacheParams(buildTargetUris))
           .toScala
-        compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris, null)).toScala
-        run <- scala1.buildTargetRun(new RunParams(buildTargetUri, Collections.emptyList())).toScala
+        compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris)).toScala
+        run <- scala1.buildTargetRun(new RunParams(buildTargetUri)).toScala
         test <- scala1
-          .buildTargetTest(new TestParams(buildTargetUris, Collections.emptyList()))
+          .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
         _ <- scala1.buildShutdown().toScala
         _ = scala1.onBuildExit()
