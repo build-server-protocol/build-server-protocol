@@ -2,6 +2,12 @@ package tests
 
 import ch.epfl.scala.bsp.{endpoints => s}
 import ch.epfl.scala.bsp4j._
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import difflib.DiffUtils
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -186,18 +192,29 @@ class TypoSuite extends FunSuite {
       .forwardNotification(s.Build.exit)
   }
 
+  val gson = new GsonBuilder().setPrettyPrinting().create()
+  val gsonParser = new JsonParser()
   def traceWriter(baos: ByteArrayOutputStream): PrintWriter = {
+    // Normalize JSON so that bsp4s and bsp4j produce identical strings
+    def normalizeJson(json: String): String = {
+      val obj = gsonParser.parse(json).getAsJsonObject
+      List("params", "result").foreach { key =>
+        if (obj.get(key) == JsonNull.INSTANCE) {
+          // bsp4j uses `params: null` when bsp4s `params: {}`
+          obj.add(key, new JsonObject())
+        }
+      }
+      if (obj.get("id") != null) {
+        // bsp4s and bsp4j may not have the same ID request numbers
+        obj.add("id", new JsonPrimitive("1"))
+      }
+      gson.toJson(obj)
+    }
     new PrintWriter(baos) {
-      override def print(s: String): Unit = {
-        // NOTE(olafur): We can parse the string as JSON if regexp search/replace is too hacky.
-        super.print(
-          s.replaceFirst("id\": .*", "id\": 0")
-            .replaceFirst("params\": null", "params\": {}")
-            .replaceFirst("result\": null", "result\": {}")
-        )
+      override def print(json: String): Unit = {
+        super.print(normalizeJson(json))
       }
     }
-
   }
 
   /** Fails the test case with a readable unified diff if obtained != expected */
