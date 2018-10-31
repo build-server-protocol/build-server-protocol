@@ -20,7 +20,7 @@ public class CompileReport {
   
   private Long time;
   
-  public CompileReport(@NonNull final BuildTargetIdentifier target, final Integer errors, final Integer warnings) {
+  public CompileReport(@NonNull final BuildTargetIdentifier target, @NonNull final Integer errors, @NonNull final Integer warnings) {
     this.target = target;
     this.errors = errors;
     this.warnings = warnings;

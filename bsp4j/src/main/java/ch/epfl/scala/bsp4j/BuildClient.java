@@ -20,7 +20,7 @@ public interface BuildClient {
     void onBuildTargetCompileReport(CompileReport params);
 
     @JsonNotification("buildTarget/testReport")
-    void onBuildTargetTest(TestReport params);
+    void onBuildTargetTestReport(TestReport params);
 
     default void onConnectWithServer(BuildServer server) {
 

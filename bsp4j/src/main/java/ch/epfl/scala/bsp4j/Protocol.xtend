@@ -46,14 +46,17 @@ class BuildTarget {
   @NonNull BuildTargetIdentifier id
   String displayName
   @NonNull List<String> tags
-  List<String> languageIds
-  List<BuildTargetIdentifier> dependencies
+  @NonNull List<String> languageIds
+  @NonNull List<BuildTargetIdentifier> dependencies
   @NonNull BuildTargetCapabilities capabilities
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
-  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull BuildTargetCapabilities capabilities) {
+  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds,
+       @NonNull List<BuildTargetIdentifier> dependencies,  @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
     this.tags = tags
+    this.dependencies = dependencies
+    this.languageIds = languageIds
     this.capabilities = capabilities
   }
 }
@@ -73,27 +76,34 @@ class InitializeBuildParams {
 @JsonRpcData
 class BuildClientCapabilities {
   @NonNull List<String> languageIds
-  @NonNull Boolean providesFileWatching
-  new(@NonNull List<String> languageIds, @NonNull Boolean providesFileWatching) {
+  new(@NonNull List<String> languageIds) {
     this.languageIds = languageIds
-    this.providesFileWatching = providesFileWatching
   }
 }
 
 
 @JsonRpcData
 class CompileProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
 class TestProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
 class RunProvider {
-  List<String> languageIds
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
 }
 
 @JsonRpcData
@@ -279,9 +289,9 @@ class SourceItem {
 
 @JsonRpcData
 class InverseSourcesParams {
-  @NonNull List<TextDocumentIdentifier> textDocuments
-  new(@NonNull List<TextDocumentIdentifier> textDocuments) {
-    this.textDocuments = textDocuments
+  @NonNull TextDocumentIdentifier textDocument
+  new(@NonNull TextDocumentIdentifier textDocument) {
+    this.textDocument = textDocument
   }
 }
 
@@ -334,12 +344,13 @@ class ResourcesResult {
     this.items = items
   }
 }
+
 @JsonRpcData
 class ResourcesItem {
-  @NonNull List<BuildTargetIdentifier> targets
+  @NonNull BuildTargetIdentifier target
   @NonNull List<String> resources
-  new(@NonNull List<BuildTargetIdentifier> targets, @NonNull List<String> resources) {
-    this.targets = targets
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> resources) {
+    this.target = target
     this.resources = resources
   }
 }
@@ -348,7 +359,6 @@ class ResourcesItem {
 class CompileParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
   }
@@ -372,7 +382,7 @@ class CompileReport {
   @NonNull Integer errors
   @NonNull Integer warnings
   Long time
-  new(@NonNull BuildTargetIdentifier target, Integer errors, Integer warnings) {
+  new(@NonNull BuildTargetIdentifier target, @NonNull Integer errors, @NonNull Integer warnings) {
     this.target = target
     this.errors = errors
     this.warnings = warnings
@@ -383,7 +393,6 @@ class CompileReport {
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
   }
@@ -410,8 +419,8 @@ class TestReport {
   @NonNull Integer cancelled
   @NonNull Integer skipped
   Long time
-  new(@NonNull BuildTargetIdentifier target, Integer passed, Integer failed, Integer ignored,
-      Integer cancelled, Integer skipped) {
+  new(@NonNull BuildTargetIdentifier target, @NonNull Integer passed, @NonNull Integer failed, @NonNull Integer ignored,
+      @NonNull Integer cancelled, @NonNull Integer skipped) {
     this.target = target
     this.passed = passed
     this.failed = failed
@@ -425,7 +434,6 @@ class TestReport {
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
   new(@NonNull BuildTargetIdentifier target) {
     this.target = target
   }

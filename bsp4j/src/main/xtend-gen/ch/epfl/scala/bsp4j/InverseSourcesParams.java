@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.TextDocumentIdentifier;
-import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -9,27 +8,27 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class InverseSourcesParams {
   @NonNull
-  private List<TextDocumentIdentifier> textDocuments;
+  private TextDocumentIdentifier textDocument;
   
-  public InverseSourcesParams(@NonNull final List<TextDocumentIdentifier> textDocuments) {
-    this.textDocuments = textDocuments;
+  public InverseSourcesParams(@NonNull final TextDocumentIdentifier textDocument) {
+    this.textDocument = textDocument;
   }
   
   @Pure
   @NonNull
-  public List<TextDocumentIdentifier> getTextDocuments() {
-    return this.textDocuments;
+  public TextDocumentIdentifier getTextDocument() {
+    return this.textDocument;
   }
   
-  public void setTextDocuments(@NonNull final List<TextDocumentIdentifier> textDocuments) {
-    this.textDocuments = textDocuments;
+  public void setTextDocument(@NonNull final TextDocumentIdentifier textDocument) {
+    this.textDocument = textDocument;
   }
   
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("textDocuments", this.textDocuments);
+    b.add("textDocument", this.textDocument);
     return b.toString();
   }
   
@@ -43,10 +42,10 @@ public class InverseSourcesParams {
     if (getClass() != obj.getClass())
       return false;
     InverseSourcesParams other = (InverseSourcesParams) obj;
-    if (this.textDocuments == null) {
-      if (other.textDocuments != null)
+    if (this.textDocument == null) {
+      if (other.textDocument != null)
         return false;
-    } else if (!this.textDocuments.equals(other.textDocuments))
+    } else if (!this.textDocument.equals(other.textDocument))
       return false;
     return true;
   }
@@ -54,6 +53,6 @@ public class InverseSourcesParams {
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.textDocuments== null) ? 0 : this.textDocuments.hashCode());
+    return 31 * 1 + ((this.textDocument== null) ? 0 : this.textDocument.hashCode());
   }
 }

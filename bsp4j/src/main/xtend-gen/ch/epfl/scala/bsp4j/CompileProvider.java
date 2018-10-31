@@ -1,19 +1,26 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CompileProvider {
+  @NonNull
   private List<String> languageIds;
   
+  public CompileProvider(@NonNull final List<String> languageIds) {
+    this.languageIds = languageIds;
+  }
+  
   @Pure
+  @NonNull
   public List<String> getLanguageIds() {
     return this.languageIds;
   }
   
-  public void setLanguageIds(final List<String> languageIds) {
+  public void setLanguageIds(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
   }
   

@@ -166,6 +166,9 @@ trait BuildTarget {
     * The ID string for each language is defined in the LSP. */
   def languageIds: List[String]
 
+  /** The direct upstream build target dependencies of this build target */
+  def dependencies: List[BuildTargetIdentifer]
+
   /** Language-specific metadata about this target.
     * See ScalaBuildTarget as an example. */
   def data: Option[Json] // Note, matches `any` in the LSP.
@@ -308,11 +311,7 @@ trait BuildClientCapabilities {
     * The server must never respond with build targets for other
     * languages than those that appear in this list. */
   def languageIds: List[String]
-  
-  /** The client can provide support for the file watching
-    * notifications to the server. A language server can forward
-    * these notifications from the editor. */
-  def providesFileWatching: Boolean
+
 }
 ```
 
@@ -326,37 +325,44 @@ trait InitializeBuildResult {
   def capabilities: BuildServerCapabilities
 }
 
+
 trait BuildServerCapabilities {
   /** The languages the server supports compilation via method buildTarget/compile. */
-  def compileProvider: {
-    def languageIds: List[String]
-  }
+  def compileProvider: Option[CompileProvider]
   
   /** The languages the server supports test execution via method buildTarget/test */
-  def testProvider: {
-    def languageIds: List[String]
-  }
+  def testProvider: Option[TestProvider]
   
   /** The languages the server supports run via method buildTarget/run */
-  def runProvider: {
-    def languageIds: List[String]
-  }
+  def runProvider: Option[RunProvider]
   
   /** The server can provide a list of targets that contain a
     * single text document via the method buildTarget/inverseSources */
-  def inverseSourcesProvider: Boolean
+  def inverseSourcesProvider: Option[Boolean]
   
   /** The server provides sources for library dependencies
     * via method buildTarget/dependencySources */
-  def dependencySourcesProvider: Boolean
+  def dependencySourcesProvider: Option[Boolean]
   
   /** The server provides all the resource dependencies
     * via method buildTarget/resources */
-  def resourcesProvider: Boolean
+  def resourcesProvider: Option[Boolean]
   
   /** The server sends notifications to the client on build
     * target change events via buildTarget/didChange */
-  def buildTargetChangedProvider: Boolean
+  def buildTargetChangedProvider: Option[Boolean]
+}
+
+trait CompileProvider {
+  def languageIds: List[String]
+}
+
+trait RunProvider {
+  def languageIds: List[String]
+}
+
+trait TestProvider {
+  def languageIds: List[String]
 }
 ```
 
@@ -761,7 +767,7 @@ trait CompileParams {
   def originId: Option[String]
 
   /** Optional arguments to the compilation process. */
-  def arguments: List[Json]
+  def arguments: Option[List[String]]
 }
 ```
 
@@ -846,7 +852,7 @@ trait TestParams {
   def originId: Option[String]
   
   /** Optional arguments to the test execution. */
-  def arguments: List[Json]
+  def arguments: Option[List[String]]
 }
 ```
 
@@ -928,8 +934,8 @@ trait RunParams {
     * The server may include this id in triggered notifications or responses. */
   def originId: Option[String]
   
-  /** Optional arguments to the test execution. */
-  def arguments: Option[Json]
+  /** Optional arguments to the executed application. */
+  def arguments: Option[List[String]]
 }
 ```
 

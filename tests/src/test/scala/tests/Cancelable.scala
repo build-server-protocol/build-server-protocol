@@ -8,7 +8,10 @@ trait Cancelable {
 }
 class OpenCancelable extends Cancelable {
   private val toCancel = ListBuffer.empty[Cancelable]
-  def add(cancelable: Cancelable): Unit = toCancel += cancelable
+  def add(cancelable: Cancelable): this.type = {
+    toCancel += cancelable
+    this
+  }
   override def cancel(): Unit = Cancelable.cancelAll(toCancel)
 }
 object Cancelable {

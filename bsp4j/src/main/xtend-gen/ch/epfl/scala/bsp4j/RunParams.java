@@ -1,8 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
-import com.google.gson.annotations.JsonAdapter;
-import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -13,9 +11,6 @@ public class RunParams {
   private BuildTargetIdentifier target;
   
   private String originId;
-  
-  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
-  private Object arguments;
   
   public RunParams(@NonNull final BuildTargetIdentifier target) {
     this.target = target;
@@ -40,22 +35,12 @@ public class RunParams {
     this.originId = originId;
   }
   
-  @Pure
-  public Object getArguments() {
-    return this.arguments;
-  }
-  
-  public void setArguments(final Object arguments) {
-    this.arguments = arguments;
-  }
-  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
     b.add("originId", this.originId);
-    b.add("arguments", this.arguments);
     return b.toString();
   }
   
@@ -79,11 +64,6 @@ public class RunParams {
         return false;
     } else if (!this.originId.equals(other.originId))
       return false;
-    if (this.arguments == null) {
-      if (other.arguments != null)
-        return false;
-    } else if (!this.arguments.equals(other.arguments))
-      return false;
     return true;
   }
   
@@ -93,7 +73,6 @@ public class RunParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

@@ -19,8 +19,10 @@ public class BuildTarget {
   @NonNull
   private List<String> tags;
   
+  @NonNull
   private List<String> languageIds;
   
+  @NonNull
   private List<BuildTargetIdentifier> dependencies;
   
   @NonNull
@@ -29,9 +31,11 @@ public class BuildTarget {
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
-  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final BuildTargetCapabilities capabilities) {
+  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final List<String> languageIds, @NonNull final List<BuildTargetIdentifier> dependencies, @NonNull final BuildTargetCapabilities capabilities) {
     this.id = id;
     this.tags = tags;
+    this.dependencies = dependencies;
+    this.languageIds = languageIds;
     this.capabilities = capabilities;
   }
   
@@ -65,20 +69,22 @@ public class BuildTarget {
   }
   
   @Pure
+  @NonNull
   public List<String> getLanguageIds() {
     return this.languageIds;
   }
   
-  public void setLanguageIds(final List<String> languageIds) {
+  public void setLanguageIds(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
   }
   
   @Pure
+  @NonNull
   public List<BuildTargetIdentifier> getDependencies() {
     return this.dependencies;
   }
   
-  public void setDependencies(final List<BuildTargetIdentifier> dependencies) {
+  public void setDependencies(@NonNull final List<BuildTargetIdentifier> dependencies) {
     this.dependencies = dependencies;
   }
   
