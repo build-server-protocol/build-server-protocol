@@ -1088,10 +1088,10 @@ This request may trigger a compilation or other tasks on the selected build targ
 The server may send any number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
 to communicate about tasks triggered by the request to the client.
 
-#### Test Unit Notifications
+#### Test Notifications
 
-The server may inform about individual test units in task notifications that reference the originating task in their `taskId`.
-For example, the server can send a `taskStart`/`taskFinish` for each test suite in a target, and likewise for each test in the suite.
+The server may inform about individual tests or groups of tests in task notifications that reference the originating task in their `taskId`.
+For example, the server can send a `taskStart`/`taskFinish` for each test suite in a target, and likewise for each individual test in the suite.
 The server's implementation decides the granularity at which tests are reported. For example, if it only has information 
 about all the tests in a suite at a time, it could report a TestFinish for each test once the suite is done.
 
