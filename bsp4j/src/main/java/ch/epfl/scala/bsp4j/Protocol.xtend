@@ -390,6 +390,11 @@ class CompileReport {
 }
 
 @JsonRpcData
+class CompileTask {
+  @NonNull BuildTargetIdentifier target
+}
+
+@JsonRpcData
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
@@ -431,9 +436,36 @@ class TestReport {
 }
 
 @JsonRpcData
+class TestTask {
+  @NonNull BuildTargetIdentifier target
+}
+
+@JsonRpcData
+class TestStarted {
+  @NonNull String description
+  Location location
+}
+
+@JsonRpcData
+class TestFinished {
+  @NonNull String description
+  String message
+
+  @NonNull TestStatus status
+    new(@NonNull TestStatus status) {
+      this.status = status
+    }
+
+  Location location
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+}
+
+@JsonRpcData
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
+
   new(@NonNull BuildTargetIdentifier target) {
     this.target = target
   }
@@ -443,6 +475,7 @@ class RunParams {
 class RunResult {
   String originId
   @NonNull StatusCode statusCode
+
   new(@NonNull StatusCode statusCode) {
     this.statusCode = statusCode
   }
@@ -464,4 +497,38 @@ class CleanCacheResult {
     this.message = message
     this.cleaned = cleaned
   }
+}
+
+@JsonRpcData
+class TaskStartParams {
+    @NonNull TaskId taskId
+    Long eventTime
+    String message
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+}
+
+@JsonRpcData
+class TaskProgressParams {
+    @NonNull TaskId taskId
+    Long eventTime
+    String message
+    Long total
+    Long progress
+    String unit
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+}
+
+@JsonRpcData
+class TaskFinishParams {
+    @NonNull TaskId taskId
+    Long eventTime
+    String message
+    @NonNull StatusCode statusCode
+      new(@NonNull StatusCode statusCode) {
+        this.statusCode = statusCode
+      }
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 }
