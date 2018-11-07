@@ -4,7 +4,7 @@ title: Build Server Protocol
 
 # Build Server Protocol
 
-This document describes version 1.0 of the build server protocol.
+This document describes version 2.0 (WIP) of the build server protocol.
 
 Edits to this specification can be made via a pull request against this markdown document.
 
