@@ -45,6 +45,7 @@ class BuildTarget {
 
   @NonNull BuildTargetIdentifier id
   String displayName
+  String baseDirectory
   @NonNull List<String> tags
   @NonNull List<String> languageIds
   @NonNull List<BuildTargetIdentifier> dependencies

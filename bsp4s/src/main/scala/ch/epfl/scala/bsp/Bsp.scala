@@ -59,6 +59,7 @@ object BuildTargetTag {
 @JsonCodec final case class BuildTarget(
     id: BuildTargetIdentifier,
     displayName: Option[String],
+    baseDirectory: Option[Uri],
     tags: List[String],
     capabilities: BuildTargetCapabilities,
     languageIds: List[String],

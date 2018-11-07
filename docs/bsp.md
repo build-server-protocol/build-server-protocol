@@ -151,6 +151,11 @@ trait BuildTarget {
     * Should be unique if possible.
     * The id.uri is used if None. */
   def displayName: Option[String]
+  
+  /** The directory where this target belongs to. Multiple build targets are allowed to map
+    * to the same base directory, and a build target is not required to have a base directory. 
+    * A base directory does not determine the sources of a target, see buildTarget/sources. */
+  def baseDirectory: Option[Uri]
 
   /** Free-form string tags to categorize or label this build target.
     * For example, can be used by the client to:
@@ -220,7 +225,9 @@ trait BuildTargetCapabilities {
 
 ### Build Target Identifier
 
-A unique identifier for a target, usually the project base directory.
+A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+Clients should not infer metadata out of the URI structure such as the path or query parameters, 
+use `BuildTarget` instead.
 
 ```scala
 trait BuildTargetIdentifer {
