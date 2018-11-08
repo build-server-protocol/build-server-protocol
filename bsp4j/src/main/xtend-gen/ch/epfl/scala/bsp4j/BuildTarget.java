@@ -16,6 +16,8 @@ public class BuildTarget {
   
   private String displayName;
   
+  private String baseDirectory;
+  
   @NonNull
   private List<String> tags;
   
@@ -56,6 +58,15 @@ public class BuildTarget {
   
   public void setDisplayName(final String displayName) {
     this.displayName = displayName;
+  }
+  
+  @Pure
+  public String getBaseDirectory() {
+    return this.baseDirectory;
+  }
+  
+  public void setBaseDirectory(final String baseDirectory) {
+    this.baseDirectory = baseDirectory;
   }
   
   @Pure
@@ -113,6 +124,7 @@ public class BuildTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
     b.add("displayName", this.displayName);
+    b.add("baseDirectory", this.baseDirectory);
     b.add("tags", this.tags);
     b.add("languageIds", this.languageIds);
     b.add("dependencies", this.dependencies);
@@ -140,6 +152,11 @@ public class BuildTarget {
       if (other.displayName != null)
         return false;
     } else if (!this.displayName.equals(other.displayName))
+      return false;
+    if (this.baseDirectory == null) {
+      if (other.baseDirectory != null)
+        return false;
+    } else if (!this.baseDirectory.equals(other.baseDirectory))
       return false;
     if (this.tags == null) {
       if (other.tags != null)
@@ -176,6 +193,7 @@ public class BuildTarget {
     int result = 1;
     result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
     result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
+    result = prime * result + ((this.baseDirectory== null) ? 0 : this.baseDirectory.hashCode());
     result = prime * result + ((this.tags== null) ? 0 : this.tags.hashCode());
     result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
     result = prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
