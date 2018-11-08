@@ -71,7 +71,7 @@ class TypoSuite extends FunSuite {
         capabilities.setDependencySourcesProvider(true)
         capabilities.setResourcesProvider(true)
         capabilities.setBuildTargetChangedProvider(true)
-        new InitializeBuildResult(capabilities)
+        new InitializeBuildResult("test-server", "1.0.0", "2.0.0-M1", capabilities)
       }
     }
     override def onBuildInitialized(): Unit =
@@ -313,6 +313,9 @@ class TypoSuite extends FunSuite {
           scala1
             .buildInitialize(
               new InitializeBuildParams(
+                "test-client",
+                "1.0.0",
+                "2.0.0-M1",
                 "file:///workspace/",
                 new BuildClientCapabilities(
                   Collections.singletonList("scala")

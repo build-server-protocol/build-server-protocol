@@ -75,8 +75,12 @@ object BuildTargetTag {
 
 // Request: 'build/initialize', C -> S
 @JsonCodec final case class InitializeBuildParams(
+    displayName: String,
+    version: String,
+    bspVersion: String,
     rootUri: Uri,
-    capabilities: BuildClientCapabilities
+    capabilities: BuildClientCapabilities,
+    data: Option[Json]
 )
 
 @JsonCodec final case class Shutdown()
@@ -106,7 +110,11 @@ object BuildTargetTag {
 )
 
 @JsonCodec final case class InitializeBuildResult(
-    capabilities: BuildServerCapabilities
+    displayName: String,
+    version: String,
+    bspVersion: String,
+    capabilities: BuildServerCapabilities,
+    data: Option[Json]
 )
 
 sealed abstract class MessageType(val id: Int)
@@ -377,7 +385,6 @@ case object BuildTargetEventKind {
     location: Option[Location],
     data: Option[Json]
 )
-
 
 sealed abstract class TestStatus(val code: Int)
 object TestStatus {

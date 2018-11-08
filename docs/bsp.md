@@ -322,6 +322,14 @@ Request:
 
 ```scala
 trait InitializeBuildParams {
+  /** Name of the client */
+  def displayName: String
+
+  /** The version of the client */
+  def version: String
+
+  /** The BSP version that the client speaks */
+  def bspVersion: String
 
   /** The rootUri of the workspace */
   def rootUri: Uri
@@ -329,6 +337,8 @@ trait InitializeBuildParams {
   /** The capabilities of the client */
   def capabilities: BuildClientCapabilities
 
+  /** Additional metadata about the client */
+  def data: Option[Json]
 }
 
 trait BuildClientCapabilities {
@@ -347,8 +357,20 @@ Response:
 
 ```scala
 trait InitializeBuildResult {
+  /** Name of the server */
+  def displayName: String
+
+  /** The version of the server */
+  def version: String
+
+  /** The BSP version that the server speaks */
+  def bspVersion: String
+
   /** The capabilities of the build server */
   def capabilities: BuildServerCapabilities
+
+  /** Additional metadata about the server */
+  def data: Option[Json]
 }
 
 
