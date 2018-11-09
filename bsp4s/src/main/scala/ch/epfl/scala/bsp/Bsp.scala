@@ -588,3 +588,12 @@ object ScalaPlatform {
     parent: Option[BuildTargetIdentifier],
     children: List[BuildTargetIdentifier],
 )
+
+
+@JsonCodec final case class BspConnectionDetails(
+  name: String,
+  argv: List[String],
+  version: Option[String],
+  bspVersion: Option[String],
+  languages: Option[List[String]]
+)
