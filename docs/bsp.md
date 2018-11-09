@@ -1418,7 +1418,7 @@ trait ScalaTestClassesItem {
 ```
 
 This request may trigger a compilation on the selected build targets. The server is free to send any
-number of `build/compileReport`, `build/publishDiagnostics` and `build/logMessage` notifications
+number of `build/task*`, `build/publishDiagnostics` and `build/logMessage` notifications
 during compilation before completing the response.
 
 The client will get a `originId` field in `ScalaTestClassesResult` if the `originId` field in the
