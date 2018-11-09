@@ -4,8 +4,6 @@ import java.util.List
 import com.google.gson.annotations.SerializedName
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
-import com.google.gson.annotations.JsonAdapter
-import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter
 
 @JsonRpcData
 class ScalaBuildTarget {
@@ -27,7 +25,6 @@ class ScalaBuildTarget {
 @JsonRpcData
 class ScalaTestParams {
   @NonNull List<ScalaTestClassesItem> testClasses
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new (@NonNull List<ScalaTestClassesItem> testClasses) {
     this.testClasses = testClasses

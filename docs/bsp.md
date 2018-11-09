@@ -1324,9 +1324,6 @@ trait ScalaTestParams {
   /** The test classes to be run in this test execution.
     * It is the result of `buildTarget/scalaTestClasses`. */
   def testClasses: List[ScalaTestClassesItem]
-
-  /** Additional client-specific data that the server can parse and understand. */
-  def data: Option[Json]
 }
 ```
 
@@ -1539,7 +1536,7 @@ connect to BSP servers. This protocol has been designed such that:
 
 1. Clients do not require beforehand knowledge about a specific build tool
    to be able to connect to its server.
-1. Clients can connect to build tools installed at the machine-level and at the
+1. Clients can connect to build tools installed at the machine and at the
    workspace level.
 1. Multiple build tools can run in the same workspace directory.
 
