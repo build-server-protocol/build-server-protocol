@@ -593,7 +593,7 @@ object ScalaPlatform {
 @JsonCodec final case class BspConnectionDetails(
   name: String,
   argv: List[String],
-  version: Option[String],
-  bspVersion: Option[String],
-  languages: Option[List[String]]
+  version: String,
+  bspVersion: String,
+  languages: List[String]
 )

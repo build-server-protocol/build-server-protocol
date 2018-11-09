@@ -13,10 +13,13 @@ public class BspConnectionDetails {
   @NonNull
   private List<String> argv;
   
+  @NonNull
   private String version;
   
+  @NonNull
   private String bspVersion;
   
+  @NonNull
   private List<String> languages;
   
   public BspConnectionDetails(@NonNull final String name, @NonNull final List<String> argv, final String version, final String bspVersion, final List<String> languages) {
@@ -48,29 +51,32 @@ public class BspConnectionDetails {
   }
   
   @Pure
+  @NonNull
   public String getVersion() {
     return this.version;
   }
   
-  public void setVersion(final String version) {
+  public void setVersion(@NonNull final String version) {
     this.version = version;
   }
   
   @Pure
+  @NonNull
   public String getBspVersion() {
     return this.bspVersion;
   }
   
-  public void setBspVersion(final String bspVersion) {
+  public void setBspVersion(@NonNull final String bspVersion) {
     this.bspVersion = bspVersion;
   }
   
   @Pure
+  @NonNull
   public List<String> getLanguages() {
     return this.languages;
   }
   
-  public void setLanguages(final List<String> languages) {
+  public void setLanguages(@NonNull final List<String> languages) {
     this.languages = languages;
   }
   

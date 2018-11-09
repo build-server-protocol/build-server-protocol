@@ -8,9 +8,9 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 class BspConnectionDetails {
   @NonNull String name
   @NonNull List<String> argv
-  String version
-  String bspVersion
-  List<String> languages
+  @NonNull String version
+  @NonNull String bspVersion
+  @NonNull List<String> languages
 
   new(@NonNull String name, @NonNull List<String> argv, String version, String bspVersion, List<String> languages) {
     this.name = name
