@@ -23,49 +23,62 @@ language servers/editors (clients) understand. This common functionality enables
 to provide their end users the best developer experience while supporting build tools and language
 servers with less effort and time.
 
-1. [Build Server Protocol](#build-server-protocol)
-    1. [Motivation](#motivation)
-    2. [Background](#background)
-    3. [Status](#status)
-    4. [Base protocol](#base-protocol)
-    5. [Basic Json Structures](#basic-json-structures)
-        1. [Build Target](#build-target)
-        2. [Build Target Identifier](#build-target-identifier)
-        3. [Task Id](#task-id)
-        4. [Uri](#uri)
-    6. [Actual Protocol](#actual-protocol)
-        1. [Server Lifetime](#server-lifetime)
-            1. [Initialize Build Request](#initialize-build-request)
-            2. [Initialized Build Notification](#initialized-build-notification)
-            3. [Shutdown Build Request](#shutdown-build-request)
-            4. [Exit Build Notification](#exit-build-notification)
-            5. [Show message](#show-message)
-            6. [Log message](#log-message)
-            7. [Publish Diagnostics](#publish-diagnostics)
-        2. [Workspace Build Targets Request](#workspace-build-targets-request)
-        3. [Build Target Changed Notification](#build-target-changed-notification)
-        4. [Build Target Source Request](#build-target-sources-request)
-        5. [Text Document Build Targets Request](#text-document-build-targets-request)
-        6. [Dependency Sources Request](#dependency-sources-request)
-        7. [Resources Request](#resources-request)
-        8. [Task Notifications](#task-notifications)
-            1. [Task Started](#task-started)
-            2. [Task Progress](#task-progress)
-            3. [Task Finished](#task-finished)
-        9. [Compile Request](#compile-request)
-        10. [Test Request](#test-request)
-        11. [Run Request](#run-request)
-        12. [Clean Cache Request](#clean-cache-request)
-    8. [Extensions](#extensions)
-        1. [Scala](#scala)
-            1. [Scala Build Target](#scala-build-target)
-            2. [Scalac Options Request](#scalac-options-request)
-            3. [Scala Test Classes Request](#scala-test-classes-request)
-            4. [Scala Main Classes Request](#scala-main-classes-request)
-        2. [Sbt](#sbt)
-    9. [Appendix](#appendix)
-        1. [Scala Bindings](#scala-bindings)
-        2. [FAQ](#faq)
+- [Build Server Protocol](#build-server-protocol)
+  - [Motivation](#motivation)
+  - [Background](#background)
+  - [Status](#status)
+  - [Base protocol](#base-protocol)
+  - [Basic Json Structures](#basic-json-structures)
+    - [Build Target](#build-target)
+    - [Build Target Identifier](#build-target-identifier)
+    - [Task Id](#task-id)
+    - [Status Code](#status-code)
+    - [Uri](#uri)
+  - [Actual Protocol](#actual-protocol)
+    - [Server Lifetime](#server-lifetime)
+      - [Initialize Build Request](#initialize-build-request)
+      - [Initialized Build Notification](#initialized-build-notification)
+      - [Shutdown Build Request](#shutdown-build-request)
+      - [Exit Build Notification](#exit-build-notification)
+      - [Show message](#show-message)
+      - [Log message](#log-message)
+      - [Publish Diagnostics](#publish-diagnostics)
+    - [Workspace Build Targets Request](#workspace-build-targets-request)
+    - [Build Target Changed Notification](#build-target-changed-notification)
+    - [Build Target Sources Request](#build-target-sources-request)
+    - [Inverse Sources Request](#inverse-sources-request)
+    - [Dependency Sources Request](#dependency-sources-request)
+    - [Resources Request](#resources-request)
+    - [Task Notifications](#task-notifications)
+      - [Task Started](#task-started)
+      - [Task Progress](#task-progress)
+      - [Task Finished](#task-finished)
+      - [Task Data](#task-data)
+    - [Compile Request](#compile-request)
+      - [Compile Notifications](#compile-notifications)
+    - [Test Request](#test-request)
+      - [Test Notifications](#test-notifications)
+      - [Test Notifications](#test-notifications-1)
+    - [Run Request](#run-request)
+    - [Clean Cache Request](#clean-cache-request)
+  - [Extensions](#extensions)
+    - [Scala](#scala)
+      - [Scala Build Target](#scala-build-target)
+      - [Scala Test Params](#scala-test-params)
+      - [Scalac Options Request](#scalac-options-request)
+      - [Scala Test Classes Request](#scala-test-classes-request)
+      - [Scala Main Classes Request](#scala-main-classes-request)
+    - [Sbt](#sbt)
+  - [BSP Connection Protocol](#bsp-connection-protocol)
+    - [The BSP Connection Details](#the-bsp-connection-details)
+      - [Default Locations for BSP Connection Files](#default-locations-for-bsp-connection-files)
+      - [Policy around Connection Files Generation](#policy-around-connection-files-generation)
+      - [Build Tool Commands to Start BSP Servers](#build-tool-commands-to-start-bsp-servers)
+        - [Example with `my-build-tool`](#example-with-my-build-tool)
+    - [Clients Connecting to BSP Servers](#clients-connecting-to-bsp-servers)
+  - [Appendix](#appendix)
+    - [Scala Bindings](#scala-bindings)
+    - [FAQ](#faq)
 
 ## Background
 
@@ -321,6 +334,14 @@ Request:
 
 ```scala
 trait InitializeBuildParams {
+  /** Name of the client */
+  def displayName: String
+
+  /** The version of the client */
+  def version: String
+
+  /** The BSP version that the client speaks */
+  def bspVersion: String
 
   /** The rootUri of the workspace */
   def rootUri: Uri
@@ -328,6 +349,8 @@ trait InitializeBuildParams {
   /** The capabilities of the client */
   def capabilities: BuildClientCapabilities
 
+  /** Additional metadata about the client */
+  def data: Option[Json]
 }
 
 trait BuildClientCapabilities {
@@ -346,8 +369,20 @@ Response:
 
 ```scala
 trait InitializeBuildResult {
+  /** Name of the server */
+  def displayName: String
+
+  /** The version of the server */
+  def version: String
+
+  /** The BSP version that the server speaks */
+  def bspVersion: String
+
   /** The capabilities of the build server */
   def capabilities: BuildServerCapabilities
+
+  /** Additional metadata about the server */
+  def data: Option[Json]
 }
 
 
@@ -1025,8 +1060,12 @@ trait TestParams {
     * The server may include this id in triggered notifications or responses. */
   def originId: Option[String]
   
-  /** Optional arguments to the test execution. */
+  /** Optional arguments to the test execution engine. */
   def arguments: Option[List[String]]
+
+  /** Language-specific metadata about for this test execution.
+    * See ScalaTestParams as an example. */
+  def data: Option[Json]
 }
 ```
 
@@ -1274,6 +1313,19 @@ object ScalaPlatform {
 }
 ```
 
+#### Scala Test Params
+
+`ScalaTestParams` contains scala-specific metadata for testing Scala targets.
+This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request.
+
+```scala
+trait ScalaTestParams {
+  /** The test classes to be run in this test execution.
+    * It is the result of `buildTarget/scalaTestClasses`. */
+  def testClasses: Option[List[ScalaTestClassesItem]]
+}
+```
+
 #### Scalac Options Request
 
 The build target scalac options request is sent from the client to the server to query for the list of compiler options necessary to compile in a given list of targets.
@@ -1475,6 +1527,208 @@ Similarly, the sbt build target for `M2` will have `M1` as the defined target an
 Clients can use this information to reconstruct the tree of sbt meta builds. The
 `parent` information can be defined from `children` but it's provided by the server to
 simplify the data processing on the client side.
+
+## BSP Connection Protocol
+
+The Build Server Protocol defines a standard convention for clients to
+connect to BSP servers. This protocol has been designed such that:
+
+1. Clients do not require beforehand knowledge about a specific build tool
+   to be able to connect to its server.
+1. Clients can connect to build tools installed at the machine and at the
+   workspace level.
+1. Multiple build tools can run in the same workspace directory.
+
+### The BSP Connection Details
+
+The following JSON object defines the BSP connection details:
+
+```scala
+trait BspConnectionDetails {
+  /** The name of the build tool. */
+  def name: String
+  /** The version of the build tool. */
+  def version: String
+  /** The bsp version of the build tool. */
+  def bspVersion: String
+  /** A collection of languages supported by this BSP server. */
+  def languages: List[String]
+  /** Command arguments runnable via system processes to start a BSP server */
+  def argv: List[String]
+}
+```
+
+Every build tool supporting BSP must implement a build-tool-specific command to
+generate the BSP connection details in one of the standard BSP locations for
+BSP connection files.
+
+BSP connection files:
+
+1. must be unique per build tool name and version to enable different versions
+   of the same build tool to select different BSP connection mechanisms.
+1. can be updated by the build tool at any point in time, including during the
+   startup of the build tool in a workspace.
+1. can be added to version control if and only if they do not contain
+   machine-dependent information like absolute paths or workspace-specific
+   data.
+
+This is an example of a BSP connection file:
+
+```json
+{
+ "name": "My Build Tool",
+ "version": "21.3",
+ "bspVersion": "2.0.0",
+ "languages": ["scala", "javascript", "rust"],
+ "argv": ["my-build-tool", "bsp"]
+}
+```
+
+#### Default Locations for BSP Connection Files
+
+A BSP connection file can be located in a number of locations:
+
+|        | Unix                                   | Windows                                   |
+|--------|----------------------------------------|-------------------------------------------|
+| System | `$XDG_DATA_DIRS/bsp/`                  | `%PROGRAMDATA%/bsp/`                      |
+| User   | `<workspace-dir>/.bsp/`                | `<workspace-dir>/.bsp/`                   |
+
+Note that:
+
+1. `<workspace-dir>` refers to the workspace base directory.
+1. `$XDG_DATA_DIRS` is defined by the [XDG Base Directory
+Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html)
+1. `%PROGRAMDATA%` is defined by the [Windows Documentation](https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-folderlocations-programdata)
+
+The user location has always higher priority than the system location, so if
+a client finds a BSP connection file that meets its criteria inside a user
+location it must pick it over other BSP connection files in the system
+location.
+
+Workspace-defined build tools must not write BSP connection files to the system
+location. That location is only reserved for BSP connection files that do not
+contain any workspace-specific data.
+
+#### Policy around Connection Files Generation
+
+To have a successful first-time connection to servers, at least one BSP
+connection file must exist before users import a project in an IDE or invoke
+a BSP client in a workspace.
+
+Build tools installed globally by the user should write a BSP connection file
+to the system location to minimize the chances that a client doesn't discover
+it. The BSP connection file should also be deleted when the build tool is
+uninstalled.
+
+However, in the more general case, build tools are required to implement
+a command to generate a BSP connection file either in the user or system
+location. This command must be runnable in the workspace base directory.
+
+With such command, the following workflows become possible:
+
+1. Users can manually install a BSP connection file for any build tool.
+1. Clients can implement smart discovery capabilities to:
+    1. Detect the build tool(s) used in a workspace.
+    1. Invoke the command to generate a BSP connection file for them.
+
+These workflows help improve the user experience for clients that want a more
+out-of-the-box experience and provide a escape hatch for users to generate BSP
+connection files for exotic and unsupported build tools.
+
+#### Build Tool Commands to Start BSP Servers
+
+The most important data field in the connection file is the `argv` JSON field.
+The `argv` field contains the command arguments that start a BSP server via
+system process.
+
+Clients must meet the following requirements when using `argv` via system process:
+
+1. The first element of the `argv` collection can be a simple name, a relative
+   path or an absolute path. A relative path is always relative to the
+   workspace base directory, so the client must prepend the value of the
+   workspace folder to the relative path before spawning `argv`.
+1. `argv` must always be invoked in the workspace base directory.
+1. `argv` must be invoked with the same environment variables of the client.
+
+Build tools must make sure that their `argv` invocation:
+
+1. Creates a fresh BSP connection to a server every time. This is required in
+   case there is more than one client connecting to a server or a server
+   crashes and a client wants to reconnect.
+1. Uses `stdin` to send messages and `stdout` to receive responses to/from the
+   BSP server.
+1. Uses `stderr` to report execution progress to the user.
+
+The use of `stdin` and `stdout` to communicate with the build server simplifies
+the life of clients and allows build tools to implement their own underlying
+protocol to connect to a local/remote build tool instance/daemon.
+
+In addition, build tools can use the `argv` invocation for other purposes such
+as:
+
+1. Spawn a daemon if it's not already running.
+1. Install the build tool if it's not already installed in a user's machine.
+
+##### Example with `my-build-tool`
+
+To illustrate the responsibilities of the build tool, let's go through a small
+example where:
+
+1. The `my-build-tool` build tool is installed in the user's machine.
+1. The `argv` field is set to `["my-build-tool", "bsp"]`.
+1. There is no running build tool instance in a workspace directory
+   `<workspace>`.
+1. `my-build-tool` supports BSP connections with a running instance of the
+   build tool via [UNIX domain
+   sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) and [Windows
+   Named
+   Pipes](https://docs.microsoft.com/en-us/windows/desktop/ipc/named-pipes).
+
+The invocation of `my-build-tool bsp`, with current working directory
+`<workspace>`, will need to:
+
+1. Run a background process of the build tool for the given `<workspace>`.
+1. Pick the best way to connect to the running process depending on the machine
+   it runs. For example, it would use UNIX sockets in a Linux machine.
+1. Fire up a BSP server in the build tool with script-specific connection details.
+   In the case of Unix sockets, the script will generate the socket file and
+   pass it to the background process of the build tool.
+1. Connect to the running BSP server, forward anything that comes from
+   `stdin` to the BSP server and print anything that comes from the server's
+   output streams to `stdout`. Execution progress will be shown in `stderr`.
+
+If the build tool is already running for a given project, the `argv` invocation
+will only perform the last two steps.
+
+### Clients Connecting to BSP Servers
+
+The BSP Connection Protocol aims to simplify clients the process of connecting
+to servers.
+
+Clients can connect to servers by locating connection files in the standard BSP
+locations. BSP clients must look up connection files first in the bsp user
+location and, only if the lookup of a connection file meeting certain criteria
+fails, continue the search in the system location.
+
+When more than a BSP connection file is found, BSP clients can use
+connection metadata to pick only the BSP servers they are interested in. If there
+are still ambiguities, BSP clients are free to choose how to react, for example
+by asking the end user to select a build server.
+
+When no BSP connection file is found (because, for example, the user has not
+run the build tool command to generate BSP connection details), the BSP client
+can:
+
+1. Fail gracefully.
+1. Ask users to type the command to generate the BSP connection details with
+   their preferred build tool and then connect to the BSP server.
+1. Discover the build tool used in a project manually, run the command to
+   generate the BSP connection details and then connect to the BSP server.
+
+When BSP clients have found a valid connection file, they can connect to the
+server by running the `argv` invocation via system process; listening to its
+system output and writing to its system input. If the `argv` invocation fails,
+the output in `stderr` must be shown to the user.
 
 ## Appendix
 

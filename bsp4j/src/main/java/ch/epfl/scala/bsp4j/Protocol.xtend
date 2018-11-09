@@ -65,9 +65,16 @@ class BuildTarget {
 @JsonRpcData
 class InitializeBuildParams {
   @NonNull String rootUri
+  @NonNull String displayName
+  @NonNull String version
+  @NonNull String bspVersion
   @NonNull BuildClientCapabilities capabilities
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
-  new(@NonNull String rootUri, @NonNull BuildClientCapabilities capabilities) {
+  new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull String rootUri, @NonNull BuildClientCapabilities capabilities) {
+    this.displayName = displayName
+    this.version = version
+    this.bspVersion = bspVersion
     this.rootUri = rootUri
     this.capabilities = capabilities
   }
@@ -120,8 +127,16 @@ class BuildServerCapabilities {
 
 @JsonRpcData
 class InitializeBuildResult {
+  @NonNull String displayName
+  @NonNull String version
+  @NonNull String bspVersion
   @NonNull BuildServerCapabilities capabilities
-  new(@NonNull BuildServerCapabilities capabilities) {
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
+  new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildServerCapabilities capabilities) {
+    this.displayName = displayName
+    this.version = version
+    this.bspVersion = bspVersion
     this.capabilities = capabilities
   }
 }
@@ -399,6 +414,9 @@ class CompileTask {
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
+  List<String> arguments
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
   }
@@ -465,7 +483,7 @@ class TestFinished {
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
+  List<String> arguments
 
   new(@NonNull BuildTargetIdentifier target) {
     this.target = target

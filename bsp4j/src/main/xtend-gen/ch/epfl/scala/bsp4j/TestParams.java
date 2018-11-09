@@ -1,7 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
+import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -12,6 +14,11 @@ public class TestParams {
   private List<BuildTargetIdentifier> targets;
   
   private String originId;
+  
+  private List<String> arguments;
+  
+  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
+  private Object data;
   
   public TestParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
@@ -36,12 +43,32 @@ public class TestParams {
     this.originId = originId;
   }
   
+  @Pure
+  public List<String> getArguments() {
+    return this.arguments;
+  }
+  
+  public void setArguments(final List<String> arguments) {
+    this.arguments = arguments;
+  }
+  
+  @Pure
+  public Object getData() {
+    return this.data;
+  }
+  
+  public void setData(final Object data) {
+    this.data = data;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
     b.add("originId", this.originId);
+    b.add("arguments", this.arguments);
+    b.add("data", this.data);
     return b.toString();
   }
   
@@ -65,6 +92,16 @@ public class TestParams {
         return false;
     } else if (!this.originId.equals(other.originId))
       return false;
+    if (this.arguments == null) {
+      if (other.arguments != null)
+        return false;
+    } else if (!this.arguments.equals(other.arguments))
+      return false;
+    if (this.data == null) {
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
+      return false;
     return true;
   }
   
@@ -74,6 +111,8 @@ public class TestParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
-    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

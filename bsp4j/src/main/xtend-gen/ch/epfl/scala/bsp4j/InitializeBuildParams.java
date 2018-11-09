@@ -1,6 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildClientCapabilities;
+import com.google.gson.annotations.JsonAdapter;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -11,9 +13,24 @@ public class InitializeBuildParams {
   private String rootUri;
   
   @NonNull
+  private String displayName;
+  
+  @NonNull
+  private String version;
+  
+  @NonNull
+  private String bspVersion;
+  
+  @NonNull
   private BuildClientCapabilities capabilities;
   
-  public InitializeBuildParams(@NonNull final String rootUri, @NonNull final BuildClientCapabilities capabilities) {
+  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
+  private Object data;
+  
+  public InitializeBuildParams(@NonNull final String displayName, @NonNull final String version, @NonNull final String bspVersion, @NonNull final String rootUri, @NonNull final BuildClientCapabilities capabilities) {
+    this.displayName = displayName;
+    this.version = version;
+    this.bspVersion = bspVersion;
     this.rootUri = rootUri;
     this.capabilities = capabilities;
   }
@@ -30,6 +47,36 @@ public class InitializeBuildParams {
   
   @Pure
   @NonNull
+  public String getDisplayName() {
+    return this.displayName;
+  }
+  
+  public void setDisplayName(@NonNull final String displayName) {
+    this.displayName = displayName;
+  }
+  
+  @Pure
+  @NonNull
+  public String getVersion() {
+    return this.version;
+  }
+  
+  public void setVersion(@NonNull final String version) {
+    this.version = version;
+  }
+  
+  @Pure
+  @NonNull
+  public String getBspVersion() {
+    return this.bspVersion;
+  }
+  
+  public void setBspVersion(@NonNull final String bspVersion) {
+    this.bspVersion = bspVersion;
+  }
+  
+  @Pure
+  @NonNull
   public BuildClientCapabilities getCapabilities() {
     return this.capabilities;
   }
@@ -38,12 +85,25 @@ public class InitializeBuildParams {
     this.capabilities = capabilities;
   }
   
+  @Pure
+  public Object getData() {
+    return this.data;
+  }
+  
+  public void setData(final Object data) {
+    this.data = data;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("rootUri", this.rootUri);
+    b.add("displayName", this.displayName);
+    b.add("version", this.version);
+    b.add("bspVersion", this.bspVersion);
     b.add("capabilities", this.capabilities);
+    b.add("data", this.data);
     return b.toString();
   }
   
@@ -62,10 +122,30 @@ public class InitializeBuildParams {
         return false;
     } else if (!this.rootUri.equals(other.rootUri))
       return false;
+    if (this.displayName == null) {
+      if (other.displayName != null)
+        return false;
+    } else if (!this.displayName.equals(other.displayName))
+      return false;
+    if (this.version == null) {
+      if (other.version != null)
+        return false;
+    } else if (!this.version.equals(other.version))
+      return false;
+    if (this.bspVersion == null) {
+      if (other.bspVersion != null)
+        return false;
+    } else if (!this.bspVersion.equals(other.bspVersion))
+      return false;
     if (this.capabilities == null) {
       if (other.capabilities != null)
         return false;
     } else if (!this.capabilities.equals(other.capabilities))
+      return false;
+    if (this.data == null) {
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
       return false;
     return true;
   }
@@ -76,6 +156,10 @@ public class InitializeBuildParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.rootUri== null) ? 0 : this.rootUri.hashCode());
-    return prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());
+    result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
+    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.bspVersion== null) ? 0 : this.bspVersion.hashCode());
+    result = prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

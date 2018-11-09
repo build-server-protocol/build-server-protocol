@@ -257,7 +257,7 @@ class BloopSuite extends FunSuite {
     val (server, cancel) = connectToBuildServer(client)
     try {
       val capabilities = new BuildClientCapabilities(Collections.singletonList("scala"))
-      val initializeParams = new InitializeBuildParams(bloopDirectory.toUri.toString, capabilities)
+      val initializeParams = new InitializeBuildParams("test-client", "1.0.0", "2.0.0-M1", bloopDirectory.toUri.toString, capabilities)
       val serverCapabilities = server.buildInitialize(initializeParams).get().getCapabilities
       server.onBuildInitialized()
       try {

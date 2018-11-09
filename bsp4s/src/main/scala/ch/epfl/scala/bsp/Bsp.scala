@@ -75,8 +75,12 @@ object BuildTargetTag {
 
 // Request: 'build/initialize', C -> S
 @JsonCodec final case class InitializeBuildParams(
+    displayName: String,
+    version: String,
+    bspVersion: String,
     rootUri: Uri,
-    capabilities: BuildClientCapabilities
+    capabilities: BuildClientCapabilities,
+    data: Option[Json]
 )
 
 @JsonCodec final case class Shutdown()
@@ -106,7 +110,11 @@ object BuildTargetTag {
 )
 
 @JsonCodec final case class InitializeBuildResult(
-    capabilities: BuildServerCapabilities
+    displayName: String,
+    version: String,
+    bspVersion: String,
+    capabilities: BuildServerCapabilities,
+    data: Option[Json]
 )
 
 sealed abstract class MessageType(val id: Int)
@@ -340,7 +348,8 @@ case object BuildTargetEventKind {
 @JsonCodec final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: Option[List[String]]
+    arguments: Option[List[String]],
+    data: Option[Json],
 )
 
 @JsonCodec final case class TestResult(
@@ -377,7 +386,6 @@ case object BuildTargetEventKind {
     location: Option[Location],
     data: Option[Json]
 )
-
 
 sealed abstract class TestStatus(val code: Int)
 object TestStatus {
@@ -512,6 +520,10 @@ object ScalaPlatform {
     scalaBinaryVersion: String,
     platform: ScalaPlatform,
     jars: List[Uri]
+)
+
+@JsonCodec final case class ScalaTestParams(
+    testClasses: Option[List[ScalaTestClassesItem]],
 )
 
 // Request: 'buildTarget/scalacOptions', C -> S

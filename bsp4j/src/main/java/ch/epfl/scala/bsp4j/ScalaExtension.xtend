@@ -23,6 +23,11 @@ class ScalaBuildTarget {
 }
 
 @JsonRpcData
+class ScalaTestParams {
+  List<ScalaTestClassesItem> testClasses
+}
+
+@JsonRpcData
 class ScalacOptionsParams {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {
