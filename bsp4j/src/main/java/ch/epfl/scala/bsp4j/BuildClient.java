@@ -10,17 +10,20 @@ public interface BuildClient {
     @JsonNotification("build/logMessage")
     void onBuildLogMessage(LogMessageParams params);
 
+    @JsonNotification("build/taskStart")
+    void onBuildTaskStart(TaskStartParams params);
+
+    @JsonNotification("build/taskProgress")
+    void onBuildTaskProgress(TaskProgressParams params);
+
+    @JsonNotification("build/taskFinish")
+    void onBuildTaskFinish(TaskFinishParams params);
+
     @JsonNotification("build/publishDiagnostics")
     void onBuildPublishDiagnostics(PublishDiagnosticsParams params);
 
     @JsonNotification("buildTarget/didChange")
     void onBuildTargetDidChange(DidChangeBuildTarget params);
-
-    @JsonNotification("buildTarget/compileReport")
-    void onBuildTargetCompileReport(CompileReport params);
-
-    @JsonNotification("buildTarget/testReport")
-    void onBuildTargetTestReport(TestReport params);
 
     default void onConnectWithServer(BuildServer server) {
 

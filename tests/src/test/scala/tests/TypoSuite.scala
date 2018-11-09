@@ -15,13 +15,16 @@ import java.io.OutputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.io.PrintWriter
+import java.util
 import java.util.Collections
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
+
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.FunSuite
+
 import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Await
@@ -37,10 +40,10 @@ class TypoSuite extends FunSuite {
 
   // Constants for for incoming/outgoing messages.
   val buildTargetUri = new BuildTargetIdentifier("build-target-identifier")
-  val buildTargetUris = Collections.singletonList(buildTargetUri)
+  val buildTargetUris: util.List[BuildTargetIdentifier] = Collections.singletonList(buildTargetUri)
   val textDocumentUri = "file:///Application.scala"
   val textDocumentIdentifier = new TextDocumentIdentifier("tti")
-  val textDocumentIdentifiers = Collections.singletonList(textDocumentIdentifier)
+  val textDocumentIdentifiers: util.List[TextDocumentIdentifier] = Collections.singletonList(textDocumentIdentifier)
 
   // Java build client that ignored all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
@@ -52,9 +55,11 @@ class TypoSuite extends FunSuite {
       ()
     override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit =
       ()
-    override def onBuildTargetCompileReport(params: CompileReport): Unit =
+    override def onBuildTaskStart(params: TaskStartParams): Unit =
       ()
-    override def onBuildTargetTestReport(params: TestReport): Unit =
+    override def onBuildTaskProgress(params: TaskProgressParams): Unit =
+      ()
+    override def onBuildTaskFinish(params: TaskFinishParams): Unit =
       ()
   }
 
@@ -167,10 +172,11 @@ class TypoSuite extends FunSuite {
       .empty(scribe.Logger.root)
       .ignoreNotification(s.Build.showMessage)
       .ignoreNotification(s.Build.logMessage)
+      .ignoreNotification(s.Build.taskStart)
+      .ignoreNotification(s.Build.taskProgress)
+      .ignoreNotification(s.Build.taskFinish)
       .ignoreNotification(s.Build.publishDiagnostics)
       .ignoreNotification(s.BuildTarget.didChange)
-      .ignoreNotification(s.BuildTarget.compileReport)
-      .ignoreNotification(s.BuildTarget.testReport)
 
   // Scala build server that delegates all requests to a client.
   def forwardingScalaServer(implicit client: JsonRpcClient): Services = {
@@ -190,7 +196,7 @@ class TypoSuite extends FunSuite {
       .forwardNotification(s.Build.exit)
   }
 
-  val gson = new GsonBuilder().setPrettyPrinting().create()
+  val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
   val gsonParser = new JsonParser()
   def traceWriter(baos: ByteArrayOutputStream): PrintWriter = {
     // Normalize JSON so that bsp4s and bsp4j produce identical strings

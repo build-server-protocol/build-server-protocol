@@ -14,14 +14,15 @@ trait Build {
   object logMessage extends Endpoint[LogMessageParams, Unit]("build/logMessage")
   object publishDiagnostics
       extends Endpoint[PublishDiagnosticsParams, Unit]("build/publishDiagnostics")
+  object taskStart extends Endpoint[TaskStartParams, Unit]("build/taskStart")
+  object taskProgress extends Endpoint[TaskProgressParams, Unit]("build/taskProgress")
+  object taskFinish extends Endpoint[TaskFinishParams, Unit]("build/taskFinish")
 }
 
 object BuildTarget extends BuildTarget
 trait BuildTarget {
   object compile extends Endpoint[CompileParams, CompileResult]("buildTarget/compile")
-  object compileReport extends Endpoint[CompileReport, Unit]("buildTarget/compileReport")
   object test extends Endpoint[TestParams, TestResult]("buildTarget/test")
-  object testReport extends Endpoint[TestReport, Unit]("buildTarget/testReport")
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
   object cleanCache extends Endpoint[CleanCacheParams, CleanCacheResult]("buildTarget/cleanCache")
 

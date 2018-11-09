@@ -24,6 +24,8 @@ import scala.util.Random
 trait BloopServer extends BuildServer with ScalaBuildServer
 
 class BloopClient extends BuildClient {
+  val gson: Gson = new Gson()
+
   val showMessages = ListBuffer.empty[ShowMessageParams]
   val logMessages = ListBuffer.empty[LogMessageParams]
   val diagnostics = ListBuffer.empty[PublishDiagnosticsParams]
@@ -40,8 +42,22 @@ class BloopClient extends BuildClient {
   override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
     diagnostics += params
   override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = ()
-  override def onBuildTargetCompileReport(params: CompileReport): Unit = compileReports += params
-  override def onBuildTargetTestReport(params: TestReport): Unit = testReports += params
+  override def onBuildTaskStart(params: TaskStartParams): Unit = ()
+  override def onBuildTaskProgress(params: TaskProgressParams): Unit = ()
+
+  override def onBuildTaskFinish(params: TaskFinishParams): Unit = {
+    params.getDataKind match {
+      case TaskDataKind.COMPILE_REPORT =>
+        val json = params.getData.asInstanceOf[JsonElement]
+        val report = gson.fromJson[CompileReport](json, classOf[CompileReport])
+        compileReports += report
+      case TaskDataKind.TEST_REPORT =>
+        val json = params.getData.asInstanceOf[JsonElement]
+        val report = gson.fromJson[TestReport](json, classOf[TestReport])
+        testReports += report
+      case _ =>
+    }
+  }
 }
 
 class BloopSuite extends FunSuite {
