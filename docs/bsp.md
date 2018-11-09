@@ -64,6 +64,7 @@ servers with less effort and time.
   - [Extensions](#extensions)
     - [Scala](#scala)
       - [Scala Build Target](#scala-build-target)
+      - [Scala Test Params](#scala-test-params)
       - [Scalac Options Request](#scalac-options-request)
       - [Scala Test Classes Request](#scala-test-classes-request)
       - [Scala Main Classes Request](#scala-main-classes-request)
@@ -1059,8 +1060,12 @@ trait TestParams {
     * The server may include this id in triggered notifications or responses. */
   def originId: Option[String]
   
-  /** Optional arguments to the test execution. */
+  /** Optional arguments to the test execution engine. */
   def arguments: Option[List[String]]
+
+  /** Language-specific metadata about for this test execution.
+    * See ScalaTestParams as an example. */
+  def data: Option[Json]
 }
 ```
 
@@ -1305,6 +1310,23 @@ object ScalaPlatform {
   val JVM = 1
   val JS = 2
   val Native = 3
+}
+```
+
+#### Scala Test Params
+
+`ScalaTestParams` is a basic data structure that contains scala-specific
+metadata for testing Scala targets. This metadata is embedded in the `data:
+Option[Json]` field of the `buildTarget/test` request.
+
+```scala
+trait ScalaTestParams {
+  /** The test classes to be run in this test execution.
+    * It is the result of `buildTarget/scalaTestClasses`. */
+  def testClasses: List[ScalaTestClassesItem]
+
+  /** Additional client-specific data that the server can parse and understand. */
+  def data: Option[Json]
 }
 ```
 

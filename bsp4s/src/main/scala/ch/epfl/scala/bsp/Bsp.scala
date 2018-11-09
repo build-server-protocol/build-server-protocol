@@ -348,7 +348,8 @@ case object BuildTargetEventKind {
 @JsonCodec final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: Option[List[String]]
+    arguments: Option[List[String]],
+    data: Option[Json],
 )
 
 @JsonCodec final case class TestResult(
@@ -519,6 +520,11 @@ object ScalaPlatform {
     scalaBinaryVersion: String,
     platform: ScalaPlatform,
     jars: List[Uri]
+)
+
+@JsonCodec final case class ScalaTestParams(
+    testClasses: List[ScalaTestClassesItem],
+    data: Option[Json],
 )
 
 // Request: 'buildTarget/scalacOptions', C -> S

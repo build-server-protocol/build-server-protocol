@@ -414,6 +414,9 @@ class CompileTask {
 class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
+  List<String> arguments
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
   }
@@ -480,7 +483,7 @@ class TestFinished {
 class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
-  @JsonAdapter(JsonElementTypeAdapter.Factory) Object arguments
+  List<String> arguments
 
   new(@NonNull BuildTargetIdentifier target) {
     this.target = target
