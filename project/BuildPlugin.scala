@@ -45,6 +45,7 @@ object BuildImplementation {
     Keys.developers := List(
       GitHubDev("olafurpg", "Ólafur Páll Geirsson", "olafurpg@gmail.com"),
       GitHubDev("jvican", "Jorge Vicente Cantero", "jorge@vican.me"),
+      GitHubDev("jastice", "Justin Kaeser", "justin@justinkaeser.com"),
     ),
   )
 
