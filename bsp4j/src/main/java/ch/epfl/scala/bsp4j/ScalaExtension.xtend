@@ -24,11 +24,7 @@ class ScalaBuildTarget {
 
 @JsonRpcData
 class ScalaTestParams {
-  @NonNull List<ScalaTestClassesItem> testClasses
-
-  new (@NonNull List<ScalaTestClassesItem> testClasses) {
-    this.testClasses = testClasses
-  }
+  List<ScalaTestClassesItem> testClasses
 }
 
 @JsonRpcData

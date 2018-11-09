@@ -1322,7 +1322,7 @@ This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/
 trait ScalaTestParams {
   /** The test classes to be run in this test execution.
     * It is the result of `buildTarget/scalaTestClasses`. */
-  def testClasses: List[ScalaTestClassesItem]
+  def testClasses: Option[List[ScalaTestClassesItem]]
 }
 ```
 

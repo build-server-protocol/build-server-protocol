@@ -2,26 +2,19 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.ScalaTestClassesItem;
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaTestParams {
-  @NonNull
   private List<ScalaTestClassesItem> testClasses;
   
-  public ScalaTestParams(@NonNull final List<ScalaTestClassesItem> testClasses) {
-    this.testClasses = testClasses;
-  }
-  
   @Pure
-  @NonNull
   public List<ScalaTestClassesItem> getTestClasses() {
     return this.testClasses;
   }
   
-  public void setTestClasses(@NonNull final List<ScalaTestClassesItem> testClasses) {
+  public void setTestClasses(final List<ScalaTestClassesItem> testClasses) {
     this.testClasses = testClasses;
   }
   
