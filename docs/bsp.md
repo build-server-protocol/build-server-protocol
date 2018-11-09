@@ -1657,12 +1657,14 @@ Build tools must make sure that their `argv` invocation:
    crashes and a client wants to reconnect.
 1. Uses `stdin` to send messages and `stdout` to receive responses to/from the
    BSP server.
+1. Uses `stderr` to report execution progress to the user.
 
 The use of `stdin` and `stdout` to communicate with the build server simplifies
 the life of clients and allows build tools to implement their own underlying
 protocol to connect to a local/remote build tool instance/daemon.
 
-In addition, build tools can use the `argv` invocation to:
+In addition, build tools can use the `argv` invocation for other purposes such
+as:
 
 1. Spawn a daemon if it's not already running.
 1. Install the build tool if it's not already installed in a user's machine.
@@ -1693,7 +1695,7 @@ The invocation of `my-build-tool bsp`, with current working directory
    pass it to the background process of the build tool.
 1. Connect to the running BSP server, forward anything that comes from
    `stdin` to the BSP server and print anything that comes from the server's
-   output streams to `stdout`.
+   output streams to `stdout`. Execution progress will be shown in `stderr`.
 
 If the build tool is already running for a given project, the `argv` invocation
 will only perform the last two steps.
@@ -1726,7 +1728,7 @@ can:
 When BSP clients have found a valid connection file, they can connect to the
 server by running the `argv` invocation via system process; listening to its
 system output and writing to its system input. If the `argv` invocation fails,
-its output must be shown to the user.
+the output in `stderr` must be shown to the user.
 
 ## Appendix
 
