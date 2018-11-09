@@ -1315,9 +1315,8 @@ object ScalaPlatform {
 
 #### Scala Test Params
 
-`ScalaTestParams` is a basic data structure that contains scala-specific
-metadata for testing Scala targets. This metadata is embedded in the `data:
-Option[Json]` field of the `buildTarget/test` request.
+`ScalaTestParams` contains scala-specific metadata for testing Scala targets.
+This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request.
 
 ```scala
 trait ScalaTestParams {
@@ -1654,7 +1653,7 @@ Clients must meet the following requirements when using `argv` via system proces
 Build tools must make sure that their `argv` invocation:
 
 1. Creates a fresh BSP connection to a server every time. This is required in
-   case there are more than one client connecting to a server or a server
+   case there is more than one client connecting to a server or a server
    crashes and a client wants to reconnect.
 1. Uses `stdin` to send messages and `stdout` to receive responses to/from the
    BSP server.
@@ -1665,7 +1664,7 @@ protocol to connect to a local/remote build tool instance/daemon.
 
 In addition, build tools can use the `argv` invocation to:
 
-1. Spawn a daemon if it's not already live.
+1. Spawn a daemon if it's not already running.
 1. Install the build tool if it's not already installed in a user's machine.
 
 ##### Example with `my-build-tool`
@@ -1692,7 +1691,7 @@ The invocation of `my-build-tool bsp`, with current working directory
 1. Fire up a BSP server in the build tool with script-specific connection details.
    In the case of Unix sockets, the script will generate the socket file and
    pass it to the background process of the build tool.
-1. Connect to the running BSP server and forward anything that comes from
+1. Connect to the running BSP server, forward anything that comes from
    `stdin` to the BSP server and print anything that comes from the server's
    output streams to `stdout`.
 
