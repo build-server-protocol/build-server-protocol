@@ -95,4 +95,11 @@ lazy val tests = project
       "org.scalatest" %% "scalatest" % "3.0.5"
     )
   )
-  .dependsOn(bsp4s, bsp4j)
+  .dependsOn(bsp4s, bsp4j, mockServer)
+
+lazy val mockServer = project
+  .in(file("mockServer"))
+  .settings(
+    skip.in(publish) := true,
+  )
+  .dependsOn(bsp4s)
