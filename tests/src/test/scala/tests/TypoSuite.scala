@@ -347,7 +347,6 @@ class TypoSuite extends FunSuite {
           .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
         _ <- scala1.buildShutdown().toScala
-        _ = scala1.onBuildExit()
         // NOTE(olafur): important to not finish test with a notification to avoid Thread.sleep
         // for notification to deliver.
         workspace <- scala1.workspaceBuildTargets().toScala
