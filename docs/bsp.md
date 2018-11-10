@@ -1598,27 +1598,35 @@ This is an example of a BSP connection file:
 
 #### Default Locations for BSP Connection Files
 
-A BSP connection file can be located in a number of locations:
+A BSP connection file can be located in a number of locations. BSP connection files
+may be located in the project workspace, or for bsp servers installed locally, in a system-specific
+directory in the user's data system's data directories:
 
-|        | Unix                                   | Windows                                   |
-|--------|----------------------------------------|-------------------------------------------|
-| System | `$XDG_DATA_DIRS/bsp/`                  | `%PROGRAMDATA%/bsp/`                      |
-| User   | `<workspace-dir>/.bsp/`                | `<workspace-dir>/.bsp/`                   |
+|           | Unix + Mac                                         | Windows                    |
+|-----------|----------------------------------------------------|----------------------------|
+| Workspace | `<workspace-dir>/.bsp/`                            | `<workspace-dir>\.bsp`     |
+| User      | `$XDG_DATA_HOME/bsp`                               | `%LOCALAPPDATA%\bsp`       |
+|           | `$HOME/Library/Application Support/bsp` (Mac only) |                            |
+| System    | `$XDG_DATA_DIRS/bsp/`                              | `%PROGRAMDATA%\bsp`        |
+|           | `/Library/Application Support/bsp` (Mac only)      |                            |
 
 Note that:
 
 1. `<workspace-dir>` refers to the workspace base directory.
-1. `$XDG_DATA_DIRS` is defined by the [XDG Base Directory
+1. `$XDG_DATA_HOME` and `$XDG_DATA_DIRS` are defined by the [XDG Base Directory
 Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html)
-1. `%PROGRAMDATA%` is defined by the [Windows Documentation](https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-folderlocations-programdata)
+1. `%LOCALAPPDATA%` and `%PROGRAMDATA%` are defined by the 
+[Windows Documentation](https://docs.microsoft.com/en-gb/windows/desktop/shell/csidl) 
+(see also: [Default Known Folders](https://docs.microsoft.com/en-gb/windows/desktop/shell/knownfolderid))
+1. on Macs, both standard macOS and Unix directories are supported
 
-The user location has always higher priority than the system location, so if
-a client finds a BSP connection file that meets its criteria inside a user
-location it must pick it over other BSP connection files in the system
+The workspace location always has higher priority than the user or system location, so if
+a client finds a BSP connection file that meets its criteria inside a workspace
+location it must pick it over other BSP connection files in the user or system
 location.
 
-Workspace-defined build tools must not write BSP connection files to the system
-location. That location is only reserved for BSP connection files that do not
+Workspace-defined build tools must not write BSP connection files to the user or system
+locations. That location is only reserved for BSP connection files that do not
 contain any workspace-specific data.
 
 #### Policy around Connection Files Generation
