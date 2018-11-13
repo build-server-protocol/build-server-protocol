@@ -102,8 +102,9 @@ lazy val testkit = project
   .settings(
     skip.in(publish) := true,
     mainClass in Compile := Some("ch.epfl.scala.bsp.mock.MockServer"),
-    bashScriptExtraDefines += """addJava "-Dscript.path=${real_script_path}"""",
-    batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\mockserver.bat""""
+    executableScriptName := "mockbsp",
+    bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
+    batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
   )
   .dependsOn(bsp4s)
 .enablePlugins(JavaAppPackaging)
