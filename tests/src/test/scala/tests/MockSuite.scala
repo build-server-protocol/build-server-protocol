@@ -5,6 +5,7 @@ import java.nio.file.Files
 import java.util
 import java.util.Collections
 
+import ch.epfl.scala.bsp.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp.mock.{HappyMockServer, MockServer}
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
@@ -13,66 +14,14 @@ import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.FunSuite
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
 
 trait MockBuildServer extends BuildServer with ScalaBuildServer
 
-class MockTestingClient extends BuildClient {
-  val gson: Gson = new Gson()
-
-  val showMessages: ListBuffer[ShowMessageParams] = ListBuffer.empty[ShowMessageParams]
-  val logMessages: ListBuffer[LogMessageParams] = ListBuffer.empty[LogMessageParams]
-  val diagnostics: ListBuffer[PublishDiagnosticsParams] = ListBuffer.empty[PublishDiagnosticsParams]
-  val compileReports: ListBuffer[CompileReport] = ListBuffer.empty[CompileReport]
-  val testReports: ListBuffer[TestReport] = ListBuffer.empty[TestReport]
-  def reset(): Unit = {
-    showMessages.clear()
-    logMessages.clear()
-    diagnostics.clear()
-    compileReports.clear()
-  }
-  override def onBuildShowMessage(params: ShowMessageParams): Unit = showMessages += params
-  override def onBuildLogMessage(params: LogMessageParams): Unit = logMessages += params
-  override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
-    diagnostics += params
-  override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = ()
-  override def onBuildTaskStart(params: TaskStartParams): Unit = ()
-  override def onBuildTaskProgress(params: TaskProgressParams): Unit = ()
-
-  override def onBuildTaskFinish(params: TaskFinishParams): Unit = {
-    params.getDataKind match {
-      case TaskDataKind.COMPILE_REPORT =>
-        val json = params.getData.asInstanceOf[JsonElement]
-        val report = gson.fromJson[CompileReport](json, classOf[CompileReport])
-        compileReports += report
-      case TaskDataKind.TEST_REPORT =>
-        val json = params.getData.asInstanceOf[JsonElement]
-        val report = gson.fromJson[TestReport](json, classOf[TestReport])
-        testReports += report
-      case _ =>
-    }
-  }
-}
-
 class HappyMockSuite extends FunSuite {
-
-  import MockServer.scheduler
-
-  def startMockServer(testBaseDir: File): (CancelableFuture[_], PipedInputStream, PipedOutputStream) = {
-
-    val clientIn = new PipedInputStream()
-    val serverOut = new PipedOutputStream(clientIn)
-    val serverIn = new PipedInputStream()
-    val clientOut = new PipedOutputStream(serverIn)
-
-    val mock = new HappyMockServer(testBaseDir)
-    val running = MockServer.serverTask(mock, serverIn, serverOut).runAsync
-    (running, clientIn, clientOut)
-  }
 
   def connectToBuildServer(localClient: BuildClient, baseDir: File): (MockBuildServer, Cancelable) = {
 
-    val (runningMock, clientIn, clientOut) = startMockServer(baseDir)
+    val LocalMockServer(runningMock, clientIn, clientOut) = MockServer.startMockServer(baseDir)
 
     val launcher = new Launcher.Builder[MockBuildServer]()
       //      .traceMessages(new PrintWriter(System.out))
@@ -142,7 +91,7 @@ class HappyMockSuite extends FunSuite {
     }
   }
 
-  def assertDependencySources(server: MockBuildServer, client: BloopClient): Unit = {
+  def assertDependencySources(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new DependencySourcesParams(getBuildTargetIds(server))
     val result = server.buildTargetDependencySources(params).get()
     val items = result.getItems.asScala.toList
@@ -155,7 +104,7 @@ class HappyMockSuite extends FunSuite {
     }
   }
 
-  def assertCompile(server: MockBuildServer, client: BloopClient): Unit = {
+  def assertCompile(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new CompileParams(getBuildTargetIds(server))
     val compileResult = server.buildTargetCompile(params).get()
@@ -168,7 +117,7 @@ class HappyMockSuite extends FunSuite {
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
 
-  def assertTest(server: MockBuildServer, client: BloopClient): Unit = {
+  def assertTest(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new TestParams(getBuildTargetIds(server))
     val testResult = server.buildTargetTest(params).get()
@@ -179,7 +128,7 @@ class HappyMockSuite extends FunSuite {
     assert(testResult.getStatusCode == StatusCode.OK)
   }
 
-  def assertRun(server: MockBuildServer, client: BloopClient): Unit = {
+  def assertRun(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val targetToRun = getBuildTargets(server).asScala.find(_.getCapabilities.getCanRun).get
     val params = new RunParams(targetToRun.getId)
@@ -205,7 +154,7 @@ class HappyMockSuite extends FunSuite {
     assert(tests.sorted == languages)
   }
 
-  def assertServerEndpoints(server: MockBuildServer, client: BloopClient): Unit = {
+  def assertServerEndpoints(server: MockBuildServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
     assertDependencySources(server, client)
@@ -219,7 +168,7 @@ class HappyMockSuite extends FunSuite {
   test("end to end") {
     val testDirectory = Files.createTempDirectory("bsp.MockSuite")
 
-    val client = new BloopClient
+    val client = new TestBuildClient
     val (server, cancel) = connectToBuildServer(client, testDirectory.toFile)
     try {
       val capabilities = new BuildClientCapabilities(Collections.singletonList("scala"))

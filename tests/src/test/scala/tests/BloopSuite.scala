@@ -23,42 +23,6 @@ import scala.util.Random
 
 trait BloopServer extends BuildServer with ScalaBuildServer
 
-class BloopClient extends BuildClient {
-  val gson: Gson = new Gson()
-
-  val showMessages = ListBuffer.empty[ShowMessageParams]
-  val logMessages = ListBuffer.empty[LogMessageParams]
-  val diagnostics = ListBuffer.empty[PublishDiagnosticsParams]
-  val compileReports = ListBuffer.empty[CompileReport]
-  val testReports = ListBuffer.empty[TestReport]
-  def reset(): Unit = {
-    showMessages.clear()
-    logMessages.clear()
-    diagnostics.clear()
-    compileReports.clear()
-  }
-  override def onBuildShowMessage(params: ShowMessageParams): Unit = showMessages += params
-  override def onBuildLogMessage(params: LogMessageParams): Unit = logMessages += params
-  override def onBuildPublishDiagnostics(params: PublishDiagnosticsParams): Unit =
-    diagnostics += params
-  override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit = ()
-  override def onBuildTaskStart(params: TaskStartParams): Unit = ()
-  override def onBuildTaskProgress(params: TaskProgressParams): Unit = ()
-
-  override def onBuildTaskFinish(params: TaskFinishParams): Unit = {
-    params.getDataKind match {
-      case TaskDataKind.COMPILE_REPORT =>
-        val json = params.getData.asInstanceOf[JsonElement]
-        val report = gson.fromJson[CompileReport](json, classOf[CompileReport])
-        compileReports += report
-      case TaskDataKind.TEST_REPORT =>
-        val json = params.getData.asInstanceOf[JsonElement]
-        val report = gson.fromJson[TestReport](json, classOf[TestReport])
-        testReports += report
-      case _ =>
-    }
-  }
-}
 
 class BloopSuite extends FunSuite {
   private val props = new java.util.Properties()
@@ -194,7 +158,7 @@ class BloopSuite extends FunSuite {
     }
   }
 
-  def assertDependencySources(server: BloopServer, client: BloopClient): Unit = {
+  def assertDependencySources(server: BloopServer, client: TestBuildClient): Unit = {
     val params = new DependencySourcesParams(getBuildTargets(server))
     val result = server.buildTargetDependencySources(params).get()
     val items = result.getItems.asScala.toList
@@ -207,7 +171,7 @@ class BloopSuite extends FunSuite {
     }
   }
 
-  def assertCompile(server: BloopServer, client: BloopClient): Unit = {
+  def assertCompile(server: BloopServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new CompileParams(getBuildTargets(server))
     val compileResult = server.buildTargetCompile(params).get()
@@ -217,10 +181,10 @@ class BloopSuite extends FunSuite {
     assert(client.diagnostics.nonEmpty)
     assert(client.compileReports.nonEmpty)
     // TODO(jvican): Update the status code to OK when bloop implements it
-    assert(compileResult.getStatusCode() == null)
+    assert(compileResult.getStatusCode == null)
   }
 
-  def assertTest(server: BloopServer, client: BloopClient): Unit = {
+  def assertTest(server: BloopServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new TestParams(getBuildTargets(server))
     val testResult = server.buildTargetTest(params).get()
@@ -229,10 +193,10 @@ class BloopSuite extends FunSuite {
     assert(client.logMessages.nonEmpty)
     assert(client.testReports.nonEmpty)
     // TODO(jvican): Update the status code to OK when bloop implements it
-    assert(testResult.getStatusCode() == null)
+    assert(testResult.getStatusCode == null)
   }
 
-  def assertRun(server: BloopServer, client: BloopClient): Unit = {
+  def assertRun(server: BloopServer, client: TestBuildClient): Unit = {
     client.reset()
     val targetToRun = getBuildTargets(server).asScala.find(_.getUri.endsWith("a")).get
     val params = new RunParams(targetToRun)
@@ -253,7 +217,7 @@ class BloopSuite extends FunSuite {
     assert(tests == Seq("scala", "java"))
   }
 
-  def assertServerEndpoints(server: BloopServer, client: BloopClient): Unit = {
+  def assertServerEndpoints(server: BloopServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
     assertDependencySources(server, client)
@@ -269,7 +233,7 @@ class BloopSuite extends FunSuite {
     if (!Files.exists(bloopDirectory.resolve("target"))) {
       exec("sbt", "bloopInstall")
     }
-    val client = new BloopClient
+    val client = new TestBuildClient
     val (server, cancel) = connectToBuildServer(client)
     try {
       val capabilities = new BuildClientCapabilities(Collections.singletonList("scala"))
