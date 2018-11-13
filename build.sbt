@@ -101,5 +101,9 @@ lazy val mockServer = project
   .in(file("mockServer"))
   .settings(
     skip.in(publish) := true,
+    mainClass in Compile := Some("ch.epfl.scala.bsp.mock.MockServer"),
+    bashScriptExtraDefines += """addJava "-Dscript.path=${real_script_path}"""",
+    batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\mockserver.bat""""
   )
   .dependsOn(bsp4s)
+.enablePlugins(JavaAppPackaging)
