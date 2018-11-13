@@ -88,7 +88,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
     val languageIds = List("scala")
 
-    val scalaJars = List("scala-compiler", "scala-reflect", "scala-library").map(Uri.apply)
+    val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").map(Uri.apply)
     val scalaBuildTarget = ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.Jvm, scalaJars)
     val scalaData = Some(scalaBuildTarget.asJson)
 
