@@ -251,12 +251,12 @@ trait BuildTargetIdentifer {
 
 ### Task Id 
 
-The Task Id allows clients to uniquely identify a resource and establish a client-parent
-relationship with another id.
+The Task Id allows clients to *uniquely* identify a BSP task and establish a client-parent
+relationship with another task id.
 
 ```scala
 trait TaskId {
-  /** The id */
+  /** The id, it has to be unique. */
   def id: String
 
   /** The parent id. */
@@ -264,11 +264,9 @@ trait TaskId {
 }
 ```
 
-A task id can represent any child-parent relationship established by the build tool.
-
-An example of use of task ids is logs, where BSP clients can use the task ids of logs
-to improve their readability in the user interface. Clients can show logs in a tree fashion, for
-example, or with dropdowns.
+Clients can use Task Ids to improve the user experience. For example, a client can display
+messages reported by `build/taskStart`, `build/taskProgress` and `build/taskFinish` in a
+tree fashion to help readability and convey task dependencies to the user. 
 
 ### Status Code
 
