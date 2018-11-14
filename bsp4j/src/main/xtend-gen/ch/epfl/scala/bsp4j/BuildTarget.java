@@ -14,6 +14,7 @@ public class BuildTarget {
   @NonNull
   private BuildTargetIdentifier id;
   
+  @NonNull
   private String displayName;
   
   private String baseDirectory;
@@ -33,8 +34,9 @@ public class BuildTarget {
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
-  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final List<String> languageIds, @NonNull final List<BuildTargetIdentifier> dependencies, @NonNull final BuildTargetCapabilities capabilities) {
+  public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final String displayName, @NonNull final List<String> tags, @NonNull final List<String> languageIds, @NonNull final List<BuildTargetIdentifier> dependencies, @NonNull final BuildTargetCapabilities capabilities) {
     this.id = id;
+    this.displayName = displayName;
     this.tags = tags;
     this.dependencies = dependencies;
     this.languageIds = languageIds;
@@ -52,11 +54,12 @@ public class BuildTarget {
   }
   
   @Pure
+  @NonNull
   public String getDisplayName() {
     return this.displayName;
   }
   
-  public void setDisplayName(final String displayName) {
+  public void setDisplayName(@NonNull final String displayName) {
     this.displayName = displayName;
   }
   

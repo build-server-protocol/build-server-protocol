@@ -44,7 +44,7 @@ class BuildTargetCapabilities {
 class BuildTarget {
 
   @NonNull BuildTargetIdentifier id
-  String displayName
+  @NonNull String displayName
   String baseDirectory
   @NonNull List<String> tags
   @NonNull List<String> languageIds
@@ -52,9 +52,10 @@ class BuildTarget {
   @NonNull BuildTargetCapabilities capabilities
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
-  new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds,
+  new (@NonNull BuildTargetIdentifier id, @NonNull String displayName, @NonNull List<String> tags, @NonNull List<String> languageIds,
        @NonNull List<BuildTargetIdentifier> dependencies,  @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
+    this.displayName = displayName
     this.tags = tags
     this.dependencies = dependencies
     this.languageIds = languageIds

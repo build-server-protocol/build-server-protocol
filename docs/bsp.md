@@ -163,7 +163,7 @@ trait BuildTarget {
     * May be presented in the user interface.
     * Should be unique if possible.
     * The id.uri is used if None. */
-  def displayName: Option[String]
+  def displayName: String
   
   /** The directory where this target belongs to. Multiple build targets are allowed to map
     * to the same base directory, and a build target is not required to have a base directory. 

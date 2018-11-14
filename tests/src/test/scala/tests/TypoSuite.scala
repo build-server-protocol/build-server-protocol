@@ -91,6 +91,7 @@ class TypoSuite extends FunSuite {
         val capabilities = new BuildTargetCapabilities(true, true, true)
         val target = new BuildTarget(
           buildTargetUri,
+          "build-target-identifier",
           Collections.singletonList("tag"),
           Collections.singletonList("scala"),
           buildTargetUris,
