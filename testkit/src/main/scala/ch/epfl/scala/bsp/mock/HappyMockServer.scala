@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp.mock
 import java.io.File
 import java.net.URI
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 import ch.epfl.scala.bsp
@@ -8,14 +9,15 @@ import ch.epfl.scala.bsp._
 import ch.epfl.scala.bsp.mock.mockServers._
 import io.circe.syntax._
 import monix.eval.Task
+import scribe.Logger
 
 import scala.concurrent.Promise
 import scala.concurrent.duration.FiniteDuration
-
+import scala.meta.jsonrpc.LanguageClient
 
 /** Mock server that gives a happy successful result to any request.
   */
-class HappyMockServer(base: File) extends AbstractMockServer {
+class HappyMockServer(base: File, val logger: Logger, implicit val client: LanguageClient) extends AbstractMockServer {
 
   val isInitialized: Promise[Either[ProtocolError, Unit]] = scala.concurrent.Promise[Either[ProtocolError, Unit]]()
   val isShutdown: Promise[Either[ProtocolError, Unit]] = scala.concurrent.Promise[Either[ProtocolError, Unit]]()
@@ -96,7 +98,30 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   }
 
   override def compile(params: CompileParams): BspResponse[CompileResult] = {
-    // TODO some task notifications
+    val origin = params.originId
+    val compile1Id = TaskId(UUID.randomUUID().toString, origin)
+
+    compileStart(compile1Id, "compile started: " + target1.uri, target1)
+
+    val subtask1Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
+    val subtask2Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
+    val subtask3Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
+    taskStart(subtask1Id, "resolving widgets", None, None)
+    taskStart(subtask2Id, "memoizing datapoints", None, None)
+    taskStart(subtask2Id, "unionizing beams", None, None)
+    taskFinish(subtask1Id, "targets resolved", StatusCode.Ok, None, None)
+    taskFinish(subtask2Id, "datapoints forgotten", StatusCode.Error, None, None)
+    taskFinish(subtask3Id, "beams are classless", StatusCode.Cancelled, None, None)
+
+    compileReport(compile1Id, "compile failed", target1, StatusCode.Error)
+
+    params.targets.map { target =>
+      val compileId = TaskId(UUID.randomUUID().toString, origin)
+      compileStart(compileId, "compile started: " + target.uri, target)
+      taskProgress(compileId, "compiling some files", 100, 23, None, None)
+      compileReport(compileId, "compile complete", target, StatusCode.Ok)
+    }
+
     val result = CompileResult(params.originId, StatusCode.Ok, None)
     Task(Right(result))
   }
@@ -111,6 +136,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     val result = RunResult(params.originId, StatusCode.Ok)
     Task(Right(result))
   }
+
 
   // for easy override of individual parts of responses
 

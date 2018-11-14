@@ -1,15 +1,14 @@
 package tests
 
-import java.io.{File, PipedInputStream, PipedOutputStream}
+import java.io.File
 import java.nio.file.Files
 import java.util
 import java.util.Collections
 
+import ch.epfl.scala.bsp.mock.MockServer
 import ch.epfl.scala.bsp.mock.MockServer.LocalMockServer
-import ch.epfl.scala.bsp.mock.{HappyMockServer, MockServer}
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
-import monix.execution.CancelableFuture
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.FunSuite
 

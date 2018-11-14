@@ -7,11 +7,12 @@ import ch.epfl.scala.bsp.BspConnectionDetails
 import io.circe.syntax._
 import monix.eval.Task
 import monix.execution.{CancelableFuture, ExecutionModel, Scheduler}
+import scribe.Logger
 
+import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.meta.jsonrpc._
-import scala.collection.JavaConverters._
 
 object MockServer {
 
@@ -35,7 +36,10 @@ object MockServer {
           println(s"file could not be created: $configFile")
 
       case Some("bsp") =>
-        val running = serverTask(new HappyMockServer(cwd), System.in, System.out).runAsync
+        val logger = new Logger
+        val client = LanguageClient.fromOutputStream(System.out, logger)
+        val running = serverTask(new HappyMockServer(cwd, logger, client), System.in, System.out).runAsync
+        System.err.println("Mock server listening")
         Await.ready(running, Duration.Inf)
       case _ =>
         System.err.println(
@@ -72,7 +76,9 @@ object MockServer {
     val serverIn = new PipedInputStream()
     val clientOut = new PipedOutputStream(serverIn)
 
-    val mock = new HappyMockServer(testBaseDir)
+    val logger = new Logger
+    val client = LanguageClient.fromOutputStream(serverOut, logger)
+    val mock = new HappyMockServer(testBaseDir, logger, client)
     val running = MockServer.serverTask(mock, serverIn, serverOut).runAsync
     LocalMockServer(running, clientIn, clientOut)
   }
