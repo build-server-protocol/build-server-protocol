@@ -568,10 +568,6 @@ defined it in the request that triggered this notification.
 The Diagnostics notification are sent from the server to the client to signal results of validation
 runs.
 
-Unlike the language server protocol, diagnostics are “owned” by the client so it is the client's
-responsibility to manage their lifetime and clear them if necessary. Clients generate new
-diagnostics by calling `buildTarget/compile`.
-
 Notification:
 
 * method: `build/publishDiagnostics`
@@ -593,14 +589,30 @@ trait PublishDiagnosticsParams {
   
   /** The diagnostics to be published by the client. */
   def diagnostics: List[Diagnostic]
+
+  /** Whether the client should clear the previous diagnostics
+    * mapped to the same `textDocument` and `buildTarget`. */
+  def reset: Boolean
 }
 ```
 
 where `Diagnostic` is defined as it is in LSP.
 
-The definition of `PublishDiagnosticsParams` is similar to LSP's but contains the addition of an
-optional `originId` field. Clients can use this id to know which request originated the
-notification. This field will be defined if the client defined it in the original request that
+When `reset` is true, the client must clean all previous diagnostics
+associated with the same `textDocument` and `buildTarget` and set instead the
+diagnostics in the request. This is the same behaviour as
+`PublishDiagnosticsParams` in the LSP. When `reset` is false, the diagnostics
+are added to the last active diagnostics, allowing build tools to stream
+diagnostics to the client.
+
+It is the server's responsibility to manage the lifetime of the diagnostics by
+using the appropriate value in the `reset` field. Clients generate new
+diagnostics by calling any BSP endpoint that triggers a `buildTarget/compile`,
+such as `buildTarget/compile`, `buildTarget/test` and `buildTarget/run`.
+
+The optional `originId` field in the definition of `PublishDiagnosticsParams`
+can be used by clients to know which request originated the notification. This
+field will be defined if the client defined it in the original request that
 triggered this notification.
 
 ### Workspace Build Targets Request

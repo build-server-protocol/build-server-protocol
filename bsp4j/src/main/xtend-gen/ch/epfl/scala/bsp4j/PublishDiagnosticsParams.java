@@ -16,13 +16,19 @@ public class PublishDiagnosticsParams {
   @NonNull
   private BuildTargetIdentifier buildTarget;
   
-  private String originId;
-  
+  @NonNull
   private List<Diagnostic> diagnostics;
   
-  public PublishDiagnosticsParams(@NonNull final TextDocumentIdentifier textDocument, @NonNull final BuildTargetIdentifier buildTarget) {
+  @NonNull
+  private Boolean reset;
+  
+  private String originId;
+  
+  public PublishDiagnosticsParams(@NonNull final TextDocumentIdentifier textDocument, @NonNull final BuildTargetIdentifier buildTarget, @NonNull final List<Diagnostic> diagnostics, @NonNull final Boolean reset) {
     this.textDocument = textDocument;
     this.buildTarget = buildTarget;
+    this.diagnostics = diagnostics;
+    this.reset = reset;
   }
   
   @Pure
@@ -46,6 +52,26 @@ public class PublishDiagnosticsParams {
   }
   
   @Pure
+  @NonNull
+  public List<Diagnostic> getDiagnostics() {
+    return this.diagnostics;
+  }
+  
+  public void setDiagnostics(@NonNull final List<Diagnostic> diagnostics) {
+    this.diagnostics = diagnostics;
+  }
+  
+  @Pure
+  @NonNull
+  public Boolean getReset() {
+    return this.reset;
+  }
+  
+  public void setReset(@NonNull final Boolean reset) {
+    this.reset = reset;
+  }
+  
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -54,23 +80,15 @@ public class PublishDiagnosticsParams {
     this.originId = originId;
   }
   
-  @Pure
-  public List<Diagnostic> getDiagnostics() {
-    return this.diagnostics;
-  }
-  
-  public void setDiagnostics(final List<Diagnostic> diagnostics) {
-    this.diagnostics = diagnostics;
-  }
-  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("textDocument", this.textDocument);
     b.add("buildTarget", this.buildTarget);
-    b.add("originId", this.originId);
     b.add("diagnostics", this.diagnostics);
+    b.add("reset", this.reset);
+    b.add("originId", this.originId);
     return b.toString();
   }
   
@@ -94,15 +112,20 @@ public class PublishDiagnosticsParams {
         return false;
     } else if (!this.buildTarget.equals(other.buildTarget))
       return false;
-    if (this.originId == null) {
-      if (other.originId != null)
-        return false;
-    } else if (!this.originId.equals(other.originId))
-      return false;
     if (this.diagnostics == null) {
       if (other.diagnostics != null)
         return false;
     } else if (!this.diagnostics.equals(other.diagnostics))
+      return false;
+    if (this.reset == null) {
+      if (other.reset != null)
+        return false;
+    } else if (!this.reset.equals(other.reset))
+      return false;
+    if (this.originId == null) {
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
       return false;
     return true;
   }
@@ -114,7 +137,8 @@ public class PublishDiagnosticsParams {
     int result = 1;
     result = prime * result + ((this.textDocument== null) ? 0 : this.textDocument.hashCode());
     result = prime * result + ((this.buildTarget== null) ? 0 : this.buildTarget.hashCode());
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.diagnostics== null) ? 0 : this.diagnostics.hashCode());
+    result = prime * result + ((this.diagnostics== null) ? 0 : this.diagnostics.hashCode());
+    result = prime * result + ((this.reset== null) ? 0 : this.reset.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }
