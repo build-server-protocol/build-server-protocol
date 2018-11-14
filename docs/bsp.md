@@ -598,11 +598,12 @@ trait PublishDiagnosticsParams {
 
 where `Diagnostic` is defined as it is in LSP.
 
-When `reset` is enabled, the client must clean all previous diagnostics
+When `reset` is true, the client must clean all previous diagnostics
 associated with the same `textDocument` and `buildTarget` and set instead the
-diagnostics in the request. This is the same behaviour as `BuildTargetParams`
-in the LSP. When `reset` is disabled, the diagnostics are added to the last
-active diagnostics, allowing build tools to stream diagnostics to the client.
+diagnostics in the request. This is the same behaviour as
+`PublishDiagnosticsParams` in the LSP. When `reset` is false, the diagnostics
+are added to the last active diagnostics, allowing build tools to stream
+diagnostics to the client.
 
 It is the server's responsibility to manage the lifetime of the diagnostics by
 using the appropriate value in the `reset` field. Clients generate new
