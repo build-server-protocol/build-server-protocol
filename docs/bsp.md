@@ -256,17 +256,16 @@ relationship with another task id.
 
 ```scala
 trait TaskId {
-  /** The id, it has to be unique. */
+  /** A unique identifier */
   def id: String
 
-  /** The parent id. */
+  /** The parent task id, if any. A non-empty task id means this
+    * task is a sub-task of the parent task. The child-parent
+    * relationship of tasks makes it possible to render tasks in
+    * a tree-like user interface. */
   def parent: Option[String]
 }
 ```
-
-Clients can use Task Ids to improve the user experience. For example, a client can display
-messages reported by `build/taskStart`, `build/taskProgress` and `build/taskFinish` in a
-tree fashion to help readability and convey task dependencies to the user. 
 
 ### Status Code
 
