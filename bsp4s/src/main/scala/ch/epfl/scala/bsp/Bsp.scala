@@ -143,7 +143,7 @@ object MessageType {
 
 @JsonCodec final case class TaskId(
     id: String,
-    parent: Option[String]
+    parents: Option[List[String]]
 )
 
 @JsonCodec final case class ShowMessageParams(

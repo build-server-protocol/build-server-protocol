@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -9,7 +10,7 @@ public class TaskId {
   @NonNull
   private String id;
   
-  private String parent;
+  private List<String> parents;
   
   public TaskId(@NonNull final String id) {
     this.id = id;
@@ -26,12 +27,12 @@ public class TaskId {
   }
   
   @Pure
-  public String getParent() {
-    return this.parent;
+  public List<String> getParents() {
+    return this.parents;
   }
   
-  public void setParent(final String parent) {
-    this.parent = parent;
+  public void setParents(final List<String> parents) {
+    this.parents = parents;
   }
   
   @Override
@@ -39,7 +40,7 @@ public class TaskId {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
-    b.add("parent", this.parent);
+    b.add("parents", this.parents);
     return b.toString();
   }
   
@@ -58,10 +59,10 @@ public class TaskId {
         return false;
     } else if (!this.id.equals(other.id))
       return false;
-    if (this.parent == null) {
-      if (other.parent != null)
+    if (this.parents == null) {
+      if (other.parents != null)
         return false;
-    } else if (!this.parent.equals(other.parent))
+    } else if (!this.parents.equals(other.parents))
       return false;
     return true;
   }
@@ -72,6 +73,6 @@ public class TaskId {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
-    return prime * result + ((this.parent== null) ? 0 : this.parent.hashCode());
+    return prime * result + ((this.parents== null) ? 0 : this.parents.hashCode());
   }
 }
