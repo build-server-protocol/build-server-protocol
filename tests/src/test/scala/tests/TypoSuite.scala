@@ -330,7 +330,6 @@ class TypoSuite extends FunSuite {
             )
             .toScala
         }
-        _ = scala1.onBuildInitialized()
         sources <- scala1.buildTargetSources(new SourcesParams(buildTargetUris)).toScala
         inverseSources <- scala1
           .buildTargetInverseSources(new InverseSourcesParams(textDocumentIdentifier))
@@ -347,8 +346,6 @@ class TypoSuite extends FunSuite {
           .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
         _ <- scala1.buildShutdown().toScala
-        // NOTE(olafur): important to not finish test with a notification to avoid Thread.sleep
-        // for notification to deliver.
         workspace <- scala1.workspaceBuildTargets().toScala
       } yield {
         val obtained = trace1.toString()
