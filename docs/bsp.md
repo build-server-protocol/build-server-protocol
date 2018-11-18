@@ -1599,16 +1599,16 @@ This is an example of a BSP connection file:
 #### Default Locations for BSP Connection Files
 
 A BSP connection file can be located in a number of locations. BSP connection files
-may be located in the project workspace, or for bsp servers installed locally, in a system-specific
-directory in the user's data system's data directories:
+may be located in the project workspace, or for bsp servers installed locally, 
+in a system-wide or user-specific data directory, depending on the operating system:
 
-|           | Unix + Mac                                         | Windows                    |
-|-----------|----------------------------------------------------|----------------------------|
-| Workspace | `<workspace-dir>/.bsp/`                            | `<workspace-dir>\.bsp`     |
-| User      | `$XDG_DATA_HOME/bsp`                               | `%LOCALAPPDATA%\bsp`       |
-|           | `$HOME/Library/Application Support/bsp` (Mac only) |                            |
-| System    | `$XDG_DATA_DIRS/bsp/`                              | `%PROGRAMDATA%\bsp`        |
-|           | `/Library/Application Support/bsp` (Mac only)      |                            |
+|           | Unix + Mac                                          | Windows                    |
+|-----------|-----------------------------------------------------|----------------------------|
+| Workspace | `<workspace-dir>/.bsp/`                             | `<workspace-dir>\.bsp\`    |
+| User      | `$XDG_DATA_HOME/bsp/`                               | `%LOCALAPPDATA%\bsp\`      |
+|           | `$HOME/Library/Application Support/bsp/` (Mac only) |                            |
+| System    | `$XDG_DATA_DIRS/bsp/`                               | `%PROGRAMDATA%\bsp\`       |
+|           | `/Library/Application Support/bsp/` (Mac only)      |                            |
 
 Note that:
 
