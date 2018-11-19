@@ -144,7 +144,7 @@ class InitializeBuildResult {
 @JsonRpcData
 class TaskId {
   @NonNull String id
-  String parent
+  List<String> parents
   new(@NonNull String id) {
     this.id = id
   }
