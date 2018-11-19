@@ -4,10 +4,10 @@ import ch.epfl.scala.bsp
 import ch.epfl.scala.bsp._
 import ch.epfl.scala.bsp.mock.mockServers.BspResponse
 import io.circe.Json
+import io.circe.syntax._
 import monix.eval.Task
 import monix.execution.Ack
 import scribe.Logger
-import io.circe.syntax._
 
 import scala.concurrent.Future
 import scala.meta.jsonrpc.{LanguageClient, Services}
@@ -45,6 +45,32 @@ abstract class AbstractMockServer {
 
   // notification helpers
 
+  def logMessage(message: String,
+                 messageType: MessageType = MessageType.Info,
+                 task: Option[TaskId] = None,
+                 origin: Option[String] = None): Future[Ack] = {
+    endpoints.Build.logMessage.notify(
+      LogMessageParams(messageType, task, origin, message)
+    )
+  }
+
+  def showMessage(message: String,
+                  messageType: MessageType = MessageType.Info,
+                  task: Option[TaskId] = None,
+                  origin: Option[String] = None): Future[Ack] = {
+    endpoints.Build.showMessage.notify(
+      ShowMessageParams(MessageType.Info, task, origin, message)
+    )
+  }
+
+  def publishDiagnostics(doc: TextDocumentIdentifier, target: BuildTargetIdentifier, diagnostics: List[Diagnostic],
+                        origin: Option[String] = None,
+                        reset: Boolean = false): Future[Ack] = {
+    endpoints.Build.publishDiagnostics.notify(
+      PublishDiagnosticsParams(doc, target, origin, diagnostics, reset)
+    )
+  }
+
   def taskStart(taskId: TaskId, message: String, dataKind: Option[String], data: Option[Json]): Future[Ack] = {
     val time = Some(System.currentTimeMillis())
     endpoints.Build.taskStart.notify(
@@ -71,10 +97,11 @@ abstract class AbstractMockServer {
   }
 
   def compileReport(taskId: TaskId, message: String, target: BuildTargetIdentifier, status: StatusCode): Future[Ack] = {
+    val origin = taskId.parents.flatMap(_.headOption)
     val data = status match {
-      case StatusCode.Ok => CompileReport(target, taskId.parent, 0, 0, Some(1))
-      case StatusCode.Error => CompileReport(target, taskId.parent, 1, 0, Some(1))
-      case StatusCode.Cancelled => CompileReport(target, taskId.parent, 0, 1, Some(1))
+      case StatusCode.Ok => CompileReport(target, origin, 0, 0, Some(1))
+      case StatusCode.Error => CompileReport(target, origin, 1, 0, Some(1))
+      case StatusCode.Cancelled => CompileReport(target, origin, 0, 1, Some(1))
     }
     taskFinish(taskId, message, StatusCode.Ok, Some(TaskDataKind.CompileReport), Some(data.asJson))
   }

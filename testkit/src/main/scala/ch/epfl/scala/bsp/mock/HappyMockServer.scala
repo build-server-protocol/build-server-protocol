@@ -98,20 +98,32 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
   }
 
   override def compile(params: CompileParams): BspResponse[CompileResult] = {
-    val origin = params.originId
+    val origin = params.originId.map(List(_))
     val compile1Id = TaskId(UUID.randomUUID().toString, origin)
 
     compileStart(compile1Id, "compile started: " + target1.uri, target1)
 
-    val subtask1Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
-    val subtask2Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
-    val subtask3Id = TaskId(UUID.randomUUID().toString, Some(compile1Id.id))
+    val subtaskParents = Some(List(compile1Id.id))
+    logMessage("spawning subtasks", task = Some(compile1Id), origin = params.originId)
+    val subtask1Id = TaskId(UUID.randomUUID().toString, subtaskParents)
+    val subtask2Id = TaskId(UUID.randomUUID().toString, subtaskParents)
+    val subtask3Id = TaskId(UUID.randomUUID().toString, subtaskParents)
     taskStart(subtask1Id, "resolving widgets", None, None)
     taskStart(subtask2Id, "memoizing datapoints", None, None)
     taskStart(subtask2Id, "unionizing beams", None, None)
+
+    val compileme = target1.uri.toPath.resolve("compileme.scala").toUri
+    val doc = TextDocumentIdentifier(Uri(compileme))
+    val errorMessage = Diagnostic(Range(Position(1, 10), Position(1,110)), Some(DiagnosticSeverity.Error), None, None, "this is a compile error", None)
+    val warningMessage = Diagnostic(Range(Position(2, 10), Position(2,20)), Some(DiagnosticSeverity.Warning), None, None, "this is a compile warning", None)
+    val infoMessage = Diagnostic(Range(Position(3, 1), Position(3,33)), Some(DiagnosticSeverity.Information), None, None, "this is a compile info", None)
+    publishDiagnostics(doc, target1, List(errorMessage, warningMessage), params.originId)
+    publishDiagnostics(doc, target1, List(infoMessage), params.originId)
+
     taskFinish(subtask1Id, "targets resolved", StatusCode.Ok, None, None)
     taskFinish(subtask2Id, "datapoints forgotten", StatusCode.Error, None, None)
     taskFinish(subtask3Id, "beams are classless", StatusCode.Cancelled, None, None)
+    showMessage("subtasks done", task = Some(compile1Id), origin = params.originId)
 
     compileReport(compile1Id, "compile failed", target1, StatusCode.Error)
 

@@ -110,9 +110,10 @@ class HappyMockSuite extends FunSuite {
     assert(compileResult.getOriginId == params.getOriginId)
 
     // TODO in HappyMockServer: send some notifications in compile
-    // assert(client.logMessages.nonEmpty)
-    // assert(client.diagnostics.nonEmpty)
-    // assert(client.compileReports.nonEmpty)
+    assert(client.logMessages.nonEmpty)
+    assert(client.showMessages.nonEmpty)
+    assert(client.diagnostics.nonEmpty)
+    assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
 
