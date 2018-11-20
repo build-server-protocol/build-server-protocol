@@ -99,15 +99,15 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
 
   override def compile(params: CompileParams): BspResponse[CompileResult] = {
     val origin = params.originId.map(List(_))
-    val compile1Id = TaskId(UUID.randomUUID().toString, origin)
+    val compile1Id = TaskId("compile1id", origin)
 
     compileStart(compile1Id, "compile started: " + target1.uri, target1)
 
     val subtaskParents = Some(List(compile1Id.id))
     logMessage("spawning subtasks", task = Some(compile1Id), origin = params.originId)
-    val subtask1Id = TaskId(UUID.randomUUID().toString, subtaskParents)
-    val subtask2Id = TaskId(UUID.randomUUID().toString, subtaskParents)
-    val subtask3Id = TaskId(UUID.randomUUID().toString, subtaskParents)
+    val subtask1Id = TaskId("subtask1id", subtaskParents)
+    val subtask2Id = TaskId("subtask2id", subtaskParents)
+    val subtask3Id = TaskId("subtask3id", subtaskParents)
     taskStart(subtask1Id, "resolving widgets", None, None)
     taskStart(subtask2Id, "memoizing datapoints", None, None)
     taskStart(subtask2Id, "unionizing beams", None, None)

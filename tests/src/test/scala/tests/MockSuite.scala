@@ -113,6 +113,8 @@ class HappyMockSuite extends FunSuite {
     assert(client.logMessages.nonEmpty)
     assert(client.showMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
+    assert(client.taskStarts.exists{p => p.getTaskId.getId == "subtask1id"})
+    assert(client.taskFinishes.exists{p => p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK })
     assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
