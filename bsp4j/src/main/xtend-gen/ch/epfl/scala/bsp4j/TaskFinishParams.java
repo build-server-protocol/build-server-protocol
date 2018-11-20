@@ -18,16 +18,17 @@ public class TaskFinishParams {
   private String message;
   
   @NonNull
-  private StatusCode statusCode;
-  
-  public TaskFinishParams(@NonNull final StatusCode statusCode) {
-    this.statusCode = statusCode;
-  }
+  private StatusCode status;
   
   private String dataKind;
   
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
+  
+  public TaskFinishParams(@NonNull final TaskId taskId, @NonNull final StatusCode status) {
+    this.taskId = taskId;
+    this.status = status;
+  }
   
   @Pure
   @NonNull
@@ -59,12 +60,12 @@ public class TaskFinishParams {
   
   @Pure
   @NonNull
-  public StatusCode getStatusCode() {
-    return this.statusCode;
+  public StatusCode getStatus() {
+    return this.status;
   }
   
-  public void setStatusCode(@NonNull final StatusCode statusCode) {
-    this.statusCode = statusCode;
+  public void setStatus(@NonNull final StatusCode status) {
+    this.status = status;
   }
   
   @Pure
@@ -92,7 +93,7 @@ public class TaskFinishParams {
     b.add("taskId", this.taskId);
     b.add("eventTime", this.eventTime);
     b.add("message", this.message);
-    b.add("statusCode", this.statusCode);
+    b.add("status", this.status);
     b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
@@ -123,10 +124,10 @@ public class TaskFinishParams {
         return false;
     } else if (!this.message.equals(other.message))
       return false;
-    if (this.statusCode == null) {
-      if (other.statusCode != null)
+    if (this.status == null) {
+      if (other.status != null)
         return false;
-    } else if (!this.statusCode.equals(other.statusCode))
+    } else if (!this.status.equals(other.status))
       return false;
     if (this.dataKind == null) {
       if (other.dataKind != null)
@@ -149,7 +150,7 @@ public class TaskFinishParams {
     result = prime * result + ((this.taskId== null) ? 0 : this.taskId.hashCode());
     result = prime * result + ((this.eventTime== null) ? 0 : this.eventTime.hashCode());
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    result = prime * result + ((this.statusCode== null) ? 0 : this.statusCode.hashCode());
+    result = prime * result + ((this.status== null) ? 0 : this.status.hashCode());
     result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }

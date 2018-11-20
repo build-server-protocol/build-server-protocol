@@ -95,4 +95,16 @@ lazy val tests = project
       "org.scalatest" %% "scalatest" % "3.0.5"
     )
   )
-  .dependsOn(bsp4s, bsp4j)
+  .dependsOn(bsp4s, bsp4j, testkit)
+
+lazy val testkit = project
+  .in(file("testkit"))
+  .settings(
+    skip.in(publish) := true,
+    mainClass in Compile := Some("ch.epfl.scala.bsp.mock.MockServer"),
+    executableScriptName := "mockbsp",
+    bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
+    batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
+  )
+  .dependsOn(bsp4s)
+.enablePlugins(JavaAppPackaging)

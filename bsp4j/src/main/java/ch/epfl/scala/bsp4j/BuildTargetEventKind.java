@@ -1,5 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
+import com.google.gson.annotations.JsonAdapter;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
+
+@JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum BuildTargetEventKind {
 
     CREATED(1),
