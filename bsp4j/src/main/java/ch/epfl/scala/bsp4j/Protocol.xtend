@@ -547,10 +547,12 @@ class TaskFinishParams {
     @NonNull TaskId taskId
     Long eventTime
     String message
-    @NonNull StatusCode statusCode
-      new(@NonNull StatusCode statusCode) {
-        this.statusCode = statusCode
-      }
+    @NonNull StatusCode status
     String dataKind
     @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
+    new(@NonNull TaskId taskId, @NonNull StatusCode status) {
+      this.taskId = taskId
+      this.status = status
+    }
 }
