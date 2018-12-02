@@ -2,7 +2,7 @@
 title: Build Server Protocol
 ---
 
-# Build Server Protocol
+# ![bsp logo](../resources/buildServerProtocol64.svg) Build Server Protocol
 
 This document describes version 2.0 (WIP) of the build server protocol.
 
