@@ -378,6 +378,7 @@ class ResourcesItem {
 class CompileParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
+  List<String> arguments
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
   }

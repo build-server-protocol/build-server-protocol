@@ -13,6 +13,8 @@ public class CompileParams {
   
   private String originId;
   
+  private List<String> arguments;
+  
   public CompileParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
@@ -36,12 +38,22 @@ public class CompileParams {
     this.originId = originId;
   }
   
+  @Pure
+  public List<String> getArguments() {
+    return this.arguments;
+  }
+  
+  public void setArguments(final List<String> arguments) {
+    this.arguments = arguments;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
     b.add("originId", this.originId);
+    b.add("arguments", this.arguments);
     return b.toString();
   }
   
@@ -65,6 +77,11 @@ public class CompileParams {
         return false;
     } else if (!this.originId.equals(other.originId))
       return false;
+    if (this.arguments == null) {
+      if (other.arguments != null)
+        return false;
+    } else if (!this.arguments.equals(other.arguments))
+      return false;
     return true;
   }
   
@@ -74,6 +91,7 @@ public class CompileParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
-    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    return prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
   }
 }
