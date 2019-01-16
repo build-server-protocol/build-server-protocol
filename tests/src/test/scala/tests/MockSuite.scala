@@ -90,6 +90,18 @@ class HappyMockSuite extends FunSuite {
     }
   }
 
+  def assertSources(server: MockBuildServer, client: TestBuildClient): Unit = {
+    val params = new SourcesParams(getBuildTargetIds(server))
+    val result = server.buildTargetSources(params).get()
+    val items = result.getItems.asScala.toList
+    assert(items.nonEmpty)
+    items.foreach { item =>
+      val sources = item.getSources.asScala.toList
+      assert(sources.nonEmpty)
+      assert(item.getTarget != null)
+    }
+  }
+
   def assertDependencySources(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new DependencySourcesParams(getBuildTargetIds(server))
     val result = server.buildTargetDependencySources(params).get()
@@ -159,6 +171,7 @@ class HappyMockSuite extends FunSuite {
   def assertServerEndpoints(server: MockBuildServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
+    assertSources(server, client)
     assertDependencySources(server, client)
     assertCompile(server, client)
     assertTest(server, client)

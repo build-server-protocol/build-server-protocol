@@ -23,6 +23,7 @@ abstract class AbstractMockServer {
     .request(endpoints.Build.shutdown)(shutdown)
     .notificationAsync(endpoints.Build.exit)(exit(_))
     .requestAsync(endpoints.Workspace.buildTargets)(buildTargets)
+    .requestAsync(endpoints.BuildTarget.sources)(sources)
     .requestAsync(endpoints.BuildTarget.dependencySources)(dependencySources)
     .requestAsync(endpoints.BuildTarget.inverseSources)(inverseSources)
     .requestAsync(endpoints.BuildTarget.scalacOptions)(scalacOptions(_))
@@ -35,6 +36,7 @@ abstract class AbstractMockServer {
   def shutdown(shutdown: bsp.Shutdown): Unit
   def exit(exit: Exit): Task[Unit]
   def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets]
+  def sources(params: SourcesParams): BspResponse[SourcesResult]
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]
   def scalacOptions(params: ScalacOptionsParams): BspResponse[ScalacOptionsResult]
