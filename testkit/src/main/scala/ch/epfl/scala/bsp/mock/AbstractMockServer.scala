@@ -105,6 +105,6 @@ abstract class AbstractMockServer {
       case StatusCode.Error => CompileReport(target, origin, 1, 0, Some(1))
       case StatusCode.Cancelled => CompileReport(target, origin, 0, 1, Some(1))
     }
-    taskFinish(taskId, message, StatusCode.Ok, Some(TaskDataKind.CompileReport), Some(data.asJson))
+    taskFinish(taskId, message, status, Some(TaskDataKind.CompileReport), Some(data.asJson))
   }
 }

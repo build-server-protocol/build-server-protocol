@@ -135,7 +135,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
     val subtask3Id = TaskId("subtask3id", subtaskParents)
     taskStart(subtask1Id, "resolving widgets", None, None)
     taskStart(subtask2Id, "memoizing datapoints", None, None)
-    taskStart(subtask2Id, "unionizing beams", None, None)
+    taskStart(subtask3Id, "unionizing beams", None, None)
 
     val compileme = target1.uri.toPath.resolve("compileme.scala").toUri
     val doc = TextDocumentIdentifier(Uri(compileme))
