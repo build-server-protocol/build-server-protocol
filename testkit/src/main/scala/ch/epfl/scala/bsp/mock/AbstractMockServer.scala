@@ -23,6 +23,7 @@ abstract class AbstractMockServer {
     .request(endpoints.Build.shutdown)(shutdown)
     .notificationAsync(endpoints.Build.exit)(exit(_))
     .requestAsync(endpoints.Workspace.buildTargets)(buildTargets)
+    .requestAsync(endpoints.BuildTarget.sources)(sources)
     .requestAsync(endpoints.BuildTarget.dependencySources)(dependencySources)
     .requestAsync(endpoints.BuildTarget.inverseSources)(inverseSources)
     .requestAsync(endpoints.BuildTarget.scalacOptions)(scalacOptions(_))
@@ -35,6 +36,7 @@ abstract class AbstractMockServer {
   def shutdown(shutdown: bsp.Shutdown): Unit
   def exit(exit: Exit): Task[Unit]
   def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets]
+  def sources(params: SourcesParams): BspResponse[SourcesResult]
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]
   def scalacOptions(params: ScalacOptionsParams): BspResponse[ScalacOptionsResult]
@@ -103,6 +105,6 @@ abstract class AbstractMockServer {
       case StatusCode.Error => CompileReport(target, origin, 1, 0, Some(1))
       case StatusCode.Cancelled => CompileReport(target, origin, 0, 1, Some(1))
     }
-    taskFinish(taskId, message, StatusCode.Ok, Some(TaskDataKind.CompileReport), Some(data.asJson))
+    taskFinish(taskId, message, status, Some(TaskDataKind.CompileReport), Some(data.asJson))
   }
 }
