@@ -29,7 +29,6 @@ public class SbtBuildTarget {
   public SbtBuildTarget(@NonNull final String sbtVersion, @NonNull final List<String> autoImports, @NonNull final List<String> classpath, @NonNull final ScalaBuildTarget scalaBuildTarget, @NonNull final List<BuildTargetIdentifier> children) {
     this.sbtVersion = sbtVersion;
     this.autoImports = autoImports;
-    this.classpath = classpath;
     this.scalaBuildTarget = scalaBuildTarget;
     this.children = children;
   }

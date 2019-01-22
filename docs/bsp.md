@@ -1511,9 +1511,6 @@ trait SbtBuildTarget {
   /** A sequence of Scala imports that are automatically imported in the sbt build files. */
   def autoImports: List[String]
   
-  /** The classpath for the sbt build (including sbt jars). */
-  def classpath: List[Uri]
-  
   /** The Scala build target describing the scala
    * version and scala jars used by this sbt version. */
   def scalaBuildTarget: ScalaBuildTarget

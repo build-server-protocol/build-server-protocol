@@ -584,7 +584,6 @@ object ScalaPlatform {
 @JsonCodec final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],
-    classpath: List[Uri],
     scalaBuildTarget: ScalaBuildTarget,
     parent: Option[BuildTargetIdentifier],
     children: List[BuildTargetIdentifier],
