@@ -288,6 +288,7 @@ case object BuildTargetEventKind {
 )
 @JsonCodec final case class SourceItem(
     uri: Uri,
+    isDirectory: Option[Boolean],
     generated: Boolean
 )
 

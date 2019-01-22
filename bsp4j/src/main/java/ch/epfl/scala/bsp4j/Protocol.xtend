@@ -301,8 +301,11 @@ class SourcesItem {
 class SourceItem {
   @NonNull String uri
   @NonNull Boolean generated
-  new(@NonNull String uri, @NonNull Boolean generated) {
+  Boolean isDirectory
+
+  new(@NonNull String uri, Boolean isDirectory, @NonNull Boolean generated) {
     this.uri = uri
+    this.isDirectory = isDirectory
     this.generated = generated
   }
 }

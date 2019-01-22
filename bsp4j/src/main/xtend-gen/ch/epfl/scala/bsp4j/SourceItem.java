@@ -12,8 +12,11 @@ public class SourceItem {
   @NonNull
   private Boolean generated;
   
-  public SourceItem(@NonNull final String uri, @NonNull final Boolean generated) {
+  private Boolean isDirectory;
+  
+  public SourceItem(@NonNull final String uri, final Boolean isDirectory, @NonNull final Boolean generated) {
     this.uri = uri;
+    this.isDirectory = isDirectory;
     this.generated = generated;
   }
   
@@ -37,12 +40,22 @@ public class SourceItem {
     this.generated = generated;
   }
   
+  @Pure
+  public Boolean getIsDirectory() {
+    return this.isDirectory;
+  }
+  
+  public void setIsDirectory(final Boolean isDirectory) {
+    this.isDirectory = isDirectory;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
     b.add("generated", this.generated);
+    b.add("isDirectory", this.isDirectory);
     return b.toString();
   }
   
@@ -66,6 +79,11 @@ public class SourceItem {
         return false;
     } else if (!this.generated.equals(other.generated))
       return false;
+    if (this.isDirectory == null) {
+      if (other.isDirectory != null)
+        return false;
+    } else if (!this.isDirectory.equals(other.isDirectory))
+      return false;
     return true;
   }
   
@@ -75,6 +93,7 @@ public class SourceItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
-    return prime * result + ((this.generated== null) ? 0 : this.generated.hashCode());
+    result = prime * result + ((this.generated== null) ? 0 : this.generated.hashCode());
+    return prime * result + ((this.isDirectory== null) ? 0 : this.isDirectory.hashCode());
   }
 }
