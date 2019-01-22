@@ -189,10 +189,24 @@ trait BuildTarget {
 
   /** The direct upstream build target dependencies of this build target */
   def dependencies: List[BuildTargetIdentifer]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+    */
+  def dataKind: Option[String]
 
   /** Language-specific metadata about this target.
     * See ScalaBuildTarget as an example. */
   def data: Option[Json] // Note, matches `any` in the LSP.
+}
+
+object BuildTargetDataKind {
+
+  /** The `data` field contains a `ScalaBuildTarget` object. */
+  val Scala = "scala"
+  
+  /** The `data` field contains a `SbtBuildTarget` object. */
+  val Sbt = "sbt"
+    
 }
 
 object BuildTargetTag {
@@ -1295,7 +1309,7 @@ The following section contains Scala-specific extensions to the build server pro
 #### Scala Build Target
 
 `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling a target containing Scala sources.
-This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition.
+This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when the `dataKind` field contains "scala".
 
 ```scala
 trait ScalaBuildTarget {
@@ -1501,7 +1515,7 @@ allows BSP clients to provide language support for sbt build files.
 
 `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing editor
 support for sbt build files. This metadata is embedded in the `data: Option[Json]` field of the
-`BuildTarget` definition.
+`BuildTarget` definition when the `dataKind` field contains "sbt".
 
 ```scala
 trait SbtBuildTarget {

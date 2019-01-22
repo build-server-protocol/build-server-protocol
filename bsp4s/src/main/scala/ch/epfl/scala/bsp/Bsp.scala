@@ -64,8 +64,15 @@ object BuildTargetTag {
     capabilities: BuildTargetCapabilities,
     languageIds: List[String],
     dependencies: List[BuildTargetIdentifier],
+    dataKind: Option[String],
     data: Option[Json]
 )
+
+object BuildTargetDataKind {
+  val Scala = "scala"
+  val Sbt = "sbt"
+}
+
 @JsonCodec final case class BuildClientCapabilities(
     languageIds: List[String]
 )

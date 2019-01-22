@@ -50,10 +50,11 @@ class BuildTarget {
   @NonNull List<String> languageIds
   @NonNull List<BuildTargetIdentifier> dependencies
   @NonNull BuildTargetCapabilities capabilities
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds,
-       @NonNull List<BuildTargetIdentifier> dependencies,  @NonNull BuildTargetCapabilities capabilities) {
+       @NonNull List<BuildTargetIdentifier> dependencies, @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
     this.tags = tags
     this.dependencies = dependencies
