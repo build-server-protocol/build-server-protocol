@@ -6,7 +6,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class TestStarted {
+public class TestStart {
   @NonNull
   private String description;
   
@@ -49,7 +49,7 @@ public class TestStarted {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TestStarted other = (TestStarted) obj;
+    TestStart other = (TestStart) obj;
     if (this.description == null) {
       if (other.description != null)
         return false;

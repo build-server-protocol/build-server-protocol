@@ -465,13 +465,13 @@ class TestTask {
 }
 
 @JsonRpcData
-class TestStarted {
+class TestStart {
   @NonNull String description
   Location location
 }
 
 @JsonRpcData
-class TestFinished {
+class TestFinish {
   @NonNull String description
   String message
 

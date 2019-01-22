@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class TestFinished {
+public class TestFinish {
   @NonNull
   private String description;
   
@@ -18,11 +18,13 @@ public class TestFinished {
   @NonNull
   private TestStatus status;
   
-  public TestFinished(@NonNull final TestStatus status) {
+  public TestFinish(@NonNull final TestStatus status) {
     this.status = status;
   }
   
   private Location location;
+  
+  private String dataKind;
   
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
@@ -66,6 +68,15 @@ public class TestFinished {
   }
   
   @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+  
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+  
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -82,6 +93,7 @@ public class TestFinished {
     b.add("message", this.message);
     b.add("status", this.status);
     b.add("location", this.location);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
   }
@@ -95,7 +107,7 @@ public class TestFinished {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TestFinished other = (TestFinished) obj;
+    TestFinish other = (TestFinish) obj;
     if (this.description == null) {
       if (other.description != null)
         return false;
@@ -116,6 +128,11 @@ public class TestFinished {
         return false;
     } else if (!this.location.equals(other.location))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -133,6 +150,7 @@ public class TestFinished {
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
     result = prime * result + ((this.status== null) ? 0 : this.status.hashCode());
     result = prime * result + ((this.location== null) ? 0 : this.location.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }
