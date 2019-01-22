@@ -11,6 +11,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestResult {
   private String originId;
   
+  private String dataKind;
+  
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
@@ -28,6 +30,15 @@ public class TestResult {
   
   public void setOriginId(final String originId) {
     this.originId = originId;
+  }
+  
+  @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+  
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
   }
   
   @Pure
@@ -54,6 +65,7 @@ public class TestResult {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     b.add("statusCode", this.statusCode);
     return b.toString();
@@ -74,6 +86,11 @@ public class TestResult {
         return false;
     } else if (!this.originId.equals(other.originId))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -93,6 +110,7 @@ public class TestResult {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     result = prime * result + ((this.data== null) ? 0 : this.data.hashCode());
     return prime * result + ((this.statusCode== null) ? 0 : this.statusCode.hashCode());
   }

@@ -26,7 +26,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
 
   override def initialize(params: InitializeBuildParams): BspResponse[InitializeBuildResult] =
     Task {
-      val result = bsp.InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities, None)
+      val result = bsp.InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities, None, None)
       Right(result)
     }
 
@@ -162,13 +162,13 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
       compileReport(compileId, "compile complete", target, StatusCode.Ok)
     }
 
-    val result = CompileResult(params.originId, StatusCode.Ok, None)
+    val result = CompileResult(params.originId, StatusCode.Ok, None, None)
     Task(Right(result))
   }
   override def test(params: TestParams): BspResponse[TestResult] = {
     // TODO some test task/report notifications
     // TODO some individual test notifications
-    val result = TestResult(params.originId, StatusCode.Ok, None)
+    val result = TestResult(params.originId, StatusCode.Ok, None, None)
     Task(Right(result))
   }
   override def run(params: RunParams): BspResponse[RunResult] = {

@@ -17,6 +17,8 @@ public class TestParams {
   
   private List<String> arguments;
   
+  private String dataKind;
+  
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
@@ -53,6 +55,15 @@ public class TestParams {
   }
   
   @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+  
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+  
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -68,6 +79,7 @@ public class TestParams {
     b.add("targets", this.targets);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
   }
@@ -97,6 +109,11 @@ public class TestParams {
         return false;
     } else if (!this.arguments.equals(other.arguments))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -113,6 +130,7 @@ public class TestParams {
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

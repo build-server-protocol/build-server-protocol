@@ -87,6 +87,7 @@ object BuildTargetDataKind {
     bspVersion: String,
     rootUri: Uri,
     capabilities: BuildClientCapabilities,
+    dataKind: Option[String],
     data: Option[Json]
 )
 
@@ -121,6 +122,7 @@ object BuildTargetDataKind {
     version: String,
     bspVersion: String,
     capabilities: BuildServerCapabilities,
+    dataKind: Option[String],
     data: Option[Json]
 )
 
@@ -338,6 +340,7 @@ case object BuildTargetEventKind {
 @JsonCodec final case class CompileResult(
     originId: Option[String],
     statusCode: StatusCode,
+    dataKind: Option[String],
     data: Option[Json],
 )
 
@@ -357,12 +360,14 @@ case object BuildTargetEventKind {
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    dataKind: Option[String],
     data: Option[Json],
 )
 
 @JsonCodec final case class TestResult(
     originId: Option[String],
     statusCode: StatusCode,
+    dataKind: Option[String],
     data: Option[Json],
 )
 
@@ -392,6 +397,7 @@ case object BuildTargetEventKind {
     message: Option[String],
     status: TestStatus,
     location: Option[Location],
+    dataKind: Option[String],
     data: Option[Json]
 )
 

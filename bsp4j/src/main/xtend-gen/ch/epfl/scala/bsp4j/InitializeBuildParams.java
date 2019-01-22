@@ -24,6 +24,8 @@ public class InitializeBuildParams {
   @NonNull
   private BuildClientCapabilities capabilities;
   
+  private String dataKind;
+  
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
@@ -86,6 +88,15 @@ public class InitializeBuildParams {
   }
   
   @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+  
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+  
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -103,6 +114,7 @@ public class InitializeBuildParams {
     b.add("version", this.version);
     b.add("bspVersion", this.bspVersion);
     b.add("capabilities", this.capabilities);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
   }
@@ -142,6 +154,11 @@ public class InitializeBuildParams {
         return false;
     } else if (!this.capabilities.equals(other.capabilities))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -160,6 +177,7 @@ public class InitializeBuildParams {
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.bspVersion== null) ? 0 : this.bspVersion.hashCode());
     result = prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

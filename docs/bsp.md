@@ -190,8 +190,7 @@ trait BuildTarget {
   /** The direct upstream build target dependencies of this build target */
   def dependencies: List[BuildTargetIdentifer]
   
-  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-    */
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
   def dataKind: Option[String]
 
   /** Language-specific metadata about this target.
@@ -360,6 +359,9 @@ trait InitializeBuildParams {
 
   /** The capabilities of the client */
   def capabilities: BuildClientCapabilities
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Additional metadata about the client */
   def data: Option[Json]
@@ -392,6 +394,9 @@ trait InitializeBuildResult {
 
   /** The capabilities of the build server */
   def capabilities: BuildServerCapabilities
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Additional metadata about the server */
   def data: Option[Json]
@@ -1021,6 +1026,9 @@ trait CompileResult {
   
   /** A status code for the execution. */
   def statusCode: Int
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: String
 
   /** A field containing language-specific information, like products
     * of compilation or compiler-specific metadata the client needs to know. */
@@ -1086,6 +1094,9 @@ trait TestParams {
   
   /** Optional arguments to the test execution engine. */
   def arguments: Option[List[String]]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Language-specific metadata about for this test execution.
     * See ScalaTestParams as an example. */
@@ -1105,6 +1116,9 @@ trait TestResult {
   
   /** A status code for the execution. */
   def statusCode: Int
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   def data: Option[Json] // Note, matches `any | null` in the LSP.
 }
@@ -1192,6 +1206,9 @@ trait TestFinish {
   
   /** Source location of the test, as LSP location. */
   def location: Option[Location]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Optionally, structured metadata about the test completion.
     * For example: stack traces, expected/actual values. */
@@ -1340,7 +1357,8 @@ object ScalaPlatform {
 #### Scala Test Params
 
 `ScalaTestParams` contains scala-specific metadata for testing Scala targets.
-This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request.
+This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request when the `dataKind` field
+contains "scala-test".
 
 ```scala
 trait ScalaTestParams {
