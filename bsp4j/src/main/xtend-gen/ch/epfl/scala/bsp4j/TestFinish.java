@@ -11,7 +11,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class TestFinish {
   @NonNull
-  private String description;
+  private String displayName;
   
   private String message;
   
@@ -25,18 +25,23 @@ public class TestFinish {
   private Location location;
   
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
+  public TestFinished(@NonNull final String displayName, @NonNull final TestStatus status) {
+    this.displayName = displayName;
+    this.status = status;
+  }
+
   @Pure
   @NonNull
-  public String getDescription() {
-    return this.description;
+  public String getDisplayName() {
+    return this.displayName;
   }
   
-  public void setDescription(@NonNull final String description) {
-    this.description = description;
+  public void setDisplayName(@NonNull final String displayName) {
+    this.displayName = displayName;
   }
   
   @Pure
@@ -71,11 +76,11 @@ public class TestFinish {
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
@@ -89,7 +94,7 @@ public class TestFinish {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("description", this.description);
+    b.add("displayName", this.displayName);
     b.add("message", this.message);
     b.add("status", this.status);
     b.add("location", this.location);
@@ -108,10 +113,10 @@ public class TestFinish {
     if (getClass() != obj.getClass())
       return false;
     TestFinish other = (TestFinish) obj;
-    if (this.description == null) {
-      if (other.description != null)
+    if (this.displayName == null) {
+      if (other.displayName != null)
         return false;
-    } else if (!this.description.equals(other.description))
+    } else if (!this.displayName.equals(other.displayName))
       return false;
     if (this.message == null) {
       if (other.message != null)
@@ -146,7 +151,7 @@ public class TestFinish {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.description== null) ? 0 : this.description.hashCode());
+    result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
     result = prime * result + ((this.status== null) ? 0 : this.status.hashCode());
     result = prime * result + ((this.location== null) ? 0 : this.location.hashCode());

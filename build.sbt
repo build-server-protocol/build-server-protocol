@@ -105,6 +105,8 @@ lazy val testkit = project
     executableScriptName := "mockbsp",
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.0"
   )
   .dependsOn(bsp4s)
-.enablePlugins(JavaAppPackaging)
+  .dependsOn(bsp4j)
+  .enablePlugins(JavaAppPackaging)

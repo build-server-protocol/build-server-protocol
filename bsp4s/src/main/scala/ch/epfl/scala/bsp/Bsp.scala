@@ -410,12 +410,12 @@ object SourceItemKind {
 )
 
 @JsonCodec final case class TestStart(
-    description: String,
+    displayName: String,
     location: Option[Location]
 )
 
 @JsonCodec final case class TestFinish(
-    description: String,
+    displayName: String,
     message: Option[String],
     status: TestStatus,
     location: Option[Location],

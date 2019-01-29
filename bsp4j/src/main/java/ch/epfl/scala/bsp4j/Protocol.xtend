@@ -472,19 +472,20 @@ class TestTask {
 
 @JsonRpcData
 class TestStart {
-  @NonNull String description
+  @NonNull String displayName
   Location location
+
+  new(@NonNull String displayName) {
+    this.displayName = displayName
+  }
 }
 
 @JsonRpcData
 class TestFinish {
-  @NonNull String description
+  @NonNull String displayName
   String message
 
   @NonNull TestStatus status
-    new(@NonNull TestStatus status) {
-      this.status = status
-    }
 
   Location location
   String dataKind
