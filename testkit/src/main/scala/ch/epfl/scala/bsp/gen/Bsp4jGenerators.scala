@@ -106,7 +106,14 @@ object Bsp4jGenerators {
 
   lazy val genCompileParams: Gen[CompileParams] = for {
     targets <- genBuildTargetIdentifier.list
-  } yield new CompileParams(targets)
+    arguments <- arbitrary[String].list.nullable
+    originId <- arbitrary[String].nullable
+  } yield {
+    val params = new CompileParams(targets)
+    params.setArguments(arguments)
+    params.setOriginId(originId)
+    params
+  }
 
   lazy val genCompileProvider: Gen[CompileProvider] = for {
     languageIds <- genLanguageId.list
@@ -117,15 +124,24 @@ object Bsp4jGenerators {
     errors <- arbitrary[Int]
     warnings <- arbitrary[Int]
     time <- BoxedGen.long.nullable
+    originId <- arbitrary[String].nullable
   } yield {
     val report = new CompileReport(target, errors, warnings)
     report.setTime(time)
+    report.setOriginId(originId)
     report
   }
 
   lazy val genCompileResult: Gen[CompileResult] = for {
     statusCode <- genStatusCode
-  } yield new CompileResult(statusCode)
+    originId <- arbitrary[String]
+  } yield {
+    val result = new CompileResult(statusCode)
+    result.setOriginId(originId)
+    result.setDataKind(null)
+    result.setData(null)
+    result
+  }
 
   lazy val genCompileTask: Gen[CompileTask] = for {
     target <- genBuildTargetIdentifier
@@ -187,14 +203,24 @@ object Bsp4jGenerators {
     bspVersion <- arbitrary[String]
     rootUri <- genUri
     capabilities <- genBuildClientCapabilities
-  } yield new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
+  } yield {
+    val params = new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
+    params.setDataKind(null)
+    params.setData(null)
+    params
+  }
 
   lazy val genInitializeBuildResult: Gen[InitializeBuildResult] = for {
     displayName <- arbitrary[String]
     version <- arbitrary[String]
     bspVersion <- arbitrary[String]
     capabilities <- genBuildServerCapabilities
-  } yield new InitializeBuildResult(displayName, version, bspVersion, capabilities)
+  } yield {
+    val result = new InitializeBuildResult(displayName, version, bspVersion, capabilities)
+    result.setDataKind(null)
+    result.setData(null)
+    result
+  }
 
   lazy val genInverseSourcesParams: Gen[InverseSourcesParams] = for {
     textDocument <- genTextDocumentIdentifier
@@ -215,9 +241,11 @@ object Bsp4jGenerators {
     messageType <- genMessageType
     message <- arbitrary[String]
     task <- genTaskId.nullable
+    originId <- arbitrary[String].nullable
   } yield {
     val params = new LogMessageParams(messageType, message)
     params.setTask(task)
+    params.setOriginId(originId)
     params
   }
 
@@ -233,7 +261,12 @@ object Bsp4jGenerators {
     buildTarget <- genBuildTargetIdentifier
     diagnostics <- genDiagnostic.list
     reset <- arbitrary[Boolean]
-  } yield new PublishDiagnosticsParams(textDocument, buildTarget, diagnostics, reset)
+    originId <- arbitrary[String]
+  } yield {
+    val params = new PublishDiagnosticsParams(textDocument, buildTarget, diagnostics, reset)
+    params.setOriginId(originId)
+    params
+  }
 
   lazy val genRange: Gen[Range] = for {
     start <- genPosition
@@ -268,7 +301,12 @@ object Bsp4jGenerators {
 
   lazy val genRunResult: Gen[RunResult] = for {
     statusCode <- genStatusCode
-  } yield new RunResult(statusCode)
+    originId <- arbitrary[String].nullable
+  } yield {
+    val result = new RunResult(statusCode)
+    result.setOriginId(originId)
+    result
+  }
 
   lazy val genSbtBuildTarget: Gen[SbtBuildTarget] = for {
     sbtVersion <- arbitrary[String]
@@ -276,7 +314,12 @@ object Bsp4jGenerators {
     classpath <- arbitrary[String].list
     scalaBuildTarget <- genScalaBuildTarget
     children <- genBuildTargetIdentifier.list
-  } yield new SbtBuildTarget(sbtVersion, autoImports, classpath, scalaBuildTarget, children)
+    parent <- genBuildTargetIdentifier.nullable
+  } yield {
+    val target = new SbtBuildTarget(sbtVersion, autoImports, classpath, scalaBuildTarget, children)
+    target.setParent(parent)
+    target
+  }
 
   lazy val genScalaBuildTarget: Gen[ScalaBuildTarget] = for {
     scalaOrganization <- arbitrary[String]
@@ -314,7 +357,12 @@ object Bsp4jGenerators {
 
   lazy val genScalaMainClassesParams: Gen[ScalaMainClassesParams] = for {
     targets <- genBuildTargetIdentifier.list
-  } yield new ScalaMainClassesParams(targets)
+    originId <- arbitrary[String].nullable
+  } yield {
+    val params = new ScalaMainClassesParams(targets)
+    params.setOriginId(originId)
+    params
+  }
 
   lazy val genScalaMainClassesResult: Gen[ScalaMainClassesResult] = for {
     items <- genScalaMainClassesItem.list
@@ -329,7 +377,12 @@ object Bsp4jGenerators {
 
   lazy val genScalaTestClassesParams: Gen[ScalaTestClassesParams] = for {
     targets <- genBuildTargetIdentifier.list
-  } yield new ScalaTestClassesParams(targets)
+    originId <- arbitrary[String].nullable
+  } yield {
+    val params = new ScalaTestClassesParams(targets)
+    params.setOriginId(originId)
+    params
+  }
 
   lazy val genScalaTestClassesResult: Gen[ScalaTestClassesResult] = for {
     items <- genScalaTestClassesItem.list
@@ -347,15 +400,17 @@ object Bsp4jGenerators {
     messageType <- genMessageType
     message <- arbitrary[String]
     taskId <- genTaskId.nullable
+    originId <- arbitrary[String].nullable
   } yield {
     val params = new ShowMessageParams(messageType, message)
     params.setTask(taskId)
+    params.setOriginId(originId)
     params
   }
 
   lazy val genSourceItem: Gen[SourceItem] = for {
     uri <- genUri
-    isDirectory <- arbitrary[Boolean]
+    isDirectory <- BoxedGen.boolean.nullable
     generated <- arbitrary[Boolean]
   } yield new SourceItem(uri, isDirectory, generated)
 
@@ -438,7 +493,7 @@ object Bsp4jGenerators {
     params.setEventTime(eventTime)
     params.setMessage(message)
     params.setDataKind(dataKind)
-    params.setData(null) // TODO data according to dataKind
+    params.setData(null)
     params
   }
 
@@ -452,17 +507,21 @@ object Bsp4jGenerators {
     testFinish.setDisplayName(displayName)
     testFinish.setLocation(location)
     testFinish.setMessage(message)
-    testFinish.setData(null) // TODO data according to dataKind
+    testFinish.setDataKind(null)
+    testFinish.setData(null)
     testFinish
   }
 
   lazy val genTestParams: Gen[TestParams] = for {
     targets <- genBuildTargetIdentifier.list
     arguments <- arbitrary[String].list.nullable
+    originId <- arbitrary[String].nullable
   } yield {
     val params = new TestParams(targets)
     params.setArguments(arguments)
-    params.setData(null) // TODO data according to dataKind
+    params.setOriginId(originId)
+    params.setDataKind(null)
+    params.setData(null)
     params
   }
 
@@ -478,9 +537,11 @@ object Bsp4jGenerators {
     cancelled <- arbitrary[Int]
     skipped <- arbitrary[Int]
     time <- BoxedGen.long.nullable
+    originId <- arbitrary[String].nullable
   } yield {
     val report = new TestReport(target, passed, failed, ignored, cancelled, skipped)
     report.setTime(time)
+    report.setOriginId(originId)
     report
   }
 
@@ -490,7 +551,8 @@ object Bsp4jGenerators {
   } yield {
     val result = new TestResult(statusCode)
     result.setOriginId(originId)
-    result.setData(null) // TODO data according to dataKind
+    result.setDataKind(null)
+    result.setData(null)
     result
   }
 
