@@ -336,9 +336,9 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
       assertSerializationRoundtrip[bsp4j.TaskStartParams, bsp4s.TaskStartParams](a)
     }
   }
-  test("TestFinished") {
-    forAll { a: bsp4j.TestFinished =>
-      assertSerializationRoundtrip[bsp4j.TestFinished, bsp4s.TestFinish](a)
+  test("TestFinish") {
+    forAll { a: bsp4j.TestFinish =>
+      assertSerializationRoundtrip[bsp4j.TestFinish, bsp4s.TestFinish](a)
     }
   }
   test("TestParams") {
@@ -361,9 +361,9 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
       assertSerializationRoundtrip[bsp4j.TestResult, bsp4s.TestResult](a)
     }
   }
-  test("TestStarted") {
-    forAll { a: bsp4j.TestStarted =>
-      assertSerializationRoundtrip[bsp4j.TestStarted, bsp4s.TestStart](a)
+  test("TestStart") {
+    forAll { a: bsp4j.TestStart =>
+      assertSerializationRoundtrip[bsp4j.TestStart, bsp4s.TestStart](a)
     }
   }
   test("TestStatus") {

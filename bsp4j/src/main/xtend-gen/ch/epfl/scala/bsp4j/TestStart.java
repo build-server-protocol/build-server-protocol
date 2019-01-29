@@ -12,10 +12,10 @@ public class TestStart {
   
   private Location location;
   
-  public TestStarted(@NonNull final String displayName) {
+  public TestStart(@NonNull final String displayName) {
     this.displayName = displayName;
   }
-
+  
   @Pure
   @NonNull
   public String getDisplayName() {

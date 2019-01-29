@@ -442,18 +442,18 @@ object Bsp4jGenerators {
     params
   }
 
-  lazy val genTestFinished: Gen[TestFinished] = for {
+  lazy val genTestFinish: Gen[TestFinish] = for {
     displayName <- arbitrary[String]
     status <- genTestStatus
     location <- genLocation.nullable
     message <- arbitrary[String].nullable
   } yield {
-    val testFinished = new TestFinished(displayName, status)
-    testFinished.setDisplayName(displayName)
-    testFinished.setLocation(location)
-    testFinished.setMessage(message)
-    testFinished.setData(null) // TODO data according to dataKind
-    testFinished
+    val testFinish = new TestFinish(displayName, status)
+    testFinish.setDisplayName(displayName)
+    testFinish.setLocation(location)
+    testFinish.setMessage(message)
+    testFinish.setData(null) // TODO data according to dataKind
+    testFinish
   }
 
   lazy val genTestParams: Gen[TestParams] = for {
@@ -494,13 +494,13 @@ object Bsp4jGenerators {
     result
   }
 
-  lazy val genTestStarted: Gen[TestStarted] = for {
+  lazy val genTestStart: Gen[TestStart] = for {
     displayName <- arbitrary[String]
     location <- genLocation.nullable
   } yield {
-    val testStarted = new TestStarted(displayName)
-    testStarted.setLocation(location)
-    testStarted
+    val testStart = new TestStart(displayName)
+    testStart.setLocation(location)
+    testStart
   }
 
   lazy val genTestStatus: Gen[TestStatus] = Gen.oneOf(TestStatus.values)

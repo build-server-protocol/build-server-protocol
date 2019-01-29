@@ -18,22 +18,18 @@ public class TestFinish {
   @NonNull
   private TestStatus status;
   
-  public TestFinish(@NonNull final TestStatus status) {
-    this.status = status;
-  }
-  
   private Location location;
   
   private String dataKind;
-
+  
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
-  public TestFinished(@NonNull final String displayName, @NonNull final TestStatus status) {
+  public TestFinish(@NonNull final String displayName, @NonNull final TestStatus status) {
     this.displayName = displayName;
     this.status = status;
   }
-
+  
   @Pure
   @NonNull
   public String getDisplayName() {
@@ -76,11 +72,11 @@ public class TestFinish {
   public String getDataKind() {
     return this.dataKind;
   }
-
+  
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-
+  
   @Pure
   public Object getData() {
     return this.data;
