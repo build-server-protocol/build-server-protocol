@@ -27,6 +27,10 @@ public class TaskProgressParams {
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
+  public TaskProgressParams(@NonNull final TaskId taskId) {
+    this.taskId = taskId;
+  }
+  
   @Pure
   @NonNull
   public TaskId getTaskId() {

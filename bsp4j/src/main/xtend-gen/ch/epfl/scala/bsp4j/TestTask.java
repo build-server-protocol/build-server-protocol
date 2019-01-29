@@ -10,6 +10,10 @@ public class TestTask {
   @NonNull
   private BuildTargetIdentifier target;
   
+  public TestTask(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
+  }
+  
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
