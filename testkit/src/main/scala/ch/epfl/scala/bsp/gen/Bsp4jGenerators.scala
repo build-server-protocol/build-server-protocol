@@ -283,13 +283,13 @@ object Bsp4jGenerators {
     scalaVersion <- arbitrary[String]
     scalaBinaryVersion <- arbitrary[String]
     platform <- genScalaPlatform
-    jars <- arbitrary[String].list
+    jars <- genUri.list
   } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
 
   lazy val genScalacOptionsItem: Gen[ScalacOptionsItem] = for {
     target <- genBuildTargetIdentifier
     options <- arbitrary[String].list
-    classpath <- arbitrary[String].list
+    classpath <- genUri.list
     classDirectory <- genUri
   } yield new ScalacOptionsItem(target, options, classpath, classDirectory)
 
