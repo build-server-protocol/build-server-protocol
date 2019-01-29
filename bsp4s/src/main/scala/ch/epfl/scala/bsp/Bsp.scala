@@ -401,7 +401,6 @@ object SourceItemKind {
     ignored: Int,
     cancelled: Int,
     skipped: Int,
-    pending: Int,
     time: Option[Long]
 )
 
