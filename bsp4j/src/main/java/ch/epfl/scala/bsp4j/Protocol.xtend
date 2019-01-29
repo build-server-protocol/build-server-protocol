@@ -263,11 +263,12 @@ class DidChangeBuildTarget {
 
 @JsonRpcData
 class BuildTargetEvent {
-  @NonNull String uri
+  @NonNull BuildTargetIdentifier target
   BuildTargetEventKind kind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
-  new(@NonNull String uri) {
-    this.uri = uri
+
+  new(@NonNull BuildTargetIdentifier target) {
+    this.target = target
   }
 }
 

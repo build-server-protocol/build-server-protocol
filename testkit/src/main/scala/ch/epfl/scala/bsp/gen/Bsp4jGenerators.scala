@@ -71,10 +71,10 @@ object Bsp4jGenerators {
   } yield new BuildTargetCapabilities(canCompile, canTest, canRun)
 
   lazy val genBuildTargetEvent: Gen[BuildTargetEvent] = for {
-    uri <- genUri
+    target <- genBuildTargetIdentifier
     kind <- genBuildTargetEventKind.nullable
   } yield {
-    val event = new BuildTargetEvent(uri)
+    val event = new BuildTargetEvent(target)
     event.setKind(kind)
     event.setData(null) // TODO build target event data?
     event

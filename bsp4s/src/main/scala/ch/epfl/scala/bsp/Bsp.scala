@@ -265,7 +265,7 @@ case object BuildTargetEventKind {
 }
 
 @JsonCodec final case class BuildTargetEvent(
-    id: BuildTargetIdentifier,
+    target: BuildTargetIdentifier,
     kind: Option[BuildTargetEventKind],
     data: Option[Json]
 )
