@@ -35,7 +35,7 @@ abstract class AbstractMockServer {
   def initialized(params: InitializedBuildParams): Unit
   def shutdown(shutdown: bsp.Shutdown): Unit
   def exit(exit: Exit): Task[Unit]
-  def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets]
+  def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargetsResult]
   def sources(params: SourcesParams): BspResponse[SourcesResult]
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]

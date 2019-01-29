@@ -236,7 +236,7 @@ object DiagnosticSeverity {
 @JsonCodec final case class WorkspaceBuildTargetsRequest()
 
 // Request: 'workspace/buildTargets'
-@JsonCodec final case class WorkspaceBuildTargets(
+@JsonCodec final case class WorkspaceBuildTargetsResult(
     targets: List[BuildTarget]
 )
 

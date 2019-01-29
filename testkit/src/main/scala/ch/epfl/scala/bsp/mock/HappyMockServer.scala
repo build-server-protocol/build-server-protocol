@@ -48,7 +48,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
       )
   }
 
-  override def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets] = {
+  override def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargetsResult] = {
 
     val target1Capabilities = BuildTargetCapabilities(canCompile = true, canTest = false, canRun = false)
     val target2Capabilities = BuildTargetCapabilities(canCompile = true, canTest = true, canRun = false)
@@ -69,7 +69,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
         languageIds, List(target1), Some(BuildTargetDataKind.Scala), scalaData)
     )
 
-    val result = WorkspaceBuildTargets(targets)
+    val result = WorkspaceBuildTargetsResult(targets)
 
     Task(Right(result))
   }
