@@ -23,7 +23,7 @@ cancelable.in(Global) := true
 
 lazy val bsp = project
   .in(file("."))
-  .aggregate(bsp4s, bsp4j, tests)
+  .aggregate(bsp4s, bsp4j, tests, `bsp-testkit`)
   .settings(
     skip in publish := true,
   )
@@ -95,12 +95,11 @@ lazy val tests = project
       "org.scalatest" %% "scalatest" % "3.0.5"
     )
   )
-  .dependsOn(bsp4s, bsp4j, testkit)
+  .dependsOn(bsp4s, bsp4j, `bsp-testkit`)
 
-lazy val testkit = project
+lazy val `bsp-testkit` = project
   .in(file("testkit"))
   .settings(
-    skip.in(publish) := true,
     mainClass in Compile := Some("ch.epfl.scala.bsp.mock.MockServer"),
     executableScriptName := "mockbsp",
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
