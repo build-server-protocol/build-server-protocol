@@ -4,6 +4,7 @@ import java.{lang, util}
 
 import ch.epfl.scala.bsp.gen.UtilGenerators._
 import ch.epfl.scala.bsp4j._
+import com.google.gson.{Gson, JsonElement}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck._
 
@@ -53,8 +54,24 @@ object Bsp4jGenerators {
     val buildTarget = new BuildTarget(id, tags, languageIds, dependencies, capabilities)
     buildTarget.setDisplayName(displayName)
     buildTarget.setBaseDirectory(baseDirectory)
+    buildTarget.setDataKind(null) // TODO specific build target kind
+    buildTarget.setData(null) // TODO build target data according to dataKind
     buildTarget
   }
+
+  def genBuildTarget(dataKind: String, data: JsonElement): Gen[BuildTarget] = for {
+    target <- genBuildTarget
+  } yield {
+    target.setDataKind(dataKind)
+    target.setData(data)
+    target
+  }
+
+  def genBuildTargetWithScala(implicit gson: Gson): Gen[BuildTarget] = for {
+    scalaBuildTarget <- genScalaBuildTarget
+    scalaJson = gson.toJsonTree(scalaBuildTarget)
+    target <- genBuildTarget("scala", scalaJson)
+  } yield target
 
   lazy val genBuildTargetCapabilities: Gen[BuildTargetCapabilities] = for {
     canCompile <- arbitrary[Boolean]

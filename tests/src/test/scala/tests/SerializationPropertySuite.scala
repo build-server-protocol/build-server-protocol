@@ -1,5 +1,6 @@
 package tests
 import ch.epfl.scala.bsp.gen.Bsp4jArbitrary._
+import ch.epfl.scala.bsp.gen.Bsp4jGenerators
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder}
 import io.circe.parser.decode
@@ -10,7 +11,7 @@ import org.scalatest.{Assertion, Assertions, FunSuite}
 
 class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyChecks {
 
-  val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
+  implicit val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
 
   def assertSerializationRoundtrip[T4j,T4s](bsp4jValue: T4j)(implicit encoder: Encoder[T4s], decoder: Decoder[T4s]): Assertion = {
     val bsp4jJson = gson.toJson(bsp4jValue)
@@ -43,6 +44,11 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
   }
   test("BuildTarget") {
     forAll { a: bsp4j.BuildTarget =>
+      assertSerializationRoundtrip[bsp4j.BuildTarget, bsp4s.BuildTarget](a)
+    }
+  }
+  test("BuildTarget with Scala") {
+    forAll(Bsp4jGenerators.genBuildTargetWithScala) { a: bsp4j.BuildTarget =>
       assertSerializationRoundtrip[bsp4j.BuildTarget, bsp4s.BuildTarget](a)
     }
   }
