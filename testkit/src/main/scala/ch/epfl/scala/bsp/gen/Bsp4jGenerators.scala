@@ -2,22 +2,14 @@ package ch.epfl.scala.bsp.gen
 
 import java.{lang, util}
 
+import ch.epfl.scala.bsp.gen.UtilGenerators._
 import ch.epfl.scala.bsp4j._
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck._
-import Arbitrary.arbitrary
 
 import scala.collection.JavaConverters._
 
 object Bsp4jGenerators {
-
-  /** Generate an uri string. */
-  lazy val genUri: Gen[String] = for {
-    schema <- Gen.listOfN(5, Gen.alphaChar).map(_.mkString)
-    host <- Gen.identifier
-    port <- Gen.choose(80, 1024)
-    segmentCount <- Gen.choose(0, 10)
-    segments <- Gen.listOfN(segmentCount, Gen.identifier)
-  } yield s"$schema://$host:$port/${segments.mkString("/")}"
 
   lazy val genBspConnectionDetails: Gen[BspConnectionDetails] = for {
     name <- arbitrary[String]
@@ -56,7 +48,7 @@ object Bsp4jGenerators {
     dependencies <- genBuildTargetIdentifier.list
     capabilities <- genBuildTargetCapabilities
     displayName <- arbitrary[String].nullable
-    baseDirectory <- genUri.nullable
+    baseDirectory <- genFileUriString.nullable
   } yield {
     val buildTarget = new BuildTarget(id, tags, languageIds, dependencies, capabilities)
     buildTarget.setDisplayName(displayName)
@@ -149,7 +141,7 @@ object Bsp4jGenerators {
 
   lazy val genDependencySourcesItem: Gen[DependencySourcesItem] = for {
     target <- genBuildTargetIdentifier
-    sources <- genUri.list
+    sources <- genFileUriString.list
   } yield new DependencySourcesItem(target, sources)
 
   lazy val genDependencySourcesParams: Gen[DependencySourcesParams] = for {
@@ -187,21 +179,11 @@ object Bsp4jGenerators {
     events <- genBuildTargetEvent.list
   } yield new DidChangeBuildTarget(events)
 
-  lazy val genFQN: Gen[String] = for {
-    packages <- Gen.nonEmptyListOf(Gen.identifier)
-    className <- genClassName
-  } yield s"${packages.mkString(".")}.$className"
-
-  lazy val genClassName: Gen[String] = for {
-    initial <- Gen.alphaChar
-    rest <- Gen.identifier
-  } yield s"$initial$rest"
-
   lazy val genInitializeBuildParams: Gen[InitializeBuildParams] = for {
     displayName <- arbitrary[String]
     version <- arbitrary[String]
     bspVersion <- arbitrary[String]
-    rootUri <- genUri
+    rootUri <- genFileUriString
     capabilities <- genBuildClientCapabilities
   } yield {
     val params = new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
@@ -230,10 +212,11 @@ object Bsp4jGenerators {
     targets <- genBuildTargetIdentifier.list
   } yield new InverseSourcesResult(targets)
 
+  /** A language id supported by bsp protocol. */
   lazy val genLanguageId: Gen[String] = Gen.oneOf("scala", "java")
 
   lazy val genLocation: Gen[Location] = for {
-    uri <- genUri
+    uri <- genFileUriString
     range <- genRange
   } yield new Location(uri, range)
 
@@ -275,7 +258,7 @@ object Bsp4jGenerators {
 
   lazy val genResourcesItem: Gen[ResourcesItem] = for {
     target <- genBuildTargetIdentifier
-    resources <- genUri.list
+    resources <- genFileUriString.list
   } yield new ResourcesItem(target, resources)
 
   lazy val genResourcesParams: Gen[ResourcesParams] = for {
@@ -326,14 +309,14 @@ object Bsp4jGenerators {
     scalaVersion <- arbitrary[String]
     scalaBinaryVersion <- arbitrary[String]
     platform <- genScalaPlatform
-    jars <- genUri.list
+    jars <- genFileUriString.list
   } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
 
   lazy val genScalacOptionsItem: Gen[ScalacOptionsItem] = for {
     target <- genBuildTargetIdentifier
     options <- arbitrary[String].list
-    classpath <- genUri.list
-    classDirectory <- genUri
+    classpath <- genFileUriString.list
+    classDirectory <- genFileUriString
   } yield new ScalacOptionsItem(target, options, classpath, classDirectory)
 
   lazy val genScalacOptionsParams: Gen[ScalacOptionsParams] = for {
@@ -409,7 +392,7 @@ object Bsp4jGenerators {
   }
 
   lazy val genSourceItem: Gen[SourceItem] = for {
-    uri <- genUri
+    uri <- genFileUriString
     isDirectory <- BoxedGen.boolean.nullable
     generated <- arbitrary[Boolean]
   } yield new SourceItem(uri, isDirectory, generated)
@@ -572,7 +555,7 @@ object Bsp4jGenerators {
   } yield new TestTask(target)
 
   lazy val genTextDocumentIdentifier: Gen[TextDocumentIdentifier] = for {
-    uri <- genUri
+    uri <- genFileUriString
   } yield new TextDocumentIdentifier(uri)
 
   lazy val genWorkspaceBuildTargetsResult: Gen[WorkspaceBuildTargetsResult] = for {
