@@ -70,7 +70,6 @@ class InitializeBuildParams {
   @NonNull String version
   @NonNull String bspVersion
   @NonNull BuildClientCapabilities capabilities
-  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull String rootUri, @NonNull BuildClientCapabilities capabilities) {
@@ -133,7 +132,6 @@ class InitializeBuildResult {
   @NonNull String version
   @NonNull String bspVersion
   @NonNull BuildServerCapabilities capabilities
-  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildServerCapabilities capabilities) {

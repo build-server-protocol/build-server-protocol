@@ -87,7 +87,6 @@ object BuildTargetDataKind {
     bspVersion: String,
     rootUri: Uri,
     capabilities: BuildClientCapabilities,
-    dataKind: Option[String],
     data: Option[Json]
 )
 
@@ -122,7 +121,6 @@ object BuildTargetDataKind {
     version: String,
     bspVersion: String,
     capabilities: BuildServerCapabilities,
-    dataKind: Option[String],
     data: Option[Json]
 )
 

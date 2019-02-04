@@ -26,7 +26,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
 
   override def initialize(params: InitializeBuildParams): BspResponse[InitializeBuildResult] =
     Task {
-      val result = bsp.InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities, None, None)
+      val result = bsp.InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities, None)
       Right(result)
     }
 

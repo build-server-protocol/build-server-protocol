@@ -359,9 +359,6 @@ trait InitializeBuildParams {
 
   /** The capabilities of the client */
   def capabilities: BuildClientCapabilities
-  
-  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
 
   /** Additional metadata about the client */
   def data: Option[Json]
@@ -394,9 +391,6 @@ trait InitializeBuildResult {
 
   /** The capabilities of the build server */
   def capabilities: BuildServerCapabilities
-  
-  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
 
   /** Additional metadata about the server */
   def data: Option[Json]
