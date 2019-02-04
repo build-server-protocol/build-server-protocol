@@ -104,7 +104,8 @@ class TypoSuite extends FunSuite {
         val item =
           new SourcesItem(
             buildTargetUri,
-            Collections.singletonList(new SourceItem(textDocumentIdentifier.getUri, false,true)))
+            Collections.singletonList(new SourceItem(textDocumentIdentifier.getUri, SourceItemKind.FILE, true))
+          )
         new SourcesResult(Collections.singletonList(item))
       }
     }

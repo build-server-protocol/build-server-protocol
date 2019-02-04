@@ -300,12 +300,12 @@ class SourcesItem {
 @JsonRpcData
 class SourceItem {
   @NonNull String uri
+  @NonNull SourceItemKind kind
   @NonNull Boolean generated
-  Boolean isDirectory
 
-  new(@NonNull String uri, Boolean isDirectory, @NonNull Boolean generated) {
+  new(@NonNull String uri, @NonNull SourceItemKind kind, @NonNull Boolean generated) {
     this.uri = uri
-    this.isDirectory = isDirectory
+    this.kind = kind
     this.generated = generated
   }
 }

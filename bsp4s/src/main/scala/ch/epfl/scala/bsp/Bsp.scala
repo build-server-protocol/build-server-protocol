@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp
 
 import java.net.{URI, URISyntaxException}
 
+import ch.epfl.scala.bsp.BuildTargetEventKind.{Changed, Created, Deleted}
 import io.circe.Decoder.Result
 import io.circe.derivation.JsonCodec
 import io.circe._
@@ -288,9 +289,31 @@ case object BuildTargetEventKind {
 )
 @JsonCodec final case class SourceItem(
     uri: Uri,
-    isDirectory: Option[Boolean],
+    kind: SourceItemKind,
     generated: Boolean
 )
+
+sealed abstract class SourceItemKind(val id: Int)
+object SourceItemKind {
+  object File extends SourceItemKind(1)
+  object Directory extends SourceItemKind(2)
+
+  implicit val sourceItemKindEncoder: RootEncoder[SourceItemKind] =
+    new RootEncoder[SourceItemKind] {
+      override def apply(a: SourceItemKind): Json = Json.fromInt(a.id)
+    }
+
+  implicit val sourceItemKindDecoder: Decoder[SourceItemKind] =
+    new Decoder[SourceItemKind] {
+      override def apply(c: HCursor): Result[SourceItemKind] = {
+        c.as[Int].flatMap {
+          case 1 => Right(File)
+          case 2 => Right(Directory)
+          case n => Left(DecodingFailure(s"Unknown build target event kind id for $n", c.history))
+        }
+      }
+    }
+}
 
 // Request: 'buildTarget/inverseSources', C -> S
 @JsonCodec final case class InverseSourcesParams(
