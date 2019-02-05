@@ -189,10 +189,23 @@ trait BuildTarget {
 
   /** The direct upstream build target dependencies of this build target */
   def dependencies: List[BuildTargetIdentifer]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Language-specific metadata about this target.
     * See ScalaBuildTarget as an example. */
   def data: Option[Json] // Note, matches `any` in the LSP.
+}
+
+object BuildTargetDataKind {
+
+  /** The `data` field contains a `ScalaBuildTarget` object. */
+  val Scala = "scala"
+  
+  /** The `data` field contains a `SbtBuildTarget` object. */
+  val Sbt = "sbt"
+    
 }
 
 object BuildTargetTag {
@@ -1007,6 +1020,9 @@ trait CompileResult {
   
   /** A status code for the execution. */
   def statusCode: Int
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: String
 
   /** A field containing language-specific information, like products
     * of compilation or compiler-specific metadata the client needs to know. */
@@ -1072,6 +1088,9 @@ trait TestParams {
   
   /** Optional arguments to the test execution engine. */
   def arguments: Option[List[String]]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Language-specific metadata about for this test execution.
     * See ScalaTestParams as an example. */
@@ -1091,6 +1110,9 @@ trait TestResult {
   
   /** A status code for the execution. */
   def statusCode: Int
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   def data: Option[Json] // Note, matches `any | null` in the LSP.
 }
@@ -1178,6 +1200,9 @@ trait TestFinish {
   
   /** Source location of the test, as LSP location. */
   def location: Option[Location]
+  
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  def dataKind: Option[String]
 
   /** Optionally, structured metadata about the test completion.
     * For example: stack traces, expected/actual values. */
@@ -1295,7 +1320,7 @@ The following section contains Scala-specific extensions to the build server pro
 #### Scala Build Target
 
 `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling a target containing Scala sources.
-This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition.
+This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when the `dataKind` field contains "scala".
 
 ```scala
 trait ScalaBuildTarget {
@@ -1326,7 +1351,8 @@ object ScalaPlatform {
 #### Scala Test Params
 
 `ScalaTestParams` contains scala-specific metadata for testing Scala targets.
-This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request.
+This metadata is embedded in the `data: Option[Json]` field of the `buildTarget/test` request when the `dataKind` field
+contains "scala-test".
 
 ```scala
 trait ScalaTestParams {
@@ -1501,7 +1527,7 @@ allows BSP clients to provide language support for sbt build files.
 
 `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing editor
 support for sbt build files. This metadata is embedded in the `data: Option[Json]` field of the
-`BuildTarget` definition.
+`BuildTarget` definition when the `dataKind` field contains "sbt".
 
 ```scala
 trait SbtBuildTarget {
@@ -1510,9 +1536,6 @@ trait SbtBuildTarget {
   
   /** A sequence of Scala imports that are automatically imported in the sbt build files. */
   def autoImports: List[String]
-  
-  /** The classpath for the sbt build (including sbt jars). */
-  def classpath: List[Uri]
   
   /** The Scala build target describing the scala
    * version and scala jars used by this sbt version. */

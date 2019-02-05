@@ -16,7 +16,6 @@ class SbtBuildTarget {
       @NonNull ScalaBuildTarget scalaBuildTarget, @NonNull List<BuildTargetIdentifier> children) {
     this.sbtVersion = sbtVersion
     this.autoImports = autoImports
-    this.classpath = classpath
     this.scalaBuildTarget = scalaBuildTarget
     this.children = children
   }

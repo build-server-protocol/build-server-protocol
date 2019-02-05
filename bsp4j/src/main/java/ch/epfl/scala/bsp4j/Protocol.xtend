@@ -50,10 +50,11 @@ class BuildTarget {
   @NonNull List<String> languageIds
   @NonNull List<BuildTargetIdentifier> dependencies
   @NonNull BuildTargetCapabilities capabilities
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new (@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds,
-       @NonNull List<BuildTargetIdentifier> dependencies,  @NonNull BuildTargetCapabilities capabilities) {
+       @NonNull List<BuildTargetIdentifier> dependencies, @NonNull BuildTargetCapabilities capabilities) {
     this.id = id
     this.tags = tags
     this.dependencies = dependencies
@@ -387,6 +388,7 @@ class CompileParams {
 @JsonRpcData
 class CompileResult {
   String originId
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   @NonNull StatusCode statusCode
@@ -419,6 +421,7 @@ class TestParams {
   @NonNull List<BuildTargetIdentifier> targets
   String originId
   List<String> arguments
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new(@NonNull List<BuildTargetIdentifier> targets) {
@@ -429,6 +432,7 @@ class TestParams {
 @JsonRpcData
 class TestResult {
   String originId
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   @NonNull StatusCode statusCode
@@ -464,13 +468,13 @@ class TestTask {
 }
 
 @JsonRpcData
-class TestStarted {
+class TestStart {
   @NonNull String description
   Location location
 }
 
 @JsonRpcData
-class TestFinished {
+class TestFinish {
   @NonNull String description
   String message
 
@@ -480,6 +484,7 @@ class TestFinished {
     }
 
   Location location
+  String dataKind
   @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 }
 

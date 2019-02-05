@@ -61,9 +61,12 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
     val scalaData = Some(scalaBuildTarget.asJson)
 
     val targets = List(
-      BuildTarget(target1, Some("target 1"), Some(target1.uri), List(BuildTargetTag.Library), target1Capabilities, languageIds, List.empty, scalaData),
-      BuildTarget(target2, Some("target 2"), Some(target2.uri), List(BuildTargetTag.Test), target2Capabilities, languageIds, List(target1), scalaData),
-      BuildTarget(target3, Some("target 3"), Some(target3.uri), List(BuildTargetTag.Application), target3Capabilities, languageIds, List(target1), scalaData)
+      BuildTarget(target1, Some("target 1"), Some(target1.uri), List(BuildTargetTag.Library), target1Capabilities,
+        languageIds, List.empty, Some(BuildTargetDataKind.Scala), scalaData),
+      BuildTarget(target2, Some("target 2"), Some(target2.uri), List(BuildTargetTag.Test), target2Capabilities,
+        languageIds, List(target1), Some(BuildTargetDataKind.Scala), scalaData),
+      BuildTarget(target3, Some("target 3"), Some(target3.uri), List(BuildTargetTag.Application), target3Capabilities,
+        languageIds, List(target1), Some(BuildTargetDataKind.Scala), scalaData)
     )
 
     val result = WorkspaceBuildTargets(targets)
@@ -159,13 +162,13 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
       compileReport(compileId, "compile complete", target, StatusCode.Ok)
     }
 
-    val result = CompileResult(params.originId, StatusCode.Ok, None)
+    val result = CompileResult(params.originId, StatusCode.Ok, None, None)
     Task(Right(result))
   }
   override def test(params: TestParams): BspResponse[TestResult] = {
     // TODO some test task/report notifications
     // TODO some individual test notifications
-    val result = TestResult(params.originId, StatusCode.Ok, None)
+    val result = TestResult(params.originId, StatusCode.Ok, None, None)
     Task(Right(result))
   }
   override def run(params: RunParams): BspResponse[RunResult] = {

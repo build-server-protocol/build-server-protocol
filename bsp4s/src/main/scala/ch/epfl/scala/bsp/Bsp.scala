@@ -64,8 +64,15 @@ object BuildTargetTag {
     capabilities: BuildTargetCapabilities,
     languageIds: List[String],
     dependencies: List[BuildTargetIdentifier],
+    dataKind: Option[String],
     data: Option[Json]
 )
+
+object BuildTargetDataKind {
+  val Scala = "scala"
+  val Sbt = "sbt"
+}
+
 @JsonCodec final case class BuildClientCapabilities(
     languageIds: List[String]
 )
@@ -331,6 +338,7 @@ case object BuildTargetEventKind {
 @JsonCodec final case class CompileResult(
     originId: Option[String],
     statusCode: StatusCode,
+    dataKind: Option[String],
     data: Option[Json],
 )
 
@@ -350,12 +358,14 @@ case object BuildTargetEventKind {
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    dataKind: Option[String],
     data: Option[Json],
 )
 
 @JsonCodec final case class TestResult(
     originId: Option[String],
     statusCode: StatusCode,
+    dataKind: Option[String],
     data: Option[Json],
 )
 
@@ -385,6 +395,7 @@ case object BuildTargetEventKind {
     message: Option[String],
     status: TestStatus,
     location: Option[Location],
+    dataKind: Option[String],
     data: Option[Json]
 )
 
@@ -584,7 +595,6 @@ object ScalaPlatform {
 @JsonCodec final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],
-    classpath: List[Uri],
     scalaBuildTarget: ScalaBuildTarget,
     parent: Option[BuildTargetIdentifier],
     children: List[BuildTargetIdentifier],

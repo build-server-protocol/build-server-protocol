@@ -30,6 +30,8 @@ public class BuildTarget {
   @NonNull
   private BuildTargetCapabilities capabilities;
   
+  private String dataKind;
+  
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
@@ -110,6 +112,15 @@ public class BuildTarget {
   }
   
   @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+  
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+  
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -129,6 +140,7 @@ public class BuildTarget {
     b.add("languageIds", this.languageIds);
     b.add("dependencies", this.dependencies);
     b.add("capabilities", this.capabilities);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
   }
@@ -178,6 +190,11 @@ public class BuildTarget {
         return false;
     } else if (!this.capabilities.equals(other.capabilities))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -198,6 +215,7 @@ public class BuildTarget {
     result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
     result = prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
     result = prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }
