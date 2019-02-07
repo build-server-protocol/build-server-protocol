@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.SourceItemKind;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -10,10 +11,14 @@ public class SourceItem {
   private String uri;
   
   @NonNull
+  private SourceItemKind kind;
+  
+  @NonNull
   private Boolean generated;
   
-  public SourceItem(@NonNull final String uri, @NonNull final Boolean generated) {
+  public SourceItem(@NonNull final String uri, @NonNull final SourceItemKind kind, @NonNull final Boolean generated) {
     this.uri = uri;
+    this.kind = kind;
     this.generated = generated;
   }
   
@@ -25,6 +30,16 @@ public class SourceItem {
   
   public void setUri(@NonNull final String uri) {
     this.uri = uri;
+  }
+  
+  @Pure
+  @NonNull
+  public SourceItemKind getKind() {
+    return this.kind;
+  }
+  
+  public void setKind(@NonNull final SourceItemKind kind) {
+    this.kind = kind;
   }
   
   @Pure
@@ -42,6 +57,7 @@ public class SourceItem {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
+    b.add("kind", this.kind);
     b.add("generated", this.generated);
     return b.toString();
   }
@@ -61,6 +77,11 @@ public class SourceItem {
         return false;
     } else if (!this.uri.equals(other.uri))
       return false;
+    if (this.kind == null) {
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.generated == null) {
       if (other.generated != null)
         return false;
@@ -75,6 +96,7 @@ public class SourceItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     return prime * result + ((this.generated== null) ? 0 : this.generated.hashCode());
   }
 }

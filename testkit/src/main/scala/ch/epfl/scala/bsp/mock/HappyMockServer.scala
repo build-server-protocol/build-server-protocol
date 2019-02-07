@@ -76,21 +76,21 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
 
   def sources(params: SourcesParams): BspResponse[SourcesResult] = {
     val sourceDir1 = target1.uri.toPath.resolve("src/")
-    val item1 = SourceItem(asDirUri(sourceDir1), generated = false)
+    val item1 = SourceItem(asDirUri(sourceDir1), SourceItemKind.Directory, true)
     val items1 = SourcesItem(target1, List(item1))
 
     val sourceDir2 = target2.uri.toPath.resolve("src-gen/")
-    val item2 = SourceItem(asDirUri(sourceDir2), generated = true)
+    val item2 = SourceItem(asDirUri(sourceDir2), SourceItemKind.Directory, true)
     val items2 = SourcesItem(target2, List(item2))
 
     val sourceDir3 = target3.uri.toPath.resolve("sauce/")
     val sourceFile1 = target3.uri.toPath.resolve("somewhere/sourcefile1")
     val sourceFile2 = target3.uri.toPath.resolve("somewhere/below/sourcefile2")
     val sourceFile3 = target3.uri.toPath.resolve("somewhere/sourcefile3")
-    val item3Dir = SourceItem(asDirUri(sourceDir3), generated = false)
-    val item31 = SourceItem(Uri(sourceFile1.toUri), generated = false)
-    val item32 = SourceItem(Uri(sourceFile2.toUri), generated = false)
-    val item33 = SourceItem(Uri(sourceFile3.toUri), generated = true)
+    val item3Dir = SourceItem(asDirUri(sourceDir3), SourceItemKind.Directory, false)
+    val item31 = SourceItem(Uri(sourceFile1.toUri), SourceItemKind.File, false)
+    val item32 = SourceItem(Uri(sourceFile2.toUri), SourceItemKind.File, false)
+    val item33 = SourceItem(Uri(sourceFile3.toUri), SourceItemKind.File, true)
     val items3 = SourcesItem(target3, List(item3Dir, item31, item32, item33))
 
     val result = SourcesResult(List(items1, items2, items3))
