@@ -1,9 +1,11 @@
 package ch.epfl.scala.bsp.gen
 
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Shrink}
 import Bsp4jGenerators._
 import ch.epfl.scala.bsp4j
 import ch.epfl.scala.bsp4j._
+import org.scalacheck.Shrink.shrink
+import scala.collection.JavaConverters._
 
 object Bsp4jArbitrary {
 
@@ -79,4 +81,8 @@ object Bsp4jArbitrary {
   implicit val arbTestTask: Arbitrary[TestTask] = Arbitrary(genTestTask)
   implicit val arbTextDocumentIdentifier: Arbitrary[TextDocumentIdentifier] = Arbitrary(genTextDocumentIdentifier)
   implicit val arbWorkspaceBuildTargetsResult: Arbitrary[WorkspaceBuildTargetsResult] = Arbitrary(genWorkspaceBuildTargetsResult)
+
+  implicit def shrinkJavaList[T](implicit s: Shrink[List[T]]): Shrink[java.util.List[T]] =
+    Shrink { list => shrink(list.asScala).map(_.asJava) }
+
 }
