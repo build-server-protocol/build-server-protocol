@@ -204,7 +204,6 @@ object Bsp4jGenerators {
     capabilities <- genBuildClientCapabilities
   } yield {
     val params = new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
-    params.setDataKind(null)
     params.setData(null)
     params
   }
@@ -216,7 +215,6 @@ object Bsp4jGenerators {
     capabilities <- genBuildServerCapabilities
   } yield {
     val result = new InitializeBuildResult(displayName, version, bspVersion, capabilities)
-    result.setDataKind(null)
     result.setData(null)
     result
   }
@@ -410,9 +408,12 @@ object Bsp4jGenerators {
 
   lazy val genSourceItem: Gen[SourceItem] = for {
     uri <- genFileUriString
-    isDirectory <- BoxedGen.boolean.nullable
+    kind <- genSourceItemKind
     generated <- arbitrary[Boolean]
-  } yield new SourceItem(uri, isDirectory, generated)
+  } yield new SourceItem(uri, kind, generated)
+
+  lazy val genSourceItemKind: Gen[SourceItemKind] =
+    Gen.oneOf(SourceItemKind.values)
 
   lazy val genSourcesItem: Gen[SourcesItem] = for {
     target <- genBuildTargetIdentifier

@@ -63,6 +63,7 @@ object Bsp4jArbitrary {
   implicit val arbScalaTestParams: Arbitrary[ScalaTestParams] = Arbitrary(genScalaTestParams)
   implicit val arbShowMessageParams: Arbitrary[ShowMessageParams] = Arbitrary(genShowMessageParams)
   implicit val arbSourceItem: Arbitrary[SourceItem] = Arbitrary(genSourceItem)
+  implicit val arbSourceItemKind: Arbitrary[SourceItemKind] = Arbitrary(genSourceItemKind)
   implicit val arbSourcesItem: Arbitrary[SourcesItem] = Arbitrary(genSourcesItem)
   implicit val arbSourcesParams: Arbitrary[SourcesParams] = Arbitrary(genSourcesParams)
   implicit val arbSourcesResult: Arbitrary[SourcesResult] = Arbitrary(genSourcesResult)
