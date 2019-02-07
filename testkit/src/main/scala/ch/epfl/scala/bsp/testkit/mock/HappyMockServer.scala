@@ -1,4 +1,5 @@
-package ch.epfl.scala.bsp.mock
+package ch.epfl.scala.bsp.testkit.mock
+
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
@@ -7,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 import ch.epfl.scala.bsp
 import ch.epfl.scala.bsp._
-import ch.epfl.scala.bsp.mock.mockServers._
+import mockServers._
 import io.circe.syntax._
 import monix.eval.Task
 import scribe.Logger

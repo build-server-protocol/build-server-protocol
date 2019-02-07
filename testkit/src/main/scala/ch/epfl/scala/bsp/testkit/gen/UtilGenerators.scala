@@ -1,4 +1,5 @@
-package ch.epfl.scala.bsp.gen
+package ch.epfl.scala.bsp.testkit.gen
+
 import java.net.URI
 import java.nio.file.{Path, Paths}
 

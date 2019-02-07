@@ -1,6 +1,6 @@
 package tests
-import ch.epfl.scala.bsp.gen.Bsp4jArbitrary._
-import ch.epfl.scala.bsp.gen.Bsp4jGenerators
+import ch.epfl.scala.bsp.testkit.gen.Bsp4jArbitrary._
+import ch.epfl.scala.bsp.testkit.gen.Bsp4jGenerators
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder}
 import io.circe.parser.decode

@@ -1,8 +1,8 @@
-package ch.epfl.scala.bsp.gen
+package ch.epfl.scala.bsp.testkit.gen
 
 import java.{lang, util}
 
-import ch.epfl.scala.bsp.gen.UtilGenerators._
+import UtilGenerators._
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import org.scalacheck.Arbitrary.arbitrary

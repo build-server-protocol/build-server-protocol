@@ -1,4 +1,4 @@
-package ch.epfl.scala.bsp.gen
+package ch.epfl.scala.bsp.testkit.gen
 
 import org.scalacheck.{Arbitrary, Shrink}
 import Bsp4jGenerators._

@@ -5,8 +5,8 @@ import java.nio.file.Files
 import java.util
 import java.util.Collections
 
-import ch.epfl.scala.bsp.mock.MockServer
-import ch.epfl.scala.bsp.mock.MockServer.LocalMockServer
+import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
+import ch.epfl.scala.bsp.testkit.mock.MockServer
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import org.eclipse.lsp4j.jsonrpc.Launcher
