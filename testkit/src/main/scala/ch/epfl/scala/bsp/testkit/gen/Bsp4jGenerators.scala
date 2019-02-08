@@ -558,12 +558,12 @@ object Bsp4jGenerators {
   }
 
   lazy val genTestStart: Gen[TestStart] = for {
-    displayName <- arbitrary[String]
-    location <- genLocation.nullable
-  } yield {
-    val testStart = new TestStart(displayName)
-    testStart.setLocation(location)
-    testStart
+      displayName <- arbitrary[String]
+      location <- genLocation.nullable
+    } yield {
+      val testStart = new TestStart(displayName)
+      testStart.setLocation(location)
+      testStart
   }
 
   lazy val genTestStatus: Gen[TestStatus] = Gen.oneOf(TestStatus.values)

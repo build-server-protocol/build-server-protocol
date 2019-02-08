@@ -26,7 +26,10 @@ object UtilGenerators {
   lazy val genFileUri: Gen[URI] = genPath.map(_.toUri)
 
   /** URI path representing a system-dependent file. */
-  lazy val genFileUriString: Gen[String] = genFileUri.map(_.toString)
+  lazy val genFileUriString: Gen[String] = for {
+    segmentCount <- Gen.choose(1, 10)
+    segments <- Gen.listOfN(segmentCount, Gen.identifier)
+  } yield "file:///" + segments.mkString("/") // TODO windows paths
 
   /** Fully qualified class name. */
   lazy val genFQN: Gen[String] = for {
@@ -39,6 +42,5 @@ object UtilGenerators {
     initial <- Gen.alphaChar
     rest <- Gen.identifier
   } yield s"$initial$rest"
-
 
 }
