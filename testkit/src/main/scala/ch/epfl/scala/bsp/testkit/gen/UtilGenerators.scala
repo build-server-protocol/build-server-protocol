@@ -19,8 +19,14 @@ trait UtilGenerators {
   /** A system-dependent file path. */
   lazy val genPath: Gen[Path] = for {
     segmentCount <- Gen.choose(0, 10)
-    segments <- Gen.listOfN(segmentCount, Gen.identifier)
-  } yield Paths.get(segments.mkString("/")).toAbsolutePath
+    segments <- Gen.listOfN(segmentCount, Gen.alphaNumStr)
+  } yield {
+    val combined = segments.foldLeft("") { (combined, seg) =>
+      if (combined.length + seg.length + 1 > 100) combined
+      else combined + "/" + seg
+    }
+    Paths.get(combined).toAbsolutePath
+  }
 
   /** URI representing a system-dependent file. */
   lazy val genFileUri: Gen[URI] = genPath.map(_.toUri)
