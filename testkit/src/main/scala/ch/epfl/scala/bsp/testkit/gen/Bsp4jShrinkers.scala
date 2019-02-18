@@ -612,6 +612,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     shrink(a.getTargets).map(new WorkspaceBuildTargetsResult(_))
   }
 
-
-
 }
+
+object Bsp4jShrinkers extends Bsp4jShrinkers

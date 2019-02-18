@@ -10,7 +10,7 @@ import org.scalacheck._
 
 import scala.collection.JavaConverters._
 
-object Bsp4jGenerators {
+trait Bsp4jGenerators {
 
   lazy val genBspConnectionDetails: Gen[BspConnectionDetails] = for {
     name <- arbitrary[String]
@@ -594,3 +594,5 @@ object Bsp4jGenerators {
   }
 
 }
+
+object Bsp4jGenerators extends Bsp4jGenerators

@@ -81,3 +81,5 @@ trait Bsp4jArbitrary {
   implicit val arbTextDocumentIdentifier: Arbitrary[TextDocumentIdentifier] = Arbitrary(genTextDocumentIdentifier)
   implicit val arbWorkspaceBuildTargetsResult: Arbitrary[WorkspaceBuildTargetsResult] = Arbitrary(genWorkspaceBuildTargetsResult)
 }
+
+object Bsp4jArbitrary extends Bsp4jArbitrary

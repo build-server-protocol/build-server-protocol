@@ -5,7 +5,7 @@ import java.nio.file.{Path, Paths}
 
 import org.scalacheck.Gen
 
-object UtilGenerators {
+trait UtilGenerators {
 
   /** An uri string. */
   lazy val genUri: Gen[String] = for {
@@ -44,3 +44,5 @@ object UtilGenerators {
   } yield s"$initial$rest"
 
 }
+
+object UtilGenerators extends UtilGenerators

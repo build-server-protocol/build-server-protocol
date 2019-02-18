@@ -11,7 +11,8 @@ trait UtilShrinkers {
 
   def shrinkRight[T]: Shrink[Iterable[T]] = Shrink { stream =>
     val most = stream.dropRight(1)
-    most #:: shrinkRight.shrink(most)
+    if (most.isEmpty) Stream(most)
+    else most #:: shrinkRight.shrink(most)
   }
 
   def shrinkUriPath: Shrink[String] = Shrink { path =>
@@ -54,3 +55,5 @@ trait UtilShrinkers {
     shrinkFileUri.shrink(uri).map(_.toString)
   }
 }
+
+object UtilShrinkers extends UtilShrinkers
