@@ -1,8 +1,8 @@
-package ch.epfl.scala.bsp.mock
+package ch.epfl.scala.bsp.testkit.mock
 
 import ch.epfl.scala.bsp
 import ch.epfl.scala.bsp._
-import ch.epfl.scala.bsp.mock.mockServers.BspResponse
+import mockServers.BspResponse
 import io.circe.Json
 import io.circe.syntax._
 import monix.eval.Task
@@ -35,7 +35,7 @@ abstract class AbstractMockServer {
   def initialized(params: InitializedBuildParams): Unit
   def shutdown(shutdown: bsp.Shutdown): Unit
   def exit(exit: Exit): Task[Unit]
-  def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets]
+  def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargetsResult]
   def sources(params: SourcesParams): BspResponse[SourcesResult]
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]

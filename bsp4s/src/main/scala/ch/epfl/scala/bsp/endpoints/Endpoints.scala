@@ -50,6 +50,6 @@ trait BuildTarget {
 object Workspace extends Workspace
 trait Workspace {
   object buildTargets
-      extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargets](
+      extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargetsResult](
         "workspace/buildTargets")
 }

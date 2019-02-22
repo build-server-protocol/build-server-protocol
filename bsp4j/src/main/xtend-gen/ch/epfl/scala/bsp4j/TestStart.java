@@ -8,18 +8,22 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class TestStart {
   @NonNull
-  private String description;
+  private String displayName;
   
   private Location location;
   
-  @Pure
-  @NonNull
-  public String getDescription() {
-    return this.description;
+  public TestStart(@NonNull final String displayName) {
+    this.displayName = displayName;
   }
   
-  public void setDescription(@NonNull final String description) {
-    this.description = description;
+  @Pure
+  @NonNull
+  public String getDisplayName() {
+    return this.displayName;
+  }
+  
+  public void setDisplayName(@NonNull final String displayName) {
+    this.displayName = displayName;
   }
   
   @Pure
@@ -35,7 +39,7 @@ public class TestStart {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("description", this.description);
+    b.add("displayName", this.displayName);
     b.add("location", this.location);
     return b.toString();
   }
@@ -50,10 +54,10 @@ public class TestStart {
     if (getClass() != obj.getClass())
       return false;
     TestStart other = (TestStart) obj;
-    if (this.description == null) {
-      if (other.description != null)
+    if (this.displayName == null) {
+      if (other.displayName != null)
         return false;
-    } else if (!this.description.equals(other.description))
+    } else if (!this.displayName.equals(other.displayName))
       return false;
     if (this.location == null) {
       if (other.location != null)
@@ -68,7 +72,7 @@ public class TestStart {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.description== null) ? 0 : this.description.hashCode());
+    result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
     return prime * result + ((this.location== null) ? 0 : this.location.hashCode());
   }
 }

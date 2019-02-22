@@ -18,6 +18,12 @@ public class ScalaMainClass {
   @NonNull
   private List<String> jvmOptions;
   
+  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions) {
+    this.className = className;
+    this.arguments = arguments;
+    this.jvmOptions = jvmOptions;
+  }
+  
   @Pure
   @NonNull
   public String getClassName() {

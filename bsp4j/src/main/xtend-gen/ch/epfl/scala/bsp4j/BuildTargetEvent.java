@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetEventKind;
+import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -10,25 +11,25 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class BuildTargetEvent {
   @NonNull
-  private String uri;
+  private BuildTargetIdentifier target;
   
   private BuildTargetEventKind kind;
   
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
   
-  public BuildTargetEvent(@NonNull final String uri) {
-    this.uri = uri;
+  public BuildTargetEvent(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
   }
   
   @Pure
   @NonNull
-  public String getUri() {
-    return this.uri;
+  public BuildTargetIdentifier getTarget() {
+    return this.target;
   }
   
-  public void setUri(@NonNull final String uri) {
-    this.uri = uri;
+  public void setTarget(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
   }
   
   @Pure
@@ -53,7 +54,7 @@ public class BuildTargetEvent {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("uri", this.uri);
+    b.add("target", this.target);
     b.add("kind", this.kind);
     b.add("data", this.data);
     return b.toString();
@@ -69,10 +70,10 @@ public class BuildTargetEvent {
     if (getClass() != obj.getClass())
       return false;
     BuildTargetEvent other = (BuildTargetEvent) obj;
-    if (this.uri == null) {
-      if (other.uri != null)
+    if (this.target == null) {
+      if (other.target != null)
         return false;
-    } else if (!this.uri.equals(other.uri))
+    } else if (!this.target.equals(other.target))
       return false;
     if (this.kind == null) {
       if (other.kind != null)
@@ -92,7 +93,7 @@ public class BuildTargetEvent {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }

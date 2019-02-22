@@ -1,4 +1,5 @@
-package ch.epfl.scala.bsp.mock
+package ch.epfl.scala.bsp.testkit.mock
+
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
@@ -7,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 import ch.epfl.scala.bsp
 import ch.epfl.scala.bsp._
-import ch.epfl.scala.bsp.mock.mockServers._
+import mockServers._
 import io.circe.syntax._
 import monix.eval.Task
 import scribe.Logger
@@ -48,7 +49,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
       )
   }
 
-  override def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargets] = {
+  override def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargetsResult] = {
 
     val target1Capabilities = BuildTargetCapabilities(canCompile = true, canTest = false, canRun = false)
     val target2Capabilities = BuildTargetCapabilities(canCompile = true, canTest = true, canRun = false)
@@ -69,7 +70,7 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
         languageIds, List(target1), Some(BuildTargetDataKind.Scala), scalaData)
     )
 
-    val result = WorkspaceBuildTargets(targets)
+    val result = WorkspaceBuildTargetsResult(targets)
 
     Task(Right(result))
   }

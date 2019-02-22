@@ -10,6 +10,10 @@ public class CompileTask {
   @NonNull
   private BuildTargetIdentifier target;
   
+  public CompileTask(@NonNull final BuildTargetIdentifier target) {
+    this.target = target;
+  }
+  
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {

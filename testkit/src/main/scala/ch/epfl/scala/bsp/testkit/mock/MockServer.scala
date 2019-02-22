@@ -1,4 +1,4 @@
-package ch.epfl.scala.bsp.mock
+package ch.epfl.scala.bsp.testkit.mock
 
 import java.io._
 import java.nio.file.Files

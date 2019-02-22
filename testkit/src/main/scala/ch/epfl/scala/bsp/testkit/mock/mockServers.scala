@@ -1,4 +1,5 @@
-package ch.epfl.scala.bsp.mock
+package ch.epfl.scala.bsp.testkit.mock
+
 import monix.eval.Task
 
 import scala.meta.jsonrpc.Response

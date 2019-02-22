@@ -669,7 +669,7 @@ trait DidChangeBuildTarget {
 
 trait BuildTargetEvent {
   /** The identifier for the changed build target */
-  def uri: Uri
+  def target: BuildTargetIdentifier
   
   /** The kind of change for this build target */
   def kind: Option[Int]
