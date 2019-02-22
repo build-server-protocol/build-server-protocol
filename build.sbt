@@ -79,19 +79,10 @@ lazy val tests = project
   .in(file("tests"))
   .settings(
     skip.in(publish) := true,
-    resourceGenerators.in(Test) += Def.task {
-      val out = managedResourceDirectories.in(Test).value.head / "bsp4j.properties"
-      val props = new java.util.Properties()
-      val bloopDirectory = sourceDirectory.in(Test).value / "bloop"
-      props.put("bloopDirectory", bloopDirectory.getAbsolutePath)
-      IO.write(props, "test data", out)
-      List(out)
-    },
     libraryDependencies ++= List(
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0",
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0",
-      "ch.epfl.scala" %% "bloop-frontend" % "46e63fc3",
       "org.scalatest" %% "scalatest" % "3.0.5"
     )
   )
