@@ -229,8 +229,7 @@ object DiagnosticSeverity {
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
     originId: Option[String],
-    diagnostics: List[Diagnostic],
-    reset: Boolean
+    diagnostics: List[Diagnostic]
 )
 
 @JsonCodec final case class WorkspaceBuildTargetsRequest()

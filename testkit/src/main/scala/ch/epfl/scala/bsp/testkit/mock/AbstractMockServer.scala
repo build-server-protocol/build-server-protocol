@@ -66,10 +66,9 @@ abstract class AbstractMockServer {
   }
 
   def publishDiagnostics(doc: TextDocumentIdentifier, target: BuildTargetIdentifier, diagnostics: List[Diagnostic],
-                        origin: Option[String] = None,
-                        reset: Boolean = false): Future[Ack] = {
+                        origin: Option[String] = None): Future[Ack] = {
     endpoints.Build.publishDiagnostics.notify(
-      PublishDiagnosticsParams(doc, target, origin, diagnostics, reset)
+      PublishDiagnosticsParams(doc, target, origin, diagnostics)
     )
   }
 

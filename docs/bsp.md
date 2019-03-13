@@ -600,24 +600,16 @@ trait PublishDiagnosticsParams {
   
   /** The diagnostics to be published by the client. */
   def diagnostics: List[Diagnostic]
-
-  /** Whether the client should clear the previous diagnostics
-    * mapped to the same `textDocument` and `buildTarget`. */
-  def reset: Boolean
 }
 ```
 
 where `Diagnostic` is defined as it is in LSP.
 
-When `reset` is true, the client must clean all previous diagnostics
-associated with the same `textDocument` and `buildTarget` and set instead the
-diagnostics in the request. This is the same behaviour as
-`PublishDiagnosticsParams` in the LSP. When `reset` is false, the diagnostics
-are added to the last active diagnostics, allowing build tools to stream
-diagnostics to the client.
+A publish diagnostic notification overrides all previous diagnostics
+associated with the `textDocument` and `buildTarget` with the new received
+diagnostics. It follows the same behavior as `PublishDiagnosticsParams` in LSP.
 
-It is the server's responsibility to manage the lifetime of the diagnostics by
-using the appropriate value in the `reset` field. Clients generate new
+Clients generate new
 diagnostics by calling any BSP endpoint that triggers a `buildTarget/compile`,
 such as `buildTarget/compile`, `buildTarget/test` and `buildTarget/run`.
 

@@ -57,8 +57,7 @@ class SerializationSuite extends FunSuite {
       bsp4s.TextDocumentIdentifier(bsp4s.Uri(textDocument)),
       bsp4s.BuildTargetIdentifier(bsp4s.Uri(buildTarget)),
       Some("origin"),
-      List(diagnostic1),
-      reset = false
+      List(diagnostic1)
     )
 
     val bsp4sJson = bsp4sValue.asJson.toString()
@@ -68,7 +67,6 @@ class SerializationSuite extends FunSuite {
 
     assert(bsp4jValue.getBuildTarget.getUri == bsp4sValue.buildTarget.uri.value)
     assert(bsp4jValue.getOriginId == bsp4sValue.originId.get)
-    assert(bsp4jValue.getReset == bsp4sValue.reset)
     assert(bsp4jValue.getTextDocument.getUri == bsp4sValue.textDocument.uri.value)
     assert(bsp4jValue.getDiagnostics.get(0).getMessage == bsp4sValue.diagnostics.head.message)
     assert(bsp4jValue.getDiagnostics.get(0).getSeverity.getValue == bsp4sValue.diagnostics.head.severity.get.id)

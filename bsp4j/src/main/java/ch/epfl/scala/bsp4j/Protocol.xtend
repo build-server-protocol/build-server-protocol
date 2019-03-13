@@ -235,13 +235,11 @@ class PublishDiagnosticsParams {
   @NonNull TextDocumentIdentifier textDocument
   @NonNull BuildTargetIdentifier buildTarget
   @NonNull List<Diagnostic> diagnostics
-  @NonNull Boolean reset
   String originId
-  new(@NonNull TextDocumentIdentifier textDocument, @NonNull BuildTargetIdentifier buildTarget, @NonNull List<Diagnostic> diagnostics, @NonNull Boolean reset) {
+  new(@NonNull TextDocumentIdentifier textDocument, @NonNull BuildTargetIdentifier buildTarget, @NonNull List<Diagnostic> diagnostics) {
     this.textDocument = textDocument
     this.buildTarget = buildTarget
     this.diagnostics = diagnostics
-    this.reset = reset
   }
 }
 
