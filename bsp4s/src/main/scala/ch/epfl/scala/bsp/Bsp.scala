@@ -451,7 +451,9 @@ object TestStatus {
 @JsonCodec final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
-    arguments: Option[List[String]]
+    arguments: Option[List[String]],
+    dataKind: Option[String],
+    data: Option[Json],
 )
 
 sealed abstract class StatusCode(val code: Int)

@@ -305,6 +305,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     } yield {
       val runParams = new RunParams(target)
       runParams.setArguments(arguments)
+      runParams.setDataKind(a.getDataKind)
+      runParams.setData(a.getData)
       runParams
     }
   }

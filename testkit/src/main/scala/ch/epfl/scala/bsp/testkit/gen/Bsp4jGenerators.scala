@@ -290,6 +290,8 @@ trait Bsp4jGenerators {
   } yield {
     val runParams = new RunParams(target)
     runParams.setArguments(arguments)
+    runParams.setDataKind(null)
+    runParams.setData(null)
     runParams
   }
 

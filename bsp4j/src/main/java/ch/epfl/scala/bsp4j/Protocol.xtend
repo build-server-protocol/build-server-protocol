@@ -512,6 +512,8 @@ class RunParams {
   @NonNull BuildTargetIdentifier target
   String originId
   List<String> arguments
+  String dataKind
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
 
   new(@NonNull BuildTargetIdentifier target) {
     this.target = target
