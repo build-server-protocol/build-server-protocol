@@ -1,11 +1,12 @@
 # Contributing
 
-## Updating bsp4j `*.xtend` files
+## Updating protocol
+To change the protocol (e.g. by adding a new field to some request parameters) one has to:
+1. Update the appropriate`.xtend` file in the `bsp4j` module.
+2. Manually re-generate java sources via  `sbt bsp4j/xtend`
+3. Update the corresponding classes in `bsp4s` module
 
-Whenever `*.xtend` files are updated you need to manually re-generate Java
-source files with the `sbt bsp4j/xtend` task.  For example, while iterating on
-changes in bsp4j you can use
-
+While working on changes in `bsp4j` you can use
 ```
 sbt
 > ~; bsp4j/xtend ; bsp4j/compile
