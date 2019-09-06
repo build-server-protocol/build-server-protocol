@@ -560,7 +560,8 @@ object ScalaPlatform {
 )
 
 @JsonCodec final case class ScalaTestParams(
-    testClasses: Option[List[ScalaTestClassesItem]],
+    testClasses: List[ScalaTestClassesItem],
+    jvmOptions: List[String]
 )
 
 // Request: 'buildTarget/scalacOptions', C -> S

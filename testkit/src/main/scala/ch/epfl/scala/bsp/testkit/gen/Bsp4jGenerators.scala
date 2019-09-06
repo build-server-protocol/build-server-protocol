@@ -389,12 +389,9 @@ trait Bsp4jGenerators {
   } yield new ScalaTestClassesResult(items)
 
   lazy val genScalaTestParams: Gen[ScalaTestParams] = for {
-    items <- genScalaTestClassesItem.list.nullable
-  } yield {
-    val params = new ScalaTestParams()
-    params.setTestClasses(items)
-    params
-  }
+    items <- genScalaTestClassesItem.list
+    jvmOptions <- Gen.identifier.list
+  } yield new ScalaTestParams(items, jvmOptions)
 
   lazy val genShowMessageParams: Gen[ShowMessageParams] = for {
     messageType <- genMessageType

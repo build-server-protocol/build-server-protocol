@@ -422,11 +422,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
   implicit def shrinkScalaTestParams: Shrink[ScalaTestParams] = Shrink { a =>
     for {
       items <- shrink(a.getTestClasses)
-    } yield {
-      val params = new ScalaTestParams()
-      params.setTestClasses(items)
-      params
-    }
+      jvmOptions <- shrink(a.getJvmOptions)
+    } yield new ScalaTestParams(items, jvmOptions)
   }
 
   implicit def shrinkShowMessageParams: Shrink[ShowMessageParams] = Shrink { a =>
