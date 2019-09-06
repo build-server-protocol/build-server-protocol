@@ -456,6 +456,10 @@ object TestStatus {
     data: Option[Json],
 )
 
+object RunParamsDataKind {
+  val ScalaMainClass = "scala-main-class"
+}
+
 sealed abstract class StatusCode(val code: Int)
 object StatusCode {
   case object Ok extends StatusCode(1)
@@ -562,6 +566,10 @@ object ScalaPlatform {
 @JsonCodec final case class ScalaTestParams(
     testClasses: Option[List[ScalaTestClassesItem]],
 )
+
+object TestParamsDataKind {
+  val ScalaTest = "scala-test"
+}
 
 // Request: 'buildTarget/scalacOptions', C -> S
 @JsonCodec final case class ScalacOptionsParams(
