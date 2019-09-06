@@ -592,3 +592,13 @@ class TaskFinishParams {
       this.status = status
     }
 }
+
+@JsonRpcData
+class DebuggeeAddress {
+    @NonNull String originId;
+    @NonNull String uri;
+    new(@NonNull String originId, @NonNull String uri){
+        this.originId = originId;
+        this.uri = uri;
+    }
+}

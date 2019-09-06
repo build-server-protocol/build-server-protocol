@@ -625,11 +625,12 @@ object ScalaPlatform {
     children: List[BuildTargetIdentifier],
 )
 
-
 @JsonCodec final case class BspConnectionDetails(
-  name: String,
-  argv: List[String],
-  version: String,
-  bspVersion: String,
-  languages: List[String]
+    name: String,
+    argv: List[String],
+    version: String,
+    bspVersion: String,
+    languages: List[String]
 )
+
+@JsonCodec final case class DebuggeeAddress(originId: Option[String], uri: String)

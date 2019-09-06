@@ -36,6 +36,9 @@ trait BuildTarget {
         "buildTarget/dependencySources")
   object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
+  object debuggeeListening
+    extends Endpoint[DebuggeeAddress, Unit]("buildTarget/debuggeeListening")
+
   // Scala specific endpoints
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
