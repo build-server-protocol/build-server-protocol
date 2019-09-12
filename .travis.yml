@@ -2,10 +2,15 @@ language: scala
 jdk:
   - oraclejdk8
 
+os:
+  - linux
+
+dist: trusty
+
 stages:
   - name: test
   - name: release
-    if: (branch = master AND type = push) OR (tag IS present)
+    if: (branch = master AND type = push) ODeR (tag IS present)
 
 jobs:
   include:
