@@ -592,3 +592,25 @@ class TaskFinishParams {
       this.status = status
     }
 }
+
+@JsonRpcData
+class DebugSessionParams {
+    @NonNull List<BuildTargetIdentifier> targets;
+    @NonNull String dataKind;
+    @JsonAdapter(JsonElementTypeAdapter.Factory) Object data;
+
+    new(@NonNull List<BuildTargetIdentifier> targets, @NonNull String dataKind, Object data) {
+        this.targets = targets;
+        this.dataKind = dataKind;
+        this.data = data;
+    }
+}
+
+@JsonRpcData
+class DebugSessionAddress {
+    @NonNull String uri;
+
+    new(@NonNull String uri){
+        this.uri = uri;
+    }
+}

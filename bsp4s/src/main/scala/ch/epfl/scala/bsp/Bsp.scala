@@ -624,12 +624,23 @@ object ScalaPlatform {
     parent: Option[BuildTargetIdentifier],
     children: List[BuildTargetIdentifier],
 )
-
-
 @JsonCodec final case class BspConnectionDetails(
-  name: String,
-  argv: List[String],
-  version: String,
-  bspVersion: String,
-  languages: List[String]
+    name: String,
+    argv: List[String],
+    version: String,
+    bspVersion: String,
+    languages: List[String]
 )
+
+@JsonCodec final case class DebugSessionParams(
+    targets: List[BuildTargetIdentifier],
+    dataKind: String,
+    data: Json
+)
+
+object DebugSessionParamsDataKind {
+  val ScalaMainClass = "scala-main-class"
+  val ScalaTestSuites = "scala-test-suites"
+}
+
+@JsonCodec final case class DebugSessionAddress(uri: String)
