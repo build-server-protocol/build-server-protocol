@@ -1,15 +1,19 @@
-inThisBuild(List(
-  scmInfo := Some(ScmInfo(
-    browseUrl = url("https://github.com/scalacenter/bsp"),
-    connection = "scm:git:git@github.com:scalacenter/bsp.git"
-  )),
-  bloopExportJarClassifiers := Some(Set("sources")),
-  Keys.resolvers := {
-    val oldResolvers = Keys.resolvers.value
-    val scalacenterResolver = Resolver.bintrayRepo("scalacenter", "releases")
-    (oldResolvers :+ scalacenterResolver).distinct
-  },
-))
+inThisBuild(
+  List(
+    scmInfo := Some(
+      ScmInfo(
+        browseUrl = url("https://github.com/scalacenter/bsp"),
+        connection = "scm:git:git@github.com:scalacenter/bsp.git"
+      )
+    ),
+    bloopExportJarClassifiers := Some(Set("sources")),
+    Keys.resolvers := {
+      val oldResolvers = Keys.resolvers.value
+      val scalacenterResolver = Resolver.bintrayRepo("scalacenter", "releases")
+      (oldResolvers :+ scalacenterResolver).distinct
+    }
+  )
+)
 import java.io.File
 import org.eclipse.xtend.core.XtendInjectorSingleton
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
@@ -25,7 +29,7 @@ lazy val bsp = project
   .in(file("."))
   .aggregate(bsp4s, bsp4j, tests, `bsp-testkit`)
   .settings(
-    skip in publish := true,
+    skip in publish := true
   )
 
 lazy val bsp4s = project
@@ -100,3 +104,14 @@ lazy val `bsp-testkit` = project
   .dependsOn(bsp4s)
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
+
+lazy val docs = project
+  .in(file("bsp-docs"))
+  .dependsOn(bsp4j)
+  .settings(
+    mdocOut := baseDirectory.in(ThisBuild).value / "website" / "target" / "docs",
+    mdocVariables := Map(
+      "VERSION" -> version.value
+    )
+  )
+  .enablePlugins(DocusaurusPlugin)

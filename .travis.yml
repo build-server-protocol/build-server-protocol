@@ -10,13 +10,16 @@ dist: trusty
 stages:
   - name: test
   - name: release
-    if: (branch = master AND type = push) ODeR (tag IS present)
+    if: (branch = master AND type = push) OR (tag IS present)
+
 
 jobs:
   include:
-    script:
+    - script:
       - sbt bsp4j/xtend test bsp4j/test
       - test -z $(git ls-files --modified)
+    - stage: release
+      script: sbt docs/docusaurusPublishGhpages
 
 cache:
   directories:
