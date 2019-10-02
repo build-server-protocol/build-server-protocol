@@ -64,7 +64,9 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
-            <Button href={docUrl("bsp", language)}>Get Started</Button>
+            <Button href={docUrl("specification", language)}>
+              Get Started
+            </Button>
           </PromoSection>
         </div>
       </SplashContainer>
@@ -88,7 +90,7 @@ const Features = props => {
       title: "What is BSP?",
       content:
         "The Build Server Protocol (BSP) provides endpoints for IDE and build tools to communicate about compiling, running, testing and debugging programs.",
-      image: "https://i.imgur.com/52t75HC.png",
+      image: "https://i.imgur.com/LmRwu2s.png",
       imageAlign: "left"
     },
     {
