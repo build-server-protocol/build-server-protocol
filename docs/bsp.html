@@ -1,0 +1,1735 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Build Server Protocol · Build Server Protocol</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="This document describes version 2.0 (WIP) of the build server protocol."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Build Server Protocol · Build Server Protocol"/><meta property="og:type" content="website"/><meta property="og:url" content="https://scalacenter.github.io/bsp/bsp/index.html"/><meta property="og:description" content="This document describes version 2.0 (WIP) of the build server protocol."/><meta property="og:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><link rel="shortcut icon" href="/bsp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/bsp/js/scrollSpy.js"></script><link rel="stylesheet" href="/bsp/css/main.css"/><script src="/bsp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/bsp/"><img class="logo" src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol"/><h2 class="headerTitleWithLogo">Build Server Protocol</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/bsp/docs/bsp.html" target="_self">Specification</a></li><li class=""><a href="https://github.com/scalacenter/bsp" target="_blank">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Docs</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Docs</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/bsp/docs/bsp.html">Specification</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/scalacenter/bsp/edit/master/docs/bsp.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Build Server Protocol</h1></header><article><div><span><p>This document describes version 2.0 (WIP) of the build server protocol.</p>
+<p>Edits to this specification can be made via a pull request against this markdown
+document.</p>
+<h2><a class="anchor" aria-hidden="true" id="motivation"></a><a href="#motivation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Motivation</h2>
+<p>The problem this document aims to address is the multiplied effort required to
+integrate between available language servers/editors and build tools. Currently,
+every language server must implement a custom integration for each supported
+build tool in order to extract compilation information such as classpaths,
+source directories or compiler diagnostics. Likewise, new build tools are
+expected to integrate with all available IDEs. The growing number of language
+servers and build tools in the wider programming community means tooling
+developers spend a lot of time working on these integrations.</p>
+<p>The Build Server Protocol aims to define common functionality that both build
+tools (servers) and language servers/editors (clients) understand. This common
+functionality enables tooling developers to provide their end users the best
+developer experience while supporting build tools and language servers with less
+effort and time.</p>
+<ul>
+<li><a href="#build-server-protocol">Build Server Protocol</a>
+<ul>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#background">Background</a></li>
+<li><a href="#status">Status</a></li>
+<li><a href="#base-protocol">Base protocol</a></li>
+<li><a href="#basic-json-structures">Basic Json Structures</a>
+<ul>
+<li><a href="#build-target">Build Target</a></li>
+<li><a href="#build-target-identifier">Build Target Identifier</a></li>
+<li><a href="#task-id">Task Id</a></li>
+<li><a href="#status-code">Status Code</a></li>
+<li><a href="#uri">Uri</a></li>
+</ul></li>
+<li><a href="#actual-protocol">Actual Protocol</a>
+<ul>
+<li><a href="#server-lifetime">Server Lifetime</a>
+<ul>
+<li><a href="#initialize-build-request">Initialize Build Request</a></li>
+<li><a href="#initialized-build-notification">Initialized Build Notification</a></li>
+<li><a href="#shutdown-build-request">Shutdown Build Request</a></li>
+<li><a href="#exit-build-notification">Exit Build Notification</a></li>
+<li><a href="#show-message">Show message</a></li>
+<li><a href="#log-message">Log message</a></li>
+<li><a href="#publish-diagnostics">Publish Diagnostics</a></li>
+</ul></li>
+<li><a href="#workspace-build-targets-request">Workspace Build Targets Request</a></li>
+<li><a href="#build-target-changed-notification">Build Target Changed Notification</a></li>
+<li><a href="#build-target-sources-request">Build Target Sources Request</a></li>
+<li><a href="#inverse-sources-request">Inverse Sources Request</a></li>
+<li><a href="#dependency-sources-request">Dependency Sources Request</a></li>
+<li><a href="#resources-request">Resources Request</a></li>
+<li><a href="#task-notifications">Task Notifications</a>
+<ul>
+<li><a href="#task-started">Task Started</a></li>
+<li><a href="#task-progress">Task Progress</a></li>
+<li><a href="#task-finished">Task Finished</a></li>
+<li><a href="#task-data">Task Data</a></li>
+</ul></li>
+<li><a href="#compile-request">Compile Request</a>
+<ul>
+<li><a href="#compile-notifications">Compile Notifications</a></li>
+</ul></li>
+<li><a href="#test-request">Test Request</a>
+<ul>
+<li><a href="#test-notifications">Test Notifications</a></li>
+<li><a href="#test-notifications-1">Test Notifications</a></li>
+</ul></li>
+<li><a href="#run-request">Run Request</a></li>
+<li><a href="#clean-cache-request">Clean Cache Request</a></li>
+</ul></li>
+<li><a href="#extensions">Extensions</a>
+<ul>
+<li><a href="#scala">Scala</a>
+<ul>
+<li><a href="#scala-build-target">Scala Build Target</a></li>
+<li><a href="#scala-test-params">Scala Test Params</a></li>
+<li><a href="#scalac-options-request">Scalac Options Request</a></li>
+<li><a href="#scala-test-classes-request">Scala Test Classes Request</a></li>
+<li><a href="#scala-main-classes-request">Scala Main Classes Request</a></li>
+</ul></li>
+<li><a href="#sbt">Sbt</a></li>
+</ul></li>
+<li><a href="#bsp-connection-protocol">BSP Connection Protocol</a>
+<ul>
+<li><a href="#the-bsp-connection-details">The BSP Connection Details</a>
+<ul>
+<li><a href="#default-locations-for-bsp-connection-files">Default Locations for BSP Connection Files</a></li>
+<li><a href="#policy-around-connection-files-generation">Policy around Connection Files Generation</a></li>
+<li><a href="#build-tool-commands-to-start-bsp-servers">Build Tool Commands to Start BSP Servers</a>
+<ul>
+<li><a href="#example-with-my-build-tool">Example with <code>my-build-tool</code></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#clients-connecting-to-bsp-servers">Clients Connecting to BSP Servers</a></li>
+</ul></li>
+<li><a href="#appendix">Appendix</a>
+<ul>
+<li><a href="#java-bindings">Java Bindings</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul></li>
+</ul></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="background"></a><a href="#background" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Background</h2>
+<p>The Build Server Protocol takes inspiration from the Language Server Protocol
+(LSP). Unlike in the Language Server Protocol, the language server or editor is
+referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is
+referred to as the “server”.</p>
+<p>The best way to read this document is by considering it as a wishlist from the
+perspective of an IDE developer.</p>
+<p>The code listings in this document are written using Scala syntax. Every data
+strucuture in this document has a direct translation to JSON and Protobuf. See
+<a href="#appendix">Appendix</a> for schema definitions that can be used to automatically
+generate bindings for different target languages.</p>
+<h2><a class="anchor" aria-hidden="true" id="status"></a><a href="#status" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Status</h2>
+<p>The Build Server Protocol is not an approved standard. Everything in this
+document is subject to change and open for discussions, including core data
+structures.</p>
+<p>The creation of BSP clients and servers is under active development.</p>
+<p>In the clients space, IntelliJ has been the first language server to implement
+BSP. The integration is available in the nightly releases of the Scala plugin.
+Other language servers, like <a href="https://github.com/lampepfl/dotty">Dotty IDE</a> and
+<a href="https://github.com/scalameta/metals">scalameta/metals</a>, are currently working
+or planning to work on a BSP integrations.</p>
+<p>On the server side, <a href="https://github.com/scalacenter/bloop">bloop</a> is the first
+server to implement BSP. There are ongoing efforts to implement BSP in popular
+build tools like <a href="https://github.com/sbt/sbt/issues/3890">sbt</a>.</p>
+<p>We're looking for third parties that implement BSP natively in other build tools
+like Gradle, Bazel or Pants.</p>
+<p>The Build Server Protocol has been designed to be language-agnostic. We're
+looking for ways to collaborate with other programming language communities and
+build tool authors.</p>
+<p>The best way to share your thoughts on the Build Server Protocol or to get
+involved in its development is to open an issue or pull request to this
+repository. Any help on developing integrations will be much appreciated.</p>
+<h2><a class="anchor" aria-hidden="true" id="base-protocol"></a><a href="#base-protocol" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Base protocol</h2>
+<p>The base protocol is identical to the language server base protocol. See
+<a href="https://microsoft.github.io/language-server-protocol/specification">https://microsoft.github.io/language-server-protocol/specification</a> for more
+details.</p>
+<p>Like the language server protocol, the build server protocol defines a set of
+JSON-RPC request, response and notification messages which are exchanged using
+the base protocol.</p>
+<h2><a class="anchor" aria-hidden="true" id="basic-json-structures"></a><a href="#basic-json-structures" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic Json Structures</h2>
+<p>In addition to basic data structures in the
+<a href="https://microsoft.github.io/language-server-protocol/specification#general">General section of the Language Server Protocol</a>,
+the Build Server Protocol defines the following additional data structures.</p>
+<h3><a class="anchor" aria-hidden="true" id="build-target"></a><a href="#build-target" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Target</h3>
+<p>Build target contains metadata about an artifact (for example library, test, or
+binary artifact). Using vocabulary of other build tools:</p>
+<ul>
+<li>sbt: a build target is a combined project + config. Example:
+<ul>
+<li>a regular JVM project with main and test configurations will have 2 build
+targets, one for main and one for test.</li>
+<li>a single configuration in a single project that contains both Java and Scala
+sources maps to one BuildTarget.</li>
+<li>a project with crossScalaVersions 2.11 and 2.12 containing main and test
+configuration in each will have 4 build targets.</li>
+<li>a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main
+and test configurations will have 8 build targets.</li>
+</ul></li>
+<li>pants: a pants target corresponds one-to-one with a BuildTarget</li>
+<li>bazel: a bazel target corresponds one-to-one with a BuildTarget</li>
+</ul>
+<p>The general idea is that the BuildTarget data structure should contain only
+information that is is fast or cheap to compute.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildTarget</span> </span>{
+
+  <span class="hljs-comment">/** The target’s unique identifier */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">id</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** A human readable name for this target.
+    * May be presented in the user interface.
+    * Should be unique if possible.
+    * The id.uri is used if None. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">displayName</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The directory where this target belongs to. Multiple build targets are allowed to map
+    * to the same base directory, and a build target is not required to have a base directory.
+    * A base directory does not determine the sources of a target, see buildTarget/sources. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">baseDirectory</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Uri</span>]
+
+  <span class="hljs-comment">/** Free-form string tags to categorize or label this build target.
+    * For example, can be used by the client to:
+    * - customize how the target should be translated into the client's project model.
+    * - group together different but related targets in the user interface.
+    * - display icons or colors in the user interface.
+    * Pre-defined tags are listed in `BuildTargetTag` but clients and servers
+    * are free to define new tags for custom purposes.
+    */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tags</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The capabilities of this build target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">capabilities</span></span>: <span class="hljs-type">BuildTargetCapabilities</span>
+
+  <span class="hljs-comment">/** The set of languages that this target contains.
+    * The ID string for each language is defined in the LSP. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languageIds</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The direct upstream build target dependencies of this build target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dependencies</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifer</span>]
+
+  <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Language-specific metadata about this target.
+    * See ScalaBuildTarget as an example. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>] <span class="hljs-comment">// Note, matches `any` in the LSP.</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">BuildTargetDataKind</span> </span>{
+
+  <span class="hljs-comment">/** The `data` field contains a `ScalaBuildTarget` object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Scala</span> = <span class="hljs-string">"scala"</span>
+
+  <span class="hljs-comment">/** The `data` field contains a `SbtBuildTarget` object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Sbt</span> = <span class="hljs-string">"sbt"</span>
+
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">BuildTargetTag</span> </span>{
+
+  <span class="hljs-comment">/** Target contains re-usable functionality for downstream targets. May have any
+    * combination of capabilities. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Library</span> = <span class="hljs-string">"library"</span>
+
+  <span class="hljs-comment">/** Target contains source code for producing any kind of application, may have
+    * but does not require the `canRun` capability. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Application</span> = <span class="hljs-string">"application"</span>
+
+  <span class="hljs-comment">/** Target contains source code for testing purposes, may have but does not
+    * require the `canTest` capability. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Test</span> = <span class="hljs-string">"test"</span>
+
+  <span class="hljs-comment">/** Target contains source code for integration testing purposes, may have
+    * but does not require the `canTest` capability.
+    * The difference between "test" and "integration-test" is that
+    * integration tests traditionally run slower compared to normal tests
+    * and require more computing resources to execute.
+    */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">IntegrationTest</span> = <span class="hljs-string">"integration-test"</span>
+
+  <span class="hljs-comment">/** Target contains source code to measure performance of a program, may have
+    * but does not require the `canRun` build target capability.
+    */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Benchmark</span> = <span class="hljs-string">"benchmark"</span>
+
+  <span class="hljs-comment">/** Target should be ignored by IDEs. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">NoIDE</span> = <span class="hljs-string">"no-ide"</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildTargetCapabilities</span> </span>{
+  <span class="hljs-comment">/** This target can be compiled by the BSP server. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">canCompile</span></span>: <span class="hljs-type">Boolean</span>
+  <span class="hljs-comment">/** This target can be tested by the BSP server. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">canTest</span></span>: <span class="hljs-type">Boolean</span>
+  <span class="hljs-comment">/** This target can be run by the BSP server. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">canRun</span></span>: <span class="hljs-type">Boolean</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="build-target-identifier"></a><a href="#build-target-identifier" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Target Identifier</h3>
+<p>A unique identifier for a target, can use any URI-compatible encoding as long as
+it is unique within the workspace. Clients should not infer metadata out of the
+URI structure such as the path or query parameters, use <code>BuildTarget</code> instead.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildTargetIdentifer</span> </span>{
+  <span class="hljs-comment">/** The target’s Uri */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">uri</span></span>: <span class="hljs-type">Uri</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="task-id"></a><a href="#task-id" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Id</h3>
+<p>The Task Id allows clients to <em>uniquely</em> identify a BSP task and establish a
+client-parent relationship with another task id.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TaskId</span> </span>{
+  <span class="hljs-comment">/** A unique identifier */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">id</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The parent task ids, if any. A non-empty parents field means
+    * this task is a sub-task of every parent task id. The child-parent
+    * relationship of tasks makes it possible to render tasks in
+    * a tree-like user interface or inspect what caused a certain task
+    * execution. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parents</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">List</span>[<span class="hljs-type">String</span>]]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="status-code"></a><a href="#status-code" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Status Code</h3>
+<p>Included in notifications of tasks or requests to signal the completion state.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">StatusCode</span> </span>{
+  <span class="hljs-comment">/** Execution was successful. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Ok</span> = <span class="hljs-number">1</span>
+  <span class="hljs-comment">/** Execution failed. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Error</span> = <span class="hljs-number">2</span>
+  <span class="hljs-comment">/** Execution was cancelled. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Cancelled</span> = <span class="hljs-number">3</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="uri"></a><a href="#uri" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Uri</h3>
+<pre><code class="hljs css language-scala"><span class="hljs-comment">/**  A resource identifier that is a valid URI according
+  * to rfc3986: * https://tools.ietf.org/html/rfc3986 */</span>
+<span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Uri</span> </span>= <span class="hljs-type">String</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="actual-protocol"></a><a href="#actual-protocol" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Actual Protocol</h2>
+<p>Unlike the language server protocol, the build server protocol does not support
+dynamic registration of capabilities. The motivation for this change is
+simplicity. If a motivating example for dynamic registration comes up this
+decision can be reconsidered. The server and client capabilities must be
+communicated through the initialize request.</p>
+<h3><a class="anchor" aria-hidden="true" id="server-lifetime"></a><a href="#server-lifetime" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Server Lifetime</h3>
+<p>Like the language server protocol, the current protocol specification defines
+that the lifetime of a build server is managed by the client (e.g. a language
+server like Dotty IDE). It is up to the client to decide when to start
+(process-wise) and when to shutdown a server.</p>
+<h4><a class="anchor" aria-hidden="true" id="initialize-build-request"></a><a href="#initialize-build-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Initialize Build Request</h4>
+<p>Like the language server protocol, the initialize request is sent as the first
+request from the client to the server. If the server receives a request or
+notification before the initialize request it should act as follows:</p>
+<ul>
+<li><p>For a request the response should be an error with code: -32002. The message
+can be picked by the server.</p></li>
+<li><p>Notifications should be dropped, except for the exit notification. This will
+allow the exit of a server without an initialize request.</p></li>
+</ul>
+<p>Until the server has responded to the initialize request with an
+InitializeBuildResult, the client must not send any additional requests or
+notifications to the server.</p>
+<p>Request:</p>
+<ul>
+<li><p>method: ‘build/initialize’</p></li>
+<li><p>params: InitializeBuildParams defined as follows</p></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">InitializeBuildParams</span> </span>{
+  <span class="hljs-comment">/** Name of the client */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">displayName</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The version of the client */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">version</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The BSP version that the client speaks */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bspVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The rootUri of the workspace */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">rootUri</span></span>: <span class="hljs-type">Uri</span>
+
+  <span class="hljs-comment">/** The capabilities of the client */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">capabilities</span></span>: <span class="hljs-type">BuildClientCapabilities</span>
+
+  <span class="hljs-comment">/** Additional metadata about the client */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildClientCapabilities</span> </span>{
+  <span class="hljs-comment">/** The languages that this client supports.
+    * The ID strings for each language is defined in the LSP.
+    * The server must never respond with build targets for other
+    * languages than those that appear in this list. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languageIds</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: InitializeBuildResult defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">InitializeBuildResult</span> </span>{
+  <span class="hljs-comment">/** Name of the server */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">displayName</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The version of the server */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">version</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The BSP version that the server speaks */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bspVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The capabilities of the build server */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">capabilities</span></span>: <span class="hljs-type">BuildServerCapabilities</span>
+
+  <span class="hljs-comment">/** Additional metadata about the server */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildServerCapabilities</span> </span>{
+  <span class="hljs-comment">/** The languages the server supports compilation via method buildTarget/compile. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compileProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">CompileProvider</span>]
+
+  <span class="hljs-comment">/** The languages the server supports test execution via method buildTarget/test */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">testProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">TestProvider</span>]
+
+  <span class="hljs-comment">/** The languages the server supports run via method buildTarget/run */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">runProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">RunProvider</span>]
+
+  <span class="hljs-comment">/** The server can provide a list of targets that contain a
+    * single text document via the method buildTarget/inverseSources */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">inverseSourcesProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Boolean</span>]
+
+  <span class="hljs-comment">/** The server provides sources for library dependencies
+    * via method buildTarget/dependencySources */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dependencySourcesProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Boolean</span>]
+
+  <span class="hljs-comment">/** The server provides all the resource dependencies
+    * via method buildTarget/resources */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">resourcesProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Boolean</span>]
+
+  <span class="hljs-comment">/** The server sends notifications to the client on build
+    * target change events via buildTarget/didChange */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetChangedProvider</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Boolean</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CompileProvider</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languageIds</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">RunProvider</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languageIds</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestProvider</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languageIds</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+</code></pre>
+<p>Clients can use these capabilities to notify users what BSP endpoints can and
+cannot be used and why.</p>
+<h4><a class="anchor" aria-hidden="true" id="initialized-build-notification"></a><a href="#initialized-build-notification" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Initialized Build Notification</h4>
+<p>Like the language server protocol, the initialized notification is sent from the
+client to the server after the client received the result of the initialize
+request but before the client is sending any other request or notification to
+the server. The server can use the initialized notification for example to
+initialize intensive computation such as dependency resolution or compilation.
+The initialized notification may only be sent once.</p>
+<p>Notification:</p>
+<ul>
+<li>method: ‘build/initialized’</li>
+<li>params: InitializedBuildParams defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">InitializedBuildParams</span> </span>{
+
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="shutdown-build-request"></a><a href="#shutdown-build-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Shutdown Build Request</h4>
+<p>Like the language server protocol, the shutdown build request is sent from the
+client to the server. It asks the server to shut down, but to not exit
+(otherwise the response might not be delivered correctly to the client). There
+is a separate exit notification that asks the server to exit.</p>
+<p>Request:</p>
+<ul>
+<li>method: <code>build/shutdown</code></li>
+<li>params: <code>null</code></li>
+</ul>
+<p>Response:</p>
+<ul>
+<li>result: <code>null</code></li>
+<li>error: code and message set in case an exception happens during shutdown
+request.</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="exit-build-notification"></a><a href="#exit-build-notification" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Exit Build Notification</h4>
+<p>Like the language server protocol, a notification to ask the server to exit its
+process. The server should exit with success code 0 if the shutdown request has
+been received before; otherwise with error code 1.</p>
+<p>Notification:</p>
+<ul>
+<li>method: <code>build/exit</code></li>
+<li>params: <code>null</code></li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="show-message"></a><a href="#show-message" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Show message</h4>
+<p>The show message notification is sent from a server to a client to ask the
+client to display a particular message in the user interface.</p>
+<p>Notification:</p>
+<ul>
+<li>method: <code>build/showMessage</code></li>
+<li>params: <code>ShowMessageParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ShowMessageParams</span> </span>{
+  <span class="hljs-comment">/** The message type. See {@link MessageType}. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">type</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The task id if any. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">task</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">TaskId</span>]
+
+  <span class="hljs-comment">/** The request id that originated this notification. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The actual message. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">String</span>
+}
+</code></pre>
+<p>where <code>MessageType</code> is defined as follows:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">MessageType</span> </span>{
+  <span class="hljs-comment">/** An error message. */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-keyword">val</span> <span class="hljs-type">Error</span> = <span class="hljs-number">1</span>
+  <span class="hljs-comment">/** A warning message. */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-keyword">val</span> <span class="hljs-type">Warning</span> = <span class="hljs-number">2</span>
+  <span class="hljs-comment">/** An information message. */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-keyword">val</span> <span class="hljs-type">Info</span> = <span class="hljs-number">3</span>
+  <span class="hljs-comment">/** A log message. */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-keyword">val</span> <span class="hljs-type">Log</span> = <span class="hljs-number">4</span>
+}
+</code></pre>
+<p>A <code>build/showMessage</code> notification is similar to LSP's <code>window/showMessage</code>,
+except for a few additions like <code>id</code> and <code>originId</code>.</p>
+<p>The <code>originId</code> field helps clients know which request originated a notification
+in case several requests are handled by the client at the same time. It will
+only be populated if the client defined it in the request that triggered this
+notification.</p>
+<h4><a class="anchor" aria-hidden="true" id="log-message"></a><a href="#log-message" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Log message</h4>
+<p>The log message notification is sent from the server to the client to ask the
+client to log a particular message.</p>
+<p>Notification:</p>
+<ul>
+<li>method: ‘build/logMessage’</li>
+<li>params: LogMessageParams defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">LogMessageParams</span> </span>{
+  <span class="hljs-comment">/** The message type. See {@link MessageType} */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">type</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The task id if any. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">task</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">TaskId</span>]
+
+  <span class="hljs-comment">/** The request id that originated this notification. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The actual message */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">String</span>
+}
+</code></pre>
+<p>Where type is defined as <code>build/showMessage</code>.</p>
+<p>A <code>build/logMessage</code> notification is similar to LSP's <code>window/logMessage</code>,
+except for a few additions like <code>id</code> and <code>originId</code>.</p>
+<p>The <code>originId</code> field helps clients know which request originated a notification
+in case several requests are handled by the client at the same time. It will
+only be populated if the client defined it in the request that triggered this
+notification.</p>
+<h4><a class="anchor" aria-hidden="true" id="publish-diagnostics"></a><a href="#publish-diagnostics" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Publish Diagnostics</h4>
+<p>The Diagnostics notification are sent from the server to the client to signal
+results of validation runs.</p>
+<p>Notification:</p>
+<ul>
+<li>method: <code>build/publishDiagnostics</code></li>
+<li>params: <code>PublishDiagnosticsParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">PublishDiagnosticsParams</span> </span>{
+  <span class="hljs-comment">/** The document where the diagnostics are published. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">textDocument</span></span>: <span class="hljs-type">TextDocumentIdentifier</span>
+
+  <span class="hljs-comment">/** The build target where the diagnostics origin.
+    * It is valid for one text document to belong to multiple
+    * build targets, for example sources that are compiled against multiple
+    * platforms (JVM, JavaScript). */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTarget</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** The request id that originated this notification. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The diagnostics to be published by the client. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">diagnostics</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">Diagnostic</span>]
+
+  <span class="hljs-comment">/** Whether the client should clear the previous diagnostics
+    * mapped to the same `textDocument` and `buildTarget`. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reset</span></span>: <span class="hljs-type">Boolean</span>
+}
+</code></pre>
+<p>where <code>Diagnostic</code> is defined as it is in LSP.</p>
+<p>When <code>reset</code> is true, the client must clean all previous diagnostics associated
+with the same <code>textDocument</code> and <code>buildTarget</code> and set instead the diagnostics
+in the request. This is the same behaviour as <code>PublishDiagnosticsParams</code> in the
+LSP. When <code>reset</code> is false, the diagnostics are added to the last active
+diagnostics, allowing build tools to stream diagnostics to the client.</p>
+<p>It is the server's responsibility to manage the lifetime of the diagnostics by
+using the appropriate value in the <code>reset</code> field. Clients generate new
+diagnostics by calling any BSP endpoint that triggers a <code>buildTarget/compile</code>,
+such as <code>buildTarget/compile</code>, <code>buildTarget/test</code> and <code>buildTarget/run</code>.</p>
+<p>The optional <code>originId</code> field in the definition of <code>PublishDiagnosticsParams</code>
+can be used by clients to know which request originated the notification. This
+field will be defined if the client defined it in the original request that
+triggered this notification.</p>
+<h3><a class="anchor" aria-hidden="true" id="workspace-build-targets-request"></a><a href="#workspace-build-targets-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Workspace Build Targets Request</h3>
+<p>The workspace build targets request is sent from the client to the server to ask
+for the list of all available build targets in the workspace.</p>
+<p>Request:</p>
+<ul>
+<li>method: 'workspace/buildTargets'</li>
+<li>params: <code>WorkspaceBuildTargetsParams</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">WorkspaceBuildTargetsParams</span> </span>{
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>WorkspaceBuildTargetsResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">WorkspaceBuildTargetsResult</span> </span>{
+  <span class="hljs-comment">/** The build targets in this workspace that
+    * contain sources with the given language ids. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTarget</span>]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="build-target-changed-notification"></a><a href="#build-target-changed-notification" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Target Changed Notification</h3>
+<p>The build target changed notification is sent from the server to the client to
+signal a change in a build target. The server communicates during the initialize
+handshake whether this method is supported or not.</p>
+<p>Notification:</p>
+<ul>
+<li>method: 'buildTarget/didChange'</li>
+<li>params: <code>DidChangeBuildTargetParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">DidChangeBuildTarget</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">changes</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetEvent</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BuildTargetEvent</span> </span>{
+  <span class="hljs-comment">/** The identifier for the changed build target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** The kind of change for this build target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">kind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Int</span>]
+
+  <span class="hljs-comment">/** Any additional metadata about what information changed. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+</code></pre>
+<p>where the <code>kind</code> is defined as follows:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">BuildTargetEventKind</span> </span>{
+  <span class="hljs-comment">/** The build target is new. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Created</span> = <span class="hljs-number">1</span>
+
+  <span class="hljs-comment">/** The build target has changed. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Changed</span> = <span class="hljs-number">2</span>
+
+  <span class="hljs-comment">/** The build target has been deleted. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Deleted</span> = <span class="hljs-number">3</span>
+}
+</code></pre>
+<p>The <code>BuildTargetEventKind</code> information can be used by clients to trigger
+reindexing or update the user interface with the new information.</p>
+<h3><a class="anchor" aria-hidden="true" id="build-target-sources-request"></a><a href="#build-target-sources-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Target Sources Request</h3>
+<p>The build target sources request is sent from the client to the server to query
+for the list of text documents and directories that are belong to a build
+target. The sources response must not include sources that are external to the
+workspace, see <code>buildTarget/dependencySources</code>.</p>
+<ul>
+<li>method: <code>buildTarget/sources</code></li>
+<li>params: <code>BuildTargetSourcesParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SourcesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>BuildTargetSourcesResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SourcesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">SourcesItem</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SourcesItem</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifer</span>
+  <span class="hljs-comment">/** The text documents or and directories that belong to this build target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sources</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">SourceItem</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SourceItem</span> </span>{
+  <span class="hljs-comment">/** Either a text document or a directory. A directory entry must end with a forward
+    * slash "/" and a directory entry implies that every nested text document within the
+    * directory belongs to this source item.
+    */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">uri</span></span>: <span class="hljs-type">Uri</span>
+
+  <span class="hljs-comment">/** Type of file of the source item, such as whether it is file or directory.
+   */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">kind</span></span>: <span class="hljs-type">SourceItemKind</span>
+
+  <span class="hljs-comment">/** Indicates if this source is automatically generated by the build and is not
+    * intended to be manually edited by the user. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generated</span></span>: <span class="hljs-type">Boolean</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">SourceItemKind</span> </span>{
+  <span class="hljs-comment">/** The source item references a normal file.  */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">File</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">1</span>
+  <span class="hljs-comment">/** The source item references a directory. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Directory</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">2</span>
+}
+
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="inverse-sources-request"></a><a href="#inverse-sources-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Inverse Sources Request</h3>
+<p>The inverse sources request is sent from the client to the server to query for
+the list of build targets containing a text document. The server communicates
+during the initialize handshake whether this method is supported or not. This
+request can be viewed as the inverse of <code>buildTarget/sources</code>, except it only
+works for text documents and not directories.</p>
+<ul>
+<li>method: <code>textDocument/inverseSources</code></li>
+<li>params: <code>InverseSourcesParams</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">InverseSourcesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">textDocument</span></span>: <span class="hljs-type">TextDocumentIdentifier</span>
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>InverseSourcesResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">InverseSourcesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="dependency-sources-request"></a><a href="#dependency-sources-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dependency Sources Request</h3>
+<p>The build target dependency sources request is sent from the client to the
+server to query for the sources of build target dependencies that are external
+to the workspace. The dependency sources response must not include source files
+that belong to a build target within the workspace, see <code>buildTarget/sources</code>.</p>
+<p>The server communicates during the initialize handshake whether this method is
+supported or not. This method can for example be used by a language server on
+<code>textDocument/definition</code> to &quot;Go to definition&quot; from project sources to
+dependency sources.</p>
+<ul>
+<li>method: <code>buildTarget/dependencySources</code></li>
+<li>params: <code>DependencySourcesParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">DependencySourcesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>DependencySourcesResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">DependencySourcesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">DependencySourcesItem</span>]
+}
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">DependencySourcesItem</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+  <span class="hljs-comment">/** List of resources containing source files of the
+    * target's dependencies.
+    * Can be source files, jar files, zip files, or directories. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sources</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">Uri</span>]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="resources-request"></a><a href="#resources-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Resources Request</h3>
+<p>The build target resources request is sent from the client to the server to
+query for the list of resources of a given list of build targets.</p>
+<p>A resource is a data dependency required to be present in the runtime classpath
+when a build target is run or executed. The server communicates during the
+initialize handshake whether this method is supported or not.</p>
+<p>This request can be used by a client to highlight the resources in a project
+view, for example.</p>
+<ul>
+<li>method: <code>buildTarget/resources</code></li>
+<li>params: <code>ResourcesParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ResourcesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ResourcesResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ResourcesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">ResourcesItem</span>]
+}
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ResourcesItem</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+  <span class="hljs-comment">/** List of resource files. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">resources</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">Uri</span>]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="task-notifications"></a><a href="#task-notifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Notifications</h3>
+<p>The BSP server can inform the client on the execution state of any task in the
+build tool. The execution of some tasks, such as compilation or tests, must
+always be reported by the server.</p>
+<p>The server may also send additional task notifications for actions not covered
+by the protocol, such as resolution or packaging. BSP clients can then display
+this information to their users at their discretion.</p>
+<p>When beginning a task, the server may send <code>build/taskStart</code>, intermediate
+updates may be sent in <code>build/taskProgress</code>.</p>
+<p>If a <code>build/taskStart</code> notification has been sent, the server must send
+<code>build/taskFinish</code> on completion of the same task. Conversely, a
+<code>build/taskFinish</code> notification must always be sent after a <code>build/taskStart</code>
+with the same <code>taskId</code> was sent.</p>
+<p><code>build/taskStart</code>, <code>build/taskProgress</code> and <code>build/taskFinish</code> notifications for
+the same task must use the same <code>taskId</code>.</p>
+<p>Tasks that are spawned by another task should reference the originating task's
+<code>taskId</code> in their own <code>taskId</code>'s <code>parent</code> field. Tasks spawned directly by a
+request should reference the request's <code>originId</code> parent.</p>
+<h4><a class="anchor" aria-hidden="true" id="task-started"></a><a href="#task-started" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Started</h4>
+<p>Notification:</p>
+<ul>
+<li>method: <code>build/taskStart</code></li>
+<li>params: <code>TaskStartParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TaskStartParams</span> </span>{
+    <span class="hljs-comment">/** Unique id of the task with optional reference to parent task id */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">taskId</span></span>: <span class="hljs-type">TaskId</span>
+
+    <span class="hljs-comment">/** Timestamp of when the event started in milliseconds since Epoch. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eventTime</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Long</span>]
+
+    <span class="hljs-comment">/** Message describing the task. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Optional metadata about the task.
+      * Objects for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="task-progress"></a><a href="#task-progress" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Progress</h4>
+<p>After a <code>taskStart</code> and before <code>taskFinish</code> for a <code>taskId</code>, the server may send
+any number of progress notifications.</p>
+<ul>
+<li>method: <code>build/taskProgress</code></li>
+<li>params: <code>TaskProgressParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TaskProgressParams</span> </span>{
+    <span class="hljs-comment">/** Unique id of the task with optional reference to parent task id */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">taskId</span></span>: <span class="hljs-type">TaskId</span>
+
+    <span class="hljs-comment">/** Timestamp of when the progress event was generated in milliseconds since Epoch. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eventTime</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Long</span>]
+
+    <span class="hljs-comment">/** Message describing the task progress.
+    * Information about the state of the task at the time the event is sent. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** If known, total amount of work units in this task. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">total</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Long</span>]
+
+    <span class="hljs-comment">/** If known, completed amount of work units in this task. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">progress</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Long</span>]
+
+    <span class="hljs-comment">/** Name of a work unit. For example, "files" or "tests". May be empty. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">unit</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Optional metadata about the task.
+      * Objects for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="task-finished"></a><a href="#task-finished" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Finished</h4>
+<ul>
+<li>method: <code>build/taskFinish</code></li>
+<li>params: <code>TaskFinishParams</code> defined as follows:</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TaskFinishParams</span> </span>{
+    <span class="hljs-comment">/** Unique id of the task with optional reference to parent task id */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">taskId</span></span>: <span class="hljs-type">TaskId</span>
+
+    <span class="hljs-comment">/** Timestamp of the event in milliseconds. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eventTime</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Long</span>]
+
+    <span class="hljs-comment">/** Message describing the finish event. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Task completion status. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">status</span></span>: <span class="hljs-type">StatusCode</span>
+
+    <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** Optional metadata about the task.
+      * Objects for specific tasks like compile, test, etc are specified in the protocol.
+      */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="task-data"></a><a href="#task-data" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Task Data</h4>
+<p>Task progress notifications may contain an arbitrary object in their <code>data</code>
+field. The kind of object that is contained in a notification must be specified
+in the <code>dataKind</code> field.</p>
+<p>There are predefined kinds of objects for test and compile tasks, as described
+in the <a href="#compile-request">Compile Request</a> and <a href="#test-request">Test Request</a>
+sections. These are declared by predefined <code>dataKind</code> strings in task
+notifications:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">TaskDataKind</span> </span>{
+
+  <span class="hljs-comment">/** `data` field must contain a CompileTask object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">CompileTask</span> = <span class="hljs-string">"compile-task"</span>
+
+  <span class="hljs-comment">/** `data` field must contain a CompileReport object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">CompileReport</span> = <span class="hljs-string">"compile-report"</span>
+
+  <span class="hljs-comment">/** `data` field must contain a TestTask object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">TestTask</span> = <span class="hljs-string">"test-task"</span>
+
+  <span class="hljs-comment">/** `data` field must contain a TestReport object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">TestReport</span> = <span class="hljs-string">"test-report"</span>
+
+  <span class="hljs-comment">/** `data` field must contain a TestStart object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">TestStart</span> = <span class="hljs-string">"test-start"</span>
+
+  <span class="hljs-comment">/** `data` field must contain a TestFinish object. */</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">TestFinish</span> = <span class="hljs-string">"test-finish"</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="compile-request"></a><a href="#compile-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Compile Request</h3>
+<p>The compile build target request is sent from the client to the server to
+compile the given list of build targets. The server communicates during the
+initialize handshake whether this method is supported or not. This method can
+for example be used by a language server before <code>textDocument/rename</code> to ensure
+that all workspace sources typecheck correctly and are up-to-date.</p>
+<ul>
+<li>method: <code>buildTarget/compile</code></li>
+<li>params: <code>CompileParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CompileParams</span> </span>{
+  <span class="hljs-comment">/** A sequence of build targets to compile. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Optional arguments to the compilation process. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">arguments</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">List</span>[<span class="hljs-type">String</span>]]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>CompileResult</code>, defined as follows</li>
+<li>error: JSON-RPC code and message set in case an exception happens during the
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CompileResult</span> </span>{
+  <span class="hljs-comment">/** An optional request id to know the origin of this report. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** A status code for the execution. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">statusCode</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** A field containing language-specific information, like products
+    * of compilation or compiler-specific metadata the client needs to know. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>] <span class="hljs-comment">// Note, matches `any | null` in the LSP.</span>
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="compile-notifications"></a><a href="#compile-notifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Compile Notifications</h4>
+<p>The beginning of a compilation unit may be signalled to the client with a
+<code>build/taskStart</code> notification. When the compilation unit is a build target, the
+notification's <code>dataKind</code> field must be &quot;compile-task&quot; and the <code>data</code> field must
+include a <code>CompileTask</code> object:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CompileTask</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+}
+</code></pre>
+<p>The completion of a compilation task should be signalled with a
+<code>build/taskFinish</code> notification. When the compilation unit is a build target,
+the notification's <code>dataKind</code> field must be <code>compile-report</code> and the <code>data</code>
+field must include a <code>CompileReport</code> object:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CompileReport</span> </span>{
+  <span class="hljs-comment">/** The build target that was compiled. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** An optional request id to know the origin of this report. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The total number of reported errors compiling this target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">errors</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of reported warnings compiling the target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">warnings</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of milliseconds it took to compile the target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">time</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Int</span>]
+}
+</code></pre>
+<p>The server is free to send any number of <code>build/publishDiagnostics</code> and
+<code>build/logMessage</code> notifications during compilation before completing the
+response. Any number of tasks triggered by the requests may be communicated with
+<code>build/task*</code> notifications.</p>
+<h3><a class="anchor" aria-hidden="true" id="test-request"></a><a href="#test-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Test Request</h3>
+<p>The test build target request is sent from the client to the server to test the
+given list of build targets. The server communicates during the initialize
+handshake whether this method is supported or not.</p>
+<ul>
+<li>method: <code>buildTarget/test</code></li>
+<li>params: <code>TestParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestParams</span> </span>{
+  <span class="hljs-comment">/** A sequence of build targets to test. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Optional arguments to the test execution engine. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">arguments</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">List</span>[<span class="hljs-type">String</span>]]
+
+  <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Language-specific metadata about for this test execution.
+    * See ScalaTestParams as an example. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>TestResult</code>, defined as follows</li>
+<li>error: JSON-RPC code and message set in case an exception happens during the
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestResult</span> </span>{
+  <span class="hljs-comment">/** An optional request id to know the origin of this report. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** A status code for the execution. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">statusCode</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>] <span class="hljs-comment">// Note, matches `any | null` in the LSP.</span>
+}
+</code></pre>
+<p>The field <code>data</code> may contain test-related language-specific information.</p>
+<h4><a class="anchor" aria-hidden="true" id="test-notifications"></a><a href="#test-notifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Test Notifications</h4>
+<p>The beginning of a testing unit may be signalled to the client with a
+<code>build/taskStart</code> notification. When the testing unit is a build target, the
+notification's <code>dataKind</code> field must be <code>test-task</code> and the <code>data</code> field must
+include a <code>TestTask</code> object.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestTask</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+}
+</code></pre>
+<p>The completion of a test task should be signalled with a <code>build/taskFinish</code>
+notification. When the testing unit is a build target, the notification's
+<code>dataKind</code> field must be <code>test-report</code> and the <code>data</code> field must include a
+<code>TestTask</code> object:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestReport</span> </span>{
+  <span class="hljs-comment">/** The build target that was compiled. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** The total number of successful tests. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">passed</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of failed tests. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">failed</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of ignored tests. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ignored</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of cancelled tests. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cancelled</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of skipped tests. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">skipped</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">time</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Int</span>]
+}
+</code></pre>
+<p>This request may trigger a compilation or other tasks on the selected build
+targets.</p>
+<p>The server may send any number of <code>build/task*</code>, <code>build/publishDiagnostics</code> and
+<code>build/logMessage</code> notifications to communicate about tasks triggered by the
+request to the client.</p>
+<h4><a class="anchor" aria-hidden="true" id="test-notifications-1"></a><a href="#test-notifications-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Test Notifications</h4>
+<p>The server may inform about individual tests or groups of tests in task
+notifications that reference the originating task in their <code>taskId</code>. For
+example, the server can send a <code>taskStart</code>/<code>taskFinish</code> for each test suite in a
+target, and likewise for each individual test in the suite. The server's
+implementation decides the granularity at which tests are reported. For example,
+if it only has information about all the tests in a suite at a time, it could
+report a TestFinish for each test once the suite is done.</p>
+<p>Where applicable, notifications about tests should use the <code>taskId</code> to reference
+parent tasks so that the client's user interface can display test execution in a
+tree view.</p>
+<p>Individual test start notifications should specify <code>test-started</code> in the
+<code>dataKind</code> field and include the <code>TestStart</code> object and test finish
+notifications should specify <code>test-finished</code> in the <code>dataKind</code> field and include
+the <code>TestFinish</code> object in the <code>data</code> field.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestStart</span> </span>{
+  <span class="hljs-comment">/** Name or description of the test. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">displayName</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** Source location of the test, as LSP location. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">location</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Location</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestFinish</span> </span>{
+  <span class="hljs-comment">/** Name or description of the test. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">displayName</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** Information about completion of the test, for example an error message. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Completion status of the test. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">status</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** Source location of the test, as LSP location. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">location</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Location</span>]
+
+  <span class="hljs-comment">/** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Optionally, structured metadata about the test completion.
+    * For example: stack traces, expected/actual values. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">TestStatus</span> </span>{
+    <span class="hljs-comment">/** The test passed successfully. */</span>
+    <span class="hljs-keyword">val</span> <span class="hljs-type">Passed</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">1</span>
+
+    <span class="hljs-comment">/** The test failed. */</span>
+    <span class="hljs-keyword">val</span> <span class="hljs-type">Failed</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">2</span>
+
+    <span class="hljs-comment">/** The test was marked as ignored. */</span>
+    <span class="hljs-keyword">val</span> <span class="hljs-type">Ignored</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">3</span>
+
+    <span class="hljs-comment">/** The test execution was cancelled. */</span>
+    <span class="hljs-keyword">val</span> <span class="hljs-type">Cancelled</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">4</span>
+
+    <span class="hljs-comment">/** The was not included in execution. */</span>
+    <span class="hljs-keyword">val</span> <span class="hljs-type">Skipped</span>: <span class="hljs-type">Int</span> = <span class="hljs-number">5</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="run-request"></a><a href="#run-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Run Request</h3>
+<p>The run request is sent from the client to the server to run a build target. The
+server communicates during the initialize handshake whether this method is
+supported or not.</p>
+<ul>
+<li>method: <code>buildTarget/run</code></li>
+<li>params: <code>RunParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">RunParams</span> </span>{
+  <span class="hljs-comment">/** The build target to run. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** A unique identifier generated by the client to identify this request.
+    * The server may include this id in triggered notifications or responses. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Optional arguments to the executed application. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">arguments</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">List</span>[<span class="hljs-type">String</span>]]
+
+  <span class="hljs-comment">/** Kind of data to expect in the data field. If this field is not set, the kind of data is not specified. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dataKind</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** Language-specific metadata for this execution.
+    * See ScalaMainClass as an example. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">data</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">Json</span>]
+}
+</code></pre>
+<p>Note that an empty run request is valid. Run will be executed in the target as
+specified in the build tool.</p>
+<p>Response:</p>
+<ul>
+<li>result: <code>RunResult</code>, defined as follows</li>
+<li>error: JSON-RPC code and message set in case an exception happens during the
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">RunResult</span> </span>{
+  <span class="hljs-comment">/** An optional request id to know the origin of this report. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** A status code for the execution. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">statusCode</span></span>: <span class="hljs-type">Int</span>
+}
+</code></pre>
+<p>This request may trigger a compilation on the selected build targets. The server
+is free to send any number of <code>build/task*</code>, <code>build/publishDiagnostics</code> and
+<code>build/logMessage</code> notifications during compilation before completing the
+response.</p>
+<p>The client will get a <code>originId</code> field in <code>RunResult</code> if the <code>originId</code> field in
+the <code>RunParams</code> is defined.</p>
+<h3><a class="anchor" aria-hidden="true" id="clean-cache-request"></a><a href="#clean-cache-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Clean Cache Request</h3>
+<p>The clean cache request is sent from the client to the server to reset any state
+associated with a given build target. The state can live either in the build
+tool or in the file system.</p>
+<p>The build tool defines the exact semantics of the clean cache request:</p>
+<ol>
+<li>Stateless build tools are free to ignore the request and respond with a
+successful response.</li>
+<li>Stateful build tools must ensure that invoking compilation on a target that
+has been cleaned results in a full compilation.</li>
+</ol>
+<ul>
+<li>method: <code>buildTarget/cleanCache</code></li>
+<li>params: <code>CleanCacheParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CleanCacheParams</span> </span>{
+  <span class="hljs-comment">/** The build targets to clean. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>CleanCacheResult</code>, defined as follows</li>
+<li>error: JSON-RPC code and message set in case an exception happens during the
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">CleanCacheResult</span> </span>{
+  <span class="hljs-comment">/** Optional message to display to the user. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">message</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+  <span class="hljs-comment">/** Indicates whether the clean cache request was performed or not. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cleaned</span></span>: <span class="hljs-type">Boolean</span>
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="extensions"></a><a href="#extensions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Extensions</h2>
+<p>The build server protocol is designed to be extended with language specific data
+structures and methods.</p>
+<h3><a class="anchor" aria-hidden="true" id="scala"></a><a href="#scala" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala</h3>
+<p>The following section contains Scala-specific extensions to the build server
+protocol.</p>
+<h4><a class="anchor" aria-hidden="true" id="scala-build-target"></a><a href="#scala-build-target" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Build Target</h4>
+<p><code>ScalaBuildTarget</code> is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources. This metadata is
+embedded in the <code>data: Option[Json]</code> field of the <code>BuildTarget</code> definition, when
+the <code>dataKind</code> field contains &quot;scala&quot;.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaBuildTarget</span> </span>{
+  <span class="hljs-comment">/** The Scala organization that is used for a target. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scalaOrganization</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The scala version to compile this target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scalaVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The binary version of scalaVersion.
+    * For example, 2.12 if scalaVersion is 2.12.4. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scalaBinaryVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The target platform for this target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">platform</span></span>: <span class="hljs-type">Int</span>
+
+  <span class="hljs-comment">/** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">jars</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">ScalaPlatform</span> </span>{
+  <span class="hljs-keyword">val</span> <span class="hljs-type">JVM</span> = <span class="hljs-number">1</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">JS</span> = <span class="hljs-number">2</span>
+  <span class="hljs-keyword">val</span> <span class="hljs-type">Native</span> = <span class="hljs-number">3</span>
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="scala-test-params"></a><a href="#scala-test-params" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Test Params</h4>
+<p><code>ScalaTestParams</code> contains scala-specific metadata for testing Scala targets.
+This metadata is embedded in the <code>data: Option[Json]</code> field of the
+<code>buildTarget/test</code> request when the <code>dataKind</code> field contains &quot;scala-test&quot;.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaTestParams</span> </span>{
+  <span class="hljs-comment">/** The test classes to be run in this test execution.
+    * It is the result of `buildTarget/scalaTestClasses`. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">testClasses</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">List</span>[<span class="hljs-type">ScalaTestClassesItem</span>]]
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="scalac-options-request"></a><a href="#scalac-options-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scalac Options Request</h4>
+<p>The build target scalac options request is sent from the client to the server to
+query for the list of compiler options necessary to compile in a given list of
+targets.</p>
+<ul>
+<li>method: <code>buildTarget/scalacOptions</code></li>
+<li>params: <code>ScalacOptionsParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalacOptionsParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalacOptionsResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalacOptionsResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">ScalacOptionsItem</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalacOptionsItem</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+    <span class="hljs-comment">/** Additional arguments to the compiler.
+      * For example, -deprecation. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">options</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+    <span class="hljs-comment">/** The dependency classpath for this target, must be
+      * identical to what is passed as arguments to
+      * the -classpath flag in the command line interface
+      * of scalac. */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">classpath</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">Uri</span>]
+
+    <span class="hljs-comment">/** The output directory for classfiles produced by this target */</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">classDirectory</span></span>: <span class="hljs-type">Uri</span>
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="scala-test-classes-request"></a><a href="#scala-test-classes-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Test Classes Request</h4>
+<p>The build target scala test options request is sent from the client to the
+server to query for the list of fully qualified names of test clases in a given
+list of targets.</p>
+<p>This method can for example be used by a client to:</p>
+<ul>
+<li>Show a list of the discovered classes that can be tested.</li>
+<li>Attach a &quot;Run test suite&quot; button above the definition of a test suite via
+<code>textDocument/codeLens</code>.</li>
+</ul>
+<p>(To render the code lens, the language server needs to map the fully qualified
+names of the test targets to the defining source file via
+<code>textDocument/definition</code>. Then, once users click on the button, the language
+server can pass the fully qualified name of the test class as an argument to the
+<code>buildTarget/test</code> request.)</p>
+<ul>
+<li>method: <code>buildTarget/scalaTestClasses</code></li>
+<li>params: <code>ScalaTestClassesParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaTestClassesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** An optional number uniquely identifying a client request. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalaTestClassesResult</code>, defined as follows</li>
+<li>error: code and message set in case an exception happens during shutdown
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaTestClassesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">ScalaTestClassesItem</span>]
+
+  <span class="hljs-comment">/** An optional id of the request that triggered this result. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaTestClassesItem</span> </span>{
+  <span class="hljs-comment">/** The build target that contains the test classes. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** The fully qualified names of the test classes in this target */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">classes</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+</code></pre>
+<p>This request may trigger a compilation on the selected build targets. The server
+is free to send any number of <code>build/task*</code>, <code>build/publishDiagnostics</code> and
+<code>build/logMessage</code> notifications during compilation before completing the
+response.</p>
+<p>The client will get a <code>originId</code> field in <code>ScalaTestClassesResult</code> if the
+<code>originId</code> field in the <code>ScalaTestClassesParams</code> is defined.</p>
+<h4><a class="anchor" aria-hidden="true" id="scala-main-classes-request"></a><a href="#scala-main-classes-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Main Classes Request</h4>
+<p>The build target main classes request is sent from the client to the server to
+query for the list of main classes that can be fed as arguments to
+<code>buildTarget/run</code>. This method can be used for the same use cases than the
+<a href="#scala-test-classes-request">Scala Test Classes Request</a> enables.</p>
+<ul>
+<li>method: <code>buildTarget/scalaMainClasses</code></li>
+<li>params: <code>ScalaMainClassesParams</code></li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaMainClassesParams</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">targets</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** An optional number uniquely identifying a client request. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalaMainClassesResult</code>, defined as follows</li>
+<li>error: code and message set in case an exception happens during shutdown
+request.</li>
+</ul>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaMainClassesResult</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">items</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">ScalaMainClassesItem</span>]
+
+  <span class="hljs-comment">/** An optional id of the request that triggered this result. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">originId</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">String</span>]
+
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaMainClassesItem</span> </span>{
+  <span class="hljs-comment">/** The build target that contains the test classes. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">target</span></span>: <span class="hljs-type">BuildTargetIdentifier</span>
+
+  <span class="hljs-comment">/** The main class item. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">classes</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">ScalaMainClass</span>]
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ScalaMainClass</span> </span>{
+  <span class="hljs-comment">/** The main class to run. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">class</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** The user arguments to the main entrypoint. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">arguments</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The jvm options for the application. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">jvmOptions</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+
+</code></pre>
+<p>This request may trigger a compilation on the selected build targets. The server
+is free to send any number of <code>build/taskStart</code>, <code>build/taskProgress</code>,
+<code>build/taskFinish</code>, <code>build/publishDiagnostics</code> and <code>build/logMessage</code>
+notifications during compilation before completing the response.</p>
+<p>The client will get a <code>originId</code> field in <code>ScalaMainClassesResult</code> if the
+<code>originId</code> field in the <code>ScalaMainClassesParams</code> is defined.</p>
+<h3><a class="anchor" aria-hidden="true" id="sbt"></a><a href="#sbt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sbt</h3>
+<p>The following section contains sbt-specific extensions to the build server
+protocol. This extension allows BSP clients to provide language support for sbt
+build files.</p>
+<p><code>SbtBuildTarget</code> is a basic data structure that contains sbt-specific metadata
+for providing editor support for sbt build files. This metadata is embedded in
+the <code>data: Option[Json]</code> field of the <code>BuildTarget</code> definition when the
+<code>dataKind</code> field contains &quot;sbt&quot;.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SbtBuildTarget</span> </span>{
+  <span class="hljs-comment">/** The sbt version. Useful to support version-dependent syntax. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sbtVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** A sequence of Scala imports that are automatically imported in the sbt build files. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">autoImports</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The Scala build target describing the scala
+   * version and scala jars used by this sbt version. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scalaBuildTarget</span></span>: <span class="hljs-type">ScalaBuildTarget</span>
+
+  <span class="hljs-comment">/** An optional parent if the target has an sbt meta project. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parent</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** The inverse of parent, list of targets that have this build target
+    * defined as their parent. It can contain normal project targets or
+    * sbt build targets if this target represents an sbt meta-meta build. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">children</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>For example, say we have a project in <code>/foo/bar</code> defining projects <code>A</code> and <code>B</code>
+and two meta builds <code>M1</code> (defined in <code>/foo/bar/project</code>) and <code>M2</code> (defined in
+<code>/foo/bar/project/project</code>).</p>
+<p>The sbt build target for <code>M1</code> will have <code>A</code> and <code>B</code> as the defined targets and
+<code>M2</code> as the parent. Similarly, the sbt build target for <code>M2</code> will have <code>M1</code> as
+the defined target and no parent.</p>
+<p>Clients can use this information to reconstruct the tree of sbt meta builds. The
+<code>parent</code> information can be defined from <code>children</code> but it's provided by the
+server to simplify the data processing on the client side.</p>
+<h2><a class="anchor" aria-hidden="true" id="bsp-connection-protocol"></a><a href="#bsp-connection-protocol" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BSP Connection Protocol</h2>
+<p>The Build Server Protocol defines a standard convention for clients to connect
+to BSP servers. This protocol has been designed such that:</p>
+<ol>
+<li>Clients do not require beforehand knowledge about a specific build tool to be
+able to connect to its server.</li>
+<li>Clients can connect to build tools installed at the machine and at the
+workspace level.</li>
+<li>Multiple build tools can run in the same workspace directory.</li>
+</ol>
+<h3><a class="anchor" aria-hidden="true" id="the-bsp-connection-details"></a><a href="#the-bsp-connection-details" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The BSP Connection Details</h3>
+<p>The following JSON object defines the BSP connection details:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BspConnectionDetails</span> </span>{
+  <span class="hljs-comment">/** The name of the build tool. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">name</span></span>: <span class="hljs-type">String</span>
+  <span class="hljs-comment">/** The version of the build tool. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">version</span></span>: <span class="hljs-type">String</span>
+  <span class="hljs-comment">/** The bsp version of the build tool. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bspVersion</span></span>: <span class="hljs-type">String</span>
+  <span class="hljs-comment">/** A collection of languages supported by this BSP server. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">languages</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+  <span class="hljs-comment">/** Command arguments runnable via system processes to start a BSP server */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">argv</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+}
+</code></pre>
+<p>Every build tool supporting BSP must implement a build-tool-specific command to
+generate the BSP connection details in one of the standard BSP locations for BSP
+connection files.</p>
+<p>BSP connection files:</p>
+<ol>
+<li>must be unique per build tool name and version to enable different versions
+of the same build tool to select different BSP connection mechanisms.</li>
+<li>can be updated by the build tool at any point in time, including during the
+startup of the build tool in a workspace.</li>
+<li>can be added to version control if and only if they do not contain
+machine-dependent information like absolute paths or workspace-specific data.</li>
+</ol>
+<p>This is an example of a BSP connection file:</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"My Build Tool"</span>,
+  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"21.3"</span>,
+  <span class="hljs-attr">"bspVersion"</span>: <span class="hljs-string">"2.0.0"</span>,
+  <span class="hljs-attr">"languages"</span>: [<span class="hljs-string">"scala"</span>, <span class="hljs-string">"javascript"</span>, <span class="hljs-string">"rust"</span>],
+  <span class="hljs-attr">"argv"</span>: [<span class="hljs-string">"my-build-tool"</span>, <span class="hljs-string">"bsp"</span>]
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="default-locations-for-bsp-connection-files"></a><a href="#default-locations-for-bsp-connection-files" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Default Locations for BSP Connection Files</h4>
+<p>A BSP connection file can be located in a number of locations. BSP connection
+files may be located in the project workspace, or for bsp servers installed
+locally, in a system-wide or user-specific data directory, depending on the
+operating system:</p>
+<table>
+<thead>
+<tr><th></th><th>Unix + Mac</th><th>Windows</th></tr>
+</thead>
+<tbody>
+<tr><td>Workspace</td><td><code>&lt;workspace-dir&gt;/.bsp/</code></td><td><code>&lt;workspace-dir&gt;\.bsp\</code></td></tr>
+<tr><td>User</td><td><code>$XDG_DATA_HOME/bsp/</code></td><td><code>%LOCALAPPDATA%\bsp\</code></td></tr>
+<tr><td></td><td><code>$HOME/Library/Application Support/bsp/</code> (Mac only)</td><td></td></tr>
+<tr><td>System</td><td><code>$XDG_DATA_DIRS/bsp/</code></td><td><code>%PROGRAMDATA%\bsp\</code></td></tr>
+<tr><td></td><td><code>/Library/Application Support/bsp/</code> (Mac only)</td><td></td></tr>
+</tbody>
+</table>
+<p>Note that:</p>
+<ol>
+<li><code>&lt;workspace-dir&gt;</code> refers to the workspace base directory.</li>
+<li><code>$XDG_DATA_HOME</code> and <code>$XDG_DATA_DIRS</code> are defined by the
+<a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html">XDG Base Directory Specification</a></li>
+<li><code>%LOCALAPPDATA%</code> and <code>%PROGRAMDATA%</code> are defined by the
+<a href="https://docs.microsoft.com/en-gb/windows/desktop/shell/csidl">Windows Documentation</a>
+(see also:
+<a href="https://docs.microsoft.com/en-gb/windows/desktop/shell/knownfolderid">Default Known Folders</a>)</li>
+<li>on Macs, both standard macOS and Unix directories are supported</li>
+</ol>
+<p>The workspace location always has higher priority than the user or system
+location, so if a client finds a BSP connection file that meets its criteria
+inside a workspace location it must pick it over other BSP connection files in
+the user or system location.</p>
+<p>Workspace-defined build tools must not write BSP connection files to the user or
+system locations. That location is only reserved for BSP connection files that
+do not contain any workspace-specific data.</p>
+<h4><a class="anchor" aria-hidden="true" id="policy-around-connection-files-generation"></a><a href="#policy-around-connection-files-generation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Policy around Connection Files Generation</h4>
+<p>To have a successful first-time connection to servers, at least one BSP
+connection file must exist before users import a project in an IDE or invoke a
+BSP client in a workspace.</p>
+<p>Build tools installed globally by the user should write a BSP connection file to
+the system location to minimize the chances that a client doesn't discover it.
+The BSP connection file should also be deleted when the build tool is
+uninstalled.</p>
+<p>However, in the more general case, build tools are required to implement a
+command to generate a BSP connection file either in the user or system location.
+This command must be runnable in the workspace base directory.</p>
+<p>With such command, the following workflows become possible:</p>
+<ol>
+<li>Users can manually install a BSP connection file for any build tool.</li>
+<li>Clients can implement smart discovery capabilities to:
+<ol>
+<li>Detect the build tool(s) used in a workspace.</li>
+<li>Invoke the command to generate a BSP connection file for them.</li>
+</ol></li>
+</ol>
+<p>These workflows help improve the user experience for clients that want a more
+out-of-the-box experience and provide a escape hatch for users to generate BSP
+connection files for exotic and unsupported build tools.</p>
+<h4><a class="anchor" aria-hidden="true" id="build-tool-commands-to-start-bsp-servers"></a><a href="#build-tool-commands-to-start-bsp-servers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Tool Commands to Start BSP Servers</h4>
+<p>The most important data field in the connection file is the <code>argv</code> JSON field.
+The <code>argv</code> field contains the command arguments that start a BSP server via
+system process.</p>
+<p>Clients must meet the following requirements when using <code>argv</code> via system
+process:</p>
+<ol>
+<li>The first element of the <code>argv</code> collection can be a simple name, a relative
+path or an absolute path. A relative path is always relative to the workspace
+base directory, so the client must prepend the value of the workspace folder
+to the relative path before spawning <code>argv</code>.</li>
+<li><code>argv</code> must always be invoked in the workspace base directory.</li>
+<li><code>argv</code> must be invoked with the same environment variables of the client.</li>
+</ol>
+<p>Build tools must make sure that their <code>argv</code> invocation:</p>
+<ol>
+<li>Creates a fresh BSP connection to a server every time. This is required in
+case there is more than one client connecting to a server or a server crashes
+and a client wants to reconnect.</li>
+<li>Uses <code>stdin</code> to send messages and <code>stdout</code> to receive responses to/from the
+BSP server.</li>
+<li>Uses <code>stderr</code> to report execution progress to the user.</li>
+</ol>
+<p>The use of <code>stdin</code> and <code>stdout</code> to communicate with the build server simplifies
+the life of clients and allows build tools to implement their own underlying
+protocol to connect to a local/remote build tool instance/daemon.</p>
+<p>In addition, build tools can use the <code>argv</code> invocation for other purposes such
+as:</p>
+<ol>
+<li>Spawn a daemon if it's not already running.</li>
+<li>Install the build tool if it's not already installed in a user's machine.</li>
+</ol>
+<h5><a class="anchor" aria-hidden="true" id="example-with-my-build-tool"></a><a href="#example-with-my-build-tool" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example with <code>my-build-tool</code></h5>
+<p>To illustrate the responsibilities of the build tool, let's go through a small
+example where:</p>
+<ol>
+<li>The <code>my-build-tool</code> build tool is installed in the user's machine.</li>
+<li>The <code>argv</code> field is set to <code>[&quot;my-build-tool&quot;, &quot;bsp&quot;]</code>.</li>
+<li>There is no running build tool instance in a workspace directory
+<code>&lt;workspace&gt;</code>.</li>
+<li><code>my-build-tool</code> supports BSP connections with a running instance of the build
+tool via
+<a href="https://en.wikipedia.org/wiki/Unix_domain_socket">UNIX domain sockets</a> and
+<a href="https://docs.microsoft.com/en-us/windows/desktop/ipc/named-pipes">Windows Named Pipes</a>.</li>
+</ol>
+<p>The invocation of <code>my-build-tool bsp</code>, with current working directory
+<code>&lt;workspace&gt;</code>, will need to:</p>
+<ol>
+<li>Run a background process of the build tool for the given <code>&lt;workspace&gt;</code>.</li>
+<li>Pick the best way to connect to the running process depending on the machine
+it runs. For example, it would use UNIX sockets in a Linux machine.</li>
+<li>Fire up a BSP server in the build tool with script-specific connection
+details. In the case of Unix sockets, the script will generate the socket
+file and pass it to the background process of the build tool.</li>
+<li>Connect to the running BSP server, forward anything that comes from <code>stdin</code>
+to the BSP server and print anything that comes from the server's output
+streams to <code>stdout</code>. Execution progress will be shown in <code>stderr</code>.</li>
+</ol>
+<p>If the build tool is already running for a given project, the <code>argv</code> invocation
+will only perform the last two steps.</p>
+<h3><a class="anchor" aria-hidden="true" id="clients-connecting-to-bsp-servers"></a><a href="#clients-connecting-to-bsp-servers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Clients Connecting to BSP Servers</h3>
+<p>The BSP Connection Protocol aims to simplify clients the process of connecting
+to servers.</p>
+<p>Clients can connect to servers by locating connection files in the standard BSP
+locations. BSP clients must look up connection files first in the bsp user
+location and, only if the lookup of a connection file meeting certain criteria
+fails, continue the search in the system location.</p>
+<p>When more than a BSP connection file is found, BSP clients can use connection
+metadata to pick only the BSP servers they are interested in. If there are still
+ambiguities, BSP clients are free to choose how to react, for example by asking
+the end user to select a build server.</p>
+<p>When no BSP connection file is found (because, for example, the user has not run
+the build tool command to generate BSP connection details), the BSP client can:</p>
+<ol>
+<li>Fail gracefully.</li>
+<li>Ask users to type the command to generate the BSP connection details with
+their preferred build tool and then connect to the BSP server.</li>
+<li>Discover the build tool used in a project manually, run the command to
+generate the BSP connection details and then connect to the BSP server.</li>
+</ol>
+<p>When BSP clients have found a valid connection file, they can connect to the
+server by running the <code>argv</code> invocation via system process; listening to its
+system output and writing to its system input. If the <code>argv</code> invocation fails,
+the output in <code>stderr</code> must be shown to the user.</p>
+<h2><a class="anchor" aria-hidden="true" id="appendix"></a><a href="#appendix" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Appendix</h2>
+<h3><a class="anchor" aria-hidden="true" id="java-bindings"></a><a href="#java-bindings" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Java Bindings</h3>
+<p>A Java library implementation for BSP is available from Maven Central.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-comment">// Gradle</span>
+compile group: <span class="hljs-symbol">'ch</span>.epfl.scala', name: <span class="hljs-symbol">'bsp4</span>j', version: <span class="hljs-symbol">'2</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>-<span class="hljs-type">M4</span>+<span class="hljs-number">19</span>-b728a3fa'
+
+<span class="hljs-comment">// Maven</span>
+&lt;dependency&gt;
+    &lt;groupId&gt;ch.epfl.scala&lt;/groupId&gt;
+    &lt;artifactId&gt;bsp4j&lt;/artifactId&gt;
+    &lt;version&gt;<span class="hljs-number">2.0</span><span class="hljs-number">.0</span>-<span class="hljs-type">M4</span>+<span class="hljs-number">19</span>-b728a3fa&lt;/version&gt;
+&lt;/dependency&gt;
+
+<span class="hljs-comment">// sbt</span>
+libraryDependencies += <span class="hljs-string">"ch.epfl.scala"</span> % <span class="hljs-string">"bsp4j"</span> % <span class="hljs-string">"2.0.0-M4+19-b728a3fa"</span>
+</code></pre>
+<p>The <code>bsp4j</code> module has on external dependency on the
+<a href="https://github.com/eclipse/lsp4j">eclipse/lsp4j</a> library.</p>
+<h3><a class="anchor" aria-hidden="true" id="faq"></a><a href="#faq" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>FAQ</h3>
+<p><strong>Q</strong>: What's the relationship between BSP and LSP?</p>
+<p><strong>A</strong>: They are complementary protocols. While LSP specifies endpoints for
+communication between an <strong>editor acting as client</strong> and language server, BSP
+specifies endpoints between a <strong>language server acting as client</strong> and build
+server. For example, in order to respond to a <code>textDocument/definition</code> request
+from an editor client, a language server could query a build tool via BSP for
+the classpath of a module.</p>
+<p><strong>Q</strong>: What's the relationship between implementations of BSP and
+implementations of LSP like
+<a href="https://github.com/dragos/dragos-vscode-scala">dragos/dragos-vscode-scala</a>,
+<a href="https://marketplace.visualstudio.com/items?itemName=lampepfl.dotty">Dotty IDE</a>
+or <a href="https://github.com/scalameta/metals">Metals</a>?</p>
+<p><strong>A</strong>: Currently, those language servers each implement custom integrations for
+each supported build tool to extract build metadata. Those language servers
+could instead implement a BSP client to extract build metadata from any build
+tools that implement BSP, sharing a single BSP server implementation. Likewise,
+a new build tool could implement a BSP server and support a wide range of
+language servers out-of-the-box.</p>
+<p><strong>Q</strong>: Should non-Scala participants in the protocol generate data types from
+<code>bsp.proto</code> or is it preferable to use pre-generated artifacts in maven (or
+other repos)?</p>
+<p><strong>A</strong>: BSP uses JSON on the wire like LSP, it is not necessary to use
+<code>bsp.proto</code>. The <code>bsp.proto</code> schema is provided as a language-agnostic reference
+schema for the shape of BSP data structures, similarly to how LSP messages are
+defined using TypeScript interfaces. Like with LSP, it is left to BSP
+participant to figure out how to produce JSON payloads with BSP data structures.</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#motivation">Motivation</a></li><li><a href="#background">Background</a></li><li><a href="#status">Status</a></li><li><a href="#base-protocol">Base protocol</a></li><li><a href="#basic-json-structures">Basic Json Structures</a><ul class="toc-headings"><li><a href="#build-target">Build Target</a></li><li><a href="#build-target-identifier">Build Target Identifier</a></li><li><a href="#task-id">Task Id</a></li><li><a href="#status-code">Status Code</a></li><li><a href="#uri">Uri</a></li></ul></li><li><a href="#actual-protocol">Actual Protocol</a><ul class="toc-headings"><li><a href="#server-lifetime">Server Lifetime</a></li><li><a href="#workspace-build-targets-request">Workspace Build Targets Request</a></li><li><a href="#build-target-changed-notification">Build Target Changed Notification</a></li><li><a href="#build-target-sources-request">Build Target Sources Request</a></li><li><a href="#inverse-sources-request">Inverse Sources Request</a></li><li><a href="#dependency-sources-request">Dependency Sources Request</a></li><li><a href="#resources-request">Resources Request</a></li><li><a href="#task-notifications">Task Notifications</a></li><li><a href="#compile-request">Compile Request</a></li><li><a href="#test-request">Test Request</a></li><li><a href="#run-request">Run Request</a></li><li><a href="#clean-cache-request">Clean Cache Request</a></li></ul></li><li><a href="#extensions">Extensions</a><ul class="toc-headings"><li><a href="#scala">Scala</a></li><li><a href="#sbt">Sbt</a></li></ul></li><li><a href="#bsp-connection-protocol">BSP Connection Protocol</a><ul class="toc-headings"><li><a href="#the-bsp-connection-details">The BSP Connection Details</a></li><li><a href="#clients-connecting-to-bsp-servers">Clients Connecting to BSP Servers</a></li></ul></li><li><a href="#appendix">Appendix</a><ul class="toc-headings"><li><a href="#java-bindings">Java Bindings</a></li><li><a href="#faq">FAQ</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer" style="background-color:#333"><section class="sitemap"><a href="/bsp/" class="nav-home"><img src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol" width="66" height="58"/></a><div><h5>Overview</h5><a href="/bsp/docs/bsp.html">Specification</a></div><div><h5>Social</h5><a href="https://github.com/scalameta/metals" target="_blank"><img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&amp;label=stars&amp;logo=github&amp;style=social"/></a><a href="https://gitter.im/scalameta/metals" target="_blank"><img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&amp;style=social"/></a></div></section><section class="copyright">Copyright © 2019 Build Server Protocol</section></footer></div></body></html>
