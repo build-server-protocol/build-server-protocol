@@ -104,99 +104,95 @@ binary artifact). Using vocabulary of other build tools:
 The general idea is that the BuildTarget data structure should contain only
 information that is is fast or cheap to compute.
 
-```scala
-trait BuildTarget {
-
+```ts
+export interface BuildTarget {
   /** The target’s unique identifier */
-  def id: BuildTargetIdentifier
+  id: BuildTargetIdentifier;
 
   /** A human readable name for this target.
-    * May be presented in the user interface.
-    * Should be unique if possible.
-    * The id.uri is used if None. */
-  def displayName: Option[String]
+   * May be presented in the user interface.
+   * Should be unique if possible.
+   * The id.uri is used if None. */
+  displayName?: String;
 
   /** The directory where this target belongs to. Multiple build targets are allowed to map
-    * to the same base directory, and a build target is not required to have a base directory.
-    * A base directory does not determine the sources of a target, see buildTarget/sources. */
-  def baseDirectory: Option[Uri]
+   * to the same base directory, and a build target is not required to have a base directory.
+   * A base directory does not determine the sources of a target, see buildTarget/sources. */
+  baseDirectory?: Uri;
 
   /** Free-form string tags to categorize or label this build target.
-    * For example, can be used by the client to:
-    * - customize how the target should be translated into the client's project model.
-    * - group together different but related targets in the user interface.
-    * - display icons or colors in the user interface.
-    * Pre-defined tags are listed in `BuildTargetTag` but clients and servers
-    * are free to define new tags for custom purposes.
-    */
-  def tags: List[String]
+   * For example, can be used by the client to:
+   * - customize how the target should be translated into the client's project model.
+   * - group together different but related targets in the user interface.
+   * - display icons or colors in the user interface.
+   * Pre-defined tags are listed in `BuildTargetTag` but clients and servers
+   * are free to define new tags for custom purposes.
+   */
+  tags: String[];
 
   /** The capabilities of this build target. */
-  def capabilities: BuildTargetCapabilities
+  capabilities: BuildTargetCapabilities;
 
   /** The set of languages that this target contains.
-    * The ID string for each language is defined in the LSP. */
-  def languageIds: List[String]
+   * The ID string for each language is defined in the LSP. */
+  languageIds: String[];
 
   /** The direct upstream build target dependencies of this build target */
-  def dependencies: List[BuildTargetIdentifer]
+  dependencies: BuildTargetIdentifer[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
+  dataKind?: String;
 
   /** Language-specific metadata about this target.
-    * See ScalaBuildTarget as an example. */
-  def data: Option[Json] // Note, matches `any` in the LSP.
+   * See ScalaBuildTarget as an example. */
+  data?: any;
 }
 
-object BuildTargetDataKind {
-
+export namespace BuildTargetDataKind {
   /** The `data` field contains a `ScalaBuildTarget` object. */
-  val Scala = "scala"
+  export const Scala = "scala";
 
   /** The `data` field contains a `SbtBuildTarget` object. */
-  val Sbt = "sbt"
-
+  export const Sbt = "sbt";
 }
 
-object BuildTargetTag {
-
+export namespace BuildTargetTag {
   /** Target contains re-usable functionality for downstream targets. May have any
-    * combination of capabilities. */
-  val Library = "library"
+   * combination of capabilities. */
+  export const Library = "library";
 
   /** Target contains source code for producing any kind of application, may have
-    * but does not require the `canRun` capability. */
-  val Application = "application"
+   * but does not require the `canRun` capability. */
+  export const Application = "application";
 
   /** Target contains source code for testing purposes, may have but does not
-    * require the `canTest` capability. */
-  val Test = "test"
+   * require the `canTest` capability. */
+  export const Test = "test";
 
   /** Target contains source code for integration testing purposes, may have
-    * but does not require the `canTest` capability.
-    * The difference between "test" and "integration-test" is that
-    * integration tests traditionally run slower compared to normal tests
-    * and require more computing resources to execute.
-    */
-  val IntegrationTest = "integration-test"
+   * but does not require the `canTest` capability.
+   * The difference between "test" and "integration-test" is that
+   * integration tests traditionally run slower compared to normal tests
+   * and require more computing resources to execute.
+   */
+  export const IntegrationTest = "integration-test";
 
   /** Target contains source code to measure performance of a program, may have
-    * but does not require the `canRun` build target capability.
-    */
-  val Benchmark = "benchmark"
+   * but does not require the `canRun` build target capability.
+   */
+  export const Benchmark = "benchmark";
 
   /** Target should be ignored by IDEs. */
-  val NoIDE = "no-ide"
+  export const NoIDE = "no-ide";
 }
 
-trait BuildTargetCapabilities {
+export interface BuildTargetCapabilities {
   /** This target can be compiled by the BSP server. */
-  def canCompile: Boolean
+  canCompile: Boolean;
   /** This target can be tested by the BSP server. */
-  def canTest: Boolean
+  canTest: Boolean;
   /** This target can be run by the BSP server. */
-  def canRun: Boolean
+  canRun: Boolean;
 }
 ```
 
@@ -206,10 +202,10 @@ A unique identifier for a target, can use any URI-compatible encoding as long as
 it is unique within the workspace. Clients should not infer metadata out of the
 URI structure such as the path or query parameters, use `BuildTarget` instead.
 
-```scala
-trait BuildTargetIdentifer {
+```ts
+export interface BuildTargetIdentifer {
   /** The target’s Uri */
-  def uri: Uri
+  uri: Uri;
 }
 ```
 
@@ -218,17 +214,17 @@ trait BuildTargetIdentifer {
 The Task Id allows clients to _uniquely_ identify a BSP task and establish a
 client-parent relationship with another task id.
 
-```scala
-trait TaskId {
+```ts
+export interface TaskId {
   /** A unique identifier */
-  def id: String
+  id: String;
 
   /** The parent task ids, if any. A non-empty parents field means
-    * this task is a sub-task of every parent task id. The child-parent
-    * relationship of tasks makes it possible to render tasks in
-    * a tree-like user interface or inspect what caused a certain task
-    * execution. */
-  def parents: Option[List[String]]
+   * this task is a sub-task of every parent task id. The child-parent
+   * relationship of tasks makes it possible to render tasks in
+   * a tree-like user interface or inspect what caused a certain task
+   * execution. */
+  parents?: String[];
 }
 ```
 
@@ -236,23 +232,23 @@ trait TaskId {
 
 Included in notifications of tasks or requests to signal the completion state.
 
-```scala
-object StatusCode {
+```ts
+export namespace StatusCode {
   /** Execution was successful. */
-  val Ok = 1
+  export const Ok = 1;
   /** Execution failed. */
-  val Error = 2
+  export const Error = 2;
   /** Execution was cancelled. */
-  val Cancelled = 3
+  export const Cancelled = 3;
 }
 ```
 
 ### Uri
 
-```scala
+```ts
 /**  A resource identifier that is a valid URI according
-  * to rfc3986: * https://tools.ietf.org/html/rfc3986 */
-type Uri = String
+ * to rfc3986: * https://tools.ietf.org/html/rfc3986 */
+type Uri = String;
 ```
 
 ## Actual Protocol
@@ -292,34 +288,33 @@ Request:
 
 - params: InitializeBuildParams defined as follows
 
-```scala
-trait InitializeBuildParams {
+```ts
+export interface InitializeBuildParams {
   /** Name of the client */
-  def displayName: String
+  displayName: String;
 
   /** The version of the client */
-  def version: String
+  version: String;
 
   /** The BSP version that the client speaks */
-  def bspVersion: String
+  bspVersion: String;
 
   /** The rootUri of the workspace */
-  def rootUri: Uri
+  rootUri: Uri;
 
   /** The capabilities of the client */
-  def capabilities: BuildClientCapabilities
+  capabilities: BuildClientCapabilities;
 
   /** Additional metadata about the client */
-  def data: Option[Json]
+  data?: any;
 }
 
-trait BuildClientCapabilities {
+export interface BuildClientCapabilities {
   /** The languages that this client supports.
-    * The ID strings for each language is defined in the LSP.
-    * The server must never respond with build targets for other
-    * languages than those that appear in this list. */
-  def languageIds: List[String]
-
+   * The ID strings for each language is defined in the LSP.
+   * The server must never respond with build targets for other
+   * languages than those that appear in this list. */
+  languageIds: String[];
 }
 ```
 
@@ -327,62 +322,61 @@ Response:
 
 - result: InitializeBuildResult defined as follows
 
-```scala
-trait InitializeBuildResult {
+```ts
+export interface InitializeBuildResult {
   /** Name of the server */
-  def displayName: String
+  displayName: String;
 
   /** The version of the server */
-  def version: String
+  version: String;
 
   /** The BSP version that the server speaks */
-  def bspVersion: String
+  bspVersion: String;
 
   /** The capabilities of the build server */
-  def capabilities: BuildServerCapabilities
+  capabilities: BuildServerCapabilities;
 
   /** Additional metadata about the server */
-  def data: Option[Json]
+  data?: any;
 }
 
-
-trait BuildServerCapabilities {
+export interface BuildServerCapabilities {
   /** The languages the server supports compilation via method buildTarget/compile. */
-  def compileProvider: Option[CompileProvider]
+  compileProvider?: CompileProvider;
 
   /** The languages the server supports test execution via method buildTarget/test */
-  def testProvider: Option[TestProvider]
+  testProvider?: TestProvider;
 
   /** The languages the server supports run via method buildTarget/run */
-  def runProvider: Option[RunProvider]
+  runProvider?: RunProvider;
 
   /** The server can provide a list of targets that contain a
-    * single text document via the method buildTarget/inverseSources */
-  def inverseSourcesProvider: Option[Boolean]
+   * single text document via the method buildTarget/inverseSources */
+  inverseSourcesProvider?: Boolean;
 
   /** The server provides sources for library dependencies
-    * via method buildTarget/dependencySources */
-  def dependencySourcesProvider: Option[Boolean]
+   * via method buildTarget/dependencySources */
+  dependencySourcesProvider?: Boolean;
 
   /** The server provides all the resource dependencies
-    * via method buildTarget/resources */
-  def resourcesProvider: Option[Boolean]
+   * via method buildTarget/resources */
+  resourcesProvider?: Boolean;
 
   /** The server sends notifications to the client on build
-    * target change events via buildTarget/didChange */
-  def buildTargetChangedProvider: Option[Boolean]
+   * target change events via buildTarget/didChange */
+  buildTargetChangedProvider?: Boolean;
 }
 
-trait CompileProvider {
-  def languageIds: List[String]
+export interface CompileProvider {
+  languageIds: String[];
 }
 
-trait RunProvider {
-  def languageIds: List[String]
+export interface RunProvider {
+  languageIds: String[];
 }
 
-trait TestProvider {
-  def languageIds: List[String]
+export interface TestProvider {
+  languageIds: String[];
 }
 ```
 
@@ -403,10 +397,8 @@ Notification:
 - method: ‘build/initialized’
 - params: InitializedBuildParams defined as follows
 
-```scala
-trait InitializedBuildParams {
-
-}
+```ts
+export interface InitializedBuildParams {}
 ```
 
 #### Shutdown Build Request
@@ -448,34 +440,34 @@ Notification:
 - method: `build/showMessage`
 - params: `ShowMessageParams` defined as follows:
 
-```scala
-trait ShowMessageParams {
+```ts
+export interface ShowMessageParams {
   /** The message type. See {@link MessageType}. */
-  def type: Int
+  type: Int;
 
   /** The task id if any. */
-  def task: Option[TaskId]
+  task?: TaskId;
 
   /** The request id that originated this notification. */
-  def originId: Option[String]
+  originId?: String;
 
   /** The actual message. */
-  def message: String
+  message: String;
 }
 ```
 
 where `MessageType` is defined as follows:
 
-```scala
-object MessageType {
+```ts
+export namespace MessageType {
   /** An error message. */
-  final val Error = 1
+  export const Error = 1;
   /** A warning message. */
-  final val Warning = 2
+  export const Warning = 2;
   /** An information message. */
-  final val Info = 3
+  export const Info = 3;
   /** A log message. */
-  final val Log = 4
+  export const Log = 4;
 }
 ```
 
@@ -497,19 +489,19 @@ Notification:
 - method: ‘build/logMessage’
 - params: LogMessageParams defined as follows:
 
-```scala
-trait LogMessageParams {
+```ts
+export interface LogMessageParams {
   /** The message type. See {@link MessageType} */
-  def type: Int
+  type: Int;
 
   /** The task id if any. */
-  def task: Option[TaskId]
+  task?: TaskId;
 
   /** The request id that originated this notification. */
-  def originId: Option[String]
+  originId?: String;
 
   /** The actual message */
-  def message: String
+  message: String;
 }
 ```
 
@@ -533,26 +525,26 @@ Notification:
 - method: `build/publishDiagnostics`
 - params: `PublishDiagnosticsParams` defined as follows:
 
-```scala
-trait PublishDiagnosticsParams {
+```ts
+export interface PublishDiagnosticsParams {
   /** The document where the diagnostics are published. */
-  def textDocument: TextDocumentIdentifier
+  textDocument: TextDocumentIdentifier;
 
   /** The build target where the diagnostics origin.
-    * It is valid for one text document to belong to multiple
-    * build targets, for example sources that are compiled against multiple
-    * platforms (JVM, JavaScript). */
-  def buildTarget: BuildTargetIdentifier
+   * It is valid for one text document to belong to multiple
+   * build targets, for example sources that are compiled against multiple
+   * platforms (JVM, JavaScript). */
+  buildTarget: BuildTargetIdentifier;
 
   /** The request id that originated this notification. */
-  def originId: Option[String]
+  originId?: String;
 
   /** The diagnostics to be published by the client. */
-  def diagnostics: List[Diagnostic]
+  diagnostics: Diagnostic[];
 
   /** Whether the client should clear the previous diagnostics
-    * mapped to the same `textDocument` and `buildTarget`. */
-  def reset: Boolean
+   * mapped to the same `textDocument` and `buildTarget`. */
+  reset: Boolean;
 }
 ```
 
@@ -584,20 +576,19 @@ Request:
 - method: 'workspace/buildTargets'
 - params: `WorkspaceBuildTargetsParams`, defined as follows
 
-```scala
-trait WorkspaceBuildTargetsParams {
-}
+```ts
+export interface WorkspaceBuildTargetsParams {}
 ```
 
 Response:
 
 - result: `WorkspaceBuildTargetsResult`, defined as follows
 
-```scala
-trait WorkspaceBuildTargetsResult {
+```ts
+export interface WorkspaceBuildTargetsResult {
   /** The build targets in this workspace that
-    * contain sources with the given language ids. */
-  def targets: List[BuildTarget]
+   * contain sources with the given language ids. */
+  targets: BuildTarget[];
 }
 ```
 
@@ -612,35 +603,35 @@ Notification:
 - method: 'buildTarget/didChange'
 - params: `DidChangeBuildTargetParams` defined as follows:
 
-```scala
-trait DidChangeBuildTarget {
-  def changes: List[BuildTargetEvent]
+```ts
+export interface DidChangeBuildTarget {
+  changes: BuildTargetEvent[];
 }
 
-trait BuildTargetEvent {
+export interface BuildTargetEvent {
   /** The identifier for the changed build target */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** The kind of change for this build target */
-  def kind: Option[Int]
+  kind?: Int;
 
   /** Any additional metadata about what information changed. */
-  def data: Option[Json]
+  data?: any;
 }
 ```
 
 where the `kind` is defined as follows:
 
-```scala
-object BuildTargetEventKind {
+```ts
+export namespace BuildTargetEventKind {
   /** The build target is new. */
-  val Created = 1
+  export const Created = 1;
 
   /** The build target has changed. */
-  val Changed = 2
+  export const Changed = 2;
 
   /** The build target has been deleted. */
-  val Deleted = 3
+  export const Deleted = 3;
 }
 ```
 
@@ -657,9 +648,9 @@ workspace, see `buildTarget/dependencySources`.
 - method: `buildTarget/sources`
 - params: `BuildTargetSourcesParams`
 
-```scala
-trait SourcesParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface SourcesParams {
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -667,40 +658,39 @@ Response:
 
 - result: `BuildTargetSourcesResult`, defined as follows
 
-```scala
-trait SourcesResult {
-  def items: List[SourcesItem]
+```ts
+export interface SourcesResult {
+  items: SourcesItem[k];
 }
 
-trait SourcesItem {
-  def target: BuildTargetIdentifer
+export interface SourcesItem {
+  target: BuildTargetIdentifer;
   /** The text documents or and directories that belong to this build target. */
-  def sources: List[SourceItem]
+  sources: SourceItem[];
 }
 
-trait SourceItem {
+export interface SourceItem {
   /** Either a text document or a directory. A directory entry must end with a forward
-    * slash "/" and a directory entry implies that every nested text document within the
-    * directory belongs to this source item.
-    */
-  def uri: Uri
+   * slash "/" and a directory entry implies that every nested text document within the
+   * directory belongs to this source item.
+   */
+  uri: Uri;
 
   /** Type of file of the source item, such as whether it is file or directory.
    */
-  def kind: SourceItemKind
+  kind: SourceItemKind;
 
   /** Indicates if this source is automatically generated by the build and is not
-    * intended to be manually edited by the user. */
-  def generated: Boolean
+   * intended to be manually edited by the user. */
+  generated: Boolean;
 }
 
-object SourceItemKind {
+export namespace SourceItemKind {
   /** The source item references a normal file.  */
-  val File: Int = 1
+  export const File: Int = 1;
   /** The source item references a directory. */
-  val Directory: Int = 2
+  export const Directory: Int = 2;
 }
-
 ```
 
 ### Inverse Sources Request
@@ -714,9 +704,9 @@ works for text documents and not directories.
 - method: `textDocument/inverseSources`
 - params: `InverseSourcesParams`, defined as follows
 
-```scala
-trait InverseSourcesParams {
-  def textDocument: TextDocumentIdentifier
+```ts
+export interface InverseSourcesParams {
+  textDocument: TextDocumentIdentifier;
 }
 ```
 
@@ -724,9 +714,9 @@ Response:
 
 - result: `InverseSourcesResult`, defined as follows
 
-```scala
-trait InverseSourcesResult {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface InverseSourcesResult {
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -745,9 +735,9 @@ dependency sources.
 - method: `buildTarget/dependencySources`
 - params: `DependencySourcesParams`
 
-```scala
-trait DependencySourcesParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface DependencySourcesParams {
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -755,16 +745,16 @@ Response:
 
 - result: `DependencySourcesResult`, defined as follows
 
-```scala
-trait DependencySourcesResult {
-  def items: List[DependencySourcesItem]
+```ts
+export interface DependencySourcesResult {
+  items: DependencySourcesItem[];
 }
-trait DependencySourcesItem {
-  def target: BuildTargetIdentifier
+export interface DependencySourcesItem {
+  target: BuildTargetIdentifier;
   /** List of resources containing source files of the
-    * target's dependencies.
-    * Can be source files, jar files, zip files, or directories. */
-  def sources: List[Uri]
+   * target's dependencies.
+   * Can be source files, jar files, zip files, or directories. */
+  sources: Uri[];
 }
 ```
 
@@ -783,9 +773,9 @@ view, for example.
 - method: `buildTarget/resources`
 - params: `ResourcesParams`
 
-```scala
-trait ResourcesParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface ResourcesParams {
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -793,14 +783,14 @@ Response:
 
 - result: `ResourcesResult`, defined as follows
 
-```scala
-trait ResourcesResult {
-  def items: List[ResourcesItem]
+```ts
+export interface ResourcesResult {
+  items: ResourcesItem[];
 }
-trait ResourcesItem {
-  def target: BuildTargetIdentifier
+export interface ResourcesItem {
+  target: BuildTargetIdentifier;
   /** List of resource files. */
-  def resources: List[Uri]
+  resources: Uri[];
 }
 ```
 
@@ -836,26 +826,26 @@ Notification:
 - method: `build/taskStart`
 - params: `TaskStartParams` defined as follows:
 
-```scala
-trait TaskStartParams {
-    /** Unique id of the task with optional reference to parent task id */
-    def taskId: TaskId
+```ts
+export interface TaskStartParams {
+  /** Unique id of the task with optional reference to parent task id */
+  taskId: TaskId;
 
-    /** Timestamp of when the event started in milliseconds since Epoch. */
-    def eventTime: Option[Long]
+  /** Timestamp of when the event started in milliseconds since Epoch. */
+  eventTime?: Long;
 
-    /** Message describing the task. */
-    def message: Option[String]
+  /** Message describing the task. */
+  message?: String;
 
-    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def dataKind: Option[String]
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+   * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  dataKind?: String;
 
-    /** Optional metadata about the task.
-      * Objects for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def data: Option[Json]
+  /** Optional metadata about the task.
+   * Objects for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  data?: any;
 }
 ```
 
@@ -867,38 +857,37 @@ any number of progress notifications.
 - method: `build/taskProgress`
 - params: `TaskProgressParams` defined as follows:
 
-```scala
-trait TaskProgressParams {
-    /** Unique id of the task with optional reference to parent task id */
-    def taskId: TaskId
+```ts
+export interface TaskProgressParams {
+  /** Unique id of the task with optional reference to parent task id */
+  taskId: TaskId;
 
-    /** Timestamp of when the progress event was generated in milliseconds since Epoch. */
-    def eventTime: Option[Long]
+  /** Timestamp of when the progress event was generated in milliseconds since Epoch. */
+  eventTime?: Long;
 
-    /** Message describing the task progress.
-    * Information about the state of the task at the time the event is sent. */
-    def message: Option[String]
+  /** Message describing the task progress.
+   * Information about the state of the task at the time the event is sent. */
+  message?: String;
 
-    /** If known, total amount of work units in this task. */
-    def total: Option[Long]
+  /** If known, total amount of work units in this task. */
+  total?: Long;
 
-    /** If known, completed amount of work units in this task. */
-    def progress: Option[Long]
+  /** If known, completed amount of work units in this task. */
+  progress?: Long;
 
-    /** Name of a work unit. For example, "files" or "tests". May be empty. */
-    def unit: Option[String]
+  /** Name of a work unit. For example, "files" or "tests". May be empty. */
+  unit?: String;
 
-    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def dataKind: Option[String]
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+   * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  dataKind?: String;
 
-    /** Optional metadata about the task.
-      * Objects for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def data: Option[Json]
+  /** Optional metadata about the task.
+   * Objects for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  data?: any;
 }
-
 ```
 
 #### Task Finished
@@ -906,63 +895,62 @@ trait TaskProgressParams {
 - method: `build/taskFinish`
 - params: `TaskFinishParams` defined as follows:
 
-```scala
-trait TaskFinishParams {
-    /** Unique id of the task with optional reference to parent task id */
-    def taskId: TaskId
+```ts
+export interface TaskFinishParams {
+  /** Unique id of the task with optional reference to parent task id */
+  taskId: TaskId;
 
-    /** Timestamp of the event in milliseconds. */
-    def eventTime: Option[Long]
+  /** Timestamp of the event in milliseconds. */
+  eventTime?: Long;
 
-    /** Message describing the finish event. */
-    def message: Option[String]
+  /** Message describing the finish event. */
+  message?: String;
 
-    /** Task completion status. */
-    def status: StatusCode
+  /** Task completion status. */
+  status: StatusCode;
 
-    /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-      * Kind names for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def dataKind: Option[String]
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+   * Kind names for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  dataKind?: String;
 
-    /** Optional metadata about the task.
-      * Objects for specific tasks like compile, test, etc are specified in the protocol.
-      */
-    def data: Option[Json]
+  /** Optional metadata about the task.
+   * Objects for specific tasks like compile, test, etc are specified in the protocol.
+   */
+  data?: any;
 }
 ```
 
 #### Task Data
 
-Task progress notifications may contain an arbitrary object in their `data`
-field. The kind of object that is contained in a notification must be specified
-in the `dataKind` field.
+Task progress notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
 
 There are predefined kinds of objects for test and compile tasks, as described
 in the [Compile Request](#compile-request) and [Test Request](#test-request)
 sections. These are declared by predefined `dataKind` strings in task
 notifications:
 
-```scala
-object TaskDataKind {
-
+```ts
+export namespace TaskDataKind {
   /** `data` field must contain a CompileTask object. */
-  val CompileTask = "compile-task"
+  export const CompileTask = "compile-task";
 
   /** `data` field must contain a CompileReport object. */
-  val CompileReport = "compile-report"
+  export const CompileReport = "compile-report";
 
   /** `data` field must contain a TestTask object. */
-  val TestTask = "test-task"
+  export const TestTask = "test-task";
 
   /** `data` field must contain a TestReport object. */
-  val TestReport = "test-report"
+  export const TestReport = "test-report";
 
   /** `data` field must contain a TestStart object. */
-  val TestStart = "test-start"
+  export const TestStart = "test-start";
 
   /** `data` field must contain a TestFinish object. */
-  val TestFinish = "test-finish"
+  export const TestFinish = "test-finish";
 }
 ```
 
@@ -977,17 +965,17 @@ that all workspace sources typecheck correctly and are up-to-date.
 - method: `buildTarget/compile`
 - params: `CompileParams`
 
-```scala
-trait CompileParams {
+```ts
+export interface CompileParams {
   /** A sequence of build targets to compile. */
-  def targets: List[BuildTargetIdentifier]
+  targets: BuildTargetIdentifier[];
 
   /** A unique identifier generated by the client to identify this request.
-    * The server may include this id in triggered notifications or responses. */
-  def originId: Option[String]
+   * The server may include this id in triggered notifications or responses. */
+  originId?: String;
 
   /** Optional arguments to the compilation process. */
-  def arguments: Option[List[String]]
+  arguments?: String[];
 }
 ```
 
@@ -997,20 +985,20 @@ Response:
 - error: JSON-RPC code and message set in case an exception happens during the
   request.
 
-```scala
-trait CompileResult {
+```ts
+export interface CompileResult {
   /** An optional request id to know the origin of this report. */
-  def originId: Option[String]
+  originId?: String;
 
   /** A status code for the execution. */
-  def statusCode: Int
+  statusCode: Int;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: String
+  dataKind: String;
 
   /** A field containing language-specific information, like products
-    * of compilation or compiler-specific metadata the client needs to know. */
-  def data: Option[Json] // Note, matches `any | null` in the LSP.
+   * of compilation or compiler-specific metadata the client needs to know. */
+  data?: any;
 }
 ```
 
@@ -1021,9 +1009,9 @@ The beginning of a compilation unit may be signalled to the client with a
 notification's `dataKind` field must be "compile-task" and the `data` field must
 include a `CompileTask` object:
 
-```scala
-trait CompileTask {
-  def target: BuildTargetIdentifier
+```ts
+export interface CompileTask {
+  target: BuildTargetIdentifier;
 }
 ```
 
@@ -1032,22 +1020,22 @@ The completion of a compilation task should be signalled with a
 the notification's `dataKind` field must be `compile-report` and the `data`
 field must include a `CompileReport` object:
 
-```scala
-trait CompileReport {
+```ts
+export interface CompileReport {
   /** The build target that was compiled. */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** An optional request id to know the origin of this report. */
-  def originId: Option[String]
+  originId?: String;
 
   /** The total number of reported errors compiling this target. */
-  def errors: Int
+  errors: Int;
 
   /** The total number of reported warnings compiling the target. */
-  def warnings: Int
+  warnings: Int;
 
   /** The total number of milliseconds it took to compile the target. */
-  def time: Option[Int]
+  time?: Int];
 }
 ```
 
@@ -1065,24 +1053,24 @@ handshake whether this method is supported or not.
 - method: `buildTarget/test`
 - params: `TestParams`
 
-```scala
-trait TestParams {
+```ts
+export interface TestParams {
   /** A sequence of build targets to test. */
-  def targets: List[BuildTargetIdentifier]
+  targets: BuildTargetIdentifier[];
 
   /** A unique identifier generated by the client to identify this request.
-    * The server may include this id in triggered notifications or responses. */
-  def originId: Option[String]
+   * The server may include this id in triggered notifications or responses. */
+  originId?: String;
 
   /** Optional arguments to the test execution engine. */
-  def arguments: Option[List[String]]
+  arguments?: String[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
+  dataKind?: String;
 
   /** Language-specific metadata about for this test execution.
-    * See ScalaTestParams as an example. */
-  def data: Option[Json]
+   * See ScalaTestParams as an example. */
+  data?: any;
 }
 ```
 
@@ -1092,18 +1080,18 @@ Response:
 - error: JSON-RPC code and message set in case an exception happens during the
   request.
 
-```scala
-trait TestResult {
+```ts
+export interface TestResult {
   /** An optional request id to know the origin of this report. */
-  def originId: Option[String]
+  originId?: String;
 
   /** A status code for the execution. */
-  def statusCode: Int
+  statusCode: Int;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
+  dataKind?: String;
 
-  def data: Option[Json] // Note, matches `any | null` in the LSP.
+  data?: any;
 }
 ```
 
@@ -1116,9 +1104,9 @@ The beginning of a testing unit may be signalled to the client with a
 notification's `dataKind` field must be `test-task` and the `data` field must
 include a `TestTask` object.
 
-```scala
-trait TestTask {
-  def target: BuildTargetIdentifier
+```ts
+export interface TestTask {
+  target: BuildTargetIdentifier;
 }
 ```
 
@@ -1127,28 +1115,28 @@ notification. When the testing unit is a build target, the notification's
 `dataKind` field must be `test-report` and the `data` field must include a
 `TestTask` object:
 
-```scala
-trait TestReport {
+```ts
+export interface TestReport {
   /** The build target that was compiled. */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** The total number of successful tests. */
-  def passed: Int
+  passed: Int;
 
   /** The total number of failed tests. */
-  def failed: Int
+  failed: Int;
 
   /** The total number of ignored tests. */
-  def ignored: Int
+  ignored: Int;
 
   /** The total number of cancelled tests. */
-  def cancelled: Int
+  cancelled: Int;
 
   /** The total number of skipped tests. */
-  def skipped: Int
+  skipped: Int;
 
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
-  def time: Option[Int]
+  time?: Int;
 }
 ```
 
@@ -1174,56 +1162,55 @@ parent tasks so that the client's user interface can display test execution in a
 tree view.
 
 Individual test start notifications should specify `test-started` in the
-`dataKind` field and include the `TestStart` object and test finish
+`dataKind` field and include the `TestStart` interface and test finish
 notifications should specify `test-finished` in the `dataKind` field and include
-the `TestFinish` object in the `data` field.
+the `TestFinish` interface in the `data` field.
 
-```scala
-trait TestStart {
+```ts
+export interface TestStart {
   /** Name or description of the test. */
-  def displayName: String
+  displayName: String;
 
   /** Source location of the test, as LSP location. */
-  def location: Option[Location]
+  location?: Location;
 }
 
-trait TestFinish {
+export interface TestFinish {
   /** Name or description of the test. */
-  def displayName: String
+  displayName: String;
 
   /** Information about completion of the test, for example an error message. */
-  def message: Option[String]
+  message?: String;
 
   /** Completion status of the test. */
-  def status: Int
+  status: Int;
 
   /** Source location of the test, as LSP location. */
-  def location: Option[Location]
+  location?: Location;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
+  dataKind?: String;
 
   /** Optionally, structured metadata about the test completion.
-    * For example: stack traces, expected/actual values. */
-  def data: Option[Json]
+   * For example: stack traces, expected/actual values. */
+  data?: any;
 }
 
+export namespace TestStatus {
+  /** The test passed successfully. */
+  export const Passed: Int = 1;
 
-trait TestStatus {
-    /** The test passed successfully. */
-    val Passed: Int = 1
+  /** The test failed. */
+  export const Failed: Int = 2;
 
-    /** The test failed. */
-    val Failed: Int = 2
+  /** The test was marked as ignored. */
+  export const Ignored: Int = 3;
 
-    /** The test was marked as ignored. */
-    val Ignored: Int = 3
+  /** The test execution was cancelled. */
+  export const Cancelled: Int = 4;
 
-    /** The test execution was cancelled. */
-    val Cancelled: Int = 4
-
-    /** The was not included in execution. */
-    val Skipped: Int = 5
+  /** The was not included in execution. */
+  export const Skipped: Int = 5;
 }
 ```
 
@@ -1236,24 +1223,24 @@ supported or not.
 - method: `buildTarget/run`
 - params: `RunParams`
 
-```scala
-trait RunParams {
+```ts
+export interface RunParams {
   /** The build target to run. */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** A unique identifier generated by the client to identify this request.
-    * The server may include this id in triggered notifications or responses. */
-  def originId: Option[String]
+   * The server may include this id in triggered notifications or responses. */
+  originId?: String;
 
   /** Optional arguments to the executed application. */
-  def arguments: Option[List[String]]
+  arguments?: String[];
 
   /** Kind of data to expect in the data field. If this field is not set, the kind of data is not specified. */
-  def dataKind: Option[String]
+  dataKind?: String;
 
   /** Language-specific metadata for this execution.
-    * See ScalaMainClass as an example. */
-  def data: Option[Json]
+   * See ScalaMainClass as an example. */
+  data?: any;
 }
 ```
 
@@ -1266,13 +1253,13 @@ Response:
 - error: JSON-RPC code and message set in case an exception happens during the
   request.
 
-```scala
-trait RunResult {
+```ts
+export interface RunResult {
   /** An optional request id to know the origin of this report. */
-  def originId: Option[String]
+  originId?: String;
 
   /** A status code for the execution. */
-  def statusCode: Int
+  statusCode: Int;
 }
 ```
 
@@ -1300,10 +1287,10 @@ The build tool defines the exact semantics of the clean cache request:
 - method: `buildTarget/cleanCache`
 - params: `CleanCacheParams`
 
-```scala
-trait CleanCacheParams {
+```ts
+export interface CleanCacheParams {
   /** The build targets to clean. */
-  def targets: List[BuildTargetIdentifier]
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -1313,11 +1300,11 @@ Response:
 - error: JSON-RPC code and message set in case an exception happens during the
   request.
 
-```scala
-trait CleanCacheResult {
+```ts
+export interface CleanCacheResult {
   /** Optional message to display to the user. */
-  def message: Option[String]
+  message?: String;
   /** Indicates whether the clean cache request was performed or not. */
-  def cleaned: Boolean
+  cleaned: Boolean;
 }
 ```

@@ -14,29 +14,29 @@ metadata for compiling a target containing Scala sources. This metadata is
 embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when
 the `dataKind` field contains "scala".
 
-```scala
-trait ScalaBuildTarget {
+```ts
+export interface ScalaBuildTarget {
   /** The Scala organization that is used for a target. */
-  def scalaOrganization: String
+  scalaOrganization: String;
 
   /** The scala version to compile this target */
-  def scalaVersion: String
+  scalaVersion: String;
 
   /** The binary version of scalaVersion.
-    * For example, 2.12 if scalaVersion is 2.12.4. */
-  def scalaBinaryVersion: String
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: String;
 
   /** The target platform for this target */
-  def platform: Int
+  platform: Int;
 
   /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
-  def jars: List[String]
+  jars: String[];
 }
 
-object ScalaPlatform {
-  val JVM = 1
-  val JS = 2
-  val Native = 3
+export namespace ScalaPlatform {
+  export const JVM = 1;
+  export const JS = 2;
+  export const Native = 3;
 }
 ```
 
@@ -46,11 +46,11 @@ object ScalaPlatform {
 This metadata is embedded in the `data: Option[Json]` field of the
 `buildTarget/test` request when the `dataKind` field contains "scala-test".
 
-```scala
-trait ScalaTestParams {
+```ts
+export interface ScalaTestParams {
   /** The test classes to be run in this test execution.
-    * It is the result of `buildTarget/scalaTestClasses`. */
-  def testClasses: Option[List[ScalaTestClassesItem]]
+   * It is the result of `buildTarget/scalaTestClasses`. */
+  testClasses?: ScalaTestClassesItem[];
 }
 ```
 
@@ -63,9 +63,9 @@ targets.
 - method: `buildTarget/scalacOptions`
 - params: `ScalacOptionsParams`
 
-```scala
-trait ScalacOptionsParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface ScalacOptionsParams {
+  targets: BuildTargetIdentifier[];
 }
 ```
 
@@ -73,26 +73,26 @@ Response:
 
 - result: `ScalacOptionsResult`, defined as follows
 
-```scala
-trait ScalacOptionsResult {
-  def items: List[ScalacOptionsItem]
+```ts
+export interface ScalacOptionsResult {
+  items: List[ScalacOptionsItem];
 }
 
-trait ScalacOptionsItem {
-    def target: BuildTargetIdentifier
+export interface ScalacOptionsItem {
+  target: BuildTargetIdentifier;
 
-    /** Additional arguments to the compiler.
-      * For example, -deprecation. */
-    def options: List[String]
+  /** Additional arguments to the compiler.
+   * For example, -deprecation. */
+  options: List[String];
 
-    /** The dependency classpath for this target, must be
-      * identical to what is passed as arguments to
-      * the -classpath flag in the command line interface
-      * of scalac. */
-    def classpath: List[Uri]
+  /** The dependency classpath for this target, must be
+   * identical to what is passed as arguments to
+   * the -classpath flag in the command line interface
+   * of scalac. */
+  classpath: List[Uri];
 
-    /** The output directory for classfiles produced by this target */
-    def classDirectory: Uri
+  /** The output directory for classfiles produced by this target */
+  classDirectory: Uri;
 }
 ```
 
@@ -117,12 +117,12 @@ server can pass the fully qualified name of the test class as an argument to the
 - method: `buildTarget/scalaTestClasses`
 - params: `ScalaTestClassesParams`
 
-```scala
-trait ScalaTestClassesParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface ScalaTestClassesParams {
+  targets: BuildTargetIdentifier[];
 
   /** An optional number uniquely identifying a client request. */
-  def originId: Option[String]
+  originId?: String;
 }
 ```
 
@@ -132,21 +132,20 @@ Response:
 - error: code and message set in case an exception happens during shutdown
   request.
 
-```scala
-trait ScalaTestClassesResult {
-  def items: List[ScalaTestClassesItem]
+```ts
+export interface ScalaTestClassesResult {
+  items: ScalaTestClassesItem[];
 
   /** An optional id of the request that triggered this result. */
-  def originId: Option[String]
-
+  originId?: String;
 }
 
-trait ScalaTestClassesItem {
+export interface ScalaTestClassesItem {
   /** The build target that contains the test classes. */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** The fully qualified names of the test classes in this target */
-  def classes: List[String]
+  classes: String[];
 }
 ```
 
@@ -168,12 +167,12 @@ query for the list of main classes that can be fed as arguments to
 - method: `buildTarget/scalaMainClasses`
 - params: `ScalaMainClassesParams`
 
-```scala
-trait ScalaMainClassesParams {
-  def targets: List[BuildTargetIdentifier]
+```ts
+export interface ScalaMainClassesParams {
+  targets: BuildTargetIdentifier[];
 
   /** An optional number uniquely identifying a client request. */
-  def originId: Option[String]
+  originId?: String;
 }
 ```
 
@@ -183,34 +182,32 @@ Response:
 - error: code and message set in case an exception happens during shutdown
   request.
 
-```scala
-trait ScalaMainClassesResult {
-  def items: List[ScalaMainClassesItem]
+```ts
+export interface ScalaMainClassesResult {
+  items: ScalaMainClassesItem[];
 
   /** An optional id of the request that triggered this result. */
-  def originId: Option[String]
-
+  originId?: String;
 }
 
-trait ScalaMainClassesItem {
+export interface ScalaMainClassesItem {
   /** The build target that contains the test classes. */
-  def target: BuildTargetIdentifier
+  target: BuildTargetIdentifier;
 
   /** The main class item. */
-  def classes: List[ScalaMainClass]
+  classes: ScalaMainClass[];
 }
 
-trait ScalaMainClass {
+export interface ScalaMainClass {
   /** The main class to run. */
-  def class: String
+  class: String;
 
   /** The user arguments to the main entrypoint. */
-  def arguments: List[String]
+  arguments: String[];
 
   /** The jvm options for the application. */
-  def jvmOptions: List[String]
+  jvmOptions: String[];
 }
-
 ```
 
 This request may trigger a compilation on the selected build targets. The server
