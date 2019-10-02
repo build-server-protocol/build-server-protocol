@@ -1,8 +1,6 @@
 language: scala
 jdk:
   - oraclejdk8
-node_js:
-  - 10
 
 os:
   - linux
@@ -21,7 +19,9 @@ jobs:
       - sbt bsp4j/xtend test bsp4j/test
       - test -z $(git ls-files --modified)
     - stage: release
-      script: sbt docs/docusaurusPublishGhpages
+      script:
+        - nvm install 10
+        - sbt docs/docusaurusPublishGhpages
 
 cache:
   directories:
