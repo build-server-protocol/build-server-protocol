@@ -94,17 +94,19 @@ const Features = props => {
       imageAlign: "left"
     },
     {
-      title: "Rich compilation model",
-      content: "Example of compiling multiple projects in IntelliJ via BSP.",
-      image: "https://i.imgur.com/aE6fSyb.gif",
-      imageAlign: "right"
-    },
-    {
       title: "Run, test and debug",
       content:
         "Example of running, testing and debugging a Scala program in VS Code via BSP and the Debug Adapter Protocol.",
       image:
         "https://user-images.githubusercontent.com/3709537/65522506-2622b380-deeb-11e9-821b-f7e43aec5305.gif",
+      imageAlign: "right"
+    },
+    {
+      title: "Rich compilation model",
+      content:
+        "Example of compiling multiple projects in IntelliJ via BSP. " +
+        "The build server can notify the client about compile progress and report compile errors.",
+      image: "https://i.imgur.com/aE6fSyb.gif",
       imageAlign: "left"
     },
     {
@@ -112,7 +114,7 @@ const Features = props => {
       content:
         "The Build Server Protocol (BSP) is complementary to the Language Server Protocol (LSP). " +
         "While LSP allows editor clients to abstract over different programming languages, BSP allows IDE clients to abstract over different build tools.",
-      image: "https://i.imgur.com/BIF8iHt.png",
+      image: "https://i.imgur.com/3stUaOx.png",
       imageAlign: "right"
     }
   ];

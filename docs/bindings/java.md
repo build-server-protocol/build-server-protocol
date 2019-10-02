@@ -3,11 +3,15 @@ title: Java Bindings
 sidebar_label: Java
 ---
 
+The
+[`ch.epfl.scala:bsp4j`](https://mvnrepository.com/artifact/ch.epfl.scala/bsp4j)
+module is a Java library that is available from Maven Central. The module has
+one external dependency on the [eclipse/lsp4j](https://github.com/eclipse/lsp4j)
+library.
+
 ## Installation
 
-The `ch.epfl.scala:bsp4j` module is a Java library that is available from Maven
-Central. The module has one external dependency on the
-[eclipse/lsp4j](https://github.com/eclipse/lsp4j) library.
+Add the following snippet to your build to add dependency on `bsp4j`.
 
 ### Gradle
 

@@ -9,9 +9,8 @@
         "title": "Java Bindings",
         "sidebar_label": "Java"
       },
-      "specification": {
-        "title": "Build Server Protocol",
-        "sidebar_label": "Specification"
+      "bsp": {
+        "title": "bsp"
       },
       "extensions/sbt": {
         "title": "sbt Extension",
@@ -29,6 +28,10 @@
       },
       "server-discovery": {
         "title": "Build Server Discovery"
+      },
+      "specification": {
+        "title": "Build Server Protocol",
+        "sidebar_label": "Specification"
       }
     },
     "links": {
