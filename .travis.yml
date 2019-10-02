@@ -1,4 +1,4 @@
-language: node_js
+language: scala
 jdk:
   - oraclejdk8
 node_js:
