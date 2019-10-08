@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>sbt Extension · Build Server Protocol</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="The following section contains sbt-specific extensions to the build server"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="sbt Extension · Build Server Protocol"/><meta property="og:type" content="website"/><meta property="og:url" content="https://scalacenter.github.io/bsp/bsp/index.html"/><meta property="og:description" content="The following section contains sbt-specific extensions to the build server"/><meta property="og:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><link rel="shortcut icon" href="/bsp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/bsp/js/scrollSpy.js"></script><link rel="stylesheet" href="/bsp/css/main.css"/><script src="/bsp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/bsp/"><img class="logo" src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol"/><h2 class="headerTitleWithLogo">Build Server Protocol</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/bsp/docs/specification.html" target="_self">Specification</a></li><li class=""><a href="https://github.com/scalacenter/bsp" target="_blank">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Extensions</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/specification.html">Specification</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/implementations.html">Implementations</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/server-discovery.html">Build Server Discovery</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/faq.html">Frequently Asked Questions</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extensions</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/scala.html">Scala</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/bsp/docs/extensions/sbt.html">sbt</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Bindings</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/bindings/java.html">Java</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/scalacenter/bsp/edit/master/docs/extensions/sbt.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">sbt Extension</h1></header><article><div><span><p>The following section contains sbt-specific extensions to the build server
+protocol. This extension allows BSP clients to provide language support for sbt
+build files.</p>
+<p><code>SbtBuildTarget</code> is a basic data structure that contains sbt-specific metadata
+for providing editor support for sbt build files. This metadata is embedded in
+the <code>data: Option[Json]</code> field of the <code>BuildTarget</code> definition when the
+<code>dataKind</code> field contains &quot;sbt&quot;.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">SbtBuildTarget</span> </span>{
+  <span class="hljs-comment">/** The sbt version. Useful to support version-dependent syntax. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sbtVersion</span></span>: <span class="hljs-type">String</span>
+
+  <span class="hljs-comment">/** A sequence of Scala imports that are automatically imported in the sbt build files. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">autoImports</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">String</span>]
+
+  <span class="hljs-comment">/** The Scala build target describing the scala
+   * version and scala jars used by this sbt version. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scalaBuildTarget</span></span>: <span class="hljs-type">ScalaBuildTarget</span>
+
+  <span class="hljs-comment">/** An optional parent if the target has an sbt meta project. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parent</span></span>: <span class="hljs-type">Option</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+
+  <span class="hljs-comment">/** The inverse of parent, list of targets that have this build target
+    * defined as their parent. It can contain normal project targets or
+    * sbt build targets if this target represents an sbt meta-meta build. */</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">children</span></span>: <span class="hljs-type">List</span>[<span class="hljs-type">BuildTargetIdentifier</span>]
+}
+</code></pre>
+<p>For example, say we have a project in <code>/foo/bar</code> defining projects <code>A</code> and <code>B</code>
+and two meta builds <code>M1</code> (defined in <code>/foo/bar/project</code>) and <code>M2</code> (defined in
+<code>/foo/bar/project/project</code>).</p>
+<p>The sbt build target for <code>M1</code> will have <code>A</code> and <code>B</code> as the defined targets and
+<code>M2</code> as the parent. Similarly, the sbt build target for <code>M2</code> will have <code>M1</code> as
+the defined target and no parent.</p>
+<p>Clients can use this information to reconstruct the tree of sbt meta builds. The
+<code>parent</code> information can be defined from <code>children</code> but it's provided by the
+server to simplify the data processing on the client side.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/bsp/docs/extensions/scala.html"><span class="arrow-prev">← </span><span>Scala</span></a><a class="docs-next button" href="/bsp/docs/bindings/java.html"><span>Java</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer" style="background-color:#555"><section class="sitemap"><a href="/bsp/" class="nav-home"><img src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol" width="66" height="58"/></a><div><h5>Overview</h5><a href="/bsp/docs/specification.html">Specification</a><a href="/bsp/docs/implementations.html">Implementations</a></div><div><h5>Social</h5><a href="https://github.com/scalameta/metals" target="_blank"><img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&amp;label=stars&amp;logo=github&amp;style=social"/></a><a href="https://gitter.im/scalameta/metals" target="_blank"><img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&amp;style=social"/></a></div></section><section class="copyright">Copyright © 2019 Build Server Protocol</section></footer></div></body></html>

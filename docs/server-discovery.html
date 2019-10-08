@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Build Server Discovery · Build Server Protocol</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="The Build Server Protocol defines a standard convention for clients to connect"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Build Server Discovery · Build Server Protocol"/><meta property="og:type" content="website"/><meta property="og:url" content="https://scalacenter.github.io/bsp/bsp/index.html"/><meta property="og:description" content="The Build Server Protocol defines a standard convention for clients to connect"/><meta property="og:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><link rel="shortcut icon" href="/bsp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/bsp/js/scrollSpy.js"></script><link rel="stylesheet" href="/bsp/css/main.css"/><script src="/bsp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/bsp/"><img class="logo" src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol"/><h2 class="headerTitleWithLogo">Build Server Protocol</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/bsp/docs/specification.html" target="_self">Specification</a></li><li class=""><a href="https://github.com/scalacenter/bsp" target="_blank">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Overview</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/specification.html">Specification</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/implementations.html">Implementations</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/bsp/docs/server-discovery.html">Build Server Discovery</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/faq.html">Frequently Asked Questions</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extensions</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/scala.html">Scala</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/sbt.html">sbt</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Bindings</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/bindings/java.html">Java</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/scalacenter/bsp/edit/master/docs/server-discovery.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Build Server Discovery</h1></header><article><div><span><p>The Build Server Protocol defines a standard convention for clients to connect
+to BSP servers. This protocol has been designed such that:</p>
+<ol>
+<li>Clients do not require beforehand knowledge about a specific build tool to be
+able to connect to its server.</li>
+<li>Clients can connect to build tools installed at the machine and at the
+workspace level.</li>
+<li>Multiple build tools can run in the same workspace directory.</li>
+</ol>
+<h2><a class="anchor" aria-hidden="true" id="the-bsp-connection-details"></a><a href="#the-bsp-connection-details" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The BSP Connection Details</h2>
+<p>The following JSON object defines the BSP connection details:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> BspConnectionDetails {
+  <span class="hljs-comment">/** The name of the build tool. */</span>
+  name: <span class="hljs-built_in">String</span>;
+  <span class="hljs-comment">/** The version of the build tool. */</span>
+  version: <span class="hljs-built_in">String</span>;
+  <span class="hljs-comment">/** The bsp version of the build tool. */</span>
+  bspVersion: <span class="hljs-built_in">String</span>;
+  <span class="hljs-comment">/** A collection of languages supported by this BSP server. */</span>
+  languages: <span class="hljs-built_in">String</span>[];
+  <span class="hljs-comment">/** Command arguments runnable via system processes to start a BSP server */</span>
+  argv: <span class="hljs-built_in">String</span>[];
+}
+</code></pre>
+<p>Every build tool supporting BSP must implement a build-tool-specific command to
+generate the BSP connection details in one of the standard BSP locations for BSP
+connection files.</p>
+<p>BSP connection files:</p>
+<ol>
+<li>must be unique per build tool name and version to enable different versions
+of the same build tool to select different BSP connection mechanisms.</li>
+<li>can be updated by the build tool at any point in time, including during the
+startup of the build tool in a workspace.</li>
+<li>can be added to version control if and only if they do not contain
+machine-dependent information like absolute paths or workspace-specific data.</li>
+</ol>
+<p>This is an example of a BSP connection file:</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"My Build Tool"</span>,
+  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"21.3"</span>,
+  <span class="hljs-attr">"bspVersion"</span>: <span class="hljs-string">"2.0.0"</span>,
+  <span class="hljs-attr">"languages"</span>: [<span class="hljs-string">"scala"</span>, <span class="hljs-string">"javascript"</span>, <span class="hljs-string">"rust"</span>],
+  <span class="hljs-attr">"argv"</span>: [<span class="hljs-string">"my-build-tool"</span>, <span class="hljs-string">"bsp"</span>]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="default-locations-for-bsp-connection-files"></a><a href="#default-locations-for-bsp-connection-files" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Default Locations for BSP Connection Files</h3>
+<p>A BSP connection file can be located in a number of locations. BSP connection
+files may be located in the project workspace, or for bsp servers installed
+locally, in a system-wide or user-specific data directory, depending on the
+operating system:</p>
+<table>
+<thead>
+<tr><th></th><th>Unix + Mac</th><th>Windows</th></tr>
+</thead>
+<tbody>
+<tr><td>Workspace</td><td><code>&lt;workspace-dir&gt;/.bsp/</code></td><td><code>&lt;workspace-dir&gt;\.bsp\</code></td></tr>
+<tr><td>User</td><td><code>$XDG_DATA_HOME/bsp/</code></td><td><code>%LOCALAPPDATA%\bsp\</code></td></tr>
+<tr><td></td><td><code>$HOME/Library/Application Support/bsp/</code> (Mac only)</td><td></td></tr>
+<tr><td>System</td><td><code>$XDG_DATA_DIRS/bsp/</code></td><td><code>%PROGRAMDATA%\bsp\</code></td></tr>
+<tr><td></td><td><code>/Library/Application Support/bsp/</code> (Mac only)</td><td></td></tr>
+</tbody>
+</table>
+<p>Note that:</p>
+<ol>
+<li><code>&lt;workspace-dir&gt;</code> refers to the workspace base directory.</li>
+<li><code>$XDG_DATA_HOME</code> and <code>$XDG_DATA_DIRS</code> are defined by the
+<a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html">XDG Base Directory Specification</a></li>
+<li><code>%LOCALAPPDATA%</code> and <code>%PROGRAMDATA%</code> are defined by the
+<a href="https://docs.microsoft.com/en-gb/windows/desktop/shell/csidl">Windows Documentation</a>
+(see also:
+<a href="https://docs.microsoft.com/en-gb/windows/desktop/shell/knownfolderid">Default Known Folders</a>)</li>
+<li>on Macs, both standard macOS and Unix directories are supported</li>
+</ol>
+<p>The workspace location always has higher priority than the user or system
+location, so if a client finds a BSP connection file that meets its criteria
+inside a workspace location it must pick it over other BSP connection files in
+the user or system location.</p>
+<p>Workspace-defined build tools must not write BSP connection files to the user or
+system locations. That location is only reserved for BSP connection files that
+do not contain any workspace-specific data.</p>
+<h3><a class="anchor" aria-hidden="true" id="policy-around-connection-files-generation"></a><a href="#policy-around-connection-files-generation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Policy around Connection Files Generation</h3>
+<p>To have a successful first-time connection to servers, at least one BSP
+connection file must exist before users import a project in an IDE or invoke a
+BSP client in a workspace.</p>
+<p>Build tools installed globally by the user should write a BSP connection file to
+the system location to minimize the chances that a client doesn't discover it.
+The BSP connection file should also be deleted when the build tool is
+uninstalled.</p>
+<p>However, in the more general case, build tools are required to implement a
+command to generate a BSP connection file either in the user or system location.
+This command must be runnable in the workspace base directory.</p>
+<p>With such command, the following workflows become possible:</p>
+<ol>
+<li>Users can manually install a BSP connection file for any build tool.</li>
+<li>Clients can implement smart discovery capabilities to:
+<ol>
+<li>Detect the build tool(s) used in a workspace.</li>
+<li>Invoke the command to generate a BSP connection file for them.</li>
+</ol></li>
+</ol>
+<p>These workflows help improve the user experience for clients that want a more
+out-of-the-box experience and provide a escape hatch for users to generate BSP
+connection files for exotic and unsupported build tools.</p>
+<h3><a class="anchor" aria-hidden="true" id="build-tool-commands-to-start-bsp-servers"></a><a href="#build-tool-commands-to-start-bsp-servers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build Tool Commands to Start BSP Servers</h3>
+<p>The most important data field in the connection file is the <code>argv</code> JSON field.
+The <code>argv</code> field contains the command arguments that start a BSP server via
+system process.</p>
+<p>Clients must meet the following requirements when using <code>argv</code> via system
+process:</p>
+<ol>
+<li>The first element of the <code>argv</code> collection can be a simple name, a relative
+path or an absolute path. A relative path is always relative to the workspace
+base directory, so the client must prepend the value of the workspace folder
+to the relative path before spawning <code>argv</code>.</li>
+<li><code>argv</code> must always be invoked in the workspace base directory.</li>
+<li><code>argv</code> must be invoked with the same environment variables of the client.</li>
+</ol>
+<p>Build tools must make sure that their <code>argv</code> invocation:</p>
+<ol>
+<li>Creates a fresh BSP connection to a server every time. This is required in
+case there is more than one client connecting to a server or a server crashes
+and a client wants to reconnect.</li>
+<li>Uses <code>stdin</code> to send messages and <code>stdout</code> to receive responses to/from the
+BSP server.</li>
+<li>Uses <code>stderr</code> to report execution progress to the user.</li>
+</ol>
+<p>The use of <code>stdin</code> and <code>stdout</code> to communicate with the build server simplifies
+the life of clients and allows build tools to implement their own underlying
+protocol to connect to a local/remote build tool instance/daemon.</p>
+<p>In addition, build tools can use the <code>argv</code> invocation for other purposes such
+as:</p>
+<ol>
+<li>Spawn a daemon if it's not already running.</li>
+<li>Install the build tool if it's not already installed in a user's machine.</li>
+</ol>
+<h4><a class="anchor" aria-hidden="true" id="example-with-my-build-tool"></a><a href="#example-with-my-build-tool" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example with <code>my-build-tool</code></h4>
+<p>To illustrate the responsibilities of the build tool, let's go through a small
+example where:</p>
+<ol>
+<li>The <code>my-build-tool</code> build tool is installed in the user's machine.</li>
+<li>The <code>argv</code> field is set to <code>[&quot;my-build-tool&quot;, &quot;bsp&quot;]</code>.</li>
+<li>There is no running build tool instance in a workspace directory
+<code>&lt;workspace&gt;</code>.</li>
+<li><code>my-build-tool</code> supports BSP connections with a running instance of the build
+tool via
+<a href="https://en.wikipedia.org/wiki/Unix_domain_socket">UNIX domain sockets</a> and
+<a href="https://docs.microsoft.com/en-us/windows/desktop/ipc/named-pipes">Windows Named Pipes</a>.</li>
+</ol>
+<p>The invocation of <code>my-build-tool bsp</code>, with current working directory
+<code>&lt;workspace&gt;</code>, will need to:</p>
+<ol>
+<li>Run a background process of the build tool for the given <code>&lt;workspace&gt;</code>.</li>
+<li>Pick the best way to connect to the running process depending on the machine
+it runs. For example, it would use UNIX sockets in a Linux machine.</li>
+<li>Fire up a BSP server in the build tool with script-specific connection
+details. In the case of Unix sockets, the script will generate the socket
+file and pass it to the background process of the build tool.</li>
+<li>Connect to the running BSP server, forward anything that comes from <code>stdin</code>
+to the BSP server and print anything that comes from the server's output
+streams to <code>stdout</code>. Execution progress will be shown in <code>stderr</code>.</li>
+</ol>
+<p>If the build tool is already running for a given project, the <code>argv</code> invocation
+will only perform the last two steps.</p>
+<h2><a class="anchor" aria-hidden="true" id="clients-connecting-to-bsp-servers"></a><a href="#clients-connecting-to-bsp-servers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Clients Connecting to BSP Servers</h2>
+<p>The BSP Server Discovery aims to simplify clients the process of connecting to
+servers.</p>
+<p>Clients can connect to servers by locating connection files in the standard BSP
+locations. BSP clients must look up connection files first in the bsp user
+location and, only if the lookup of a connection file meeting certain criteria
+fails, continue the search in the system location.</p>
+<p>When more than a BSP connection file is found, BSP clients can use connection
+metadata to pick only the BSP servers they are interested in. If there are still
+ambiguities, BSP clients are free to choose how to react, for example by asking
+the end user to select a build server.</p>
+<p>When no BSP connection file is found (because, for example, the user has not run
+the build tool command to generate BSP connection details), the BSP client can:</p>
+<ol>
+<li>Fail gracefully.</li>
+<li>Ask users to type the command to generate the BSP connection details with
+their preferred build tool and then connect to the BSP server.</li>
+<li>Discover the build tool used in a project manually, run the command to
+generate the BSP connection details and then connect to the BSP server.</li>
+</ol>
+<p>When BSP clients have found a valid connection file, they can connect to the
+server by running the <code>argv</code> invocation via system process; listening to its
+system output and writing to its system input. If the <code>argv</code> invocation fails,
+the output in <code>stderr</code> must be shown to the user.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/bsp/docs/implementations.html"><span class="arrow-prev">← </span><span>Implementations</span></a><a class="docs-next button" href="/bsp/docs/faq.html"><span>Frequently Asked Questions</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#the-bsp-connection-details">The BSP Connection Details</a><ul class="toc-headings"><li><a href="#default-locations-for-bsp-connection-files">Default Locations for BSP Connection Files</a></li><li><a href="#policy-around-connection-files-generation">Policy around Connection Files Generation</a></li><li><a href="#build-tool-commands-to-start-bsp-servers">Build Tool Commands to Start BSP Servers</a></li></ul></li><li><a href="#clients-connecting-to-bsp-servers">Clients Connecting to BSP Servers</a></li></ul></nav></div><footer class="nav-footer" id="footer" style="background-color:#555"><section class="sitemap"><a href="/bsp/" class="nav-home"><img src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol" width="66" height="58"/></a><div><h5>Overview</h5><a href="/bsp/docs/specification.html">Specification</a><a href="/bsp/docs/implementations.html">Implementations</a></div><div><h5>Social</h5><a href="https://github.com/scalameta/metals" target="_blank"><img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&amp;label=stars&amp;logo=github&amp;style=social"/></a><a href="https://gitter.im/scalameta/metals" target="_blank"><img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&amp;style=social"/></a></div></section><section class="copyright">Copyright © 2019 Build Server Protocol</section></footer></div></body></html>

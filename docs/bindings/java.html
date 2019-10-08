@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java Bindings · Build Server Protocol</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="The"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java Bindings · Build Server Protocol"/><meta property="og:type" content="website"/><meta property="og:url" content="https://scalacenter.github.io/bsp/bsp/index.html"/><meta property="og:description" content="The"/><meta property="og:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><link rel="shortcut icon" href="/bsp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/bsp/js/scrollSpy.js"></script><link rel="stylesheet" href="/bsp/css/main.css"/><script src="/bsp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/bsp/"><img class="logo" src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol"/><h2 class="headerTitleWithLogo">Build Server Protocol</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/bsp/docs/specification.html" target="_self">Specification</a></li><li class=""><a href="https://github.com/scalacenter/bsp" target="_blank">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Bindings</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/specification.html">Specification</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/implementations.html">Implementations</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/server-discovery.html">Build Server Discovery</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/faq.html">Frequently Asked Questions</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extensions</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/scala.html">Scala</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/sbt.html">sbt</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Bindings</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/bsp/docs/bindings/java.html">Java</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/scalacenter/bsp/edit/master/docs/bindings/java.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Java Bindings</h1></header><article><div><span><p>The
+<a href="https://mvnrepository.com/artifact/ch.epfl.scala/bsp4j"><code>ch.epfl.scala:bsp4j</code></a>
+module is a Java library that is available from Maven Central. The module has
+one external dependency on the <a href="https://github.com/eclipse/lsp4j">eclipse/lsp4j</a>
+library.</p>
+<h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
+<p>Add the following snippet to your build to add dependency on <code>bsp4j</code>.</p>
+<h3><a class="anchor" aria-hidden="true" id="gradle"></a><a href="#gradle" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Gradle</h3>
+<pre><code class="hljs css language-groovy">compile <span class="hljs-string">group:</span> <span class="hljs-string">'ch.epfl.scala'</span>, <span class="hljs-string">name:</span> <span class="hljs-string">'bsp4j'</span>, <span class="hljs-string">version:</span> <span class="hljs-string">'2.0.0-M4+23-ac091b09'</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="maven"></a><a href="#maven" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Maven</h3>
+<pre><code class="hljs css language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>ch.epfl.scala<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>bsp4j<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.0.0-M4+23-ac091b09<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="sbt"></a><a href="#sbt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>sbt</h3>
+<pre><code class="hljs css language-scala">libraryDependencies += <span class="hljs-string">"ch.epfl.scala"</span> % <span class="hljs-string">"bsp4j"</span> % <span class="hljs-string">"2.0.0-M4+23-ac091b09"</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="examples"></a><a href="#examples" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Examples</h2>
+<h3><a class="anchor" aria-hidden="true" id="client"></a><a href="#client" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Client</h3>
+<p>First, begin by obtaining an input and output stream to communicate with the
+build server.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> output: java.io.<span class="hljs-type">OutputStream</span> = buildOutputStream()
+<span class="hljs-keyword">val</span> input: java.io.<span class="hljs-type">InputStream</span> = buildInputStream()
+</code></pre>
+<p>Next, implement the <code>BuildClient</code> interface. Replace the <code>???</code> dummy
+implementations with the logic of your build client.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> java.util.concurrent._
+<span class="hljs-keyword">import</span> ch.epfl.scala.bsp4j._
+<span class="hljs-keyword">import</span> org.eclipse.lsp4j.jsonrpc.<span class="hljs-type">Launcher</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyClient</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BuildClient</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildLogMessage</span></span>(params: <span class="hljs-type">LogMessageParams</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildPublishDiagnostics</span></span>(params: <span class="hljs-type">PublishDiagnosticsParams</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildShowMessage</span></span>(params: <span class="hljs-type">ShowMessageParams</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildTargetDidChange</span></span>(params: <span class="hljs-type">DidChangeBuildTarget</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildTaskFinish</span></span>(params: <span class="hljs-type">TaskFinishParams</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildTaskProgress</span></span>(params: <span class="hljs-type">TaskProgressParams</span>): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildTaskStart</span></span>(params: <span class="hljs-type">TaskStartParams</span>): <span class="hljs-type">Unit</span> = ???
+}
+<span class="hljs-keyword">val</span> localClient = <span class="hljs-keyword">new</span> <span class="hljs-type">MyClient</span>()
+</code></pre>
+<p>Optionally, create a custom <code>ExecutorService</code> to run client responses</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> java.util.concurrent._
+<span class="hljs-keyword">val</span> es = <span class="hljs-type">Executors</span>.newFixedThreadPool(<span class="hljs-number">1</span>)
+<span class="hljs-comment">// es: ExecutorService = java.util.concurrent.ThreadPoolExecutor@69e48e96[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0]</span>
+</code></pre>
+<p>Next, wire the client implementation together with the remote build server.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> launcher = <span class="hljs-keyword">new</span> <span class="hljs-type">Launcher</span>.<span class="hljs-type">Builder</span>[<span class="hljs-type">BuildServer</span>]()
+  .setOutput(output)
+  .setInput(input)
+  .setLocalService(localClient)
+  .setExecutorService(es)
+  .setRemoteInterface(classOf[<span class="hljs-type">BuildServer</span>])
+  .create()
+<span class="hljs-comment">// launcher: Launcher[BuildServer] = org.eclipse.lsp4j.jsonrpc.Launcher$Builder$1@1ed2d564</span>
+</code></pre>
+<p>Next, obtain an instance of the remote <code>BuildServer</code> via <code>getRemoteProxy()</code>.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> server = launcher.getRemoteProxy
+<span class="hljs-comment">// server: BuildServer = EndpointProxy for org.eclipse.lsp4j.jsonrpc.RemoteEndpoint@3503094</span>
+</code></pre>
+<p>Next, start listening to the remote build server on a separate thread. The
+<code>.get()</code> method call is blocking during the lifetime of BSP session.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">new</span> <span class="hljs-type">Thread</span> {
+  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run</span></span>() = launcher.startListening().get()
+}
+<span class="hljs-comment">// res0: Thread = Thread[Thread-72,5,run-main-group-0]</span>
+</code></pre>
+<p>Next, trigger the initialize handshake with the remote server.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> workspace = java.nio.file.<span class="hljs-type">Paths</span>.get(<span class="hljs-string">"."</span>).toAbsolutePath().normalize()
+<span class="hljs-comment">// workspace: java.nio.file.Path = /home/travis/build/scalacenter/bsp</span>
+<span class="hljs-keyword">val</span> initializeResult = server.buildInitialize(<span class="hljs-keyword">new</span> <span class="hljs-type">InitializeBuildParams</span>(
+  <span class="hljs-string">"MyClient"</span>, <span class="hljs-comment">// name of this client</span>
+  <span class="hljs-string">"1.0.0"</span>, <span class="hljs-comment">// version of this client</span>
+  <span class="hljs-string">"2.0.0-M4+23-ac091b09"</span>, <span class="hljs-comment">// BSP version</span>
+  workspace.toUri().toString(),
+  <span class="hljs-keyword">new</span> <span class="hljs-type">BuildClientCapabilities</span>(java.util.<span class="hljs-type">Collections</span>.singletonList(<span class="hljs-string">"scala"</span>))
+))
+<span class="hljs-comment">// initializeResult: CompletableFuture[InitializeBuildResult] = org.eclipse.lsp4j.jsonrpc.RemoteEndpoint$1@60cbc1ab[Not completed, 1 dependents]</span>
+</code></pre>
+<p>After receiving the initialize response, send the <code>build/initialized</code>
+notification.</p>
+<pre><code class="hljs css language-scala">initializeResult.thenAccept(_ =&gt; server.onBuildInitialized())
+<span class="hljs-comment">// res1: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@2b19c75d[Not completed]</span>
+</code></pre>
+<p>After sending the <code>build/initialized</code> notification, you can send any BSP
+requests and notications such as <code>workspace/buildTargets</code>,
+<code>buildTarget/compile</code>.</p>
+<p>To close the BSP session, send the <code>build/shutdown</code> request followed by a
+<code>build/exit</code> notification.</p>
+<pre><code class="hljs css language-scala">server.buildShutdown().thenAccept(_ =&gt; server.onBuildExit())
+<span class="hljs-comment">// res2: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@23e84eaf[Not completed]</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="server"></a><a href="#server" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Server</h3>
+<p>First, implement the <code>BuildServer</code> interface.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> java.util.concurrent._
+<span class="hljs-keyword">import</span> ch.epfl.scala.bsp4j._
+<span class="hljs-keyword">import</span> org.eclipse.lsp4j.jsonrpc.<span class="hljs-type">Launcher</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBuildServer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BuildServer</span> </span>{
+  <span class="hljs-keyword">var</span> client: <span class="hljs-type">BuildClient</span> = <span class="hljs-literal">null</span> <span class="hljs-comment">// will be updated later</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildInitialize</span></span>(params: <span class="hljs-type">InitializeBuildParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">InitializeBuildResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildShutdown</span></span>(): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">Object</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetCleanCache</span></span>(params: <span class="hljs-type">CleanCacheParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">CleanCacheResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetCompile</span></span>(params: <span class="hljs-type">CompileParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">CompileResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetDependencySources</span></span>(params: <span class="hljs-type">DependencySourcesParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">DependencySourcesResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetInverseSources</span></span>(params: <span class="hljs-type">InverseSourcesParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">InverseSourcesResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetResources</span></span>(params: <span class="hljs-type">ResourcesParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">ResourcesResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetRun</span></span>(params: <span class="hljs-type">RunParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">RunResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetSources</span></span>(params: <span class="hljs-type">SourcesParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">SourcesResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">buildTargetTest</span></span>(params: <span class="hljs-type">TestParams</span>): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">TestResult</span>] = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildExit</span></span>(): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">onBuildInitialized</span></span>(): <span class="hljs-type">Unit</span> = ???
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">workspaceBuildTargets</span></span>(): <span class="hljs-type">CompletableFuture</span>[<span class="hljs-type">WorkspaceBuildTargetsResult</span>] = ???
+}
+<span class="hljs-keyword">val</span> localServer = <span class="hljs-keyword">new</span> <span class="hljs-type">MyBuildServer</span>()
+<span class="hljs-comment">// localServer: MyBuildServer = repl.Session$App4$MyBuildServer@1b7cee90</span>
+</code></pre>
+<p>Next, construct a launcher for the remote build client.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">val</span> launcher = <span class="hljs-keyword">new</span> <span class="hljs-type">Launcher</span>.<span class="hljs-type">Builder</span>[<span class="hljs-type">BuildClient</span>]()
+  .setOutput(<span class="hljs-type">System</span>.out)
+  .setInput(<span class="hljs-type">System</span>.in)
+  .setLocalService(localServer)
+  .setRemoteInterface(classOf[<span class="hljs-type">BuildClient</span>])
+  .create()
+<span class="hljs-comment">// launcher: Launcher[BuildClient] = org.eclipse.lsp4j.jsonrpc.Launcher$Builder$1@4ae59b87</span>
+</code></pre>
+<p>Next, update the remote build client reference in <code>localServer</code>.</p>
+<pre><code class="hljs css language-scala">localServer.client = launcher.getRemoteProxy()
+</code></pre>
+<p>Finally, in a <code>main</code> method wire everything together.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>(args: <span class="hljs-type">Array</span>[<span class="hljs-type">String</span>]): <span class="hljs-type">Unit</span> = {
+  launcher.startListening().get() <span class="hljs-comment">// listen until BSP session is over.</span>
+}
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/bsp/docs/extensions/sbt.html"><span class="arrow-prev">← </span><span>sbt</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a><ul class="toc-headings"><li><a href="#gradle">Gradle</a></li><li><a href="#maven">Maven</a></li><li><a href="#sbt">sbt</a></li></ul></li><li><a href="#examples">Examples</a><ul class="toc-headings"><li><a href="#client">Client</a></li><li><a href="#server">Server</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer" style="background-color:#555"><section class="sitemap"><a href="/bsp/" class="nav-home"><img src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol" width="66" height="58"/></a><div><h5>Overview</h5><a href="/bsp/docs/specification.html">Specification</a><a href="/bsp/docs/implementations.html">Implementations</a></div><div><h5>Social</h5><a href="https://github.com/scalameta/metals" target="_blank"><img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&amp;label=stars&amp;logo=github&amp;style=social"/></a><a href="https://gitter.im/scalameta/metals" target="_blank"><img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&amp;style=social"/></a></div></section><section class="copyright">Copyright © 2019 Build Server Protocol</section></footer></div></body></html>

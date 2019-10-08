@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Scala Extension · Build Server Protocol</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="The following section contains Scala-specific extensions to the build server"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Scala Extension · Build Server Protocol"/><meta property="og:type" content="website"/><meta property="og:url" content="https://scalacenter.github.io/bsp/bsp/index.html"/><meta property="og:description" content="The following section contains Scala-specific extensions to the build server"/><meta property="og:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://scalacenter.github.io/bsp/bsp/img/bsp-logo.svg"/><link rel="shortcut icon" href="/bsp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"/><script src="/bsp/js/scrollSpy.js"></script><link rel="stylesheet" href="/bsp/css/main.css"/><script src="/bsp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/bsp/"><img class="logo" src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol"/><h2 class="headerTitleWithLogo">Build Server Protocol</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/bsp/docs/specification.html" target="_self">Specification</a></li><li class=""><a href="https://github.com/scalacenter/bsp" target="_blank">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Extensions</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/specification.html">Specification</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/implementations.html">Implementations</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/server-discovery.html">Build Server Discovery</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/faq.html">Frequently Asked Questions</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extensions</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/bsp/docs/extensions/scala.html">Scala</a></li><li class="navListItem"><a class="navItem" href="/bsp/docs/extensions/sbt.html">sbt</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Bindings</h3><ul class=""><li class="navListItem"><a class="navItem" href="/bsp/docs/bindings/java.html">Java</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/scalacenter/bsp/edit/master/docs/extensions/scala.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Scala Extension</h1></header><article><div><span><p>The following section contains Scala-specific extensions to the build server
+protocol.</p>
+<h2><a class="anchor" aria-hidden="true" id="scala-build-target"></a><a href="#scala-build-target" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Build Target</h2>
+<p><code>ScalaBuildTarget</code> is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources. This metadata is
+embedded in the <code>data: Option[Json]</code> field of the <code>BuildTarget</code> definition, when
+the <code>dataKind</code> field contains &quot;scala&quot;.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaBuildTarget {
+  <span class="hljs-comment">/** The Scala organization that is used for a target. */</span>
+  scalaOrganization: <span class="hljs-built_in">String</span>;
+
+  <span class="hljs-comment">/** The scala version to compile this target */</span>
+  scalaVersion: <span class="hljs-built_in">String</span>;
+
+  <span class="hljs-comment">/** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */</span>
+  scalaBinaryVersion: <span class="hljs-built_in">String</span>;
+
+  <span class="hljs-comment">/** The target platform for this target */</span>
+  platform: Int;
+
+  <span class="hljs-comment">/** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */</span>
+  jars: <span class="hljs-built_in">String</span>[];
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">namespace</span> ScalaPlatform {
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> JVM = <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> JS = <span class="hljs-number">2</span>;
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Native = <span class="hljs-number">3</span>;
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="scala-test-params"></a><a href="#scala-test-params" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Test Params</h2>
+<p><code>ScalaTestParams</code> contains scala-specific metadata for testing Scala targets.
+This metadata is embedded in the <code>data: Option[Json]</code> field of the
+<code>buildTarget/test</code> request when the <code>dataKind</code> field contains &quot;scala-test&quot;.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaTestParams {
+  <span class="hljs-comment">/** The test classes to be run in this test execution.
+   * It is the result of `buildTarget/scalaTestClasses`. */</span>
+  testClasses?: ScalaTestClassesItem[];
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="scalac-options-request"></a><a href="#scalac-options-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scalac Options Request</h2>
+<p>The build target scalac options request is sent from the client to the server to
+query for the list of compiler options necessary to compile in a given list of
+targets.</p>
+<ul>
+<li>method: <code>buildTarget/scalacOptions</code></li>
+<li>params: <code>ScalacOptionsParams</code></li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalacOptionsParams {
+  targets: BuildTargetIdentifier[];
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalacOptionsResult</code>, defined as follows</li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalacOptionsResult {
+  items: List[ScalacOptionsItem];
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalacOptionsItem {
+  target: BuildTargetIdentifier;
+
+  <span class="hljs-comment">/** Additional arguments to the compiler.
+   * For example, -deprecation. */</span>
+  options: List[<span class="hljs-built_in">String</span>];
+
+  <span class="hljs-comment">/** The dependency classpath for this target, must be
+   * identical to what is passed as arguments to
+   * the -classpath flag in the command line interface
+   * of scalac. */</span>
+  classpath: List[Uri];
+
+  <span class="hljs-comment">/** The output directory for classfiles produced by this target */</span>
+  classDirectory: Uri;
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="scala-test-classes-request"></a><a href="#scala-test-classes-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Test Classes Request</h2>
+<p>The build target scala test options request is sent from the client to the
+server to query for the list of fully qualified names of test clases in a given
+list of targets.</p>
+<p>This method can for example be used by a client to:</p>
+<ul>
+<li>Show a list of the discovered classes that can be tested.</li>
+<li>Attach a &quot;Run test suite&quot; button above the definition of a test suite via
+<code>textDocument/codeLens</code>.</li>
+</ul>
+<p>(To render the code lens, the language server needs to map the fully qualified
+names of the test targets to the defining source file via
+<code>textDocument/definition</code>. Then, once users click on the button, the language
+server can pass the fully qualified name of the test class as an argument to the
+<code>buildTarget/test</code> request.)</p>
+<ul>
+<li>method: <code>buildTarget/scalaTestClasses</code></li>
+<li>params: <code>ScalaTestClassesParams</code></li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaTestClassesParams {
+  targets: BuildTargetIdentifier[];
+
+  <span class="hljs-comment">/** An optional number uniquely identifying a client request. */</span>
+  originId?: <span class="hljs-built_in">String</span>;
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalaTestClassesResult</code>, defined as follows</li>
+<li>error: code and message set in case an exception happens during shutdown
+request.</li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaTestClassesResult {
+  items: ScalaTestClassesItem[];
+
+  <span class="hljs-comment">/** An optional id of the request that triggered this result. */</span>
+  originId?: <span class="hljs-built_in">String</span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaTestClassesItem {
+  <span class="hljs-comment">/** The build target that contains the test classes. */</span>
+  target: BuildTargetIdentifier;
+
+  <span class="hljs-comment">/** The fully qualified names of the test classes in this target */</span>
+  classes: <span class="hljs-built_in">String</span>[];
+}
+</code></pre>
+<p>This request may trigger a compilation on the selected build targets. The server
+is free to send any number of <code>build/task*</code>, <code>build/publishDiagnostics</code> and
+<code>build/logMessage</code> notifications during compilation before completing the
+response.</p>
+<p>The client will get a <code>originId</code> field in <code>ScalaTestClassesResult</code> if the
+<code>originId</code> field in the <code>ScalaTestClassesParams</code> is defined.</p>
+<h2><a class="anchor" aria-hidden="true" id="scala-main-classes-request"></a><a href="#scala-main-classes-request" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Scala Main Classes Request</h2>
+<p>The build target main classes request is sent from the client to the server to
+query for the list of main classes that can be fed as arguments to
+<code>buildTarget/run</code>. This method can be used for the same use cases than the
+<a href="#scala-test-classes-request">Scala Test Classes Request</a> enables.</p>
+<ul>
+<li>method: <code>buildTarget/scalaMainClasses</code></li>
+<li>params: <code>ScalaMainClassesParams</code></li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaMainClassesParams {
+  targets: BuildTargetIdentifier[];
+
+  <span class="hljs-comment">/** An optional number uniquely identifying a client request. */</span>
+  originId?: <span class="hljs-built_in">String</span>;
+}
+</code></pre>
+<p>Response:</p>
+<ul>
+<li>result: <code>ScalaMainClassesResult</code>, defined as follows</li>
+<li>error: code and message set in case an exception happens during shutdown
+request.</li>
+</ul>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaMainClassesResult {
+  items: ScalaMainClassesItem[];
+
+  <span class="hljs-comment">/** An optional id of the request that triggered this result. */</span>
+  originId?: <span class="hljs-built_in">String</span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaMainClassesItem {
+  <span class="hljs-comment">/** The build target that contains the test classes. */</span>
+  target: BuildTargetIdentifier;
+
+  <span class="hljs-comment">/** The main class item. */</span>
+  classes: ScalaMainClass[];
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ScalaMainClass {
+  <span class="hljs-comment">/** The main class to run. */</span>
+  <span class="hljs-keyword">class</span>: <span class="hljs-built_in">String</span>;
+
+  <span class="hljs-comment">/** The user arguments to the main entrypoint. */</span>
+  <span class="hljs-built_in">arguments</span>: <span class="hljs-built_in">String</span>[];
+
+  <span class="hljs-comment">/** The jvm options for the application. */</span>
+  jvmOptions: <span class="hljs-built_in">String</span>[];
+}
+</code></pre>
+<p>This request may trigger a compilation on the selected build targets. The server
+is free to send any number of <code>build/taskStart</code>, <code>build/taskProgress</code>,
+<code>build/taskFinish</code>, <code>build/publishDiagnostics</code> and <code>build/logMessage</code>
+notifications during compilation before completing the response.</p>
+<p>The client will get a <code>originId</code> field in <code>ScalaMainClassesResult</code> if the
+<code>originId</code> field in the <code>ScalaMainClassesParams</code> is defined.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/bsp/docs/faq.html"><span class="arrow-prev">← </span><span>Frequently Asked Questions</span></a><a class="docs-next button" href="/bsp/docs/extensions/sbt.html"><span>sbt</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#scala-build-target">Scala Build Target</a></li><li><a href="#scala-test-params">Scala Test Params</a></li><li><a href="#scalac-options-request">Scalac Options Request</a></li><li><a href="#scala-test-classes-request">Scala Test Classes Request</a></li><li><a href="#scala-main-classes-request">Scala Main Classes Request</a></li></ul></nav></div><footer class="nav-footer" id="footer" style="background-color:#555"><section class="sitemap"><a href="/bsp/" class="nav-home"><img src="/bsp/img/bsp-logo.svg" alt="Build Server Protocol" width="66" height="58"/></a><div><h5>Overview</h5><a href="/bsp/docs/specification.html">Specification</a><a href="/bsp/docs/implementations.html">Implementations</a></div><div><h5>Social</h5><a href="https://github.com/scalameta/metals" target="_blank"><img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&amp;label=stars&amp;logo=github&amp;style=social"/></a><a href="https://gitter.im/scalameta/metals" target="_blank"><img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&amp;style=social"/></a></div></section><section class="copyright">Copyright © 2019 Build Server Protocol</section></footer></div></body></html>
