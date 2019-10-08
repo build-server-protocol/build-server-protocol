@@ -43,7 +43,8 @@ class TypoSuite extends FunSuite {
   val buildTargetUris: util.List[BuildTargetIdentifier] = Collections.singletonList(buildTargetUri)
   val textDocumentUri = "file:///Application.scala"
   val textDocumentIdentifier = new TextDocumentIdentifier("tti")
-  val textDocumentIdentifiers: util.List[TextDocumentIdentifier] = Collections.singletonList(textDocumentIdentifier)
+  val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
+    Collections.singletonList(textDocumentIdentifier)
 
   // Java build client that ignored all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
@@ -66,7 +67,8 @@ class TypoSuite extends FunSuite {
   // Java server client that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
     override def buildInitialize(
-        params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = {
+        params: InitializeBuildParams
+    ): CompletableFuture[InitializeBuildResult] = {
       CompletableFuture.completedFuture {
         val capabilities = new BuildServerCapabilities()
         capabilities.setCompileProvider(new CompileProvider(Collections.singletonList("scala")))
@@ -104,19 +106,23 @@ class TypoSuite extends FunSuite {
         val item =
           new SourcesItem(
             buildTargetUri,
-            Collections.singletonList(new SourceItem(textDocumentIdentifier.getUri, SourceItemKind.FILE, true))
+            Collections.singletonList(
+              new SourceItem(textDocumentIdentifier.getUri, SourceItemKind.FILE, true)
+            )
           )
         new SourcesResult(Collections.singletonList(item))
       }
     }
     override def buildTargetInverseSources(
-        params: InverseSourcesParams): CompletableFuture[InverseSourcesResult] = {
+        params: InverseSourcesParams
+    ): CompletableFuture[InverseSourcesResult] = {
       CompletableFuture.completedFuture {
         new InverseSourcesResult(Collections.singletonList(buildTargetUri))
       }
     }
     override def buildTargetDependencySources(
-        params: DependencySourcesParams): CompletableFuture[DependencySourcesResult] = {
+        params: DependencySourcesParams
+    ): CompletableFuture[DependencySourcesResult] = {
       CompletableFuture.completedFuture {
         val item =
           new DependencySourcesItem(buildTargetUri, Collections.singletonList(textDocumentUri))
@@ -124,7 +130,8 @@ class TypoSuite extends FunSuite {
       }
     }
     override def buildTargetResources(
-        params: ResourcesParams): CompletableFuture[ResourcesResult] = {
+        params: ResourcesParams
+    ): CompletableFuture[ResourcesResult] = {
       CompletableFuture.completedFuture {
         val item = new ResourcesItem(buildTargetUri, Collections.singletonList(textDocumentUri))
         new ResourcesResult(Collections.singletonList(item))
@@ -146,7 +153,8 @@ class TypoSuite extends FunSuite {
       }
     }
     override def buildTargetCleanCache(
-        params: CleanCacheParams): CompletableFuture[CleanCacheResult] = {
+        params: CleanCacheParams
+    ): CompletableFuture[CleanCacheResult] = {
       CompletableFuture.completedFuture {
         new CleanCacheResult("clean", true)
       }
@@ -161,8 +169,9 @@ class TypoSuite extends FunSuite {
     def ignoreNotification[A](endpoint: Endpoint[A, Unit]): Services = {
       services.notification(endpoint)(_ => ())
     }
-    def forwardNotification[A](endpoint: Endpoint[A, Unit])(
-        implicit client: JsonRpcClient): Services = {
+    def forwardNotification[A](
+        endpoint: Endpoint[A, Unit]
+    )(implicit client: JsonRpcClient): Services = {
       services.notification(endpoint)(a => endpoint.notify(a))
     }
   }
@@ -242,8 +251,9 @@ class TypoSuite extends FunSuite {
     }
   }
 
-  def startScalaConnection(in: InputStream, out: OutputStream)(fn: JsonRpcClient => Services)(
-      implicit s: Scheduler): Connection = {
+  def startScalaConnection(in: InputStream, out: OutputStream)(
+      fn: JsonRpcClient => Services
+  )(implicit s: Scheduler): Connection = {
     val logger = scribe.Logger.root
     Connection(new InputOutput(in, out), logger, logger)(fn)
   }

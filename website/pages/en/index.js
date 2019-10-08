@@ -64,7 +64,9 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
-            <Button href={docUrl("bsp", language)}>Get Started</Button>
+            <Button href={docUrl("specification", language)}>
+              Get Started
+            </Button>
           </PromoSection>
         </div>
       </SplashContainer>
@@ -88,14 +90,8 @@ const Features = props => {
       title: "What is BSP?",
       content:
         "The Build Server Protocol (BSP) provides endpoints for IDE and build tools to communicate about compiling, running, testing and debugging programs.",
-      image: "https://i.imgur.com/52t75HC.png",
+      image: "https://i.imgur.com/LmRwu2s.png",
       imageAlign: "left"
-    },
-    {
-      title: "Rich compilation model",
-      content: "Example of compiling multiple projects in IntelliJ via BSP.",
-      image: "https://i.imgur.com/aE6fSyb.gif",
-      imageAlign: "right"
     },
     {
       title: "Run, test and debug",
@@ -103,6 +99,14 @@ const Features = props => {
         "Example of running, testing and debugging a Scala program in VS Code via BSP and the Debug Adapter Protocol.",
       image:
         "https://user-images.githubusercontent.com/3709537/65522506-2622b380-deeb-11e9-821b-f7e43aec5305.gif",
+      imageAlign: "right"
+    },
+    {
+      title: "Rich compilation model",
+      content:
+        "Example of compiling multiple projects in IntelliJ via BSP. " +
+        "The build server can notify the client about compile progress and report compile errors.",
+      image: "https://i.imgur.com/aE6fSyb.gif",
       imageAlign: "left"
     },
     {
@@ -110,7 +114,7 @@ const Features = props => {
       content:
         "The Build Server Protocol (BSP) is complementary to the Language Server Protocol (LSP). " +
         "While LSP allows editor clients to abstract over different programming languages, BSP allows IDE clients to abstract over different build tools.",
-      image: "https://i.imgur.com/BIF8iHt.png",
+      image: "https://i.imgur.com/3stUaOx.png",
       imageAlign: "right"
     }
   ];

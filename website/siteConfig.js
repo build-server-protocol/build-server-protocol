@@ -24,7 +24,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: "bsp", label: "Specification" },
+    { doc: "specification", label: "Specification" },
     { href: repoUrl, label: "GitHub", external: true }
   ],
 
@@ -38,8 +38,8 @@ const siteConfig = {
 
   /* colors for website */
   colors: {
-    primaryColor: "#222",
-    secondaryColor: "#333"
+    primaryColor: "#444",
+    secondaryColor: "#555"
   },
 
   customDocsPath: "website/target/docs",

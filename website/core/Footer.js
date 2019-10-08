@@ -29,7 +29,8 @@ class Footer extends React.Component {
           )}
           <div>
             <h5>Overview</h5>
-            <a href={`${docsUrl}bsp.html`}>Specification</a>
+            <a href={`${docsUrl}specification.html`}>Specification</a>
+            <a href={`${docsUrl}implementations.html`}>Implementations</a>
           </div>
           <div>
             <h5>Social</h5>
