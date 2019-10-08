@@ -11,12 +11,12 @@ Even though the protocol focuses on Scala developer tools, it's designed to
 be language-agnostic. We're looking for third parties in other programming
 languages to join this effort.
 
-Read the draft [here](docs/bsp.md).
+Read the specification [here](docs/specification.md).
 
 ## Maintainers
 
 The current maintainers (people who can merge pull requests) are:
 
-* Justin Kaeser - @jastice
-* Ólafur Páll Geirsson - @olafurpg
-* Jorge Vicente Cantero - @jvican
+* Justin Kaeser - [@jastice](https://github.com/jastice)
+* Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+* Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
