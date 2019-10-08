@@ -1,19 +1,20 @@
 // See https://docusaurus.io/docs/site-config.html for all the possible
 // site configuration options.
 
-const repoUrl = "https://github.com/scalacenter/bsp";
-const baseUrl = "/bsp/";
+const repoUrl =
+  "https://github.com/build-server-protocol/build-server-protocol";
+const baseUrl = "/build-server-protocol/";
 
 const siteConfig = {
   title: "Build Server Protocol",
   tagline:
     "Protocol for IDEs and build tools to communicate about compile, run, test, debug and more.",
-  url: "https://scalacenter.github.io/bsp",
+  url: "https://build-server-protocol.github.io/build-server-protocol",
   baseUrl: baseUrl,
 
   // Used for publishing and more
-  projectName: "bsp",
-  organizationName: "scalacenter",
+  projectName: "build-server-protocol.github.io",
+  organizationName: "build-server-protocol",
 
   // algolia: {
   //   apiKey: "c865f6d974a3072a35d4b53d48ac2307",
