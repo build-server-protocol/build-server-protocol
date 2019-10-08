@@ -3,7 +3,7 @@
 
 const repoUrl =
   "https://github.com/build-server-protocol/build-server-protocol";
-const baseUrl = "/build-server-protocol/";
+const baseUrl = "/";
 
 const siteConfig = {
   title: "Build Server Protocol",
