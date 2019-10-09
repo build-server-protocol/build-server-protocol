@@ -34,15 +34,25 @@ class Footer extends React.Component {
           </div>
           <div>
             <h5>Social</h5>
-            <a href="https://github.com/scalameta/metals" target="_blank">
+            <a
+              href="https://github.com/build-server-protocol/build-server-protocol"
+              target="_blank"
+            >
               <img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&label=stars&logo=github&style=social" />
             </a>
-            <a href="https://gitter.im/scalameta/metals" target="_blank">
+            <a href="https://gitter.im/scalacenter/bsp" target="_blank">
               <img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&style=social" />
             </a>
           </div>
         </section>
         <section className="copyright">{copyright}</section>
+        <section className="copyright">
+          <p>
+            The Build Server Protocol is a collaborative effort between
+            developers at the <a href="https://scala.epfl.ch/">Scala Center</a>{" "}
+            and <a href="https://www.jetbrains.com/">Jetbrains</a>.
+          </p>
+        </section>
       </footer>
     );
   }
