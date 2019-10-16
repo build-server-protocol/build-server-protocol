@@ -8,6 +8,7 @@ title: Implementations
 | Build tool | Link                                                       | Implementation language | Notes                                 |
 | ---------- | ---------------------------------------------------------- | ----------------------- | ------------------------------------- |
 | Bloop      | [scalacenter/bloop](https://github.com/scalacenter/bloop/) | Scala                   | Supports sbt, Gradle, Maven and Mill. |
+| Mill with BSP module | [mill](https://github.com/mill/) | Scala  | [PR #664](https://github.com/lihaoyi/mill/pull/664) |
 
 ## Build Clients
 
