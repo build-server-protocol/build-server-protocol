@@ -1,1 +1,1 @@
-This document has moved to [here](specification.md).
+This document has moved to [here](https://build-server-protocol.github.io/docs/specification).
