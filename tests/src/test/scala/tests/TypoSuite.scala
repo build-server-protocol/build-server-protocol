@@ -210,19 +210,33 @@ class TypoSuite extends FunSuite {
   val gsonParser = new JsonParser()
   def traceWriter(baos: ByteArrayOutputStream): PrintWriter = {
     // Normalize JSON so that bsp4s and bsp4j produce identical strings
-    def normalizeJson(json: String): String = {
-      val obj = gsonParser.parse(json).getAsJsonObject
-      List("params", "result").foreach { key =>
-        if (obj.get(key) == JsonNull.INSTANCE) {
-          // bsp4j uses `params: null` when bsp4s `params: {}`
-          obj.add(key, new JsonObject())
+    def normalizeJson(jsonTrace: String): String = {
+      val params = "Params: "
+      val result = "Result: "
+      val paramsIndex = jsonTrace.indexOf(params)
+      val startIndex =
+        if (paramsIndex < 0) jsonTrace.indexOf(result)
+        else paramsIndex
+      val json = jsonTrace.substring(startIndex + params.length())
+      val elem = gsonParser.parse(json)
+      if (elem.isJsonObject()) {
+        val obj = elem.getAsJsonObject
+        List("params", "result").foreach { key =>
+          if (obj.get(key) == JsonNull.INSTANCE) {
+            // bsp4j uses `params: null` when bsp4s `params: {}`
+            obj.add(key, new JsonObject())
+          }
         }
+        if (obj.get("id") != null) {
+          // bsp4s and bsp4j may not have the same ID request numbers
+          obj.add("id", new JsonPrimitive("1"))
+        }
+        gson.toJson(obj)
+      } else if (elem.isJsonNull()) {
+        gson.toJson(new JsonObject())
+      } else {
+        fail(s"unexpected JSON: $json")
       }
-      if (obj.get("id") != null) {
-        // bsp4s and bsp4j may not have the same ID request numbers
-        obj.add("id", new JsonPrimitive("1"))
-      }
-      gson.toJson(obj)
     }
     new PrintWriter(baos) {
       override def print(json: String): Unit = {

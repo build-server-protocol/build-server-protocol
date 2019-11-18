@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -33,7 +34,7 @@ public class CompileReport {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Pure
@@ -52,7 +53,7 @@ public class CompileReport {
   }
   
   public void setErrors(@NonNull final Integer errors) {
-    this.errors = errors;
+    this.errors = Preconditions.checkNotNull(errors, "errors");
   }
   
   @Pure
@@ -62,7 +63,7 @@ public class CompileReport {
   }
   
   public void setWarnings(@NonNull final Integer warnings) {
-    this.warnings = warnings;
+    this.warnings = Preconditions.checkNotNull(warnings, "warnings");
   }
   
   @Pure

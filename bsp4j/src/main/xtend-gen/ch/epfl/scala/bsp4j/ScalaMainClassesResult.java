@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import ch.epfl.scala.bsp4j.ScalaMainClassesItem;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -22,7 +23,7 @@ public class ScalaMainClassesResult {
   }
   
   public void setItems(@NonNull final List<ScalaMainClassesItem> items) {
-    this.items = items;
+    this.items = Preconditions.checkNotNull(items, "items");
   }
   
   @Override

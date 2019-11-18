@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import ch.epfl.scala.bsp4j.ScalaBuildTarget;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -40,7 +41,7 @@ public class SbtBuildTarget {
   }
   
   public void setSbtVersion(@NonNull final String sbtVersion) {
-    this.sbtVersion = sbtVersion;
+    this.sbtVersion = Preconditions.checkNotNull(sbtVersion, "sbtVersion");
   }
   
   @Pure
@@ -50,7 +51,7 @@ public class SbtBuildTarget {
   }
   
   public void setAutoImports(@NonNull final List<String> autoImports) {
-    this.autoImports = autoImports;
+    this.autoImports = Preconditions.checkNotNull(autoImports, "autoImports");
   }
   
   @Pure
@@ -60,7 +61,7 @@ public class SbtBuildTarget {
   }
   
   public void setClasspath(@NonNull final List<String> classpath) {
-    this.classpath = classpath;
+    this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
   
   @Pure
@@ -70,7 +71,7 @@ public class SbtBuildTarget {
   }
   
   public void setScalaBuildTarget(@NonNull final ScalaBuildTarget scalaBuildTarget) {
-    this.scalaBuildTarget = scalaBuildTarget;
+    this.scalaBuildTarget = Preconditions.checkNotNull(scalaBuildTarget, "scalaBuildTarget");
   }
   
   @Pure
@@ -89,7 +90,7 @@ public class SbtBuildTarget {
   }
   
   public void setChildren(@NonNull final List<BuildTargetIdentifier> children) {
-    this.children = children;
+    this.children = Preconditions.checkNotNull(children, "children");
   }
   
   @Override

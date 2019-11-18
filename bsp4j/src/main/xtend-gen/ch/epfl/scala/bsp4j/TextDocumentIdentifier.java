@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -20,7 +21,7 @@ public class TextDocumentIdentifier {
   }
   
   public void setUri(@NonNull final String uri) {
-    this.uri = uri;
+    this.uri = Preconditions.checkNotNull(uri, "uri");
   }
   
   @Override

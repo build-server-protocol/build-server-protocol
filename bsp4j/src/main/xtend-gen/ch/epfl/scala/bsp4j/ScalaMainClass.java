@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -31,7 +32,7 @@ public class ScalaMainClass {
   }
   
   public void setClassName(@NonNull final String className) {
-    this.className = className;
+    this.className = Preconditions.checkNotNull(className, "className");
   }
   
   @Pure
@@ -41,7 +42,7 @@ public class ScalaMainClass {
   }
   
   public void setArguments(@NonNull final List<String> arguments) {
-    this.arguments = arguments;
+    this.arguments = Preconditions.checkNotNull(arguments, "arguments");
   }
   
   @Pure
@@ -51,7 +52,7 @@ public class ScalaMainClass {
   }
   
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
-    this.jvmOptions = jvmOptions;
+    this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
   
   @Override

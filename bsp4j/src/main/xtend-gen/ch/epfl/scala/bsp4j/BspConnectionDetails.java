@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -37,7 +38,7 @@ public class BspConnectionDetails {
   }
   
   public void setName(@NonNull final String name) {
-    this.name = name;
+    this.name = Preconditions.checkNotNull(name, "name");
   }
   
   @Pure
@@ -47,7 +48,7 @@ public class BspConnectionDetails {
   }
   
   public void setArgv(@NonNull final List<String> argv) {
-    this.argv = argv;
+    this.argv = Preconditions.checkNotNull(argv, "argv");
   }
   
   @Pure
@@ -57,7 +58,7 @@ public class BspConnectionDetails {
   }
   
   public void setVersion(@NonNull final String version) {
-    this.version = version;
+    this.version = Preconditions.checkNotNull(version, "version");
   }
   
   @Pure
@@ -67,7 +68,7 @@ public class BspConnectionDetails {
   }
   
   public void setBspVersion(@NonNull final String bspVersion) {
-    this.bspVersion = bspVersion;
+    this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
   
   @Pure
@@ -77,7 +78,7 @@ public class BspConnectionDetails {
   }
   
   public void setLanguages(@NonNull final List<String> languages) {
-    this.languages = languages;
+    this.languages = Preconditions.checkNotNull(languages, "languages");
   }
   
   @Override

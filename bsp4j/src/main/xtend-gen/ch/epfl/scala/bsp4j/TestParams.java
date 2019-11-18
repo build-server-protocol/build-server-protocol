@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -33,7 +34,7 @@ public class TestParams {
   }
   
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
-    this.targets = targets;
+    this.targets = Preconditions.checkNotNull(targets, "targets");
   }
   
   @Pure

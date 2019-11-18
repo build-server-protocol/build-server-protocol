@@ -1,5 +1,6 @@
 inThisBuild(
   List(
+    scalaVersion := "2.12.10",
     scmInfo := Some(
       ScmInfo(
         browseUrl = url("https://github.com/scalacenter/bsp"),
@@ -74,8 +75,8 @@ lazy val bsp4j = project
     },
     unmanagedSourceDirectories.in(Compile) += sourceDirectory.in(Compile).value / "xtend-gen",
     libraryDependencies ++= List(
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.5.0",
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.5.0"
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.8.1",
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.8.1"
     )
   )
 

@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -21,7 +22,7 @@ public class CompileTask {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Override

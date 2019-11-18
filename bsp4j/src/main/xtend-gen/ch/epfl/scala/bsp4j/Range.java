@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -25,7 +26,7 @@ public class Range {
   }
   
   public void setStart(@NonNull final Position start) {
-    this.start = start;
+    this.start = Preconditions.checkNotNull(start, "start");
   }
   
   @Pure
@@ -35,7 +36,7 @@ public class Range {
   }
   
   public void setEnd(@NonNull final Position end) {
-    this.end = end;
+    this.end = Preconditions.checkNotNull(end, "end");
   }
   
   @Override

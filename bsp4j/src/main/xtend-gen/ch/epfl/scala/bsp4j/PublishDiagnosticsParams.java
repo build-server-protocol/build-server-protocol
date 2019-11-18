@@ -5,6 +5,7 @@ import ch.epfl.scala.bsp4j.Diagnostic;
 import ch.epfl.scala.bsp4j.TextDocumentIdentifier;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -38,7 +39,7 @@ public class PublishDiagnosticsParams {
   }
   
   public void setTextDocument(@NonNull final TextDocumentIdentifier textDocument) {
-    this.textDocument = textDocument;
+    this.textDocument = Preconditions.checkNotNull(textDocument, "textDocument");
   }
   
   @Pure
@@ -48,7 +49,7 @@ public class PublishDiagnosticsParams {
   }
   
   public void setBuildTarget(@NonNull final BuildTargetIdentifier buildTarget) {
-    this.buildTarget = buildTarget;
+    this.buildTarget = Preconditions.checkNotNull(buildTarget, "buildTarget");
   }
   
   @Pure
@@ -58,7 +59,7 @@ public class PublishDiagnosticsParams {
   }
   
   public void setDiagnostics(@NonNull final List<Diagnostic> diagnostics) {
-    this.diagnostics = diagnostics;
+    this.diagnostics = Preconditions.checkNotNull(diagnostics, "diagnostics");
   }
   
   @Pure
@@ -68,7 +69,7 @@ public class PublishDiagnosticsParams {
   }
   
   public void setReset(@NonNull final Boolean reset) {
-    this.reset = reset;
+    this.reset = Preconditions.checkNotNull(reset, "reset");
   }
   
   @Pure

@@ -5,6 +5,7 @@ import ch.epfl.scala.bsp4j.TestStatus;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -37,7 +38,7 @@ public class TestFinish {
   }
   
   public void setDisplayName(@NonNull final String displayName) {
-    this.displayName = displayName;
+    this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
   
   @Pure
@@ -56,7 +57,7 @@ public class TestFinish {
   }
   
   public void setStatus(@NonNull final TestStatus status) {
-    this.status = status;
+    this.status = Preconditions.checkNotNull(status, "status");
   }
   
   @Pure

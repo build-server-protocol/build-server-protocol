@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.TaskId;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -38,7 +39,7 @@ public class TaskProgressParams {
   }
   
   public void setTaskId(@NonNull final TaskId taskId) {
-    this.taskId = taskId;
+    this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
   
   @Pure
