@@ -45,6 +45,8 @@ trait BuildTarget {
   object scalaMainClasses
       extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
         "buildTarget/scalaMainClasses")
+  object scalaClasspath extends Endpoint[ExecutionEnvironmentParams, ExecutionEnvironmentResult]("buildTarget/executionEnvironment")
+
 }
 
 object Workspace extends Workspace

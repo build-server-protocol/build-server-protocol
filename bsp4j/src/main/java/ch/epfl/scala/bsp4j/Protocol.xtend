@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j
 
 import java.util.List
+import java.util.Map
 import com.google.gson.annotations.JsonAdapter
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
@@ -528,6 +529,36 @@ class RunResult {
 
   new(@NonNull StatusCode statusCode) {
     this.statusCode = statusCode
+  }
+}
+
+@JsonRpcData
+class ExecutionEnvironmentParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
+class ClasspathItem {
+  @NonNull BuildTargetIdentifier target
+  @NonNull List<String> classpath
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath) {
+    this.target = target
+    this.classpath = classpath
+  }
+}
+
+@JsonRpcData
+class ExecutionEnvironmentResult {
+  @NonNull String workingDirectory
+  @NonNull Map<String, String> environmentVariables
+  @NonNull List<ClasspathItem> items
+  new(@NonNull List<ClasspathItem> items, @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
+    this.items = items
+    this.workingDirectory = workingDirectory
+    this.environmentVariables = environmentVariables
   }
 }
 

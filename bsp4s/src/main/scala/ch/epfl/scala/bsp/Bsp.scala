@@ -576,6 +576,23 @@ object TestParamsDataKind {
     targets: List[BuildTargetIdentifier]
 )
 
+
+@JsonCodec final case class ExecutionEnvironmentParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
+)
+
+@JsonCodec final case class ClasspathItem(
+    target: BuildTargetIdentifier,
+    classpath: List[String],
+)
+
+@JsonCodec final case class ExecutionEnvironmentResult(
+    items: List[ClasspathItem],
+    workingDirectory: String,
+    environmentVariables: Map[String, String]
+)
+
 @JsonCodec final case class ScalacOptionsItem(
     target: BuildTargetIdentifier,
     options: List[String],
