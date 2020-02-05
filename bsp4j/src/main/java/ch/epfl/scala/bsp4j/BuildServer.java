@@ -46,9 +46,6 @@ public interface BuildServer {
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
-    @JsonRequest("buildTarget/executionEnvironment")
-    CompletableFuture<ExecutionEnvironmentResult> getClasspath(ExecutionEnvironmentParams params);
-
     default void onConnectWithClient(BuildClient server) {
 
     }
