@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -17,10 +18,18 @@ public class JvmEnvironmentEntry {
   @NonNull
   private List<String> jvmOptions;
   
-  public JvmEnvironmentEntry(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions) {
+  @NonNull
+  private String workingDirectory;
+  
+  @NonNull
+  private Map<String, String> environmentVariables;
+  
+  public JvmEnvironmentEntry(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.target = target;
     this.classpath = classpath;
     this.jvmOptions = jvmOptions;
+    this.workingDirectory = workingDirectory;
+    this.environmentVariables = environmentVariables;
   }
   
   @Pure
@@ -53,6 +62,26 @@ public class JvmEnvironmentEntry {
     this.jvmOptions = jvmOptions;
   }
   
+  @Pure
+  @NonNull
+  public String getWorkingDirectory() {
+    return this.workingDirectory;
+  }
+  
+  public void setWorkingDirectory(@NonNull final String workingDirectory) {
+    this.workingDirectory = workingDirectory;
+  }
+  
+  @Pure
+  @NonNull
+  public Map<String, String> getEnvironmentVariables() {
+    return this.environmentVariables;
+  }
+  
+  public void setEnvironmentVariables(@NonNull final Map<String, String> environmentVariables) {
+    this.environmentVariables = environmentVariables;
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -60,6 +89,8 @@ public class JvmEnvironmentEntry {
     b.add("target", this.target);
     b.add("classpath", this.classpath);
     b.add("jvmOptions", this.jvmOptions);
+    b.add("workingDirectory", this.workingDirectory);
+    b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
   
@@ -88,6 +119,16 @@ public class JvmEnvironmentEntry {
         return false;
     } else if (!this.jvmOptions.equals(other.jvmOptions))
       return false;
+    if (this.workingDirectory == null) {
+      if (other.workingDirectory != null)
+        return false;
+    } else if (!this.workingDirectory.equals(other.workingDirectory))
+      return false;
+    if (this.environmentVariables == null) {
+      if (other.environmentVariables != null)
+        return false;
+    } else if (!this.environmentVariables.equals(other.environmentVariables))
+      return false;
     return true;
   }
   
@@ -98,6 +139,8 @@ public class JvmEnvironmentEntry {
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
-    return prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
+    result = prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
+    result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
+    return prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
   }
 }

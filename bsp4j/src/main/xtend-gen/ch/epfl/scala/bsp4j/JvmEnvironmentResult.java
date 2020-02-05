@@ -2,7 +2,6 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.JvmEnvironmentEntry;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -10,38 +9,10 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class JvmEnvironmentResult {
   @NonNull
-  private String workingDirectory;
-  
-  @NonNull
-  private Map<String, String> environmentVariables;
-  
-  @NonNull
   private List<JvmEnvironmentEntry> entries;
   
-  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentEntry> entries, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentEntry> entries) {
     this.entries = entries;
-    this.workingDirectory = workingDirectory;
-    this.environmentVariables = environmentVariables;
-  }
-  
-  @Pure
-  @NonNull
-  public String getWorkingDirectory() {
-    return this.workingDirectory;
-  }
-  
-  public void setWorkingDirectory(@NonNull final String workingDirectory) {
-    this.workingDirectory = workingDirectory;
-  }
-  
-  @Pure
-  @NonNull
-  public Map<String, String> getEnvironmentVariables() {
-    return this.environmentVariables;
-  }
-  
-  public void setEnvironmentVariables(@NonNull final Map<String, String> environmentVariables) {
-    this.environmentVariables = environmentVariables;
   }
   
   @Pure
@@ -58,8 +29,6 @@ public class JvmEnvironmentResult {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("workingDirectory", this.workingDirectory);
-    b.add("environmentVariables", this.environmentVariables);
     b.add("entries", this.entries);
     return b.toString();
   }
@@ -74,16 +43,6 @@ public class JvmEnvironmentResult {
     if (getClass() != obj.getClass())
       return false;
     JvmEnvironmentResult other = (JvmEnvironmentResult) obj;
-    if (this.workingDirectory == null) {
-      if (other.workingDirectory != null)
-        return false;
-    } else if (!this.workingDirectory.equals(other.workingDirectory))
-      return false;
-    if (this.environmentVariables == null) {
-      if (other.environmentVariables != null)
-        return false;
-    } else if (!this.environmentVariables.equals(other.environmentVariables))
-      return false;
     if (this.entries == null) {
       if (other.entries != null)
         return false;
@@ -95,10 +54,6 @@ public class JvmEnvironmentResult {
   @Override
   @Pure
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
-    result = prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
-    return prime * result + ((this.entries== null) ? 0 : this.entries.hashCode());
+    return 31 * 1 + ((this.entries== null) ? 0 : this.entries.hashCode());
   }
 }

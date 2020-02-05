@@ -545,22 +545,23 @@ class JvmEnvironmentEntry {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classpath
   @NonNull List<String> jvmOptions
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath, @NonNull List<String> jvmOptions) {
+  @NonNull String workingDirectory
+  @NonNull Map<String, String> environmentVariables
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath, @NonNull List<String> jvmOptions,
+      @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
     this.target = target
     this.classpath = classpath
     this.jvmOptions = jvmOptions
+    this.workingDirectory = workingDirectory
+    this.environmentVariables = environmentVariables
   }
 }
 
 @JsonRpcData
 class JvmEnvironmentResult {
-  @NonNull String workingDirectory
-  @NonNull Map<String, String> environmentVariables
   @NonNull List<JvmEnvironmentEntry> entries
-  new(@NonNull List<JvmEnvironmentEntry> entries, @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
+  new(@NonNull List<JvmEnvironmentEntry> entries) {
     this.entries = entries
-    this.workingDirectory = workingDirectory
-    this.environmentVariables = environmentVariables
   }
 }
 
