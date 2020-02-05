@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.ClasspathItem;
+import ch.epfl.scala.bsp4j.TargetJavaExecutionEnvironmentItem;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -16,9 +16,9 @@ public class JavaExecutionEnvironmentResult {
   private Map<String, String> environmentVariables;
   
   @NonNull
-  private List<ClasspathItem> items;
+  private List<TargetJavaExecutionEnvironmentItem> items;
   
-  public JavaExecutionEnvironmentResult(@NonNull final List<ClasspathItem> items, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+  public JavaExecutionEnvironmentResult(@NonNull final List<TargetJavaExecutionEnvironmentItem> items, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.items = items;
     this.workingDirectory = workingDirectory;
     this.environmentVariables = environmentVariables;
@@ -46,11 +46,11 @@ public class JavaExecutionEnvironmentResult {
   
   @Pure
   @NonNull
-  public List<ClasspathItem> getItems() {
+  public List<TargetJavaExecutionEnvironmentItem> getItems() {
     return this.items;
   }
   
-  public void setItems(@NonNull final List<ClasspathItem> items) {
+  public void setItems(@NonNull final List<TargetJavaExecutionEnvironmentItem> items) {
     this.items = items;
   }
   

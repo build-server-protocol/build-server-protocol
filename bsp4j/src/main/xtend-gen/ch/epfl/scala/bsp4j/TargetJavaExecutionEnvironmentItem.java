@@ -7,7 +7,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ClasspathItem {
+public class TargetJavaExecutionEnvironmentItem {
   @NonNull
   private BuildTargetIdentifier target;
   
@@ -17,7 +17,7 @@ public class ClasspathItem {
   @NonNull
   private List<String> jvmOptions;
   
-  public ClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions) {
+  public TargetJavaExecutionEnvironmentItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions) {
     this.target = target;
     this.classpath = classpath;
     this.jvmOptions = jvmOptions;
@@ -72,7 +72,7 @@ public class ClasspathItem {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ClasspathItem other = (ClasspathItem) obj;
+    TargetJavaExecutionEnvironmentItem other = (TargetJavaExecutionEnvironmentItem) obj;
     if (this.target == null) {
       if (other.target != null)
         return false;

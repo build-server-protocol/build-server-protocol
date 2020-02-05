@@ -582,14 +582,14 @@ object TestParamsDataKind {
     originId: Option[String]
 )
 
-@JsonCodec final case class ClasspathItem(
+@JsonCodec final case class TargetJavaExecutionEnvironmentItem(
     target: BuildTargetIdentifier,
     classpath: List[String],
     jvmOptions: List[String]
 )
 
 @JsonCodec final case class JavaExecutionEnvironmentResult(
-    items: List[ClasspathItem],
+    items: List[TargetJavaExecutionEnvironmentItem],
     workingDirectory: String,
     environmentVariables: Map[String, String]
 )
