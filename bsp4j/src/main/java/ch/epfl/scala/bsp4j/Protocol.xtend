@@ -544,9 +544,11 @@ class JavaExecutionEnvironmentParams {
 class ClasspathItem {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classpath
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath) {
+  @NonNull List<String> jvmOptions
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath, @NonNull List<String> jvmOptions) {
     this.target = target
     this.classpath = classpath
+    this.jvmOptions = jvmOptions
   }
 }
 

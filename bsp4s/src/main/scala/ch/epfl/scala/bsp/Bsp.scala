@@ -585,6 +585,7 @@ object TestParamsDataKind {
 @JsonCodec final case class ClasspathItem(
     target: BuildTargetIdentifier,
     classpath: List[String],
+    jvmOptions: List[String]
 )
 
 @JsonCodec final case class JavaExecutionEnvironmentResult(

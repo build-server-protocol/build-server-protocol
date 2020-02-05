@@ -14,9 +14,13 @@ public class ClasspathItem {
   @NonNull
   private List<String> classpath;
   
-  public ClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath) {
+  @NonNull
+  private List<String> jvmOptions;
+  
+  public ClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions) {
     this.target = target;
     this.classpath = classpath;
+    this.jvmOptions = jvmOptions;
   }
   
   @Pure
@@ -39,12 +43,23 @@ public class ClasspathItem {
     this.classpath = classpath;
   }
   
+  @Pure
+  @NonNull
+  public List<String> getJvmOptions() {
+    return this.jvmOptions;
+  }
+  
+  public void setJvmOptions(@NonNull final List<String> jvmOptions) {
+    this.jvmOptions = jvmOptions;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
     b.add("classpath", this.classpath);
+    b.add("jvmOptions", this.jvmOptions);
     return b.toString();
   }
   
@@ -68,6 +83,11 @@ public class ClasspathItem {
         return false;
     } else if (!this.classpath.equals(other.classpath))
       return false;
+    if (this.jvmOptions == null) {
+      if (other.jvmOptions != null)
+        return false;
+    } else if (!this.jvmOptions.equals(other.jvmOptions))
+      return false;
     return true;
   }
   
@@ -77,6 +97,7 @@ public class ClasspathItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
+    result = prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
+    return prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
   }
 }
