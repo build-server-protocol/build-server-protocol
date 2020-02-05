@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.TargetJavaExecutionEnvironmentItem;
+import ch.epfl.scala.bsp4j.JvmEnvironmentEntry;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -8,7 +8,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class JavaExecutionEnvironmentResult {
+public class JvmEnvironmentResult {
   @NonNull
   private String workingDirectory;
   
@@ -16,10 +16,10 @@ public class JavaExecutionEnvironmentResult {
   private Map<String, String> environmentVariables;
   
   @NonNull
-  private List<TargetJavaExecutionEnvironmentItem> items;
+  private List<JvmEnvironmentEntry> entries;
   
-  public JavaExecutionEnvironmentResult(@NonNull final List<TargetJavaExecutionEnvironmentItem> items, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
-    this.items = items;
+  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentEntry> entries, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+    this.entries = entries;
     this.workingDirectory = workingDirectory;
     this.environmentVariables = environmentVariables;
   }
@@ -46,12 +46,12 @@ public class JavaExecutionEnvironmentResult {
   
   @Pure
   @NonNull
-  public List<TargetJavaExecutionEnvironmentItem> getItems() {
-    return this.items;
+  public List<JvmEnvironmentEntry> getEntries() {
+    return this.entries;
   }
   
-  public void setItems(@NonNull final List<TargetJavaExecutionEnvironmentItem> items) {
-    this.items = items;
+  public void setEntries(@NonNull final List<JvmEnvironmentEntry> entries) {
+    this.entries = entries;
   }
   
   @Override
@@ -60,7 +60,7 @@ public class JavaExecutionEnvironmentResult {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("workingDirectory", this.workingDirectory);
     b.add("environmentVariables", this.environmentVariables);
-    b.add("items", this.items);
+    b.add("entries", this.entries);
     return b.toString();
   }
   
@@ -73,7 +73,7 @@ public class JavaExecutionEnvironmentResult {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    JavaExecutionEnvironmentResult other = (JavaExecutionEnvironmentResult) obj;
+    JvmEnvironmentResult other = (JvmEnvironmentResult) obj;
     if (this.workingDirectory == null) {
       if (other.workingDirectory != null)
         return false;
@@ -84,10 +84,10 @@ public class JavaExecutionEnvironmentResult {
         return false;
     } else if (!this.environmentVariables.equals(other.environmentVariables))
       return false;
-    if (this.items == null) {
-      if (other.items != null)
+    if (this.entries == null) {
+      if (other.entries != null)
         return false;
-    } else if (!this.items.equals(other.items))
+    } else if (!this.entries.equals(other.entries))
       return false;
     return true;
   }
@@ -99,6 +99,6 @@ public class JavaExecutionEnvironmentResult {
     int result = 1;
     result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
     result = prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
-    return prime * result + ((this.items== null) ? 0 : this.items.hashCode());
+    return prime * result + ((this.entries== null) ? 0 : this.entries.hashCode());
   }
 }

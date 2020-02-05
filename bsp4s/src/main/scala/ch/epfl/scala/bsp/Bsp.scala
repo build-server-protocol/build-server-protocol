@@ -577,19 +577,19 @@ object TestParamsDataKind {
 )
 
 
-@JsonCodec final case class JavaExecutionEnvironmentParams(
+@JsonCodec final case class JvmEnvironmentParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String]
 )
 
-@JsonCodec final case class TargetJavaExecutionEnvironmentItem(
+@JsonCodec final case class JvmEnvironmentEntry(
     target: BuildTargetIdentifier,
     classpath: List[String],
     jvmOptions: List[String]
 )
 
-@JsonCodec final case class JavaExecutionEnvironmentResult(
-    items: List[TargetJavaExecutionEnvironmentItem],
+@JsonCodec final case class JvmEnvironmentResult(
+    entries: List[JvmEnvironmentEntry],
     workingDirectory: String,
     environmentVariables: Map[String, String]
 )

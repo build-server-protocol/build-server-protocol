@@ -533,7 +533,7 @@ class RunResult {
 }
 
 @JsonRpcData
-class JavaExecutionEnvironmentParams {
+class JvmEnvironmentParams {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
@@ -541,7 +541,7 @@ class JavaExecutionEnvironmentParams {
 }
 
 @JsonRpcData
-class TargetJavaExecutionEnvironmentItem {
+class JvmEnvironmentEntry {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classpath
   @NonNull List<String> jvmOptions
@@ -553,12 +553,12 @@ class TargetJavaExecutionEnvironmentItem {
 }
 
 @JsonRpcData
-class JavaExecutionEnvironmentResult {
+class JvmEnvironmentResult {
   @NonNull String workingDirectory
   @NonNull Map<String, String> environmentVariables
-  @NonNull List<TargetJavaExecutionEnvironmentItem> items
-  new(@NonNull List<TargetJavaExecutionEnvironmentItem> items, @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
-    this.items = items
+  @NonNull List<JvmEnvironmentEntry> entries
+  new(@NonNull List<JvmEnvironmentEntry> entries, @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
+    this.entries = entries
     this.workingDirectory = workingDirectory
     this.environmentVariables = environmentVariables
   }
