@@ -1308,3 +1308,44 @@ export interface CleanCacheResult {
   cleaned: Boolean;
 }
 ```
+
+### Test Environment Request
+
+This request is send from the client in order to gather all information required
+to execute tests in the same was as bloop is doing it. This is useful if the client
+has some kind of a native support for unit testing and it's impossible to utilize
+all its features when spawning a remote test run via `buildTarget/test`.
+
+The data provided by this endpoint may change beteween compilations, so it should
+not be cached in any form. The client should ask for it right before test exection,
+after all the targets are compiled.
+
+- method: `buildTarget/jvmTestEnvironment`
+- params: `JvmEnvironmentParams`
+
+```ts
+export interface JvmEnvironmentParams(
+    targets: BuildTargetIdentifier[],
+    originId?: String
+)
+```
+
+Response:
+
+- result: `JvmEnvironmentResult`, defined as follows
+- error: JSON-RPC code and message set in case an exception happens during the
+  request.
+
+```ts
+export interface JvmEnvironmentEntry{
+    target: BuildTargetIdentifier;
+    classpath: String[];
+    jvmOptions: String[];
+}
+
+export interface JvmEnvironmentResult{
+    entries: JvmEnvironmentEntry[];
+    workingDirectory: String;
+    environmentVariables: Map<String, String>;
+}
+```
