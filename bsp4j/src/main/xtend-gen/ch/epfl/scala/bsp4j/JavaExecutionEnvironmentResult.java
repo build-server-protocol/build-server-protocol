@@ -8,7 +8,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ExecutionEnvironmentResult {
+public class JavaExecutionEnvironmentResult {
   @NonNull
   private String workingDirectory;
   
@@ -18,7 +18,7 @@ public class ExecutionEnvironmentResult {
   @NonNull
   private List<ClasspathItem> items;
   
-  public ExecutionEnvironmentResult(@NonNull final List<ClasspathItem> items, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+  public JavaExecutionEnvironmentResult(@NonNull final List<ClasspathItem> items, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.items = items;
     this.workingDirectory = workingDirectory;
     this.environmentVariables = environmentVariables;
@@ -73,7 +73,7 @@ public class ExecutionEnvironmentResult {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ExecutionEnvironmentResult other = (ExecutionEnvironmentResult) obj;
+    JavaExecutionEnvironmentResult other = (JavaExecutionEnvironmentResult) obj;
     if (this.workingDirectory == null) {
       if (other.workingDirectory != null)
         return false;

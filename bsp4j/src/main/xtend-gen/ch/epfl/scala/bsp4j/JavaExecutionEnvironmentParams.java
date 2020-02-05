@@ -7,11 +7,11 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ExecutionEnvironmentParams {
+public class JavaExecutionEnvironmentParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
   
-  public ExecutionEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
+  public JavaExecutionEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
   
@@ -42,7 +42,7 @@ public class ExecutionEnvironmentParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ExecutionEnvironmentParams other = (ExecutionEnvironmentParams) obj;
+    JavaExecutionEnvironmentParams other = (JavaExecutionEnvironmentParams) obj;
     if (this.targets == null) {
       if (other.targets != null)
         return false;

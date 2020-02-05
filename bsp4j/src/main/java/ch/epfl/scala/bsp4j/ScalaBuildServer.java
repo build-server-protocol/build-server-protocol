@@ -15,6 +15,6 @@ public interface ScalaBuildServer {
     @JsonRequest("buildTarget/scalaMainClasses")
     CompletableFuture<ScalaMainClassesResult> buildTargetScalaMainClasses(ScalaMainClassesParams params);
 
-    @JsonRequest("buildTarget/executionEnvironment")
-    CompletableFuture<ExecutionEnvironmentResult> executionEnvironment(ExecutionEnvironmentParams params);
+    @JsonRequest("buildTarget/javaExecutionEnvironment")
+    CompletableFuture<JavaExecutionEnvironmentResult> javaExecutionEnvironment(JavaExecutionEnvironmentParams params);
 }
