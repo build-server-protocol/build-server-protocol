@@ -541,7 +541,7 @@ class JvmEnvironmentParams {
 }
 
 @JsonRpcData
-class JvmEnvironmentEntry {
+class JvmEnvironmentItem {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classpath
   @NonNull List<String> jvmOptions
@@ -559,8 +559,8 @@ class JvmEnvironmentEntry {
 
 @JsonRpcData
 class JvmEnvironmentResult {
-  @NonNull List<JvmEnvironmentEntry> entries
-  new(@NonNull List<JvmEnvironmentEntry> entries) {
+  @NonNull List<JvmEnvironmentItem> entries
+  new(@NonNull List<JvmEnvironmentItem> entries) {
     this.entries = entries
   }
 }

@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.JvmEnvironmentEntry;
+import ch.epfl.scala.bsp4j.JvmEnvironmentItem;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -9,19 +9,19 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class JvmEnvironmentResult {
   @NonNull
-  private List<JvmEnvironmentEntry> entries;
+  private List<JvmEnvironmentItem> entries;
   
-  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentEntry> entries) {
+  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentItem> entries) {
     this.entries = entries;
   }
   
   @Pure
   @NonNull
-  public List<JvmEnvironmentEntry> getEntries() {
+  public List<JvmEnvironmentItem> getEntries() {
     return this.entries;
   }
   
-  public void setEntries(@NonNull final List<JvmEnvironmentEntry> entries) {
+  public void setEntries(@NonNull final List<JvmEnvironmentItem> entries) {
     this.entries = entries;
   }
   

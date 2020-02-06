@@ -1337,14 +1337,14 @@ Response:
   request.
 
 ```ts
-export interface JvmEnvironmentEntry{
+export interface JvmEnvironmentItem{
     target: BuildTargetIdentifier;
     classpath: String[];
     jvmOptions: String[];
 }
 
 export interface JvmEnvironmentResult{
-    entries: JvmEnvironmentEntry[];
+    entries: JvmEnvironmentItem[];
     workingDirectory: String;
     environmentVariables: Map<String, String>;
 }

@@ -582,7 +582,7 @@ object TestParamsDataKind {
     originId: Option[String]
 )
 
-@JsonCodec final case class JvmEnvironmentEntry(
+@JsonCodec final case class JvmEnvironmentItem(
     target: BuildTargetIdentifier,
     classpath: List[String],
     jvmOptions: List[String],
@@ -591,7 +591,7 @@ object TestParamsDataKind {
 )
 
 @JsonCodec final case class JvmEnvironmentResult(
-    entries: List[JvmEnvironmentEntry]
+    entries: List[JvmEnvironmentItem]
 )
 
 @JsonCodec final case class ScalacOptionsItem(

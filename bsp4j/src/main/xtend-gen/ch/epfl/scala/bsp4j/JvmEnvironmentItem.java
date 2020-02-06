@@ -8,7 +8,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class JvmEnvironmentEntry {
+public class JvmEnvironmentItem {
   @NonNull
   private BuildTargetIdentifier target;
   
@@ -24,7 +24,7 @@ public class JvmEnvironmentEntry {
   @NonNull
   private Map<String, String> environmentVariables;
   
-  public JvmEnvironmentEntry(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+  public JvmEnvironmentItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.target = target;
     this.classpath = classpath;
     this.jvmOptions = jvmOptions;
@@ -103,7 +103,7 @@ public class JvmEnvironmentEntry {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    JvmEnvironmentEntry other = (JvmEnvironmentEntry) obj;
+    JvmEnvironmentItem other = (JvmEnvironmentItem) obj;
     if (this.target == null) {
       if (other.target != null)
         return false;
