@@ -1311,10 +1311,10 @@ export interface CleanCacheResult {
 
 ### Test Environment Request
 
-This request is send from the client in order to gather all information required
-to execute tests in the same was as bloop is doing it. This is useful if the client
-has some kind of a native support for unit testing and it's impossible to utilize
-all its features when spawning a remote test run via `buildTarget/test`.
+The JVM test environment request is sent from the client to the server in order to
+gather information required to launch a Java process. This is useful when the
+client wants to control the Java process execution, for example to enable custom
+Java agents or launch a custom main class during unit testing or debugging
 
 The data provided by this endpoint may change beteween compilations, so it should
 not be cached in any form. The client should ask for it right before test exection,
