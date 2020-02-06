@@ -9,27 +9,27 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class JvmEnvironmentResult {
   @NonNull
-  private List<JvmEnvironmentItem> entries;
+  private List<JvmEnvironmentItem> items;
   
-  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentItem> entries) {
-    this.entries = entries;
+  public JvmEnvironmentResult(@NonNull final List<JvmEnvironmentItem> items) {
+    this.items = items;
   }
   
   @Pure
   @NonNull
-  public List<JvmEnvironmentItem> getEntries() {
-    return this.entries;
+  public List<JvmEnvironmentItem> getItems() {
+    return this.items;
   }
   
-  public void setEntries(@NonNull final List<JvmEnvironmentItem> entries) {
-    this.entries = entries;
+  public void setItems(@NonNull final List<JvmEnvironmentItem> items) {
+    this.items = items;
   }
   
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("entries", this.entries);
+    b.add("items", this.items);
     return b.toString();
   }
   
@@ -43,10 +43,10 @@ public class JvmEnvironmentResult {
     if (getClass() != obj.getClass())
       return false;
     JvmEnvironmentResult other = (JvmEnvironmentResult) obj;
-    if (this.entries == null) {
-      if (other.entries != null)
+    if (this.items == null) {
+      if (other.items != null)
         return false;
-    } else if (!this.entries.equals(other.entries))
+    } else if (!this.items.equals(other.items))
       return false;
     return true;
   }
@@ -54,6 +54,6 @@ public class JvmEnvironmentResult {
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.entries== null) ? 0 : this.entries.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

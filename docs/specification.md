@@ -1344,7 +1344,7 @@ export interface JvmEnvironmentItem{
 }
 
 export interface JvmEnvironmentResult{
-    entries: JvmEnvironmentItem[];
+    items: JvmEnvironmentItem[];
     workingDirectory: String;
     environmentVariables: Map<String, String>;
 }

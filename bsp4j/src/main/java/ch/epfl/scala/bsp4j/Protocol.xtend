@@ -559,9 +559,9 @@ class JvmEnvironmentItem {
 
 @JsonRpcData
 class JvmEnvironmentResult {
-  @NonNull List<JvmEnvironmentItem> entries
-  new(@NonNull List<JvmEnvironmentItem> entries) {
-    this.entries = entries
+  @NonNull List<JvmEnvironmentItem> items
+  new(@NonNull List<JvmEnvironmentItem> items) {
+    this.items = items
   }
 }
 

@@ -591,7 +591,7 @@ object TestParamsDataKind {
 )
 
 @JsonCodec final case class JvmEnvironmentResult(
-    entries: List[JvmEnvironmentItem]
+    items: List[JvmEnvironmentItem]
 )
 
 @JsonCodec final case class ScalacOptionsItem(
