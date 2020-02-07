@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import ch.epfl.scala.bsp4j.MessageType;
 import ch.epfl.scala.bsp4j.TaskId;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -30,7 +31,7 @@ public class LogMessageParams {
   }
   
   public void setType(@NonNull final MessageType type) {
-    this.type = type;
+    this.type = Preconditions.checkNotNull(type, "type");
   }
   
   @Pure
@@ -58,7 +59,7 @@ public class LogMessageParams {
   }
   
   public void setMessage(@NonNull final String message) {
-    this.message = message;
+    this.message = Preconditions.checkNotNull(message, "message");
   }
   
   @Override

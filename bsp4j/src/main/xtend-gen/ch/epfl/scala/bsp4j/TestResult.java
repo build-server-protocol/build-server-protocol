@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.StatusCode;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -57,7 +58,7 @@ public class TestResult {
   }
   
   public void setStatusCode(@NonNull final StatusCode statusCode) {
-    this.statusCode = statusCode;
+    this.statusCode = Preconditions.checkNotNull(statusCode, "statusCode");
   }
   
   @Override

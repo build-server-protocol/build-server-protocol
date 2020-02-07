@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -28,7 +29,7 @@ public class BuildTargetCapabilities {
   }
   
   public void setCanCompile(@NonNull final Boolean canCompile) {
-    this.canCompile = canCompile;
+    this.canCompile = Preconditions.checkNotNull(canCompile, "canCompile");
   }
   
   @Pure
@@ -38,7 +39,7 @@ public class BuildTargetCapabilities {
   }
   
   public void setCanTest(@NonNull final Boolean canTest) {
-    this.canTest = canTest;
+    this.canTest = Preconditions.checkNotNull(canTest, "canTest");
   }
   
   @Pure
@@ -48,7 +49,7 @@ public class BuildTargetCapabilities {
   }
   
   public void setCanRun(@NonNull final Boolean canRun) {
-    this.canRun = canRun;
+    this.canRun = Preconditions.checkNotNull(canRun, "canRun");
   }
   
   @Override

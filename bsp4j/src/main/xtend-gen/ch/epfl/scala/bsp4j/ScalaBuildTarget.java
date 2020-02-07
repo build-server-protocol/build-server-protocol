@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import ch.epfl.scala.bsp4j.ScalaPlatform;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -38,7 +39,7 @@ public class ScalaBuildTarget {
   }
   
   public void setScalaOrganization(@NonNull final String scalaOrganization) {
-    this.scalaOrganization = scalaOrganization;
+    this.scalaOrganization = Preconditions.checkNotNull(scalaOrganization, "scalaOrganization");
   }
   
   @Pure
@@ -48,7 +49,7 @@ public class ScalaBuildTarget {
   }
   
   public void setScalaVersion(@NonNull final String scalaVersion) {
-    this.scalaVersion = scalaVersion;
+    this.scalaVersion = Preconditions.checkNotNull(scalaVersion, "scalaVersion");
   }
   
   @Pure
@@ -58,7 +59,7 @@ public class ScalaBuildTarget {
   }
   
   public void setScalaBinaryVersion(@NonNull final String scalaBinaryVersion) {
-    this.scalaBinaryVersion = scalaBinaryVersion;
+    this.scalaBinaryVersion = Preconditions.checkNotNull(scalaBinaryVersion, "scalaBinaryVersion");
   }
   
   @Pure
@@ -68,7 +69,7 @@ public class ScalaBuildTarget {
   }
   
   public void setPlatform(@NonNull final ScalaPlatform platform) {
-    this.platform = platform;
+    this.platform = Preconditions.checkNotNull(platform, "platform");
   }
   
   @Pure
@@ -78,7 +79,7 @@ public class ScalaBuildTarget {
   }
   
   public void setJars(@NonNull final List<String> jars) {
-    this.jars = jars;
+    this.jars = Preconditions.checkNotNull(jars, "jars");
   }
   
   @Override

@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -34,7 +35,7 @@ public class ScalacOptionsItem {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Pure
@@ -44,7 +45,7 @@ public class ScalacOptionsItem {
   }
   
   public void setOptions(@NonNull final List<String> options) {
-    this.options = options;
+    this.options = Preconditions.checkNotNull(options, "options");
   }
   
   @Pure
@@ -54,7 +55,7 @@ public class ScalacOptionsItem {
   }
   
   public void setClasspath(@NonNull final List<String> classpath) {
-    this.classpath = classpath;
+    this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
   
   @Pure
@@ -64,7 +65,7 @@ public class ScalacOptionsItem {
   }
   
   public void setClassDirectory(@NonNull final String classDirectory) {
-    this.classDirectory = classDirectory;
+    this.classDirectory = Preconditions.checkNotNull(classDirectory, "classDirectory");
   }
   
   @Override

@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -24,7 +25,7 @@ public class Position {
   }
   
   public void setLine(@NonNull final Integer line) {
-    this.line = line;
+    this.line = Preconditions.checkNotNull(line, "line");
   }
   
   @Pure
@@ -34,7 +35,7 @@ public class Position {
   }
   
   public void setCharacter(@NonNull final Integer character) {
-    this.character = character;
+    this.character = Preconditions.checkNotNull(character, "character");
   }
   
   @Override

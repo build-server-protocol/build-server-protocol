@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -45,7 +46,7 @@ public class TestReport {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Pure
@@ -64,7 +65,7 @@ public class TestReport {
   }
   
   public void setPassed(@NonNull final Integer passed) {
-    this.passed = passed;
+    this.passed = Preconditions.checkNotNull(passed, "passed");
   }
   
   @Pure
@@ -74,7 +75,7 @@ public class TestReport {
   }
   
   public void setFailed(@NonNull final Integer failed) {
-    this.failed = failed;
+    this.failed = Preconditions.checkNotNull(failed, "failed");
   }
   
   @Pure
@@ -84,7 +85,7 @@ public class TestReport {
   }
   
   public void setIgnored(@NonNull final Integer ignored) {
-    this.ignored = ignored;
+    this.ignored = Preconditions.checkNotNull(ignored, "ignored");
   }
   
   @Pure
@@ -94,7 +95,7 @@ public class TestReport {
   }
   
   public void setCancelled(@NonNull final Integer cancelled) {
-    this.cancelled = cancelled;
+    this.cancelled = Preconditions.checkNotNull(cancelled, "cancelled");
   }
   
   @Pure
@@ -104,7 +105,7 @@ public class TestReport {
   }
   
   public void setSkipped(@NonNull final Integer skipped) {
-    this.skipped = skipped;
+    this.skipped = Preconditions.checkNotNull(skipped, "skipped");
   }
   
   @Pure

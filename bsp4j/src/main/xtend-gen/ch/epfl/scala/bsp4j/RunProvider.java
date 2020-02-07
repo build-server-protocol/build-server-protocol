@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -21,7 +22,7 @@ public class RunProvider {
   }
   
   public void setLanguageIds(@NonNull final List<String> languageIds) {
-    this.languageIds = languageIds;
+    this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
   
   @Override

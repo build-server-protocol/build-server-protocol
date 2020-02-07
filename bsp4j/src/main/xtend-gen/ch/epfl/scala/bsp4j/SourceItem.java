@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.SourceItemKind;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -29,7 +30,7 @@ public class SourceItem {
   }
   
   public void setUri(@NonNull final String uri) {
-    this.uri = uri;
+    this.uri = Preconditions.checkNotNull(uri, "uri");
   }
   
   @Pure
@@ -39,7 +40,7 @@ public class SourceItem {
   }
   
   public void setKind(@NonNull final SourceItemKind kind) {
-    this.kind = kind;
+    this.kind = Preconditions.checkNotNull(kind, "kind");
   }
   
   @Pure
@@ -49,7 +50,7 @@ public class SourceItem {
   }
   
   public void setGenerated(@NonNull final Boolean generated) {
-    this.generated = generated;
+    this.generated = Preconditions.checkNotNull(generated, "generated");
   }
   
   @Override

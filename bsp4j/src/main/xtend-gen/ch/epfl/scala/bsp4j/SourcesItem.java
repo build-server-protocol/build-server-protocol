@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import ch.epfl.scala.bsp4j.SourceItem;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -27,7 +28,7 @@ public class SourcesItem {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Pure
@@ -37,7 +38,7 @@ public class SourcesItem {
   }
   
   public void setSources(@NonNull final List<SourceItem> sources) {
-    this.sources = sources;
+    this.sources = Preconditions.checkNotNull(sources, "sources");
   }
   
   @Override

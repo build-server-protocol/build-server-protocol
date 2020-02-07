@@ -6,6 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -50,7 +51,7 @@ public class BuildTarget {
   }
   
   public void setId(@NonNull final BuildTargetIdentifier id) {
-    this.id = id;
+    this.id = Preconditions.checkNotNull(id, "id");
   }
   
   @Pure
@@ -78,7 +79,7 @@ public class BuildTarget {
   }
   
   public void setTags(@NonNull final List<String> tags) {
-    this.tags = tags;
+    this.tags = Preconditions.checkNotNull(tags, "tags");
   }
   
   @Pure
@@ -88,7 +89,7 @@ public class BuildTarget {
   }
   
   public void setLanguageIds(@NonNull final List<String> languageIds) {
-    this.languageIds = languageIds;
+    this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
   
   @Pure
@@ -98,7 +99,7 @@ public class BuildTarget {
   }
   
   public void setDependencies(@NonNull final List<BuildTargetIdentifier> dependencies) {
-    this.dependencies = dependencies;
+    this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
   
   @Pure
@@ -108,7 +109,7 @@ public class BuildTarget {
   }
   
   public void setCapabilities(@NonNull final BuildTargetCapabilities capabilities) {
-    this.capabilities = capabilities;
+    this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
   
   @Pure

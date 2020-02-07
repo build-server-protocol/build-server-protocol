@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.BuildClientCapabilities;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -42,7 +43,7 @@ public class InitializeBuildParams {
   }
   
   public void setRootUri(@NonNull final String rootUri) {
-    this.rootUri = rootUri;
+    this.rootUri = Preconditions.checkNotNull(rootUri, "rootUri");
   }
   
   @Pure
@@ -52,7 +53,7 @@ public class InitializeBuildParams {
   }
   
   public void setDisplayName(@NonNull final String displayName) {
-    this.displayName = displayName;
+    this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
   
   @Pure
@@ -62,7 +63,7 @@ public class InitializeBuildParams {
   }
   
   public void setVersion(@NonNull final String version) {
-    this.version = version;
+    this.version = Preconditions.checkNotNull(version, "version");
   }
   
   @Pure
@@ -72,7 +73,7 @@ public class InitializeBuildParams {
   }
   
   public void setBspVersion(@NonNull final String bspVersion) {
-    this.bspVersion = bspVersion;
+    this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
   
   @Pure
@@ -82,7 +83,7 @@ public class InitializeBuildParams {
   }
   
   public void setCapabilities(@NonNull final BuildClientCapabilities capabilities) {
-    this.capabilities = capabilities;
+    this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
   
   @Pure
