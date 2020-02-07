@@ -41,7 +41,7 @@ abstract class AbstractMockServer {
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]
   def scalacOptions(params: ScalacOptionsParams): BspResponse[ScalacOptionsResult]
-  def jvmTestEnvironment(params: JvmEnvironmentParams): BspResponse[JvmEnvironmentResult]
+  def jvmTestEnvironment(params: JvmTestEnvironmentParams): BspResponse[JvmTestEnvironmentResult]
   def compile(params: CompileParams): BspResponse[CompileResult]
   def test(params: TestParams): BspResponse[TestResult]
   def run(params: RunParams): BspResponse[RunResult]

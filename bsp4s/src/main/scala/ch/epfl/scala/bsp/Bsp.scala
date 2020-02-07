@@ -577,7 +577,7 @@ object TestParamsDataKind {
 )
 
 
-@JsonCodec final case class JvmEnvironmentParams(
+@JsonCodec final case class JvmTestEnvironmentParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String]
 )
@@ -590,7 +590,7 @@ object TestParamsDataKind {
     environmentVariables: Map[String, String]
 )
 
-@JsonCodec final case class JvmEnvironmentResult(
+@JsonCodec final case class JvmTestEnvironmentResult(
     items: List[JvmEnvironmentItem]
 )
 

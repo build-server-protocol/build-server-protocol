@@ -1,35 +1,35 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
+import ch.epfl.scala.bsp4j.JvmEnvironmentItem;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class JvmEnvironmentParams {
+public class JvmTestEnvironmentResult {
   @NonNull
-  private List<BuildTargetIdentifier> targets;
+  private List<JvmEnvironmentItem> items;
   
-  public JvmEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
-    this.targets = targets;
+  public JvmTestEnvironmentResult(@NonNull final List<JvmEnvironmentItem> items) {
+    this.items = items;
   }
   
   @Pure
   @NonNull
-  public List<BuildTargetIdentifier> getTargets() {
-    return this.targets;
+  public List<JvmEnvironmentItem> getItems() {
+    return this.items;
   }
   
-  public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
-    this.targets = targets;
+  public void setItems(@NonNull final List<JvmEnvironmentItem> items) {
+    this.items = items;
   }
   
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("targets", this.targets);
+    b.add("items", this.items);
     return b.toString();
   }
   
@@ -42,11 +42,11 @@ public class JvmEnvironmentParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    JvmEnvironmentParams other = (JvmEnvironmentParams) obj;
-    if (this.targets == null) {
-      if (other.targets != null)
+    JvmTestEnvironmentResult other = (JvmTestEnvironmentResult) obj;
+    if (this.items == null) {
+      if (other.items != null)
         return false;
-    } else if (!this.targets.equals(other.targets))
+    } else if (!this.items.equals(other.items))
       return false;
     return true;
   }
@@ -54,6 +54,6 @@ public class JvmEnvironmentParams {
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.targets== null) ? 0 : this.targets.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

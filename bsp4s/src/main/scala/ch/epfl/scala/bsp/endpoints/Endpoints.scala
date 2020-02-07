@@ -45,7 +45,7 @@ trait BuildTarget {
   object scalaMainClasses
       extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
         "buildTarget/scalaMainClasses")
-  object jvmTestEnvironment extends Endpoint[JvmEnvironmentParams, JvmEnvironmentResult]("buildTarget/jvmTestEnvironment")
+  object jvmTestEnvironment extends Endpoint[JvmTestEnvironmentParams, JvmTestEnvironmentResult]("buildTarget/jvmTestEnvironment")
 
 }
 

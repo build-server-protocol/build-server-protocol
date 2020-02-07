@@ -6,7 +6,7 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
-class JvmEnvironmentParams {
+class JvmTestEnvironmentParams {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
@@ -31,7 +31,7 @@ class JvmEnvironmentItem {
 }
 
 @JsonRpcData
-class JvmEnvironmentResult {
+class JvmTestEnvironmentResult {
   @NonNull List<JvmEnvironmentItem> items
   new(@NonNull List<JvmEnvironmentItem> items) {
     this.items = items

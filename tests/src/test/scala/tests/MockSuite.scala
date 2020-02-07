@@ -91,7 +91,7 @@ class HappyMockSuite extends FunSuite {
   }
 
   def assertJvmEnvironment(server: MockBuildServer): Unit = {
-    val jvmTestEnvironmentParams = new JvmEnvironmentParams(getBuildTargetIds(server))
+    val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
     scalacOptionsItems.foreach { item =>

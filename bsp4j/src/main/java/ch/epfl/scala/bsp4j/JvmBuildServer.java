@@ -6,5 +6,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface JvmBuildServer {
     @JsonRequest("buildTarget/jvmTestEnvironment")
-    CompletableFuture<JvmEnvironmentResult> jvmTestEnvironment(JvmEnvironmentParams params);
+    CompletableFuture<JvmTestEnvironmentResult> jvmTestEnvironment(JvmTestEnvironmentParams params);
 }

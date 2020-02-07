@@ -20,10 +20,10 @@ not be cached in any form. The client should ask for it right before test execut
 after all the targets are compiled.
 
 - method: `buildTarget/jvmTestEnvironment`
-- params: `JvmEnvironmentParams`
+- params: `JvmTestEnvironmentParams`
 
 ```ts
-export interface JvmEnvironmentParams(
+export interface JvmTestEnvironmentParams(
     targets: BuildTargetIdentifier[],
     originId?: String
 )
@@ -31,7 +31,7 @@ export interface JvmEnvironmentParams(
 
 Response:
 
-- result: `JvmEnvironmentResult`, defined as follows
+- result: `JvmTestEnvironmentResult`, defined as follows
 - error: JSON-RPC code and message set in case an exception happens during the
   request.
 
@@ -42,7 +42,7 @@ export interface JvmEnvironmentItem{
     jvmOptions: String[];
 }
 
-export interface JvmEnvironmentResult{
+export interface JvmTestEnvironmentResult{
     items: JvmEnvironmentItem[];
     workingDirectory: String;
     environmentVariables: Map<String, String>;
