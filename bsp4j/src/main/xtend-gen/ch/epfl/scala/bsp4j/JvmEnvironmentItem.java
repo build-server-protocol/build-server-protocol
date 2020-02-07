@@ -4,6 +4,7 @@ import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -39,7 +40,7 @@ public class JvmEnvironmentItem {
   }
   
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
-    this.target = target;
+    this.target = Preconditions.checkNotNull(target, "target");
   }
   
   @Pure
@@ -49,7 +50,7 @@ public class JvmEnvironmentItem {
   }
   
   public void setClasspath(@NonNull final List<String> classpath) {
-    this.classpath = classpath;
+    this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
   
   @Pure
@@ -59,7 +60,7 @@ public class JvmEnvironmentItem {
   }
   
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
-    this.jvmOptions = jvmOptions;
+    this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
   
   @Pure
@@ -69,7 +70,7 @@ public class JvmEnvironmentItem {
   }
   
   public void setWorkingDirectory(@NonNull final String workingDirectory) {
-    this.workingDirectory = workingDirectory;
+    this.workingDirectory = Preconditions.checkNotNull(workingDirectory, "workingDirectory");
   }
   
   @Pure
@@ -79,7 +80,7 @@ public class JvmEnvironmentItem {
   }
   
   public void setEnvironmentVariables(@NonNull final Map<String, String> environmentVariables) {
-    this.environmentVariables = environmentVariables;
+    this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
   
   @Override
