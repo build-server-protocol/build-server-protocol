@@ -1316,8 +1316,8 @@ gather information required to launch a Java process. This is useful when the
 client wants to control the Java process execution, for example to enable custom
 Java agents or launch a custom main class during unit testing or debugging
 
-The data provided by this endpoint may change beteween compilations, so it should
-not be cached in any form. The client should ask for it right before test exection,
+The data provided by this endpoint may change between compilations, so it should
+not be cached in any form. The client should ask for it right before test execution,
 after all the targets are compiled.
 
 - method: `buildTarget/jvmTestEnvironment`
