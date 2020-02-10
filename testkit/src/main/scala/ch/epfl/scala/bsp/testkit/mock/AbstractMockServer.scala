@@ -29,6 +29,7 @@ abstract class AbstractMockServer {
     .requestAsync(endpoints.BuildTarget.scalacOptions)(scalacOptions(_))
     .requestAsync(endpoints.BuildTarget.compile)(compile(_))
     .requestAsync(endpoints.BuildTarget.test)(test(_))
+    .requestAsync(endpoints.BuildTarget.jvmTestEnvironment)(jvmTestEnvironment(_))
     .requestAsync(endpoints.BuildTarget.run)(run(_))
 
   def initialize(params: InitializeBuildParams): BspResponse[InitializeBuildResult]
@@ -40,6 +41,7 @@ abstract class AbstractMockServer {
   def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
   def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]
   def scalacOptions(params: ScalacOptionsParams): BspResponse[ScalacOptionsResult]
+  def jvmTestEnvironment(params: JvmTestEnvironmentParams): BspResponse[JvmTestEnvironmentResult]
   def compile(params: CompileParams): BspResponse[CompileResult]
   def test(params: TestParams): BspResponse[TestResult]
   def run(params: RunParams): BspResponse[RunResult]

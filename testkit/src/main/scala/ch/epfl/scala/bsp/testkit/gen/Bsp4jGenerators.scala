@@ -582,6 +582,26 @@ trait Bsp4jGenerators {
     targets <- genBuildTarget.list
   } yield new WorkspaceBuildTargetsResult(targets)
 
+  lazy val genEnvironmentVariables = for {
+    varName <- arbitrary[String]
+    varVal <- arbitrary[String]
+  } yield (varName, varVal)
+
+  lazy val genJvmEnvironmentItem: Gen[JvmEnvironmentItem] = for {
+    target <- genBuildTargetIdentifier
+    options <- arbitrary[String].list
+    envVars <- genEnvironmentVariables.list
+    classpath <- genFileUriString.list
+    workdir <- genFileUriString
+  } yield new JvmEnvironmentItem(target, options, classpath, workdir, envVars.asScala.toMap.asJava)
+
+  lazy val genJvmTestEnvironmentParams: Gen[JvmTestEnvironmentParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new JvmTestEnvironmentParams(targets)
+
+  lazy val genJvmTestEnvironmentResult: Gen[JvmTestEnvironmentResult] = for {
+    items <- genJvmEnvironmentItem.list
+  } yield new JvmTestEnvironmentResult(items)
 
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)

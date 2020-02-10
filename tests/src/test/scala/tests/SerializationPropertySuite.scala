@@ -393,5 +393,19 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
       assertSerializationRoundtrip[bsp4j.WorkspaceBuildTargetsResult, bsp4s.WorkspaceBuildTargetsResult](a)
     }
   }
-
+  test("JvmTestEnvironmentParams") {
+    forAll { a: bsp4j.JvmTestEnvironmentParams =>
+      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentParams, bsp4s.JvmTestEnvironmentParams](a)
+    }
+  }
+  test("JvmTestEnvironmentResult") {
+    forAll { a: bsp4j.JvmTestEnvironmentResult =>
+      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentResult, bsp4s.JvmTestEnvironmentResult](a)
+    }
+  }
+  test("JvmEnvironmentItem") {
+    forAll { a: bsp4j.JvmEnvironmentItem =>
+      assertSerializationRoundtrip[bsp4j.JvmEnvironmentItem, bsp4s.JvmEnvironmentItem](a)
+    }
+  }
 }
