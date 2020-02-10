@@ -110,6 +110,7 @@ lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j)
   .settings(
+    skip in publish := true,
     mdocOut := baseDirectory.in(ThisBuild).value / "website" / "target" / "docs",
     mdocVariables := Map(
       "VERSION" -> version.value
