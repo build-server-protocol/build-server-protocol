@@ -114,7 +114,8 @@ object BuildTargetDataKind {
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
-    buildTargetChangedProvider: Option[Boolean]
+    buildTargetChangedProvider: Option[Boolean],
+    jvmTestEnvironmentProvider: Option[Boolean]
 )
 
 @JsonCodec final case class InitializeBuildResult(

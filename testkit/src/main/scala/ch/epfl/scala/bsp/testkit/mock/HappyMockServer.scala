@@ -194,7 +194,8 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
     inverseSourcesProvider = Some(true),
     dependencySourcesProvider = Some(true),
     resourcesProvider = Some(true),
-    buildTargetChangedProvider = Some(true)
+    buildTargetChangedProvider = Some(true),
+    jvmTestEnvironmentProvider = Some(true)
   )
 
   val baseUri: URI = base.getCanonicalFile.toURI
