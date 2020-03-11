@@ -420,7 +420,12 @@ trait Bsp4jGenerators {
   lazy val genSourcesItem: Gen[SourcesItem] = for {
     target <- genBuildTargetIdentifier
     sources <- genSourceItem.list
-  } yield new SourcesItem(target, sources)
+    roots <- genFileUriString.list.nullable
+  } yield {
+    val item = new SourcesItem(target, sources)
+    item.setRoots(roots)
+    item
+  }
 
   lazy val genSourcesParams: Gen[SourcesParams] = for {
     targets <- genBuildTargetIdentifier.list
