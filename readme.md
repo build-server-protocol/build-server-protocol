@@ -17,6 +17,8 @@ Read the specification [here](docs/specification.md).
 
 The current maintainers (people who can merge pull requests) are:
 
-* Justin Kaeser - [@jastice](https://github.com/jastice)
-* Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
 * Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
+* Justin Kaeser - [@jastice](https://github.com/jastice)
+* Łukasz Wawrzyk - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
+* Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+* Tomasz Pasternak - [@tpasternak](https://github.com/tpasternak)
