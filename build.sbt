@@ -1,6 +1,6 @@
 inThisBuild(List(
   scalaVersion := "2.12.10",
-  organization := "com.geirsson",
+  organization := "ch.epfl.scala",
   homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
