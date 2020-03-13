@@ -1,5 +1,4 @@
-addSbtPlugin("ch.epfl.scala" % "sbt-release-early" % "2.1.0")
-addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.0.0")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.2")
 addSbtPlugin("org.scalameta" % "sbt-mdoc" % "1.3.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.12")
 addSbtCoursier

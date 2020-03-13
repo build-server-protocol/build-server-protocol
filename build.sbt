@@ -1,12 +1,6 @@
 inThisBuild(
   List(
     scalaVersion := "2.12.10",
-    scmInfo := Some(
-      ScmInfo(
-        browseUrl = url("https://github.com/scalacenter/bsp"),
-        connection = "scm:git:git@github.com:scalacenter/bsp.git"
-      )
-    ),
     bloopExportJarClassifiers := Some(Set("sources")),
     Keys.resolvers := {
       val oldResolvers = Keys.resolvers.value
@@ -25,13 +19,7 @@ def inferJavaHome() =
   Some(file(System.getProperty("java.home")).getParentFile)
 
 cancelable.in(Global) := true
-
-lazy val bsp = project
-  .in(file("."))
-  .aggregate(bsp4s, bsp4j, tests, `bsp-testkit`)
-  .settings(
-    skip in publish := true
-  )
+skip in publish := true
 
 lazy val bsp4s = project
   .in(file("bsp4s"))
