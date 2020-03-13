@@ -1,14 +1,15 @@
-inThisBuild(
-  List(
-    scalaVersion := "2.12.10",
-    bloopExportJarClassifiers := Some(Set("sources")),
-    Keys.resolvers := {
-      val oldResolvers = Keys.resolvers.value
-      val scalacenterResolver = Resolver.bintrayRepo("scalacenter", "releases")
-      (oldResolvers :+ scalacenterResolver).distinct
-    }
+inThisBuild(List(
+  scalaVersion := "2.12.10",
+  organization := "com.geirsson",
+  homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  developers := List(
+      Developer("olafurpg", "Ólafur Páll Geirsson", "olafurpg@gmail.com", url("https://github.com/olafurpg")),
+      Developer("jvican", "Jorge Vicente Cantero", "jorge@vican.me", url("https://github.com/jvican")),
+      Developer("jastice", "Justin Kaeser", "justin@justinkaeser.com", url("https://github.com/jastice")),
   )
-)
+))
+
 import java.io.File
 import org.eclipse.xtend.core.XtendInjectorSingleton
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
