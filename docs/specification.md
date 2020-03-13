@@ -667,6 +667,11 @@ export interface SourcesItem {
   target: BuildTargetIdentifer;
   /** The text documents or and directories that belong to this build target. */
   sources: SourceItem[];
+  /** The root directories from where source files should be relativized.
+   * 
+   * Example: ["file://Users/name/dev/metals/src/main/scala"]
+   */
+  roots?: Uri[]; 
 }
 
 export interface SourceItem {

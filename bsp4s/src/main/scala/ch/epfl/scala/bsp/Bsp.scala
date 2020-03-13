@@ -286,7 +286,8 @@ case object BuildTargetEventKind {
 )
 @JsonCodec final case class SourcesItem(
     target: BuildTargetIdentifier,
-    sources: List[SourceItem]
+    sources: List[SourceItem],
+    roots: Option[List[Uri]]
 )
 @JsonCodec final case class SourceItem(
     uri: Uri,

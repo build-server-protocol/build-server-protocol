@@ -16,6 +16,8 @@ public class SourcesItem {
   @NonNull
   private List<SourceItem> sources;
   
+  private List<String> roots;
+  
   public SourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<SourceItem> sources) {
     this.target = target;
     this.sources = sources;
@@ -41,12 +43,22 @@ public class SourcesItem {
     this.sources = Preconditions.checkNotNull(sources, "sources");
   }
   
+  @Pure
+  public List<String> getRoots() {
+    return this.roots;
+  }
+  
+  public void setRoots(final List<String> roots) {
+    this.roots = roots;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
     b.add("sources", this.sources);
+    b.add("roots", this.roots);
     return b.toString();
   }
   
@@ -70,6 +82,11 @@ public class SourcesItem {
         return false;
     } else if (!this.sources.equals(other.sources))
       return false;
+    if (this.roots == null) {
+      if (other.roots != null)
+        return false;
+    } else if (!this.roots.equals(other.roots))
+      return false;
     return true;
   }
   
@@ -79,6 +96,7 @@ public class SourcesItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.sources== null) ? 0 : this.sources.hashCode());
+    result = prime * result + ((this.sources== null) ? 0 : this.sources.hashCode());
+    return prime * result + ((this.roots== null) ? 0 : this.roots.hashCode());
   }
 }
