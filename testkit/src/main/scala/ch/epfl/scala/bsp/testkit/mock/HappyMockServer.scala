@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp.testkit.mock
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -57,8 +58,11 @@ class HappyMockServer(base: File, val logger: Logger, implicit val client: Langu
 
     val languageIds = List("scala")
 
+    val javaHome = sys.props.get("java.home").map(p => Uri(Paths.get(p).toUri))
+    val javaVersion = sys.props.get("java.vm.specification.version")
+    val jvmBuildTarget = JvmBuildTarget(javaHome, javaVersion)
     val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").map(Uri.apply)
-    val scalaBuildTarget = ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.Jvm, scalaJars)
+    val scalaBuildTarget = ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.Jvm, scalaJars, jvmBuildTarget)
     val scalaData = Some(scalaBuildTarget.asJson)
 
     val targets = List(

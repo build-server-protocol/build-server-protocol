@@ -12,13 +12,15 @@ class ScalaBuildTarget {
   @NonNull String scalaBinaryVersion
   @NonNull ScalaPlatform platform
   @NonNull List<String> jars
+  @NonNull JvmBuildTarget jvmBuildTarget
   new(@NonNull String scalaOrganization, @NonNull String scalaVersion, @NonNull String scalaBinaryVersion,
-      @NonNull ScalaPlatform platform, @NonNull List<String> jars) {
+      @NonNull ScalaPlatform platform, @NonNull List<String> jars, @NonNull JvmBuildTarget jvmBuildTarget) {
     this.scalaOrganization = scalaOrganization
     this.scalaVersion = scalaVersion
     this.scalaBinaryVersion = scalaBinaryVersion
     this.platform = platform
     this.jars = jars
+    this.jvmBuildTarget = jvmBuildTarget
   }
 }
 

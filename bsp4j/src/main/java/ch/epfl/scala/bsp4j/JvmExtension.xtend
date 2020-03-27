@@ -6,6 +6,16 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
+class JvmBuildTarget {
+  String javaHome
+  String javaVersion
+  new(String javaHome, String javaVersion) {
+    this.javaHome = javaHome
+    this.javaVersion = javaVersion
+  }
+}
+
+@JsonRpcData
 class JvmTestEnvironmentParams {
   @NonNull List<BuildTargetIdentifier> targets
   new(@NonNull List<BuildTargetIdentifier> targets) {

@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.JvmBuildTarget;
 import ch.epfl.scala.bsp4j.ScalaPlatform;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -24,12 +25,16 @@ public class ScalaBuildTarget {
   @NonNull
   private List<String> jars;
   
-  public ScalaBuildTarget(@NonNull final String scalaOrganization, @NonNull final String scalaVersion, @NonNull final String scalaBinaryVersion, @NonNull final ScalaPlatform platform, @NonNull final List<String> jars) {
+  @NonNull
+  private JvmBuildTarget jvmBuildTarget;
+  
+  public ScalaBuildTarget(@NonNull final String scalaOrganization, @NonNull final String scalaVersion, @NonNull final String scalaBinaryVersion, @NonNull final ScalaPlatform platform, @NonNull final List<String> jars, @NonNull final JvmBuildTarget jvmBuildTarget) {
     this.scalaOrganization = scalaOrganization;
     this.scalaVersion = scalaVersion;
     this.scalaBinaryVersion = scalaBinaryVersion;
     this.platform = platform;
     this.jars = jars;
+    this.jvmBuildTarget = jvmBuildTarget;
   }
   
   @Pure
@@ -82,6 +87,16 @@ public class ScalaBuildTarget {
     this.jars = Preconditions.checkNotNull(jars, "jars");
   }
   
+  @Pure
+  @NonNull
+  public JvmBuildTarget getJvmBuildTarget() {
+    return this.jvmBuildTarget;
+  }
+  
+  public void setJvmBuildTarget(@NonNull final JvmBuildTarget jvmBuildTarget) {
+    this.jvmBuildTarget = Preconditions.checkNotNull(jvmBuildTarget, "jvmBuildTarget");
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -91,6 +106,7 @@ public class ScalaBuildTarget {
     b.add("scalaBinaryVersion", this.scalaBinaryVersion);
     b.add("platform", this.platform);
     b.add("jars", this.jars);
+    b.add("jvmBuildTarget", this.jvmBuildTarget);
     return b.toString();
   }
   
@@ -129,6 +145,11 @@ public class ScalaBuildTarget {
         return false;
     } else if (!this.jars.equals(other.jars))
       return false;
+    if (this.jvmBuildTarget == null) {
+      if (other.jvmBuildTarget != null)
+        return false;
+    } else if (!this.jvmBuildTarget.equals(other.jvmBuildTarget))
+      return false;
     return true;
   }
   
@@ -141,6 +162,7 @@ public class ScalaBuildTarget {
     result = prime * result + ((this.scalaVersion== null) ? 0 : this.scalaVersion.hashCode());
     result = prime * result + ((this.scalaBinaryVersion== null) ? 0 : this.scalaBinaryVersion.hashCode());
     result = prime * result + ((this.platform== null) ? 0 : this.platform.hashCode());
-    return prime * result + ((this.jars== null) ? 0 : this.jars.hashCode());
+    result = prime * result + ((this.jars== null) ? 0 : this.jars.hashCode());
+    return prime * result + ((this.jvmBuildTarget== null) ? 0 : this.jvmBuildTarget.hashCode());
   }
 }
