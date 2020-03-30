@@ -325,6 +325,13 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     }
   }
 
+  implicit def shrinkJvmBuildTarget: Shrink[JvmBuildTarget] = Shrink { a =>
+    for {
+      javaHome <- shrink(a.getJavaHome)
+      javaVersion <- shrink(a.getJavaVersion)
+    } yield new JvmBuildTarget(javaHome, javaVersion)
+  }
+
   implicit def shrinkSbtBuildTarget: Shrink[SbtBuildTarget] = Shrink { a =>
     for {
       sbtVersion <- shrink(a.getSbtVersion)
@@ -347,7 +354,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       scalaBinaryVersion <- shrink(a.getScalaBinaryVersion)
       platform <- shrink(a.getPlatform)
       jars <- shrink(a.getJars)
-    } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+      jvmBuildTarget <- shrink(a.getJvmBuildTarget)
+    } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars, jvmBuildTarget)
   }
 
   implicit def shrinkScalacOptionsItem: Shrink[ScalacOptionsItem] = Shrink { a =>

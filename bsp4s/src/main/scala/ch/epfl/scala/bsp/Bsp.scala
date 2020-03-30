@@ -557,12 +557,18 @@ object ScalaPlatform {
   }
 }
 
+@JsonCodec final case class JvmBuildTarget(
+    javaHome: Option[Uri],
+    javaVersion: Option[String]
+)
+
 @JsonCodec final case class ScalaBuildTarget(
     scalaOrganization: String,
     scalaVersion: String,
     scalaBinaryVersion: String,
     platform: ScalaPlatform,
-    jars: List[Uri]
+    jars: List[Uri],
+    jvmBuildTarget: JvmBuildTarget
 )
 
 @JsonCodec final case class ScalaTestParams(

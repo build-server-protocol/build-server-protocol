@@ -45,6 +45,7 @@ trait Bsp4jArbitrary {
   implicit val arbRunParams: Arbitrary[RunParams] = Arbitrary(genRunParams)
   implicit val arbRunProvider: Arbitrary[RunProvider] = Arbitrary(genRunProvider)
   implicit val arbRunResult: Arbitrary[RunResult] = Arbitrary(genRunResult)
+  implicit val arbJvmBuildTarget: Arbitrary[JvmBuildTarget] = Arbitrary(genJvmBuildTarget)
   implicit val arbSbtBuildTarget: Arbitrary[SbtBuildTarget] = Arbitrary(genSbtBuildTarget)
   implicit val arbScalaBuildTarget: Arbitrary[ScalaBuildTarget] = Arbitrary(genScalaBuildTarget)
   implicit val arbScalacOptionsItem: Arbitrary[ScalacOptionsItem] = Arbitrary(genScalacOptionsItem)

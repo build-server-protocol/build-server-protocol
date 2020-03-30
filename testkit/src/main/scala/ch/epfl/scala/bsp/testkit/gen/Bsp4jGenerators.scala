@@ -308,6 +308,11 @@ trait Bsp4jGenerators {
     result
   }
 
+  lazy val genJvmBuildTarget: Gen[JvmBuildTarget] = for {
+    javaHome <- genFileUriString.nullable
+    javaVersion <- arbitrary[String].nullable
+  } yield new JvmBuildTarget(javaHome, javaVersion)
+
   lazy val genSbtBuildTarget: Gen[SbtBuildTarget] = for {
     sbtVersion <- arbitrary[String]
     autoImports <- arbitrary[String].list
@@ -327,7 +332,8 @@ trait Bsp4jGenerators {
     scalaBinaryVersion <- arbitrary[String]
     platform <- genScalaPlatform
     jars <- genFileUriString.list
-  } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+    jvmBuildTarget <- genJvmBuildTarget
+  } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars, jvmBuildTarget)
 
   lazy val genScalacOptionsItem: Gen[ScalacOptionsItem] = for {
     target <- genBuildTargetIdentifier

@@ -7,6 +7,24 @@ sidebar_label: JVM
 The following section contains JVM-specific extensions to the build server
 protocol.
 
+## JVM Build Target
+
+`JvmBuildTarget` is a basic data structure that contains jvm-specific
+metadata, specifically JDK reference. This metadata is embedded in
+the `data: Option[Json]` field of the `BuildTarget` definition, when
+the `dataKind` field contains "jvm".
+
+```ts
+export interface JvmBuildTarget {
+  /** Uri representing absolute path to java home
+   * For example: file:///usr/lib/jvm/java-8-openjdk-amd64/jre */
+  javaHome?: Uri;
+
+  /** The java version this target is supposed to use.
+   * For example: 1.8 */
+  javaVersion?: String;
+}
+```
 
 ## Test Environment Request
 
