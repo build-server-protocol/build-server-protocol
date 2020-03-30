@@ -31,6 +31,9 @@ export interface ScalaBuildTarget {
 
   /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
   jars: String[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget: JvmBuildTarget;
 }
 
 export namespace ScalaPlatform {
