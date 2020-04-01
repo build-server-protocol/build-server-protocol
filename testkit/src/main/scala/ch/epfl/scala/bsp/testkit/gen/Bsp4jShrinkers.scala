@@ -355,7 +355,11 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       platform <- shrink(a.getPlatform)
       jars <- shrink(a.getJars)
       jvmBuildTarget <- shrink(a.getJvmBuildTarget)
-    } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars, jvmBuildTarget)
+    } yield {
+      val target = new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+      target.setJvmBuildTarget(jvmBuildTarget)
+      target
+    }
   }
 
   implicit def shrinkScalacOptionsItem: Shrink[ScalacOptionsItem] = Shrink { a =>
