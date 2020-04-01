@@ -332,8 +332,12 @@ trait Bsp4jGenerators {
     scalaBinaryVersion <- arbitrary[String]
     platform <- genScalaPlatform
     jars <- genFileUriString.list
-    jvmBuildTarget <- genJvmBuildTarget
-  } yield new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars, jvmBuildTarget)
+    jvmBuildTarget <- genJvmBuildTarget.nullable
+  } yield {
+    val target = new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+    target.setJvmBuildTarget(jvmBuildTarget)
+    target
+  }
 
   lazy val genScalacOptionsItem: Gen[ScalacOptionsItem] = for {
     target <- genBuildTargetIdentifier

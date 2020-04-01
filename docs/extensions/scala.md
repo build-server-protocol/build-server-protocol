@@ -33,7 +33,7 @@ export interface ScalaBuildTarget {
   jars: String[];
 
   /** The jvm build target describing jdk to be used */
-  jvmBuildTarget: JvmBuildTarget;
+  jvmBuildTarget?: JvmBuildTarget;
 }
 
 export namespace ScalaPlatform {

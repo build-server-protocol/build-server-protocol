@@ -25,16 +25,14 @@ public class ScalaBuildTarget {
   @NonNull
   private List<String> jars;
   
-  @NonNull
   private JvmBuildTarget jvmBuildTarget;
   
-  public ScalaBuildTarget(@NonNull final String scalaOrganization, @NonNull final String scalaVersion, @NonNull final String scalaBinaryVersion, @NonNull final ScalaPlatform platform, @NonNull final List<String> jars, @NonNull final JvmBuildTarget jvmBuildTarget) {
+  public ScalaBuildTarget(@NonNull final String scalaOrganization, @NonNull final String scalaVersion, @NonNull final String scalaBinaryVersion, @NonNull final ScalaPlatform platform, @NonNull final List<String> jars) {
     this.scalaOrganization = scalaOrganization;
     this.scalaVersion = scalaVersion;
     this.scalaBinaryVersion = scalaBinaryVersion;
     this.platform = platform;
     this.jars = jars;
-    this.jvmBuildTarget = jvmBuildTarget;
   }
   
   @Pure
@@ -88,13 +86,12 @@ public class ScalaBuildTarget {
   }
   
   @Pure
-  @NonNull
   public JvmBuildTarget getJvmBuildTarget() {
     return this.jvmBuildTarget;
   }
   
-  public void setJvmBuildTarget(@NonNull final JvmBuildTarget jvmBuildTarget) {
-    this.jvmBuildTarget = Preconditions.checkNotNull(jvmBuildTarget, "jvmBuildTarget");
+  public void setJvmBuildTarget(final JvmBuildTarget jvmBuildTarget) {
+    this.jvmBuildTarget = jvmBuildTarget;
   }
   
   @Override

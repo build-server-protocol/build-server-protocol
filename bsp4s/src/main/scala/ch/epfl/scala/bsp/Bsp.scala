@@ -568,7 +568,7 @@ object ScalaPlatform {
     scalaBinaryVersion: String,
     platform: ScalaPlatform,
     jars: List[Uri],
-    jvmBuildTarget: JvmBuildTarget
+    jvmBuildTarget: Option[JvmBuildTarget]
 )
 
 @JsonCodec final case class ScalaTestParams(
