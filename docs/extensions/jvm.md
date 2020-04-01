@@ -56,7 +56,7 @@ Response:
 ```ts
 export interface JvmEnvironmentItem{
     target: BuildTargetIdentifier;
-    classpath: String[];
+    classpath: Uri[];
     jvmOptions: String[];
 }
 
