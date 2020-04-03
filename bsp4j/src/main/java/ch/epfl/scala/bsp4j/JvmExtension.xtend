@@ -48,3 +48,19 @@ class JvmTestEnvironmentResult {
   }
 }
 
+
+@JsonRpcData
+class JvmRunEnvironmentParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
+class JvmRunEnvironmentResult {
+  @NonNull List<JvmEnvironmentItem> items
+  new(@NonNull List<JvmEnvironmentItem> items) {
+    this.items = items
+  }
+}

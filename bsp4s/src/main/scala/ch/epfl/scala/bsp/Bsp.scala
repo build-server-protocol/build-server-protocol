@@ -115,7 +115,8 @@ object BuildTargetDataKind {
     dependencySourcesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
     buildTargetChangedProvider: Option[Boolean],
-    jvmTestEnvironmentProvider: Option[Boolean]
+    jvmTestEnvironmentProvider: Option[Boolean],
+    jvmRunEnvironmentProvider: Option[Boolean]
 )
 
 @JsonCodec final case class InitializeBuildResult(
@@ -600,6 +601,15 @@ object TestParamsDataKind {
 
 @JsonCodec final case class JvmTestEnvironmentResult(
     items: List[JvmEnvironmentItem]
+)
+
+@JsonCodec final case class JvmRunEnvironmentParams(
+   targets: List[BuildTargetIdentifier],
+   originId: Option[String]
+)
+
+@JsonCodec final case class JvmRunEnvironmentResult(
+   items: List[JvmEnvironmentItem]
 )
 
 @JsonCodec final case class ScalacOptionsItem(
