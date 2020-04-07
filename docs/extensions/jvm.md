@@ -66,3 +66,38 @@ export interface JvmTestEnvironmentResult{
     environmentVariables: Map<String, String>;
 }
 ```
+
+## Run Environment Request
+
+Similar to `buildTarget/jvmTestEnvironment`, but returns environment
+that should be used for regular exection of main classes, not for testing
+
+- method: `buildTarget/jvmRunEnvironment`
+- params: `JvmRunEnvironmentParams`
+
+```ts
+export interface JvmRunEnvironmentParams(
+    targets: BuildTargetIdentifier[],
+    originId?: String
+)
+```
+
+Response:
+
+- result: `JvmRunEnvironmentResult`, defined as follows
+- error: JSON-RPC code and message set in case an exception happens during the
+  request.
+
+```ts
+export interface JvmEnvironmentItem{
+    target: BuildTargetIdentifier;
+    classpath: Uri[];
+    jvmOptions: String[];
+}
+
+export interface JvmRunEnvironmentResult{
+    items: JvmEnvironmentItem[];
+    workingDirectory: String;
+    environmentVariables: Map<String, String>;
+}
+```

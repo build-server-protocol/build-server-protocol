@@ -125,6 +125,7 @@ class BuildServerCapabilities {
   Boolean dependencySourcesProvider
   Boolean resourcesProvider
   Boolean buildTargetChangedProvider
+  Boolean jvmRunEnvironmentProvider
   Boolean jvmTestEnvironmentProvider
 }
 

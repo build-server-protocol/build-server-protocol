@@ -618,6 +618,14 @@ trait Bsp4jGenerators {
     items <- genJvmEnvironmentItem.list
   } yield new JvmTestEnvironmentResult(items)
 
+  lazy val genJvmRunEnvironmentParams: Gen[JvmRunEnvironmentParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new JvmRunEnvironmentParams(targets)
+
+  lazy val genJvmRunEnvironmentResult: Gen[JvmRunEnvironmentResult] = for {
+    items <- genJvmEnvironmentItem.list
+  } yield new JvmRunEnvironmentResult(items)
+
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)

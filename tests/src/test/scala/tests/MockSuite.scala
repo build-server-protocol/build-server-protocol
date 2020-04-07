@@ -90,7 +90,7 @@ class HappyMockSuite extends FunSuite {
     }
   }
 
-  def assertJvmEnvironment(server: MockBuildServer): Unit = {
+  def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
@@ -103,7 +103,24 @@ class HappyMockSuite extends FunSuite {
       assert(classpath.nonEmpty)
       assert(classpath.exists(_.contains("scala-library")))
       val envVars = item.getEnvironmentVariables.asScala
-      assert(envVars.nonEmpty)
+      assert(envVars.get("TESTING").contains("true"))
+    }
+  }
+
+  def assertJvmRunEnvironment(server: MockBuildServer): Unit = {
+    val jvmRunEnvironmentParams = new JvmRunEnvironmentParams(getBuildTargetIds(server))
+    val testEnvResult = server.jvmRunEnvironment(jvmRunEnvironmentParams).get
+    val testEnvItems = testEnvResult.getItems.asScala
+    testEnvItems.foreach { item =>
+      val options = item.getJvmOptions.asScala
+      assert(options.nonEmpty)
+      val uri = item.getTarget.getUri
+      assert(uri.nonEmpty)
+      val classpath = item.getClasspath.asScala
+      assert(classpath.nonEmpty)
+      assert(classpath.exists(_.contains("scala-library")))
+      val envVars = item.getEnvironmentVariables.asScala
+      assert(envVars.get("TESTING").contains("false"))
     }
   }
 
@@ -188,7 +205,8 @@ class HappyMockSuite extends FunSuite {
   def assertServerEndpoints(server: MockBuildServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
-    assertJvmEnvironment(server)
+    assertJvmTestEnvironment(server)
+    assertJvmRunEnvironment(server)
     assertSources(server, client)
     assertDependencySources(server, client)
     assertCompile(server, client)

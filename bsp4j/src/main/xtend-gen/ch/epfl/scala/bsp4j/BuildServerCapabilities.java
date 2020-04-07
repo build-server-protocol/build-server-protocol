@@ -22,6 +22,8 @@ public class BuildServerCapabilities {
   
   private Boolean buildTargetChangedProvider;
   
+  private Boolean jvmRunEnvironmentProvider;
+  
   private Boolean jvmTestEnvironmentProvider;
   
   @Pure
@@ -88,6 +90,15 @@ public class BuildServerCapabilities {
   }
   
   @Pure
+  public Boolean getJvmRunEnvironmentProvider() {
+    return this.jvmRunEnvironmentProvider;
+  }
+  
+  public void setJvmRunEnvironmentProvider(final Boolean jvmRunEnvironmentProvider) {
+    this.jvmRunEnvironmentProvider = jvmRunEnvironmentProvider;
+  }
+  
+  @Pure
   public Boolean getJvmTestEnvironmentProvider() {
     return this.jvmTestEnvironmentProvider;
   }
@@ -107,6 +118,7 @@ public class BuildServerCapabilities {
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
+    b.add("jvmRunEnvironmentProvider", this.jvmRunEnvironmentProvider);
     b.add("jvmTestEnvironmentProvider", this.jvmTestEnvironmentProvider);
     return b.toString();
   }
@@ -156,6 +168,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.buildTargetChangedProvider.equals(other.buildTargetChangedProvider))
       return false;
+    if (this.jvmRunEnvironmentProvider == null) {
+      if (other.jvmRunEnvironmentProvider != null)
+        return false;
+    } else if (!this.jvmRunEnvironmentProvider.equals(other.jvmRunEnvironmentProvider))
+      return false;
     if (this.jvmTestEnvironmentProvider == null) {
       if (other.jvmTestEnvironmentProvider != null)
         return false;
@@ -176,6 +193,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
     result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
+    result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
     return prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
   }
 }
