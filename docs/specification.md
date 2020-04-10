@@ -36,8 +36,8 @@ referred to as the “server”.
 The best way to read this document is by considering it as a wishlist from the
 perspective of an IDE developer.
 
-The code listings in this document are written using Scala syntax. Every data
-strucuture in this document has a direct translation to JSON and Protobuf.
+The code listings in this document are written using TypeScript syntax. Every
+data strucuture in this document has a direct translation to JSON and Protobuf.
 
 ## Status
 
