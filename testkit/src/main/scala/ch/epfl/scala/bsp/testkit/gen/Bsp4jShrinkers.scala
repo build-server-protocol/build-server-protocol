@@ -384,7 +384,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       className <- shrink(a.getClassName)
       arguments <- shrink(a.getArguments)
       jvmOptions <- shrink(a.getJvmOptions)
-    } yield new ScalaMainClass(className, arguments, jvmOptions)
+      environmentVariables <- shrink(a.getEnvironmentVariables)
+    } yield new ScalaMainClass(className, arguments, jvmOptions, environmentVariables)
   }
 
   implicit def shrinkScalaMainClassesItem: Shrink[ScalaMainClassesItem] = Shrink { a =>

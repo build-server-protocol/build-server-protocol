@@ -358,7 +358,8 @@ trait Bsp4jGenerators {
     className <- genClassName
     arguments <- arbitrary[String].list
     jvmOptions <- arbitrary[String].list
-  } yield new ScalaMainClass(className, arguments, jvmOptions)
+    environmentVariables <- arbitrary[String].list
+  } yield new ScalaMainClass(className, arguments, jvmOptions, environmentVariables)
 
   lazy val genScalaMainClassesItem: Gen[ScalaMainClassesItem] = for {
     target <- genBuildTargetIdentifier

@@ -648,7 +648,8 @@ object TestParamsDataKind {
 @JsonCodec final case class ScalaMainClass(
     `class`: String,
     arguments: List[String],
-    jvmOptions: List[String]
+    jvmOptions: List[String],
+    environmentVariables: List[String]
 )
 
 @JsonCodec final case class ScalaMainClassesItem(

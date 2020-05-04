@@ -19,10 +19,14 @@ public class ScalaMainClass {
   @NonNull
   private List<String> jvmOptions;
   
-  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions) {
+  @NonNull
+  private List<String> environmentVariables;
+  
+  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions, @NonNull final List<String> environmentVariables) {
     this.className = className;
     this.arguments = arguments;
     this.jvmOptions = jvmOptions;
+    this.environmentVariables = environmentVariables;
   }
   
   @Pure
@@ -55,6 +59,16 @@ public class ScalaMainClass {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
   
+  @Pure
+  @NonNull
+  public List<String> getEnvironmentVariables() {
+    return this.environmentVariables;
+  }
+  
+  public void setEnvironmentVariables(@NonNull final List<String> environmentVariables) {
+    this.environmentVariables = environmentVariables;
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -62,6 +76,7 @@ public class ScalaMainClass {
     b.add("className", this.className);
     b.add("arguments", this.arguments);
     b.add("jvmOptions", this.jvmOptions);
+    b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
   
@@ -90,6 +105,11 @@ public class ScalaMainClass {
         return false;
     } else if (!this.jvmOptions.equals(other.jvmOptions))
       return false;
+    if (this.environmentVariables == null) {
+      if (other.environmentVariables != null)
+        return false;
+    } else if (!this.environmentVariables.equals(other.environmentVariables))
+      return false;
     return true;
   }
   
@@ -100,6 +120,7 @@ public class ScalaMainClass {
     int result = 1;
     result = prime * result + ((this.className== null) ? 0 : this.className.hashCode());
     result = prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
-    return prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
+    result = prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
+    return prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
   }
 }
