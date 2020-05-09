@@ -19,14 +19,12 @@ public class ScalaMainClass {
   @NonNull
   private List<String> jvmOptions;
   
-  @NonNull
   private List<String> environmentVariables;
   
-  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions, @NonNull final List<String> environmentVariables) {
+  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions) {
     this.className = className;
     this.arguments = arguments;
     this.jvmOptions = jvmOptions;
-    this.environmentVariables = environmentVariables;
   }
   
   @Pure
@@ -60,12 +58,11 @@ public class ScalaMainClass {
   }
   
   @Pure
-  @NonNull
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
   
-  public void setEnvironmentVariables(@NonNull final List<String> environmentVariables) {
+  public void setEnvironmentVariables(final List<String> environmentVariables) {
     this.environmentVariables = environmentVariables;
   }
   
