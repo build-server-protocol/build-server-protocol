@@ -210,6 +210,9 @@ export interface ScalaMainClass {
 
   /** The jvm options for the application. */
   jvmOptions: String[];
+
+  /** The environment variables for the application. */
+  environmentVariables?: String[];
 }
 ```
 

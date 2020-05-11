@@ -118,6 +118,7 @@ class ScalaMainClass {
   @NonNull @SerializedName("class") String className
   @NonNull List<String> arguments
   @NonNull List<String> jvmOptions
+  List<String> environmentVariables
   new(@NonNull String className, @NonNull List<String> arguments, @NonNull List<String> jvmOptions) {
     this.className = className
     this.arguments = arguments
