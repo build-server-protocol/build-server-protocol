@@ -660,7 +660,7 @@ Response:
 
 ```ts
 export interface SourcesResult {
-  items: SourcesItem[k];
+  items: SourcesItem[];
 }
 
 export interface SourcesItem {
