@@ -23,7 +23,7 @@ class HappyMockSuite extends FunSuite {
     val LocalMockServer(runningMock, clientIn, clientOut) = MockServer.startMockServer(baseDir)
 
     val launcher = new Launcher.Builder[MockBuildServer]()
-      //      .traceMessages(new PrintWriter(System.out))
+      // .traceMessages(new PrintWriter(System.out))
       .setRemoteInterface(classOf[MockBuildServer])
       .setInput(clientIn)
       .setOutput(clientOut)
@@ -34,11 +34,7 @@ class HappyMockSuite extends FunSuite {
     localClient.onConnectWithServer(bsp)
     val cancelable = Cancelable { () =>
       Cancelable.cancelAll(
-        List(
-          Cancelable(() => clientIn.close()),
-          Cancelable(() => clientOut.close()),
-          Cancelable(() => runningMock.cancel()),
-        )
+        List(Cancelable(() => clientIn.close()), Cancelable(() => clientOut.close()))
       )
     }
     (bsp, cancelable)

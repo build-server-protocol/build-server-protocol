@@ -1,114 +1,121 @@
 package ch.epfl.scala.bsp.testkit.mock
 
-import ch.epfl.scala.bsp
-import ch.epfl.scala.bsp._
-import mockServers.BspResponse
-import io.circe.Json
-import io.circe.syntax._
-import monix.eval.Task
-import monix.execution.Ack
-import scribe.Logger
+import ch.epfl.scala.bsp4j._
+import com.google.gson.GsonBuilder
 
-import scala.concurrent.Future
-import scala.meta.jsonrpc.{LanguageClient, Services}
+import scala.jdk.CollectionConverters._
 
-abstract class AbstractMockServer {
-  implicit val client: LanguageClient
+abstract class AbstractBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer
 
-  val logger: Logger
-  val services: Services = Services
-    .empty(logger)
-    .requestAsync(endpoints.Build.initialize)(initialize)
-    .notification(endpoints.Build.initialized)(initialized)
-    .request(endpoints.Build.shutdown)(shutdown)
-    .notificationAsync(endpoints.Build.exit)(exit(_))
-    .requestAsync(endpoints.Workspace.buildTargets)(buildTargets)
-    .requestAsync(endpoints.BuildTarget.sources)(sources)
-    .requestAsync(endpoints.BuildTarget.dependencySources)(dependencySources)
-    .requestAsync(endpoints.BuildTarget.inverseSources)(inverseSources)
-    .requestAsync(endpoints.BuildTarget.scalacOptions)(scalacOptions(_))
-    .requestAsync(endpoints.BuildTarget.compile)(compile(_))
-    .requestAsync(endpoints.BuildTarget.test)(test(_))
-    .requestAsync(endpoints.BuildTarget.jvmTestEnvironment)(jvmTestEnvironment(_))
-    .requestAsync(endpoints.BuildTarget.jvmRunEnvironment)(jvmRunEnvironment(_))
-    .requestAsync(endpoints.BuildTarget.run)(run(_))
+abstract class AbstractMockServer extends AbstractBuildServer {
+  var client: BuildClient
 
-  def initialize(params: InitializeBuildParams): BspResponse[InitializeBuildResult]
-  def initialized(params: InitializedBuildParams): Unit
-  def shutdown(shutdown: bsp.Shutdown): Unit
-  def exit(exit: Exit): Task[Unit]
-  def buildTargets(request: WorkspaceBuildTargetsRequest): BspResponse[WorkspaceBuildTargetsResult]
-  def sources(params: SourcesParams): BspResponse[SourcesResult]
-  def dependencySources(params: DependencySourcesParams): BspResponse[DependencySourcesResult]
-  def inverseSources(params: InverseSourcesParams): BspResponse[InverseSourcesResult]
-  def scalacOptions(params: ScalacOptionsParams): BspResponse[ScalacOptionsResult]
-  def jvmTestEnvironment(params: JvmTestEnvironmentParams): BspResponse[JvmTestEnvironmentResult]
-  def jvmRunEnvironment(params: JvmRunEnvironmentParams): BspResponse[JvmRunEnvironmentResult]
-  def compile(params: CompileParams): BspResponse[CompileResult]
-  def test(params: TestParams): BspResponse[TestResult]
-  def run(params: RunParams): BspResponse[RunResult]
-
+  private val gson = new GsonBuilder()
+    .setPrettyPrinting()
+    .create()
 
   // notification helpers
 
   def logMessage(message: String,
-                 messageType: MessageType = MessageType.Info,
+                 messageType: MessageType = MessageType.INFORMATION,
                  task: Option[TaskId] = None,
-                 origin: Option[String] = None): Future[Ack] = {
-    endpoints.Build.logMessage.notify(
-      LogMessageParams(messageType, task, origin, message)
-    )
+                 origin: Option[String] = None): Unit = {
+    val params = new LogMessageParams(messageType, message)
+    task.foreach(params.setTask)
+    origin.foreach(params.setOriginId)
+
+    client.onBuildLogMessage(params)
   }
 
   def showMessage(message: String,
-                  messageType: MessageType = MessageType.Info,
+                  messageType: MessageType = MessageType.INFORMATION,
                   task: Option[TaskId] = None,
-                  origin: Option[String] = None): Future[Ack] = {
-    endpoints.Build.showMessage.notify(
-      ShowMessageParams(MessageType.Info, task, origin, message)
-    )
+                  origin: Option[String] = None): Unit = {
+    val params = new ShowMessageParams(messageType, message)
+    task.foreach(params.setTask)
+    origin.foreach(params.setOriginId)
+
+    client.onBuildShowMessage(params)
   }
 
-  def publishDiagnostics(doc: TextDocumentIdentifier, target: BuildTargetIdentifier, diagnostics: List[Diagnostic],
-                        origin: Option[String] = None,
-                        reset: Boolean = false): Future[Ack] = {
-    endpoints.Build.publishDiagnostics.notify(
-      PublishDiagnosticsParams(doc, target, origin, diagnostics, reset)
-    )
+  def publishDiagnostics(doc: TextDocumentIdentifier,
+                         target: BuildTargetIdentifier,
+                         diagnostics: List[Diagnostic],
+                         origin: Option[String] = None,
+                         reset: Boolean = false): Unit = {
+    val params = new PublishDiagnosticsParams(doc, target, diagnostics.asJava, reset)
+    origin.foreach(params.setOriginId)
+
+    client.onBuildPublishDiagnostics(params)
   }
 
-  def taskStart(taskId: TaskId, message: String, dataKind: Option[String], data: Option[Json]): Future[Ack] = {
-    val time = Some(System.currentTimeMillis())
-    endpoints.Build.taskStart.notify(
-      TaskStartParams(taskId, time, Some(message), dataKind, None))
+  def taskStart(taskId: TaskId,
+                message: String,
+                dataKind: Option[String],
+                data: Option[AnyRef]): Unit = {
+    val time = System.currentTimeMillis()
+    val params = new TaskStartParams(taskId)
+    params.setEventTime(time)
+    params.setMessage(message)
+    dataKind.foreach(params.setDataKind)
+    data.foreach(d => params.setData(gson.toJsonTree(d)))
+
+    client.onBuildTaskStart(params)
   }
 
-  def taskProgress(taskId: TaskId, message: String, total: Long, progress: Long, dataKind: Option[String], data: Option[Json]): Future[Ack] = {
-    val time = Some(System.currentTimeMillis())
-    endpoints.Build.taskProgress.notify(
-      TaskProgressParams(taskId, time, Some(message), Some(total), Some(progress), Some("units"), dataKind, data)
-    )
+  def taskProgress(taskId: TaskId,
+                   message: String,
+                   total: Long,
+                   progress: Long,
+                   dataKind: Option[String],
+                   data: Option[AnyRef]): Unit = {
+    val time = System.currentTimeMillis()
+    val params = new TaskProgressParams(taskId)
+    params.setEventTime(time)
+    params.setMessage(message)
+    params.setTotal(total)
+    params.setProgress(progress)
+    dataKind.foreach(params.setDataKind)
+    data.foreach(d => params.setData(gson.toJsonTree(d)))
+
+    client.onBuildTaskProgress(params)
   }
 
-  def taskFinish(taskId: TaskId, message: String, statusCode: StatusCode, dataKind: Option[String], data: Option[Json]): Future[Ack] = {
-    val time = Some(System.currentTimeMillis())
-    endpoints.Build.taskFinish.notify(
-      TaskFinishParams(taskId, time, Some(message), statusCode, dataKind, data)
-    )
+  def taskFinish(taskId: TaskId,
+                 message: String,
+                 statusCode: StatusCode,
+                 dataKind: Option[String],
+                 data: Option[AnyRef]): Unit = {
+    val time = System.currentTimeMillis()
+    val params = new TaskFinishParams(taskId, statusCode)
+    params.setEventTime(time)
+    params.setMessage(message)
+    params.setStatus(statusCode)
+    dataKind.foreach(params.setDataKind)
+    data.foreach(d => params.setData(gson.toJsonTree(d)))
+
+    client.onBuildTaskFinish(params)
   }
 
-  def compileStart(taskId: TaskId, message: String, target: BuildTargetIdentifier): Future[Ack] = {
-    val data = CompileTask(target).asJson
-    taskStart(taskId, message, Some(TaskDataKind.CompileTask), Some(data))
+  def compileStart(taskId: TaskId, message: String, target: BuildTargetIdentifier): Unit = {
+    val data = new CompileTask(target)
+    taskStart(taskId, message, Some(TaskDataKind.COMPILE_TASK), Some(data))
   }
 
-  def compileReport(taskId: TaskId, message: String, target: BuildTargetIdentifier, status: StatusCode): Future[Ack] = {
-    val origin = taskId.parents.flatMap(_.headOption)
+  def compileReport(taskId: TaskId,
+                    message: String,
+                    target: BuildTargetIdentifier,
+                    status: StatusCode,
+                    time: Long = System.currentTimeMillis): Unit = {
+    val origin = taskId.getParents.asScala.headOption
     val data = status match {
-      case StatusCode.Ok => CompileReport(target, origin, 0, 0, Some(1))
-      case StatusCode.Error => CompileReport(target, origin, 1, 0, Some(1))
-      case StatusCode.Cancelled => CompileReport(target, origin, 0, 1, Some(1))
+      case StatusCode.OK => new CompileReport(target, 0, 0)
+      case StatusCode.ERROR => new CompileReport(target, 1, 0)
+      case StatusCode.CANCELLED => new CompileReport(target, 0, 1)
     }
-    taskFinish(taskId, message, status, Some(TaskDataKind.CompileReport), Some(data.asJson))
+    origin.foreach(data.setOriginId)
+    data.setTime(time)
+
+    taskFinish(taskId, message, status, Some(TaskDataKind.COMPILE_REPORT), Some(data))
   }
 }

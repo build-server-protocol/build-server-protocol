@@ -2,24 +2,17 @@ package ch.epfl.scala.bsp.testkit.mock
 
 import java.io._
 import java.nio.file.Files
+import java.util.concurrent.{ExecutorService, Future}
 
-import ch.epfl.scala.bsp.BspConnectionDetails
-import io.circe.syntax._
-import monix.eval.Task
-import monix.execution.{CancelableFuture, ExecutionModel, Scheduler}
-import scribe.Logger
+import ch.epfl.scala.bsp4j.{BspConnectionDetails, BuildClient}
+import com.google.gson.Gson
+import org.eclipse.lsp4j.jsonrpc.Launcher
 
-import scala.collection.JavaConverters._
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import scala.meta.jsonrpc._
+import scala.jdk.CollectionConverters._
 
 object MockServer {
 
-  implicit val scheduler: Scheduler = Scheduler(
-    java.util.concurrent.Executors.newFixedThreadPool(4),
-    ExecutionModel.AlwaysAsyncExecution
-  )
+  val executorService: ExecutorService = java.util.concurrent.Executors.newFixedThreadPool(4)
 
   def main(args: Array[String]): Unit = {
     val cwd = new File(".").getCanonicalFile
@@ -36,11 +29,13 @@ object MockServer {
           println(s"file could not be created: $configFile")
 
       case Some("bsp") =>
-        val logger = new Logger
-        val client = LanguageClient.fromOutputStream(System.out, logger)
-        val running = serverTask(new HappyMockServer(cwd, logger, client), System.in, System.out).runAsync
+        val server = new HappyMockServer(cwd)
+        val launcher = clientLauncher(server, System.in, System.out)
+        val client = launcher.getRemoteProxy
+        server.client = client
+        val running = launcher.startListening()
         System.err.println("Mock server listening")
-        Await.ready(running, Duration.Inf)
+        running.get()
       case _ =>
         System.err.println(
           """supported commands:
@@ -54,20 +49,21 @@ object MockServer {
 
     val parent = file.getParentFile
     (parent.isDirectory || parent.mkdirs()) && {
-      val details = BspConnectionDetails(
-        name = "BSP Mock Server",
-        argv = List(s"$scriptFile", "bsp"),
-        version = "1.0",
-        bspVersion = "2.0",
-        languages = List("java","scala")
+      val details = new BspConnectionDetails(
+        "BSP Mock Server",
+        List(s"$scriptFile", "bsp").asJava,
+        "1.0",
+        "2.0",
+        List("java","scala").asJava
       )
-      val json = List(details.asJson.toString()).asJava
+      val detailsJson = new Gson().toJson(details)
+      val json = List(detailsJson).asJava
       Files.write(file.toPath, json)
       file.isFile
     }
   }
 
-  case class LocalMockServer(running: CancelableFuture[_], clientIn: PipedInputStream, clientOut: PipedOutputStream)
+  case class LocalMockServer(running: Future[_], clientIn: PipedInputStream, clientOut: PipedOutputStream)
 
   def startMockServer(testBaseDir: File): LocalMockServer = {
 
@@ -76,26 +72,23 @@ object MockServer {
     val serverIn = new PipedInputStream()
     val clientOut = new PipedOutputStream(serverIn)
 
-    val logger = new Logger
-    val client = LanguageClient.fromOutputStream(serverOut, logger)
-    val mock = new HappyMockServer(testBaseDir, logger, client)
-    val running = MockServer.serverTask(mock, serverIn, serverOut).runAsync
+    val server = new HappyMockServer(testBaseDir)
+    val launcher = clientLauncher(server, serverIn, serverOut)
+    val client = launcher.getRemoteProxy
+    server.client = client
+
+    val running = launcher.startListening()
     LocalMockServer(running, clientIn, clientOut)
   }
 
-  def serverTask(server: AbstractMockServer, in: InputStream, out: OutputStream): Task[Unit] = {
+  def clientLauncher(server: AbstractMockServer, in: InputStream, out: OutputStream): Launcher[BuildClient] =
+    new Launcher.Builder[BuildClient]()
+      .setOutput(out)
+      .setInput(in)
+      .setLocalService(server)
+      .setExecutorService(executorService)
+      .setRemoteInterface(classOf[BuildClient])
+      .create()
 
-    val client = new LanguageClient(out, server.logger)
-    val messages = BaseProtocolMessage.fromInputStream(in, server.logger)
-    val languageServer = new LanguageServer(messages, client, server.services, scheduler, server.logger)
-
-    languageServer.startTask
-      .onErrorHandleWith { err =>
-        Task.now {
-          System.err.println(s"Mock BSP server failed with ${ err.getMessage}")
-          err.printStackTrace(System.err)
-        }
-      }
-  }
 
 }

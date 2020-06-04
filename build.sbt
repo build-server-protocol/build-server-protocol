@@ -1,5 +1,5 @@
 inThisBuild(List(
-  scalaVersion := "2.12.10",
+  scalaVersion := "2.12.11",
   organization := "ch.epfl.scala",
   homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -89,9 +89,13 @@ lazy val `bsp-testkit` = project
     executableScriptName := "mockbsp",
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.0"
+    libraryDependencies ++= List(
+      "org.scalacheck" %% "scalacheck" % "1.14.0",
+      "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.1",
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.6"
+    ),
+    crossScalaVersions := List("2.12.11", "2.13.2")
   )
-  .dependsOn(bsp4s)
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
 
