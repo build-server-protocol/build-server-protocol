@@ -1,7 +1,8 @@
 package ch.epfl.scala.bsp
 package endpoints
 
-import scala.meta.jsonrpc.Endpoint
+import jsonrpc4s.Endpoint
+import jsonrpc4s.Endpoint.unitCodec
 
 object Build extends Build
 trait Build {
@@ -33,8 +34,11 @@ trait BuildTarget {
       extends Endpoint[InverseSourcesParams, InverseSourcesResult]("buildTarget/inverseSources")
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
-        "buildTarget/dependencySources")
+        "buildTarget/dependencySources"
+      )
+
   object dependencyModules extends Endpoint[DependencyModulesParams, DependencyModulesResult]("buildTarget/dependencyModules")
+
   object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
   // Scala specific endpoints
@@ -42,16 +46,20 @@ trait BuildTarget {
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
   object scalaTestClasses
       extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult](
-        "buildTarget/scalaTestClasses")
+        "buildTarget/scalaTestClasses"
+      )
   object scalaMainClasses
       extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
-        "buildTarget/scalaMainClasses")
+        "buildTarget/scalaMainClasses"
+      )
   object jvmTestEnvironment
-    extends Endpoint[JvmTestEnvironmentParams, JvmTestEnvironmentResult](
-      "buildTarget/jvmTestEnvironment")
+      extends Endpoint[JvmTestEnvironmentParams, JvmTestEnvironmentResult](
+        "buildTarget/jvmTestEnvironment"
+      )
   object jvmRunEnvironment
     extends Endpoint[JvmRunEnvironmentParams, JvmRunEnvironmentResult](
-      "buildTarget/jvmRunEnvironment")
+      "buildTarget/jvmRunEnvironment"
+    )
   // Java specific endpoints
   object javacOptions
     extends Endpoint[JavacOptionsParams, JavacOptionsResult](
@@ -68,7 +76,8 @@ object Workspace extends Workspace
 trait Workspace {
   object buildTargets
       extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargetsResult](
-        "workspace/buildTargets")
+        "workspace/buildTargets"
+      )
   object reload extends Endpoint[Reload, Unit]("workspace/reload")
 }
 

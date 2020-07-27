@@ -1,14 +1,31 @@
-inThisBuild(List(
-  scalaVersion := "2.12.11",
-  organization := "ch.epfl.scala",
-  homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
-  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  developers := List(
-      Developer("olafurpg", "Ólafur Páll Geirsson", "olafurpg@gmail.com", url("https://github.com/olafurpg")),
-      Developer("jvican", "Jorge Vicente Cantero", "jorge@vican.me", url("https://github.com/jvican")),
-      Developer("jastice", "Justin Kaeser", "justin@justinkaeser.com", url("https://github.com/jastice")),
+inThisBuild(
+  List(
+    scalaVersion := "2.12.11",
+    organization := "ch.epfl.scala",
+    homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
+    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers := List(
+      Developer(
+        "olafurpg",
+        "Ólafur Páll Geirsson",
+        "olafurpg@gmail.com",
+        url("https://github.com/olafurpg")
+      ),
+      Developer(
+        "jvican",
+        "Jorge Vicente Cantero",
+        "jorge@vican.me",
+        url("https://github.com/jvican")
+      ),
+      Developer(
+        "jastice",
+        "Justin Kaeser",
+        "justin@justinkaeser.com",
+        url("https://github.com/jastice")
+      )
+    )
   )
-))
+)
 
 import java.io.File
 import org.eclipse.xtend.core.XtendInjectorSingleton
@@ -32,12 +49,9 @@ lazy val bsp4s = project
   .settings(
     Test / publishArtifact := false,
     Compile / doc / sources := Nil,
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
     libraryDependencies ++= List(
-      "io.circe" %% "circe-core" % "0.9.0",
-      "io.circe" %% "circe-derivation" % "0.9.0-M4",
-      "io.circe" %% "circe-generic-extras" % "0.9.0",
-      "org.scalameta" %% "lsp4s" % "0.2.0"
+      "me.vican.jorge" %% "jsonrpc4s" % "1.0.0+23-a0cabe67",
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.6.0"
     )
   )
 
