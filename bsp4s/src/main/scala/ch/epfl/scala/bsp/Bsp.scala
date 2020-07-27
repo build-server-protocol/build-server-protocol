@@ -3,9 +3,13 @@ package ch.epfl.scala.bsp
 import java.net.{URI, URISyntaxException}
 
 import ch.epfl.scala.bsp.BuildTargetEventKind.{Changed, Created, Deleted}
-import io.circe.Decoder.Result
-import io.circe.derivation.JsonCodec
-import io.circe._
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
+import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonCodec
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonWriter
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonReader
+import com.github.plokhotnyuk.jsoniter_scala.macros.CodecMakerConfig
+import jsonrpc4s.RawJson
 
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
@@ -16,37 +20,49 @@ object Uri {
   // This is the only valid way to create a URI
   def apply(u: URI): Uri = Uri(u.toString)
 
-  implicit val uriEncoder: RootEncoder[Uri] = new RootEncoder[Uri] {
-    override def apply(a: Uri): Json = Json.fromString(a.value)
-  }
-
-  implicit val uriDecoder: Decoder[Uri] = new Decoder[Uri] {
-    // Should we add validation here
-    override def apply(c: HCursor): Result[Uri] = {
-      c.as[String].flatMap { str =>
-        try Right(Uri(URI.create(str).toString))
-        catch {
-          case _: IllegalArgumentException | _: URISyntaxException =>
-            Left(DecodingFailure(s"String $str is not a valid URI.", c.history))
-        }
+  implicit val uriCodec: JsonValueCodec[Uri] = new JsonValueCodec[Uri] {
+    def nullValue: Uri = null
+    def encodeValue(id: Uri, out: JsonWriter): Unit = out.writeVal(id.value)
+    def decodeValue(in: JsonReader, default: Uri): Uri = {
+      val defaultStr = if (default == null) null else default.value
+      val str = in.readString(defaultStr)
+      try Uri(URI.create(str).toString)
+      catch {
+        case _: IllegalArgumentException | _: URISyntaxException =>
+          in.decodeError(s"String $str is not a valid URI!")
       }
     }
   }
 }
 
-@JsonCodec final case class TextDocumentIdentifier(
+final case class TextDocumentIdentifier(
     uri: Uri
 )
 
-@JsonCodec final case class BuildTargetIdentifier(
+object TextDocumentIdentifier {
+  implicit val codec: JsonValueCodec[TextDocumentIdentifier] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class BuildTargetIdentifier(
     uri: Uri
 )
 
-@JsonCodec final case class BuildTargetCapabilities(
+object BuildTargetIdentifier {
+  implicit val codec: JsonValueCodec[BuildTargetIdentifier] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class BuildTargetCapabilities(
     canCompile: Boolean,
     canTest: Boolean,
-    canRun: Boolean,
+    canRun: Boolean
 )
+
+object BuildTargetCapabilities {
+  implicit val codec: JsonValueCodec[BuildTargetCapabilities] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object BuildTargetTag {
   val Library = "library"
@@ -57,7 +73,7 @@ object BuildTargetTag {
   val NoIDE = "no-ide"
 }
 
-@JsonCodec final case class BuildTarget(
+final case class BuildTarget(
     id: BuildTargetIdentifier,
     displayName: Option[String],
     baseDirectory: Option[Uri],
@@ -66,48 +82,93 @@ object BuildTargetTag {
     languageIds: List[String],
     dependencies: List[BuildTargetIdentifier],
     dataKind: Option[String],
-    data: Option[Json]
+    data: Option[RawJson]
 )
+
+object BuildTarget {
+  implicit val codec: JsonValueCodec[BuildTarget] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object BuildTargetDataKind {
   val Scala = "scala"
   val Sbt = "sbt"
 }
 
-@JsonCodec final case class BuildClientCapabilities(
+final case class BuildClientCapabilities(
     languageIds: List[String]
 )
 
+object BuildClientCapabilities {
+  implicit val codec: JsonValueCodec[BuildClientCapabilities] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Notification: 'build/initialized', C -> S
-@JsonCodec final case class InitializedBuildParams()
+final case class InitializedBuildParams()
+
+object InitializedBuildParams {
+  implicit val codec: JsonValueCodec[InitializedBuildParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 // Request: 'build/initialize', C -> S
-@JsonCodec final case class InitializeBuildParams(
+final case class InitializeBuildParams(
     displayName: String,
     version: String,
     bspVersion: String,
     rootUri: Uri,
     capabilities: BuildClientCapabilities,
-    data: Option[Json]
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class Shutdown()
+object InitializeBuildParams {
+  implicit val codec: JsonValueCodec[InitializeBuildParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
-@JsonCodec final case class Exit()
+final case class Shutdown()
 
-@JsonCodec final case class CompileProvider(
+object Shutdown {
+  implicit val codec: JsonValueCodec[Shutdown] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class Exit()
+
+object Exit {
+  implicit val codec: JsonValueCodec[Exit] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CompileProvider(
     languageIds: List[String]
 )
 
-@JsonCodec final case class TestProvider(
+object CompileProvider {
+  implicit val codec: JsonValueCodec[CompileProvider] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestProvider(
     languageIds: List[String]
 )
 
-@JsonCodec final case class RunProvider(
+object TestProvider {
+  implicit val codec: JsonValueCodec[TestProvider] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class RunProvider(
     languageIds: List[String]
 )
 
-@JsonCodec final case class BuildServerCapabilities(
+object RunProvider {
+  implicit val codec: JsonValueCodec[RunProvider] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class BuildServerCapabilities(
     compileProvider: Option[CompileProvider],
     testProvider: Option[TestProvider],
     runProvider: Option[RunProvider],
@@ -119,13 +180,23 @@ object BuildTargetDataKind {
     jvmRunEnvironmentProvider: Option[Boolean]
 )
 
-@JsonCodec final case class InitializeBuildResult(
+object BuildServerCapabilities {
+  implicit val codec: JsonValueCodec[BuildServerCapabilities] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class InitializeBuildResult(
     displayName: String,
     version: String,
     bspVersion: String,
     capabilities: BuildServerCapabilities,
-    data: Option[Json]
+    data: Option[RawJson]
 )
+
+object InitializeBuildResult {
+  implicit val codec: JsonValueCodec[InitializeBuildResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 sealed abstract class MessageType(val id: Int)
 object MessageType {
@@ -134,56 +205,83 @@ object MessageType {
   case object Info extends MessageType(3)
   case object Log extends MessageType(4)
 
-  implicit val messageTypeEncoder: RootEncoder[MessageType] = new RootEncoder[MessageType] {
-    override def apply(a: MessageType): Json = Json.fromInt(a.id)
-  }
-
-  implicit val messageTypeDecoder: Decoder[MessageType] = new Decoder[MessageType] {
-    override def apply(c: HCursor): Result[MessageType] = {
-      c.as[Int].flatMap {
-        case 1 => Right(Error)
-        case 2 => Right(Warning)
-        case 3 => Right(Info)
-        case 4 => Right(Log)
-        case n => Left(DecodingFailure(s"Unknown message type id for $n", c.history))
+  implicit val codec: JsonValueCodec[MessageType] = new JsonValueCodec[MessageType] {
+    def nullValue: MessageType = null
+    def encodeValue(msg: MessageType, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def decodeValue(in: JsonReader, default: MessageType): MessageType = {
+      in.readInt() match {
+        case 1 => Error
+        case 2 => Warning
+        case 3 => Info
+        case 4 => Log
+        case n => in.decodeError(s"Unknown message type id for $n")
       }
     }
   }
 }
 
-@JsonCodec final case class TaskId(
+final case class TaskId(
     id: String,
     parents: Option[List[String]]
 )
 
-@JsonCodec final case class ShowMessageParams(
+object TaskId {
+  implicit val codec: JsonValueCodec[TaskId] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ShowMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
     originId: Option[String],
     message: String
 )
 
-@JsonCodec final case class LogMessageParams(
+object ShowMessageParams {
+  implicit val codec: JsonValueCodec[ShowMessageParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class LogMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
     originId: Option[String],
     message: String
 )
 
-@JsonCodec final case class Position(
+object LogMessageParams {
+  implicit val codec: JsonValueCodec[LogMessageParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class Position(
     line: Int,
     character: Int
 )
 
-@JsonCodec final case class Range(
+object Position {
+  implicit val codec: JsonValueCodec[Position] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class Range(
     start: Position,
     end: Position
 )
 
-@JsonCodec case class Location(
+object Range {
+  implicit val codec: JsonValueCodec[Range] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+case class Location(
     uri: Uri,
     range: Range
 )
+object Location {
+  implicit val codec: JsonValueCodec[Location] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 sealed abstract class DiagnosticSeverity(val id: Int)
 object DiagnosticSeverity {
@@ -192,33 +290,33 @@ object DiagnosticSeverity {
   case object Information extends DiagnosticSeverity(3)
   case object Hint extends DiagnosticSeverity(4)
 
-  implicit val diagnosticSeverityEncoder: RootEncoder[DiagnosticSeverity] = {
-    new RootEncoder[DiagnosticSeverity] {
-      override def apply(a: DiagnosticSeverity): Json = Json.fromInt(a.id)
-    }
-  }
-
-  implicit val diagnosticSeverityDecoder: Decoder[DiagnosticSeverity] = {
-    new Decoder[DiagnosticSeverity] {
-      override def apply(c: HCursor): Result[DiagnosticSeverity] = {
-        c.as[Int].flatMap {
-          case 1 => Right(Error)
-          case 2 => Right(Warning)
-          case 3 => Right(Information)
-          case 4 => Right(Hint)
-          case n => Left(DecodingFailure(s"Unknown diagnostic severity id for $n", c.history))
-        }
+  implicit val codec: JsonValueCodec[DiagnosticSeverity] = new JsonValueCodec[DiagnosticSeverity] {
+    def nullValue: DiagnosticSeverity = null
+    def encodeValue(diagnostic: DiagnosticSeverity, out: JsonWriter): Unit =
+      out.writeVal(diagnostic.id)
+    def decodeValue(in: JsonReader, default: DiagnosticSeverity): DiagnosticSeverity = {
+      in.readInt() match {
+        case 1 => Error
+        case 2 => Warning
+        case 3 => Information
+        case 4 => Hint
+        case n => in.decodeError(s"Unknown diagnostic severity id for $n")
       }
     }
   }
 }
 
-@JsonCodec final case class DiagnosticRelatedInformation(
+final case class DiagnosticRelatedInformation(
     location: Location,
     message: String
 )
 
-@JsonCodec final case class Diagnostic(
+object DiagnosticRelatedInformation {
+  implicit val codec: JsonValueCodec[DiagnosticRelatedInformation] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class Diagnostic(
     range: Range,
     severity: Option[DiagnosticSeverity],
     code: Option[String],
@@ -227,7 +325,12 @@ object DiagnosticSeverity {
     relatedInformation: Option[DiagnosticRelatedInformation]
 )
 
-@JsonCodec final case class PublishDiagnosticsParams(
+object Diagnostic {
+  implicit val codec: JsonValueCodec[Diagnostic] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
     originId: Option[String],
@@ -235,12 +338,27 @@ object DiagnosticSeverity {
     reset: Boolean
 )
 
-@JsonCodec final case class WorkspaceBuildTargetsRequest()
+object PublishDiagnosticsParams {
+  implicit val codec: JsonValueCodec[PublishDiagnosticsParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class WorkspaceBuildTargetsRequest()
+
+object WorkspaceBuildTargetsRequest {
+  implicit val codec: JsonValueCodec[WorkspaceBuildTargetsRequest] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 // Request: 'workspace/buildTargets'
-@JsonCodec final case class WorkspaceBuildTargetsResult(
+final case class WorkspaceBuildTargetsResult(
     targets: List[BuildTarget]
 )
+
+object WorkspaceBuildTargetsResult {
+  implicit val codec: JsonValueCodec[WorkspaceBuildTargetsResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 sealed abstract class BuildTargetEventKind(val id: Int)
 case object BuildTargetEventKind {
@@ -248,128 +366,205 @@ case object BuildTargetEventKind {
   case object Changed extends BuildTargetEventKind(2)
   case object Deleted extends BuildTargetEventKind(3)
 
-  implicit val buildTargetEventKindEncoder: RootEncoder[BuildTargetEventKind] =
-    new RootEncoder[BuildTargetEventKind] {
-      override def apply(a: BuildTargetEventKind): Json = Json.fromInt(a.id)
-    }
-
-  implicit val buildTargetEventKindDecoder: Decoder[BuildTargetEventKind] =
-    new Decoder[BuildTargetEventKind] {
-      override def apply(c: HCursor): Result[BuildTargetEventKind] = {
-        c.as[Int].flatMap {
-          case 1 => Right(Created)
-          case 2 => Right(Changed)
-          case 3 => Right(Deleted)
-          case n => Left(DecodingFailure(s"Unknown build target event kind id for $n", c.history))
+  implicit val codec: JsonValueCodec[BuildTargetEventKind] =
+    new JsonValueCodec[BuildTargetEventKind] {
+      def nullValue: BuildTargetEventKind = null
+      def encodeValue(kind: BuildTargetEventKind, out: JsonWriter): Unit =
+        out.writeVal(kind.id)
+      def decodeValue(in: JsonReader, default: BuildTargetEventKind): BuildTargetEventKind = {
+        in.readInt() match {
+          case 1 => Created
+          case 2 => Changed
+          case 3 => Deleted
+          case n => in.decodeError(s"Unknown build target event kind id for $n")
         }
       }
     }
 }
 
-@JsonCodec final case class BuildTargetEvent(
+final case class BuildTargetEvent(
     target: BuildTargetIdentifier,
     kind: Option[BuildTargetEventKind],
-    data: Option[Json]
+    data: Option[RawJson]
 )
 
+object BuildTargetEvent {
+  implicit val codec: JsonValueCodec[BuildTargetEvent] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Notification: 'buildTarget/didChange', S -> C
-@JsonCodec final case class DidChangeBuildTarget(
+final case class DidChangeBuildTarget(
     changes: List[BuildTargetEvent]
 )
 
+object DidChangeBuildTarget {
+  implicit val codec: JsonValueCodec[DidChangeBuildTarget] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Request: 'buildTarget/sources', C -> S
-@JsonCodec final case class SourcesParams(
+final case class SourcesParams(
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class SourcesResult(
+object SourcesParams {
+  implicit val codec: JsonValueCodec[SourcesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class SourcesResult(
     items: List[SourcesItem]
 )
-@JsonCodec final case class SourcesItem(
+
+object SourcesResult {
+  implicit val codec: JsonValueCodec[SourcesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class SourcesItem(
     target: BuildTargetIdentifier,
     sources: List[SourceItem],
     roots: Option[List[Uri]]
 )
-@JsonCodec final case class SourceItem(
+
+object SourcesItem {
+  implicit val codec: JsonValueCodec[SourcesItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class SourceItem(
     uri: Uri,
     kind: SourceItemKind,
     generated: Boolean
 )
+
+object SourceItem {
+  implicit val codec: JsonValueCodec[SourceItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 sealed abstract class SourceItemKind(val id: Int)
 object SourceItemKind {
   object File extends SourceItemKind(1)
   object Directory extends SourceItemKind(2)
 
-  implicit val sourceItemKindEncoder: RootEncoder[SourceItemKind] =
-    new RootEncoder[SourceItemKind] {
-      override def apply(a: SourceItemKind): Json = Json.fromInt(a.id)
-    }
-
-  implicit val sourceItemKindDecoder: Decoder[SourceItemKind] =
-    new Decoder[SourceItemKind] {
-      override def apply(c: HCursor): Result[SourceItemKind] = {
-        c.as[Int].flatMap {
-          case 1 => Right(File)
-          case 2 => Right(Directory)
-          case n => Left(DecodingFailure(s"Unknown build target event kind id for $n", c.history))
-        }
+  implicit val codec: JsonValueCodec[SourceItemKind] = new JsonValueCodec[SourceItemKind] {
+    def nullValue: SourceItemKind = null
+    def encodeValue(item: SourceItemKind, out: JsonWriter): Unit =
+      out.writeVal(item.id)
+    def decodeValue(in: JsonReader, default: SourceItemKind): SourceItemKind = {
+      in.readInt() match {
+        case 1 => File
+        case 2 => Directory
+        case n => in.decodeError(s"Unknown source item kind id for $n")
       }
     }
+  }
 }
 
 // Request: 'buildTarget/inverseSources', C -> S
-@JsonCodec final case class InverseSourcesParams(
+final case class InverseSourcesParams(
     textDocument: TextDocumentIdentifier
 )
 
-@JsonCodec final case class InverseSourcesResult(
+object InverseSourcesParams {
+  implicit val codec: JsonValueCodec[InverseSourcesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class InverseSourcesResult(
     targets: List[BuildTargetIdentifier]
 )
+
+object InverseSourcesResult {
+  implicit val codec: JsonValueCodec[InverseSourcesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 // Request: 'buildTarget/dependencySources', C -> S
-@JsonCodec final case class DependencySourcesParams(
+final case class DependencySourcesParams(
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class DependencySourcesItem(
+object DependencySourcesParams {
+  implicit val codec: JsonValueCodec[DependencySourcesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class DependencySourcesItem(
     target: BuildTargetIdentifier,
     sources: List[Uri]
 )
 
-@JsonCodec final case class DependencySourcesResult(
+object DependencySourcesItem {
+  implicit val codec: JsonValueCodec[DependencySourcesItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class DependencySourcesResult(
     items: List[DependencySourcesItem]
 )
 
+object DependencySourcesResult {
+  implicit val codec: JsonValueCodec[DependencySourcesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Request: 'buildTarget/resources', C -> S
-@JsonCodec final case class ResourcesParams(
+final case class ResourcesParams(
     targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class ResourcesResult(
+object ResourcesParams {
+  implicit val codec: JsonValueCodec[ResourcesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ResourcesResult(
     items: List[ResourcesItem]
 )
 
-@JsonCodec final case class ResourcesItem(
+object ResourcesResult {
+  implicit val codec: JsonValueCodec[ResourcesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ResourcesItem(
     target: BuildTargetIdentifier,
     resources: List[Uri]
 )
 
+object ResourcesItem {
+  implicit val codec: JsonValueCodec[ResourcesItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Request: 'buildTarget/compile', C -> S
-@JsonCodec final case class CompileParams(
+final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]]
 )
 
-@JsonCodec final case class CompileResult(
+object CompileParams {
+  implicit val codec: JsonValueCodec[CompileParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CompileResult(
     originId: Option[String],
     statusCode: StatusCode,
     dataKind: Option[String],
-    data: Option[Json],
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class CompileReport(
+object CompileResult {
+  implicit val codec: JsonValueCodec[CompileResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CompileReport(
     target: BuildTargetIdentifier,
     originId: Option[String],
     errors: Int,
@@ -377,26 +572,46 @@ object SourceItemKind {
     time: Option[Long]
 )
 
-@JsonCodec final case class CompileTask(
+object CompileReport {
+  implicit val codec: JsonValueCodec[CompileReport] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CompileTask(
     target: BuildTargetIdentifier
 )
 
-@JsonCodec final case class TestParams(
+object CompileTask {
+  implicit val codec: JsonValueCodec[CompileTask] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
     dataKind: Option[String],
-    data: Option[Json],
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class TestResult(
+object TestParams {
+  implicit val codec: JsonValueCodec[TestParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestResult(
     originId: Option[String],
     statusCode: StatusCode,
     dataKind: Option[String],
-    data: Option[Json],
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class TestReport(
+object TestResult {
+  implicit val codec: JsonValueCodec[TestResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestReport(
     target: BuildTargetIdentifier,
     originId: Option[String],
     passed: Int,
@@ -407,23 +622,43 @@ object SourceItemKind {
     time: Option[Long]
 )
 
-@JsonCodec final case class TestTask(
+object TestReport {
+  implicit val codec: JsonValueCodec[TestReport] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestTask(
     target: BuildTargetIdentifier
 )
 
-@JsonCodec final case class TestStart(
+object TestTask {
+  implicit val codec: JsonValueCodec[TestTask] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestStart(
     displayName: String,
     location: Option[Location]
 )
 
-@JsonCodec final case class TestFinish(
+object TestStart {
+  implicit val codec: JsonValueCodec[TestStart] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TestFinish(
     displayName: String,
     message: Option[String],
     status: TestStatus,
     location: Option[Location],
     dataKind: Option[String],
-    data: Option[Json]
+    data: Option[RawJson]
 )
+
+object TestFinish {
+  implicit val codec: JsonValueCodec[TestFinish] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 sealed abstract class TestStatus(val code: Int)
 object TestStatus {
@@ -433,31 +668,35 @@ object TestStatus {
   case object Cancelled extends TestStatus(4)
   case object Skipped extends TestStatus(5)
 
-  implicit val testStatusEncoder: RootEncoder[TestStatus] = new RootEncoder[TestStatus] {
-    override def apply(a: TestStatus): Json = Json.fromInt(a.code)
-  }
-
-  implicit val statusCodeDecoder: Decoder[TestStatus] = new Decoder[TestStatus] {
-    override def apply(c: HCursor): Result[TestStatus] = {
-      c.as[Int].flatMap {
-        case 1 => Right(Passed)
-        case 2 => Right(Failed)
-        case 3 => Right(Ignored)
-        case 4 => Right(Cancelled)
-        case 5 => Right(Skipped)
-        case n => Left(DecodingFailure(s"Unknown test status $n", c.history))
+  implicit val codec: JsonValueCodec[TestStatus] = new JsonValueCodec[TestStatus] {
+    def nullValue: TestStatus = null
+    def encodeValue(status: TestStatus, out: JsonWriter): Unit =
+      out.writeVal(status.code)
+    def decodeValue(in: JsonReader, default: TestStatus): TestStatus = {
+      in.readInt() match {
+        case 1 => Passed
+        case 2 => Failed
+        case 3 => Ignored
+        case 4 => Cancelled
+        case 5 => Skipped
+        case n => in.decodeError(s"Unknown test status $n")
       }
     }
   }
 }
 
-@JsonCodec final case class RunParams(
+final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
     arguments: Option[List[String]],
     dataKind: Option[String],
-    data: Option[Json],
+    data: Option[RawJson]
 )
+
+object RunParams {
+  implicit val codec: JsonValueCodec[RunParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object RunParamsDataKind {
   val ScalaMainClass = "scala-main-class"
@@ -469,45 +708,64 @@ object StatusCode {
   case object Error extends StatusCode(2)
   case object Cancelled extends StatusCode(3)
 
-  implicit val statusCodeEncoder: RootEncoder[StatusCode] = new RootEncoder[StatusCode] {
-    override def apply(a: StatusCode): Json = Json.fromInt(a.code)
-  }
-
-  implicit val statusCodeDecoder: Decoder[StatusCode] = new Decoder[StatusCode] {
-    override def apply(c: HCursor): Result[StatusCode] = {
-      c.as[Int].flatMap {
-        case 1 => Right(Ok)
-        case 2 => Right(Error)
-        case 3 => Right(Cancelled)
-        case n => Left(DecodingFailure(s"Unknown status code $n", c.history))
+  implicit val codec: JsonValueCodec[StatusCode] = new JsonValueCodec[StatusCode] {
+    def nullValue: StatusCode = null
+    def encodeValue(status: StatusCode, out: JsonWriter): Unit =
+      out.writeVal(status.code)
+    def decodeValue(in: JsonReader, default: StatusCode): StatusCode = {
+      in.readInt() match {
+        case 1 => Ok
+        case 2 => Error
+        case 3 => Cancelled
+        case n => in.decodeError(s"Unknown status code $n")
       }
     }
   }
 }
 
-@JsonCodec final case class RunResult(
+final case class RunResult(
     originId: Option[String],
     statusCode: StatusCode
 )
 
-@JsonCodec final case class CleanCacheParams(
-    targets: List[BuildTargetIdentifier],
+object RunResult {
+  implicit val codec: JsonValueCodec[RunResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CleanCacheParams(
+    targets: List[BuildTargetIdentifier]
 )
 
-@JsonCodec final case class CleanCacheResult(
+object CleanCacheParams {
+  implicit val codec: JsonValueCodec[CleanCacheParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class CleanCacheResult(
     message: Option[String],
     cleaned: Boolean
 )
 
-@JsonCodec final case class TaskStartParams(
+object CleanCacheResult {
+  implicit val codec: JsonValueCodec[CleanCacheResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TaskStartParams(
     taskId: TaskId,
     eventTime: Option[Long],
     message: Option[String],
     dataKind: Option[String],
-    data: Option[Json]
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class TaskProgressParams(
+object TaskStartParams {
+  implicit val codec: JsonValueCodec[TaskStartParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TaskProgressParams(
     taskId: TaskId,
     eventTime: Option[Long],
     message: Option[String],
@@ -515,17 +773,27 @@ object StatusCode {
     progress: Option[Long],
     unit: Option[String],
     dataKind: Option[String],
-    data: Option[Json]
+    data: Option[RawJson]
 )
 
-@JsonCodec final case class TaskFinishParams(
+object TaskProgressParams {
+  implicit val codec: JsonValueCodec[TaskProgressParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class TaskFinishParams(
     taskId: TaskId,
     eventTime: Option[Long],
     message: Option[String],
     status: StatusCode,
     dataKind: Option[String],
-    data: Option[Json]
+    data: Option[RawJson]
 )
+
+object TaskFinishParams {
+  implicit val codec: JsonValueCodec[TaskFinishParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object TaskDataKind {
   val CompileTask = "compile-task"
@@ -542,28 +810,32 @@ object ScalaPlatform {
   case object Js extends ScalaPlatform(2)
   case object Native extends ScalaPlatform(3)
 
-  implicit val scalaPlatformEncoder: RootEncoder[ScalaPlatform] = new RootEncoder[ScalaPlatform] {
-    override def apply(a: ScalaPlatform): Json = Json.fromInt(a.id)
-  }
-
-  implicit val scalaPlatformDecoder: Decoder[ScalaPlatform] = new Decoder[ScalaPlatform] {
-    override def apply(c: HCursor): Result[ScalaPlatform] = {
-      c.as[Int].flatMap {
-        case 1 => Right(Jvm)
-        case 2 => Right(Js)
-        case 3 => Right(Native)
-        case n => Left(DecodingFailure(s"Unknown platform id for $n", c.history))
+  implicit val codec: JsonValueCodec[ScalaPlatform] = new JsonValueCodec[ScalaPlatform] {
+    def nullValue: ScalaPlatform = null
+    def encodeValue(platform: ScalaPlatform, out: JsonWriter): Unit =
+      out.writeVal(platform.id)
+    def decodeValue(in: JsonReader, default: ScalaPlatform): ScalaPlatform = {
+      in.readInt() match {
+        case 1 => Jvm
+        case 2 => Js
+        case 3 => Native
+        case n => in.decodeError(s"Unknown platform id for $n")
       }
     }
   }
 }
 
-@JsonCodec final case class JvmBuildTarget(
+final case class JvmBuildTarget(
     javaHome: Option[Uri],
     javaVersion: Option[String]
 )
 
-@JsonCodec final case class ScalaBuildTarget(
+object JvmBuildTarget {
+  implicit val codec: JsonValueCodec[JvmBuildTarget] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaBuildTarget(
     scalaOrganization: String,
     scalaVersion: String,
     scalaBinaryVersion: String,
@@ -572,26 +844,45 @@ object ScalaPlatform {
     jvmBuildTarget: Option[JvmBuildTarget]
 )
 
-@JsonCodec final case class ScalaTestParams(
-    testClasses: Option[List[ScalaTestClassesItem]],
+object ScalaBuildTarget {
+  implicit val codec: JsonValueCodec[ScalaBuildTarget] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaTestParams(
+    testClasses: Option[List[ScalaTestClassesItem]]
 )
+
+object ScalaTestParams {
+  implicit val codec: JsonValueCodec[ScalaTestParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object TestParamsDataKind {
   val ScalaTest = "scala-test"
 }
 
 // Request: 'buildTarget/scalacOptions', C -> S
-@JsonCodec final case class ScalacOptionsParams(
+final case class ScalacOptionsParams(
     targets: List[BuildTargetIdentifier]
 )
 
+object ScalacOptionsParams {
+  implicit val codec: JsonValueCodec[ScalacOptionsParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
-@JsonCodec final case class JvmTestEnvironmentParams(
+final case class JvmTestEnvironmentParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String]
 )
 
-@JsonCodec final case class JvmEnvironmentItem(
+object JvmTestEnvironmentParams {
+  implicit val codec: JsonValueCodec[JvmTestEnvironmentParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class JvmEnvironmentItem(
     target: BuildTargetIdentifier,
     classpath: List[String],
     jvmOptions: List[String],
@@ -599,77 +890,148 @@ object TestParamsDataKind {
     environmentVariables: Map[String, String]
 )
 
-@JsonCodec final case class JvmTestEnvironmentResult(
+object JvmEnvironmentItem {
+  implicit val codec: JsonValueCodec[JvmEnvironmentItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class JvmTestEnvironmentResult(
     items: List[JvmEnvironmentItem]
 )
 
-@JsonCodec final case class JvmRunEnvironmentParams(
-   targets: List[BuildTargetIdentifier],
-   originId: Option[String]
+object JvmTestEnvironmentResult {
+  implicit val codec: JsonValueCodec[JvmTestEnvironmentResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class JvmRunEnvironmentParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
 )
 
-@JsonCodec final case class JvmRunEnvironmentResult(
-   items: List[JvmEnvironmentItem]
+object JvmRunEnvironmentParams {
+  implicit val codec: JsonValueCodec[JvmRunEnvironmentParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class JvmRunEnvironmentResult(
+    items: List[JvmEnvironmentItem]
 )
 
-@JsonCodec final case class ScalacOptionsItem(
+object JvmRunEnvironmentResult {
+  implicit val codec: JsonValueCodec[JvmRunEnvironmentResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalacOptionsItem(
     target: BuildTargetIdentifier,
     options: List[String],
     classpath: List[Uri],
-    classDirectory: Uri,
+    classDirectory: Uri
 )
 
-@JsonCodec final case class ScalacOptionsResult(
+object ScalacOptionsItem {
+  implicit val codec: JsonValueCodec[ScalacOptionsItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalacOptionsResult(
     items: List[ScalacOptionsItem]
 )
 
+object ScalacOptionsResult {
+  implicit val codec: JsonValueCodec[ScalacOptionsResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Request: 'buildTarget/scalaTestClasses', C -> S
-@JsonCodec final case class ScalaTestClassesParams(
+final case class ScalaTestClassesParams(
     targets: List[BuildTargetIdentifier],
-    originId: Option[String],
+    originId: Option[String]
 )
 
-@JsonCodec final case class ScalaTestClassesItem(
+object ScalaTestClassesParams {
+  implicit val codec: JsonValueCodec[ScalaTestClassesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaTestClassesItem(
     target: BuildTargetIdentifier,
     // Fully qualified names of test classes
     classes: List[String]
 )
 
-@JsonCodec final case class ScalaTestClassesResult(
+object ScalaTestClassesItem {
+  implicit val codec: JsonValueCodec[ScalaTestClassesItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaTestClassesResult(
     items: List[ScalaTestClassesItem]
 )
 
+object ScalaTestClassesResult {
+  implicit val codec: JsonValueCodec[ScalaTestClassesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
 // Request: 'buildTarget/scalaMainClasses', C -> S
-@JsonCodec final case class ScalaMainClassesParams(
+final case class ScalaMainClassesParams(
     targets: List[BuildTargetIdentifier],
-    originId: Option[String],
+    originId: Option[String]
 )
 
-@JsonCodec final case class ScalaMainClass(
+object ScalaMainClassesParams {
+  implicit val codec: JsonValueCodec[ScalaMainClassesParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaMainClass(
     `class`: String,
     arguments: List[String],
     jvmOptions: List[String],
     environmentVariables: List[String]
 )
 
-@JsonCodec final case class ScalaMainClassesItem(
+object ScalaMainClass {
+  implicit val codec: JsonValueCodec[ScalaMainClass] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaMainClassesItem(
     target: BuildTargetIdentifier,
     // Fully qualified names of test classes
     classes: List[ScalaMainClass]
 )
 
-@JsonCodec final case class ScalaMainClassesResult(
+object ScalaMainClassesItem {
+  implicit val codec: JsonValueCodec[ScalaMainClassesItem] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class ScalaMainClassesResult(
     items: List[ScalaMainClassesItem]
 )
 
-@JsonCodec final case class SbtBuildTarget(
+object ScalaMainClassesResult {
+  implicit val codec: JsonValueCodec[ScalaMainClassesResult] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],
     scalaBuildTarget: ScalaBuildTarget,
     parent: Option[BuildTargetIdentifier],
-    children: List[BuildTargetIdentifier],
+    children: List[BuildTargetIdentifier]
 )
-@JsonCodec final case class BspConnectionDetails(
+
+object SbtBuildTarget {
+  implicit val codec: JsonValueCodec[SbtBuildTarget] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class BspConnectionDetails(
     name: String,
     argv: List[String],
     version: String,
@@ -677,15 +1039,30 @@ object TestParamsDataKind {
     languages: List[String]
 )
 
-@JsonCodec final case class DebugSessionParams(
+object BspConnectionDetails {
+  implicit val codec: JsonValueCodec[BspConnectionDetails] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
+
+final case class DebugSessionParams(
     targets: List[BuildTargetIdentifier],
     dataKind: String,
-    data: Json
+    data: RawJson
 )
+
+object DebugSessionParams {
+  implicit val codec: JsonValueCodec[DebugSessionParams] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
 
 object DebugSessionParamsDataKind {
   val ScalaMainClass = "scala-main-class"
   val ScalaTestSuites = "scala-test-suites"
 }
 
-@JsonCodec final case class DebugSessionAddress(uri: String)
+final case class DebugSessionAddress(uri: String)
+
+object DebugSessionAddress {
+  implicit val codec: JsonValueCodec[DebugSessionAddress] =
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+}
