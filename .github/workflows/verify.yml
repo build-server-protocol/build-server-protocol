@@ -1,0 +1,20 @@
+name: Verify
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olafurpg/setup-scala@v7
+      - name: generate xtend
+        run: sbt bsp4j/xtend
+      - name: generate mdoc
+        run: sbt mdoc
+      - name: compile
+        run: sbt +compile +package
+      - name: test
+        run: sbt +test
