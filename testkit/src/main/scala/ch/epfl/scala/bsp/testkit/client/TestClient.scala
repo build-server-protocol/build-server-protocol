@@ -1,14 +1,12 @@
 package ch.epfl.scala.bsp.testkit.client
 
 import java.io.File
-import java.util.{Collections, Optional}
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
-import com.google.common.collect.Lists
 
-import scala.::
 import scala.annotation.tailrec
 import scala.collection.convert.ImplicitConversions.`collection asJava`
 import scala.collection.mutable
@@ -72,9 +70,9 @@ case class TestClient(
     testShutdown()
   }
 
-  def testMultipleUnitTests(tests: List[TestClient.ClientUnitTest.Value]): Unit = {
+  def testMultipleUnitTests(tests: java.util.List[TestClient.ClientUnitTest.Value]): Unit = {
     testSessionInitialization()
-    tests.map(unitTests.get).foreach(test => test.foreach(_()))
+    tests.asScala.map(unitTests.get).foreach(test => test.foreach(_()))
     testShutdown()
   }
 
@@ -94,10 +92,9 @@ case class TestClient(
     val targets = await(server.workspaceBuildTargets()).getTargets.asScala
 
     targets
-      .map(target => {
+      .foreach(target => {
         languages.addAll(target.getLanguageIds)
       })
-      .toList
 
     val targetsId = targets.map(_.getId).asJava
 
@@ -416,7 +413,7 @@ object TestClient {
         CleanCacheSuccessfully, CleanCacheUnsuccessfully = Value
   }
 
-  def testInitialStructure(workspacePath: String, compilerOutputDir: String): TestClient = {
+  def testInitialStructure(workspacePath: java.lang.String, compilerOutputDir: java.lang.String): TestClient = {
     val workspace = new File(workspacePath)
     val compilerOutput = new File(workspace, compilerOutputDir)
     val (capabilities, connectionFiles) = MockCommunications.prepareSession(workspace)

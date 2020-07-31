@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp.testkit.client.mock
 
 import java.io.File
-import java.util.concurrent.Future
 
 import ch.epfl.scala.bsp.testkit.client.mock
-import ch.epfl.scala.bsp4j.{BspConnectionDetails, BuildClientCapabilities, BuildServer, InitializeBuildParams}
+import ch.epfl.scala.bsp4j.{BspConnectionDetails, BuildClientCapabilities, InitializeBuildParams}
 import com.google.gson.{Gson, JsonArray, JsonObject}
 
 import scala.io.Source

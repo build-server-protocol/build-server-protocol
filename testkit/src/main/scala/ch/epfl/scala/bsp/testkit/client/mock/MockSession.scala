@@ -1,7 +1,7 @@
 package ch.epfl.scala.bsp.testkit.client.mock
 
 import java.net.URI
-import java.util.concurrent.{Executors, Future}
+import java.util.concurrent.Executors
 
 import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams}
 import org.eclipse.lsp4j.jsonrpc.Launcher
