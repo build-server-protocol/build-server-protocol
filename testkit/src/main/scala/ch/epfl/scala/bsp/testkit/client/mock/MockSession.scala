@@ -9,9 +9,9 @@ import org.eclipse.lsp4j.jsonrpc.Launcher
 case class MockSession(process: Process, root: URI, compilerOutput: URI, initializeBuildParams: InitializeBuildParams, cleanup: () => Unit) {
 
   val connection: MockConnection = startServerConnection
+  val client = new MockClient
 
   private def startServerConnection: MockConnection = {
-    val client = new MockClient
 
     val launcher = new Launcher.Builder[BuildServer]()
       .setRemoteInterface(classOf[BuildServer])
@@ -22,6 +22,9 @@ case class MockSession(process: Process, root: URI, compilerOutput: URI, initial
       .create()
 
     val listening = launcher.startListening
+    new Thread {
+      listening.get()
+    }
     val server: BuildServer = launcher.getRemoteProxy
 
     client.onConnectWithServer(server)
@@ -33,8 +36,9 @@ case class MockSession(process: Process, root: URI, compilerOutput: URI, initial
       cleanup()
     }
 
-    MockConnection(server, cancelable, listening)
+
+    MockConnection(server, cancelable)
   }
 
-  case class MockConnection(server: BuildServer, cancelable: () => Unit, listening: Future[Void])
+  case class MockConnection(server: BuildServer, cancelable: () => Unit)
 }

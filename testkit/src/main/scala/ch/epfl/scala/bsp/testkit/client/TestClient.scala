@@ -1,14 +1,19 @@
 package ch.epfl.scala.bsp.testkit.client
 
 import java.io.File
+import java.util.{Collections, Optional}
 import java.util.concurrent.CompletableFuture
 
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
+import com.google.common.collect.Lists
 
+import scala.::
+import scala.annotation.tailrec
 import scala.collection.convert.ImplicitConversions.`collection asJava`
 import scala.collection.mutable
 import scala.compat.java8.FutureConverters._
+import scala.compat.java8.OptionConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.jdk.CollectionConverters._
@@ -21,18 +26,20 @@ case class TestClient(
     timeoutDuration: Duration = 30.seconds
 ) {
   private val server = session.connection.server
+  private val client = session.client
+  private val alreadySentDiagnosticsTimeout = 2.seconds
 
   private val unitTests: Map[TestClient.ClientUnitTest.Value, () => Unit] = Map(
     TestClient.ClientUnitTest.ResolveProjectTest -> resolveProject,
     TestClient.ClientUnitTest.TargetCapabilities -> targetCapabilities,
-    TestClient.ClientUnitTest.CompileSuccessfully -> targetsCompileSuccessfully,
+    TestClient.ClientUnitTest.CompileSuccessfully -> compileSuccessfully,
     TestClient.ClientUnitTest.CompileUnsuccessfully -> targetsCompileUnsuccessfully,
-    TestClient.ClientUnitTest.RunSuccessfully -> targetsRunSuccessfully,
+    TestClient.ClientUnitTest.RunSuccessfully -> runSuccessfully,
     TestClient.ClientUnitTest.RunUnsuccessfully -> targetsRunUnsuccessfully,
-    TestClient.ClientUnitTest.TestSuccessfully -> targetsTestSuccessfully,
+    TestClient.ClientUnitTest.TestSuccessfully -> testSuccessfully,
     TestClient.ClientUnitTest.TestUnsuccessfully -> targetsTestUnsuccessfully,
     TestClient.ClientUnitTest.CleanCacheSuccessfully -> cleanCacheSuccessfully,
-    TestClient.ClientUnitTest.CleanCacheUnsuccessfully -> cleanCacheUnsuccessfully,
+    TestClient.ClientUnitTest.CleanCacheUnsuccessfully -> cleanCacheUnsuccessfully
   )
 
   private def await[T](future: CompletableFuture[T]): T = {
@@ -136,9 +143,52 @@ case class TestClient(
       )
     )
 
-  private def targetsCompileSuccessfully(targets: mutable.Buffer[BuildTarget]): Unit = {
+  private def targetsCompileSuccessfully(
+      targets: mutable.Buffer[BuildTarget] = await(server.workspaceBuildTargets()).getTargets.asScala,
+      compileDiagnostics: List[ExpectedDiagnostic] = List.empty
+  ): Unit = {
     val compileResult: CompileResult = compileTarget(targets)
     assert(compileResult.getStatusCode == StatusCode.OK, "Targets failed to compile!")
+    compileDiagnostics.foreach(expectedDiagnostic => {
+      val diagnostics = obtainExpectedDiagnostic(expectedDiagnostic)
+      diagnostics.foreach(client.onBuildPublishDiagnostics)
+    })
+  }
+
+  private def compileSuccessfully(): Unit = targetsCompileSuccessfully()
+
+  @tailrec
+  private def obtainExpectedDiagnostic(
+      expectedDiagnostic: ExpectedDiagnostic,
+      list: List[PublishDiagnosticsParams] = List.empty
+  ): List[PublishDiagnosticsParams] = {
+    val polledDiagnostic = client.pollPublishDiagnostics(alreadySentDiagnosticsTimeout)
+    assert(polledDiagnostic.isDefined, "Did not find expected diagnostic!")
+    val diagnostics = polledDiagnostic.get
+    val diagnostic = diagnostics.getDiagnostics.asScala.find(expectedDiagnostic.isEqual)
+    diagnostic match {
+      case None => obtainExpectedDiagnostic(expectedDiagnostic, diagnostics :: list)
+      case Some(foundDiagnostic) =>
+        diagnostics.getDiagnostics.remove(foundDiagnostic)
+        diagnostics :: list
+    }
+  }
+
+  @tailrec
+  private def obtainExpectedNotification(
+      expectedNotification: BuildTargetEventKind,
+      list: List[DidChangeBuildTarget] = List.empty
+  ): List[DidChangeBuildTarget] = {
+    val polledNotification = client.pollBuildTargetDidChange(alreadySentDiagnosticsTimeout)
+    assert(polledNotification.isDefined, "Did not find expected notification!")
+    val notifications = polledNotification.get
+    val diagnostic = notifications.getChanges.asScala.find(expectedNotification == _.getKind)
+    diagnostic match {
+      case None => obtainExpectedNotification(expectedNotification, notifications :: list)
+      case Some(foundDiagnostic) =>
+        notifications.getChanges.remove(foundDiagnostic)
+        notifications :: list
+    }
   }
 
   private def targetsCompileUnsuccessfully(): Unit = {
@@ -153,20 +203,22 @@ case class TestClient(
 
   def testTargetsCompileUnsuccessfully(): Unit = wrapTest(() => targetsCompileUnsuccessfully())
 
-  def testTargetsCompileSuccessfully(): Unit =
-    wrapTest(
-      targetsCompileSuccessfully
-    )
-
-  private def targetsCompileSuccessfully: () => Unit = { () =>
-    {
-      val targets = await(server.workspaceBuildTargets()).getTargets.asScala
-      targetsCompileSuccessfully(targets)
-    }
-  }
-
-  def testTargetsCompileSuccessfully(targets: java.util.List[BuildTarget]): Unit =
-    wrapTest(() => targetsCompileSuccessfully(targets.asScala))
+  def testTargetsCompileSuccessfully(
+      withTaskNotifications: Boolean = false,
+      targets: Optional[java.util.List[BuildTarget]]
+  ): Unit =
+    wrapTest(() => {
+      targets.asScala match {
+        case Some(targets) => targetsCompileSuccessfully(targets.asScala)
+        case None          => targetsCompileSuccessfully()
+      }
+      if (withTaskNotifications) {
+        val taskStartNotification = client.pollTaskStart(alreadySentDiagnosticsTimeout)
+        val taskEndNotification = client.pollTaskFinish(alreadySentDiagnosticsTimeout)
+        assert(taskStartNotification.isDefined, "No task start notification sent")
+        assert(taskEndNotification.isDefined, "No task end notification sent")
+      }
+    })
 
   private def testTargets(targets: mutable.Buffer[BuildTarget]) =
     testIfSuccessful(
@@ -175,7 +227,9 @@ case class TestClient(
       )
     )
 
-  private def targetsTestSuccessfully(targets: mutable.Buffer[BuildTarget]): Unit = {
+  private def targetsTestSuccessfully(
+      targets: mutable.Buffer[BuildTarget] = await(server.workspaceBuildTargets()).getTargets.asScala
+  ): Unit = {
     val testResult: TestResult = testTargets(targets)
     assert(testResult.getStatusCode == StatusCode.OK, "Tests to targets failed!")
   }
@@ -190,23 +244,21 @@ case class TestClient(
   def testTargetsTestUnsuccessfully(): Unit =
     wrapTest(() => targetsTestUnsuccessfully())
 
-  def testTargetsTestSuccessfully(): Unit = {
+  private def testSuccessfully(): Unit =
+    targetsTestSuccessfully()
+
+  def testTargetsTestSuccessfully(targets: Optional[java.util.List[BuildTarget]]): Unit =
     wrapTest(
-      targetsTestSuccessfully
+      () =>
+        targets.asScala match {
+          case Some(targets) => targetsTestSuccessfully(targets.asScala)
+          case None          => targetsTestSuccessfully()
+        }
     )
-  }
 
-  private def targetsTestSuccessfully: () => Unit = { () =>
-    {
-      val targets = await(server.workspaceBuildTargets()).getTargets.asScala
-      targetsTestSuccessfully(targets)
-    }
-  }
-
-  def testTargetsTestSuccessfully(targets: java.util.List[BuildTarget]): Unit =
-    wrapTest(() => targetsTestSuccessfully(targets.asScala))
-
-  private def targetsRunSuccessfully(targets: mutable.Buffer[BuildTarget]): Unit = {
+  private def targetsRunSuccessfully(
+      targets: mutable.Buffer[BuildTarget] = await(server.workspaceBuildTargets()).getTargets.asScala
+  ): Unit = {
     val runResults = runTargets(targets)
 
     runResults.foreach(
@@ -241,21 +293,18 @@ case class TestClient(
           )
       )
 
-  def testTargetsRunSuccessfully(): Unit = {
+  private def runSuccessfully(): Unit = {
+    targetsRunSuccessfully()
+  }
+
+  def testTargetsRunSuccessfully(targets: Optional[java.util.List[BuildTarget]]): Unit =
     wrapTest(
-      targetsRunSuccessfully
+      () =>
+        targets.asScala match {
+          case Some(targets) => targetsRunSuccessfully(targets.asScala)
+          case None          => targetsRunSuccessfully()
+        }
     )
-  }
-
-  private def targetsRunSuccessfully: () => Unit = { () =>
-    {
-      val targets = await(server.workspaceBuildTargets()).getTargets.asScala
-      targetsRunSuccessfully(targets)
-    }
-  }
-
-  def testTargetsRunSuccessfully(targets: java.util.List[BuildTarget]): Unit =
-    wrapTest(() => targetsRunSuccessfully(targets.asScala))
 
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
@@ -355,6 +404,9 @@ case class TestClient(
     val cleanCacheResult = await(server.buildTargetCleanCache(new CleanCacheParams(targets)))
     cleanCacheResult
   }
+
+  def testDidChangeNotification(buildTargetEventKind: BuildTargetEventKind): Unit =
+    obtainExpectedNotification(buildTargetEventKind)
 }
 
 object TestClient {
