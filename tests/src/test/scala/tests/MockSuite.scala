@@ -163,7 +163,8 @@ class HappyMockSuite extends FunSuite {
 
   def assertTest(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
-    val params = new TestParams(getBuildTargetIds(server))
+    val testableTargets = getBuildTargets(server).asScala.filter(_.getCapabilities.getCanTest).map(_.getId).asJava
+    val params = new TestParams(testableTargets)
     val testResult = server.buildTargetTest(params).get()
     assert(testResult.getOriginId == params.getOriginId)
     // TODO in HappyMockServer: send some notifications in compile
