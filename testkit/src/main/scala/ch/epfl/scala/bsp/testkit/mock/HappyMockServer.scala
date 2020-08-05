@@ -9,6 +9,8 @@ import java.util.concurrent.CompletableFuture
 
 import ch.epfl.scala.bsp.testkit.mock.HappyMockServer.ProtocolError
 import ch.epfl.scala.bsp4j._
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
+import org.eclipse.lsp4j.jsonrpc.messages.{ResponseError, ResponseErrorCode}
 
 import scala.compat.java8.FunctionConverters._
 import scala.concurrent.duration._
@@ -118,7 +120,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest(() => {
       val item1: JvmEnvironmentItem = environmentItem(testing = false)
       val result = new JvmRunEnvironmentResult(List(item1).asJava)
-      result
+      Left(result)
     })
 
   override def jvmTestEnvironment(
@@ -127,7 +129,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest(() => {
       val item1: JvmEnvironmentItem = environmentItem(testing = true)
       val result = new JvmTestEnvironmentResult(List(item1).asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetScalacOptions(
@@ -143,7 +145,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item3 =
         new ScalacOptionsItem(targetId3, options, classpath, uriInTarget(targetId3, "out").toString)
       val result = new ScalacOptionsResult(List(item1, item2, item3).asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetScalaTestClasses(
@@ -152,15 +154,16 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest(() => {
       // TODO return some test classes
       val result = new ScalaTestClassesResult(List.empty.asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetScalaMainClasses(
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
     handleRequest(() => {
+      val list: util.List[String] = List.empty.asJava
       val result = new ScalaMainClassesResult(List.empty.asJava)
-      result
+      Left(result)
     })
 
   override def buildInitialize(
@@ -168,17 +171,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[InitializeBuildResult] = {
     handleRequest(() => {
       val result = new InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities)
-      result
+      Left(result)
     }, isBuildInitialize = true)
   }
 
   override def onBuildInitialized(): Unit =
-    handleRequest(() => isInitialized.success(Right(())), isBuildInitialize = true)
+    handleRequest(() => Left(isInitialized.success(Right(()))), isBuildInitialize = true)
 
   override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleRequest(() => {
       isShutdown.success(Right())
-      "boo"
+      Left("boo")
     }, isBuildShutdown = true)
   }
 
@@ -212,7 +215,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target3.setData(scalaBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] =
@@ -237,7 +240,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val items3 = new SourcesItem(targetId3, List(item3Dir, item31, item32, item33).asJava)
 
       val result = new SourcesResult(List(items1, items2, items3).asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetInverseSources(
@@ -245,7 +248,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[InverseSourcesResult] =
     handleRequest(() => {
       val result = new InverseSourcesResult(List(targetId1, targetId2, targetId3).asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetDependencySources(
@@ -269,156 +272,222 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item3 = new DependencySourcesItem(targetId3, target3Sources)
       val result = new DependencySourcesResult(List(item1, item2, item3).asJava)
 
-      result
+      Left(result)
     })
 
   override def buildTargetResources(params: ResourcesParams): CompletableFuture[ResourcesResult] =
     handleRequest(() => {
       // TODO provide resources
       val result = new ResourcesResult(List.empty.asJava)
-      result
+      Left(result)
     })
 
   override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] =
     handleRequest(() => {
-      params.getTargets.forEach(targetIdentifier => {
+      val uncompilableTargets = params.getTargets.asScala.filter(targetIdentifier => {
         compileTargets.get(targetIdentifier) match {
           case Some(target) =>
-            if(!target.getCapabilities.getCanCompile)
-              throw new RuntimeException(s"Target ${targetIdentifier.getUri} is not compilable")
-          case None =>
+            !target.getCapabilities.getCanCompile
+          case None => false
         }
       })
 
-      val origin = List(params.getOriginId).asJava
-      val compile1Id = new TaskId("compile1id")
-      compile1Id.setParents(origin)
+      if (uncompilableTargets.nonEmpty)
+        Right(
+          new ResponseError(
+            ResponseErrorCode.InvalidParams,
+            s"Targets ${uncompilableTargets.map(_.getUri)} are not compilable",
+            null
+          )
+        )
+      else {
+        val origin = List(params.getOriginId).asJava
+        val compile1Id = new TaskId("compile1id")
+        compile1Id.setParents(origin)
 
-      compileStart(compile1Id, "compile started: " + targetId1.getUri, targetId1)
+        compileStart(compile1Id, "compile started: " + targetId1.getUri, targetId1)
 
-      val subtaskParents = List(compile1Id.getId).asJava
-      logMessage("spawning subtasks", task = Some(compile1Id), origin = Some(params.getOriginId))
-      val subtask1Id = new TaskId("subtask1id")
-      subtask1Id.setParents(subtaskParents)
-      val subtask2Id = new TaskId("subtask2id")
-      subtask2Id.setParents(subtaskParents)
-      val subtask3Id = new TaskId("subtask3id")
-      subtask3Id.setParents(subtaskParents)
-      taskStart(subtask1Id, "resolving widgets", None, None)
-      taskStart(subtask2Id, "memoizing datapoints", None, None)
-      taskStart(subtask3Id, "unionizing beams", None, None)
+        val subtaskParents = List(compile1Id.getId).asJava
+        logMessage("spawning subtasks", task = Some(compile1Id), origin = Some(params.getOriginId))
+        val subtask1Id = new TaskId("subtask1id")
+        subtask1Id.setParents(subtaskParents)
+        val subtask2Id = new TaskId("subtask2id")
+        subtask2Id.setParents(subtaskParents)
+        val subtask3Id = new TaskId("subtask3id")
+        subtask3Id.setParents(subtaskParents)
+        taskStart(subtask1Id, "resolving widgets", None, None)
+        taskStart(subtask2Id, "memoizing datapoints", None, None)
+        taskStart(subtask3Id, "unionizing beams", None, None)
 
-      val compileme = new URI(targetId1.getUri).resolve("compileme.scala")
-      val doc = new TextDocumentIdentifier(compileme.toString)
+        val compileme = new URI(targetId1.getUri).resolve("compileme.scala")
+        val doc = new TextDocumentIdentifier(compileme.toString)
 
-      val errorMessage = new Diagnostic(
-        new Range(new Position(1, 10), new Position(1, 110)),
-        "this is a compile error"
-      )
-      errorMessage.setSeverity(DiagnosticSeverity.ERROR)
+        val errorMessage = new Diagnostic(
+          new Range(new Position(1, 10), new Position(1, 110)),
+          "this is a compile error"
+        )
+        errorMessage.setSeverity(DiagnosticSeverity.ERROR)
 
-      val warningMessage = new Diagnostic(
-        new Range(new Position(2, 10), new Position(2, 20)),
-        "this is a compile warning"
-      )
-      warningMessage.setSeverity(DiagnosticSeverity.WARNING)
+        val warningMessage = new Diagnostic(
+          new Range(new Position(2, 10), new Position(2, 20)),
+          "this is a compile warning"
+        )
+        warningMessage.setSeverity(DiagnosticSeverity.WARNING)
 
-      val infoMessage =
-        new Diagnostic(new Range(new Position(3, 1), new Position(3, 33)), "this is a compile info")
-      infoMessage.setSeverity(DiagnosticSeverity.INFORMATION)
+        val infoMessage =
+          new Diagnostic(
+            new Range(new Position(3, 1), new Position(3, 33)),
+            "this is a compile info"
+          )
+        infoMessage.setSeverity(DiagnosticSeverity.INFORMATION)
 
-      publishDiagnostics(
-        doc,
-        targetId1,
-        List(errorMessage, warningMessage),
-        Option(params.getOriginId)
-      )
-      publishDiagnostics(doc, targetId1, List(infoMessage), Option(params.getOriginId))
+        publishDiagnostics(
+          doc,
+          targetId1,
+          List(errorMessage, warningMessage),
+          Option(params.getOriginId)
+        )
+        publishDiagnostics(doc, targetId1, List(infoMessage), Option(params.getOriginId))
 
-      taskFinish(subtask1Id, "targets resolved", StatusCode.OK, None, None)
-      taskFinish(subtask2Id, "datapoints forgotten", StatusCode.ERROR, None, None)
-      taskFinish(subtask3Id, "beams are classless", StatusCode.CANCELLED, None, None)
-      showMessage("subtasks done", task = Some(compile1Id), origin = Option(params.getOriginId))
+        taskFinish(subtask1Id, "targets resolved", StatusCode.OK, None, None)
+        taskFinish(subtask2Id, "datapoints forgotten", StatusCode.ERROR, None, None)
+        taskFinish(subtask3Id, "beams are classless", StatusCode.CANCELLED, None, None)
+        showMessage("subtasks done", task = Some(compile1Id), origin = Option(params.getOriginId))
 
-      compileReport(compile1Id, "compile failed", targetId1, StatusCode.ERROR)
+        compileReport(compile1Id, "compile failed", targetId1, StatusCode.ERROR)
 
-      params.getTargets.asScala.foreach { target =>
-        val compileId = new TaskId(UUID.randomUUID().toString)
-        compileId.setParents(origin)
-        compileStart(compileId, "compile started: " + target.getUri, target)
-        taskProgress(compileId, "compiling some files", 100, 23, None, None)
-        compileReport(compileId, "compile complete", target, StatusCode.OK)
+        params.getTargets.asScala.foreach { target =>
+          val compileId = new TaskId(UUID.randomUUID().toString)
+          compileId.setParents(origin)
+          compileStart(compileId, "compile started: " + target.getUri, target)
+          taskProgress(compileId, "compiling some files", 100, 23, None, None)
+          compileReport(compileId, "compile complete", target, StatusCode.OK)
+        }
+
+        val result = new CompileResult(StatusCode.OK)
+        result.setOriginId(params.getOriginId)
+        Left(result)
       }
 
-      val result = new CompileResult(StatusCode.OK)
-      result.setOriginId(params.getOriginId)
-      result
     })
 
   override def buildTargetTest(params: TestParams): CompletableFuture[TestResult] =
     handleRequest(() => {
-      params.getTargets.forEach(targetIdentifier => {
+      val errorTargets = params.getTargets.asScala.filter(targetIdentifier => {
         compileTargets.get(targetIdentifier) match {
           case Some(target) =>
-            if(!target.getCapabilities.getCanTest)
-              throw new RuntimeException(s"Target ${targetIdentifier.getUri} is not testable")
-          case None =>
+            !target.getCapabilities.getCanTest
+          case None => false
         }
       })
-      // TODO some test task/report notifications
-      // TODO some individual test notifications
-      val result = new TestResult(StatusCode.OK)
-      result.setOriginId(params.getOriginId)
-      result
+
+      if (errorTargets.nonEmpty)
+        Right(
+          new ResponseError(
+            ResponseErrorCode.InvalidParams,
+            s"Target ${errorTargets.map(_.getUri)} is not compilable",
+            null
+          )
+        )
+      else {
+        // TODO some test task/report notifications
+        // TODO some individual test notifications
+        val result = new TestResult(StatusCode.OK)
+        result.setOriginId(params.getOriginId)
+        Left(result)
+      }
     })
 
   override def buildTargetRun(params: RunParams): CompletableFuture[RunResult] =
     handleRequest(() => {
       compileTargets.get(params.getTarget) match {
         case Some(target) =>
-          if(!target.getCapabilities.getCanRun)
-            throw new RuntimeException(s"Target ${target.getId.getUri} is not runnable")
+          if (!target.getCapabilities.getCanRun)
+            Right(
+              new ResponseError(
+                ResponseErrorCode.InvalidParams,
+                s"Target ${target.getId.getUri} is not compilable",
+                null
+              )
+            )
+          else
+            mockRunAnswer(params)
         case None =>
+          mockRunAnswer(params)
       }
-      // TODO some task notifications
-      val result = new RunResult(StatusCode.OK)
-      result.setOriginId(params.getOriginId)
-      result
     })
+
+  private def mockRunAnswer(params: RunParams) = {
+    // TODO some task notifications
+    val result = new RunResult(StatusCode.OK)
+    result.setOriginId(params.getOriginId)
+    Left(result)
+  }
 
   override def buildTargetCleanCache(
       params: CleanCacheParams
   ): CompletableFuture[CleanCacheResult] =
     handleRequest(() => {
       val result = new CleanCacheResult("cleaned cache", true)
-      result
+      Left(result)
     })
 
   private def handleRequest[T](
-      f: () => T,
+      f: () => Either[T, ResponseError],
       isBuildInitialize: Boolean = false,
       isBuildShutdown: Boolean = false
   ): CompletableFuture[T] = {
     val future = CompletableFuture.supplyAsync(f.asJava)
     if (isShutdown.isCompleted && !isBuildShutdown)
-      future.completeExceptionally(
-        new Exception("Cannot handle requests after receiving the shutdown request")
+      completeExceptionally(
+        new ResponseError(
+          ResponseErrorCode.serverErrorEnd,
+          "Cannot handle requests after receiving the shutdown request",
+          null
+        )
       )
     else if (!isInitialized.isCompleted && !isBuildInitialize) {
       Try(Await.result(isInitialized.future, 1.seconds)) match {
         case Failure(_) =>
-          future.completeExceptionally(
-            new Exception("Cannot handle requests before receiving the initialize request")
+          completeExceptionally(
+            new ResponseError(
+              ResponseErrorCode.serverNotInitialized,
+              "Cannot handle requests before receiving the initialize request",
+              null
+            )
           )
-        case Success(_) =>
+        case Success(_) => getValue(future)
       }
+    } else {
+      getValue(future)
     }
-    try {
-      future.get()
-    }catch {
-      case exception: Exception => future.completeExceptionally(exception)
-    }
+  }
 
+  private def getValue[T](future: CompletableFuture[Either[T, ResponseError]]): CompletableFuture[T] = {
+    Try(future.get()) match {
+      case Failure(exception) =>
+        completeExceptionally(
+          new ResponseError(
+            ResponseErrorCode.InternalError,
+            exception.getMessage,
+            null
+          )
+        )
+      case Success(response) =>
+        response match {
+          case Left(value)  => CompletableFuture.completedFuture(value)
+          case Right(error) => completeExceptionally(error)
+        }
+    }
+  }
+
+  private def completeExceptionally[T](error: ResponseError) = {
+    val future = new CompletableFuture[T]()
+    future.completeExceptionally(
+      new ResponseErrorException(
+        error
+      )
+    )
     future
   }
 }

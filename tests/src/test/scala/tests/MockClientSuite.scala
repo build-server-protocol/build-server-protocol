@@ -50,6 +50,10 @@ class MockClientSuite extends FunSuite {
     initializeBuildParams
   )
 
+  test("Initialize connection followed by its shutdown"){
+    client.testInitializeAndShutdown()
+  }
+
   test("Initial imports") {
     client.testResolveProject()
   }
@@ -59,16 +63,17 @@ class MockClientSuite extends FunSuite {
   }
 
   test("Running batch tests") {
-    client.testMultipleUnitTests(
-      Lists.newArrayList(
-        TestClient.ClientUnitTest.ResolveProjectTest,
-        TestClient.ClientUnitTest.CompileSuccessfully
-      )
+    client.wrapTest(
+      session => {
+        client.resolveProject(session)
+        client.targetsCompileSuccessfully(session)
+        client.cleanCacheSuccessfully(session)
+      }
     )
   }
 
   test("Test Compile of all targets") {
-    client.testTargetsCompileSuccessfully(targets = Optional.empty())
+    client.testTargetsCompileSuccessfully(true)
   }
 
   test("Clean cache") {
@@ -77,18 +82,18 @@ class MockClientSuite extends FunSuite {
 
   test("Run Targets") {
     client.testTargetsRunSuccessfully(
-      Optional.of(
-        Lists.newArrayList(
-          target3
-        )
+      Lists.newArrayList(
+        target3
       )
     )
   }
 
   test("Run Tests") {
-    client.testTargetsTestSuccessfully(Optional.of(Lists.newArrayList(
-      target2
-    )))
+    client.testTargetsTestSuccessfully(
+      Lists.newArrayList(
+        target2
+      )
+    )
   }
 
 }
