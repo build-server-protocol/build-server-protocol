@@ -1,7 +1,7 @@
 package tests
 
 import java.nio.file.Files
-import java.util.{Collections, Optional}
+import java.util.Collections
 
 import ch.epfl.scala.bsp.testkit.client.TestClient
 import ch.epfl.scala.bsp.testkit.mock.MockServer

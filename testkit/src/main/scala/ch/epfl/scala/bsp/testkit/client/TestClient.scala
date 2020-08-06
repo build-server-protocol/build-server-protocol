@@ -84,10 +84,21 @@ class TestClient(
     targetsCompileSuccessfully(targets, session, List.empty)
 
     if (withTaskNotifications) {
-      val taskStartNotification = session.client.pollTaskStart(alreadySentDiagnosticsTimeout)
-      val taskEndNotification = session.client.pollTaskFinish(alreadySentDiagnosticsTimeout)
-      assert(taskStartNotification.isDefined, "No task start notification sent")
-      assert(taskEndNotification.isDefined, "No task end notification sent")
+      val taskStartNotification = session.client.poll(
+        session.client.getTaskStart,
+        alreadySentDiagnosticsTimeout,
+        (_: TaskStartParams) => true
+      )
+      val taskEndNotification = session.client.poll(
+        session.client.getTaskStart,
+        alreadySentDiagnosticsTimeout,
+        (_: TaskStartParams) => true
+      )
+
+      val taskStart = Await.ready(taskStartNotification, alreadySentDiagnosticsTimeout).value.get
+      val taskEnd = Await.ready(taskEndNotification, alreadySentDiagnosticsTimeout).value.get
+      assert(taskStart.isSuccess, "No task start notification sent")
+      assert(taskEnd.isSuccess, "No task end notification sent")
     }
   }
 
@@ -277,10 +288,9 @@ class TestClient(
     val compileResult: CompileResult =
       Await.result(compileTarget(targets.asScala, session), timeoutDuration)
     assert(compileResult.getStatusCode == StatusCode.OK, "Targets failed to compile!")
-    compileDiagnostics.foreach(expectedDiagnostic => {
-      val diagnostics = obtainExpectedDiagnostic(expectedDiagnostic, session)
-      diagnostics.foreach(session.client.onBuildPublishDiagnostics)
-    })
+    compileDiagnostics.foreach(
+      expectedDiagnostic => obtainExpectedDiagnostic(expectedDiagnostic, session)
+    )
   }
 
   def targetsCompileSuccessfully(
@@ -289,40 +299,34 @@ class TestClient(
   ): Unit =
     targetsCompileSuccessfully(getAllBuildTargets(session).asJava, session, compileDiagnostics)
 
-  @tailrec
   final private def obtainExpectedDiagnostic(
       expectedDiagnostic: ExpectedDiagnostic,
-      session: MockSession,
-      list: List[PublishDiagnosticsParams] = List.empty
-  ): List[PublishDiagnosticsParams] = {
-    val polledDiagnostic = session.client.pollPublishDiagnostics(alreadySentDiagnosticsTimeout)
-    assert(polledDiagnostic.isDefined, "Did not find expected diagnostic!")
-    val diagnostics = polledDiagnostic.get
-    val diagnostic = diagnostics.getDiagnostics.asScala.find(expectedDiagnostic.isEqual)
-    diagnostic match {
-      case None => obtainExpectedDiagnostic(expectedDiagnostic, session, diagnostics :: list)
-      case Some(foundDiagnostic) =>
-        diagnostics.getDiagnostics.remove(foundDiagnostic)
-        diagnostics :: list
-    }
+      session: MockSession
+  ): Unit = {
+    val polledDiagnostic = session.client.poll(
+      session.client.getPublishDiagnostics,
+      alreadySentDiagnosticsTimeout,
+      (diagnostics: PublishDiagnosticsParams) =>
+        diagnostics.getDiagnostics.asScala.exists(expectedDiagnostic.isEqual)
+    )
+
+    val diagnostic = Await.ready(polledDiagnostic, alreadySentDiagnosticsTimeout).value.get
+    assert(diagnostic.isSuccess, "Did not find expected diagnostic!")
   }
 
-  @tailrec
   final private def obtainExpectedNotification(
       expectedNotification: BuildTargetEventKind,
-      session: MockSession,
-      list: List[DidChangeBuildTarget] = List.empty
-  ): List[DidChangeBuildTarget] = {
-    val polledNotification = session.client.pollBuildTargetDidChange(alreadySentDiagnosticsTimeout)
-    assert(polledNotification.isDefined, "Did not find expected notification!")
-    val notifications = polledNotification.get
-    val diagnostic = notifications.getChanges.asScala.find(expectedNotification == _.getKind)
-    diagnostic match {
-      case None => obtainExpectedNotification(expectedNotification, session, notifications :: list)
-      case Some(foundDiagnostic) =>
-        notifications.getChanges.remove(foundDiagnostic)
-        notifications :: list
-    }
+      session: MockSession
+  ): Unit = {
+    val polledNotification = session.client.poll(
+      session.client.getDidChangeBuildTarget,
+      alreadySentDiagnosticsTimeout,
+      (didChange: DidChangeBuildTarget) => didChange.getChanges.asScala.exists(expectedNotification == _.getKind)
+    )
+
+    val notification = Await.ready(polledNotification, alreadySentDiagnosticsTimeout).value.get
+    assert(notification.isSuccess, "Did not find expected notification!")
+
   }
 
   private def targetsCompileUnsuccessfully(session: MockSession): Unit = {
