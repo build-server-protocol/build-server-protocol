@@ -12,11 +12,10 @@ import ch.epfl.scala.bsp4j._
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import org.eclipse.lsp4j.jsonrpc.messages.{ResponseError, ResponseErrorCode}
 
-import scala.compat.java8.FutureConverters._
 import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future, Promise}
+import scala.concurrent._
 import scala.jdk.CollectionConverters._
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 object HappyMockServer {
   case object ProtocolError
@@ -433,66 +432,62 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   private def handleRequest[T](
       f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
-    checkShutdown {
-      checkInitialize {
-        getValue(f)
-      }
-    }
+    val result = for {
+      _ <- checkInitialize
+      _ <- checkShutdown
+      res <- getValue(f)
+    } yield res
+
+    toCompletableFuture(result)
   }
 
-  private def checkInitialize[T](f: => CompletableFuture[T]): CompletableFuture[T] = {
-    Try(Await.result(isInitialized.future, 1.seconds)) match {
-      case Failure(_) =>
-        completeExceptionally(
-          new ResponseError(
-            ResponseErrorCode.serverNotInitialized,
-            "Cannot handle requests before receiving the initialize request",
-            null
-          )
-        )
-      case Success(_) => f
+  private def toCompletableFuture[T](either: Either[ResponseError, T]): CompletableFuture[T] =
+    either match {
+      case Left(value)  => completeExceptionally(value)
+      case Right(value) => CompletableFuture.completedFuture(value)
     }
-  }
 
-  private def checkShutdown[T](f: => CompletableFuture[T]): CompletableFuture[T] = {
-    if (isShutdown.isCompleted)
-      completeExceptionally(
-        new ResponseError(
-          ResponseErrorCode.serverErrorEnd,
-          "Cannot handle requests after receiving the shutdown request",
+  private def checkInitialize[T]: Either[ResponseError, Unit] = {
+    try {
+      Await.result(isInitialized.future, 1.seconds)
+      Right(())
+    } catch {
+      case x: TimeoutException =>
+        val err = new ResponseError(
+          ResponseErrorCode.serverNotInitialized,
+          "Cannot handle requests before receiving the initialize request",
           null
         )
-      )
-    else
-      f
-  }
-
-  private def getValue[T](f: => Either[ResponseError, T]): CompletableFuture[T] = {
-    val handled = Try(f).toEither.left
-      .map(exception => new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null))
-      .joinRight
-
-    handled match {
-      case Right(value)  => CompletableFuture.completedFuture(value)
-      case Left(error) => completeExceptionally(error)
+        Left(err)
     }
   }
+
+  private def checkShutdown[T]: Either[ResponseError, Unit] =
+    if (isShutdown.isCompleted) {
+      val err = new ResponseError(
+        ResponseErrorCode.serverErrorEnd,
+        "Cannot handle requests after receiving the shutdown request",
+        null
+      )
+      Left(err)
+    } else Right(())
+
+  private def getValue[T](f: => Either[ResponseError, T]): Either[ResponseError, T] =
+    Try(f).toEither.left
+      .map(
+        exception => new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null)
+      )
+      .joinRight
 
   private def handleBuildInitializeRequest[T](
       f: => Either[ResponseError, T]
-  ): CompletableFuture[T] = {
-    checkShutdown {
-      getValue(f)
-    }
-  }
+  ): CompletableFuture[T] =
+    toCompletableFuture(checkShutdown.flatMap(_ => getValue(f)))
 
   private def handleBuildShutdownRequest[T](
       f: => Either[ResponseError, T]
-  ): CompletableFuture[T] = {
-    checkInitialize {
-      getValue(f)
-    }
-  }
+  ): CompletableFuture[T] =
+    toCompletableFuture(checkInitialize.flatMap(_ => getValue(f)))
 
   private def completeExceptionally[T](error: ResponseError): CompletableFuture[T] = {
     val future = new CompletableFuture[T]()
