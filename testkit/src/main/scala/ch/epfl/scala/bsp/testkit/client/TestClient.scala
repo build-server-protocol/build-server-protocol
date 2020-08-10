@@ -35,7 +35,7 @@ class TestClient(
     val session: MockSession = new MockSession(in, out, initializeBuildParams, cleanup)
 
     await(testSessionInitialization(session))
-    body(session)
+    await(body(session))
     await(testShutdown(session, cleanup))
   }
 
