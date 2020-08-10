@@ -2,6 +2,7 @@ package tests
 
 import java.nio.file.Files
 import java.util.Collections
+import java.util.concurrent.Executors
 
 import ch.epfl.scala.bsp.testkit.client.TestClient
 import ch.epfl.scala.bsp.testkit.mock.MockServer
@@ -10,6 +11,7 @@ import ch.epfl.scala.bsp4j._
 import com.google.common.collect.Lists
 import org.scalatest.FunSuite
 
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.jdk.CollectionConverters._
 
 class MockClientSuite extends FunSuite {
@@ -23,6 +25,9 @@ class MockClientSuite extends FunSuite {
       testDirectory.toUri.toString,
       new BuildClientCapabilities(Collections.singletonList("scala"))
     )
+
+  private implicit val executionContext: ExecutionContextExecutor =
+    ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
   val targetId2 = new BuildTargetIdentifier(testDirectory.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(testDirectory.resolve("target3").toString)
@@ -50,7 +55,7 @@ class MockClientSuite extends FunSuite {
     initializeBuildParams
   )
 
-  test("Initialize connection followed by its shutdown"){
+  test("Initialize connection followed by its shutdown") {
     client.testInitializeAndShutdown()
   }
 
@@ -65,9 +70,10 @@ class MockClientSuite extends FunSuite {
   test("Running batch tests") {
     client.wrapTest(
       session => {
-        client.resolveProject(session)
-        client.targetsCompileSuccessfully(session)
-        client.cleanCacheSuccessfully(session)
+        client
+          .resolveProject(session)
+          .map(_ => client.targetsCompileSuccessfully(session))
+          .flatMap(_ => client.cleanCacheSuccessfully(session))
       }
     )
   }

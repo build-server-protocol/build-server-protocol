@@ -215,14 +215,13 @@ class TestClient(
         )
         session.connection.server.onBuildInitialized()
       })
-
   }
 
   private def testShutdown(session: MockSession, cleanup: () => Unit): Future[Unit] = {
     session.connection.server
       .buildShutdown()
       .toScala
-      .map((_) => {
+      .map(_ => {
         val failedRequest =
           Await
             .ready(session.connection.server.workspaceBuildTargets().toScala, timeoutDuration)
