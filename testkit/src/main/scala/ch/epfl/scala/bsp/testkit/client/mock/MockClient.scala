@@ -53,7 +53,7 @@ class MockClient extends BuildClient {
             promise.success(value)
             timer.cancel()
           case None =>
-            durationLeft = durationLeft.-(interval)
+            durationLeft = durationLeft - interval
             if(durationLeft.toSeconds <= 0) {
               promise.failure(new Throwable("No notification found"))
               timer.cancel()

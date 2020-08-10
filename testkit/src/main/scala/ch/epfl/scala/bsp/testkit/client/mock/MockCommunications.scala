@@ -2,9 +2,9 @@ package ch.epfl.scala.bsp.testkit.client.mock
 
 import java.io.File
 
-import ch.epfl.scala.bsp.testkit.client.{TestClient, mock}
+import ch.epfl.scala.bsp.testkit.client.TestClient
 import ch.epfl.scala.bsp4j.{BspConnectionDetails, BuildClientCapabilities, InitializeBuildParams}
-import com.google.gson.{Gson, JsonArray, JsonObject}
+import com.google.gson.{Gson, JsonObject}
 
 import scala.io.Source
 import scala.jdk.CollectionConverters._
@@ -13,13 +13,12 @@ import scala.util.{Failure, Try}
 private class MockCommunications(
     details: BspConnectionDetails,
     workspace: File,
-    compilerOutput: File,
-    capabilities: BuildClientCapabilities
+    capabilities: BuildClientCapabilities,
+    properties: Map[String, String]
 ) {
   private def createInitializeBuildParams(): InitializeBuildParams = {
     val dataJson = new JsonObject
-    dataJson.addProperty("clientClassesRootDir", compilerOutput.toURI.toString)
-    dataJson.add("supportedScalaVersions", new JsonArray())
+    properties.foreach(property => dataJson.addProperty(property._1, property._2))
 
     val initializeBuildParams =
       new InitializeBuildParams("Mock-Client", "0.0", "2.0", workspace.toURI.toString, capabilities)
@@ -77,12 +76,12 @@ object MockCommunications {
 
   def connect(
       workspace: File,
-      compilerOutput: File,
       capabilities: BuildClientCapabilities,
-      details: BspConnectionDetails
+      details: BspConnectionDetails,
+      properties: Map[String, String]
   ): TestClient = {
     val mockCommunications =
-      new MockCommunications(details, workspace, compilerOutput, capabilities)
+      new MockCommunications(details, workspace, capabilities, properties)
     mockCommunications.connect()
   }
 }

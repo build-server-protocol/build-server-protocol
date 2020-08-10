@@ -6,7 +6,7 @@ import java.util.concurrent.{CompletableFuture, Executors}
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
 
-import scala.annotation.tailrec
+import scala.collection.convert.ImplicitConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.compat.java8.FutureConverters._
@@ -26,30 +26,37 @@ class TestClient(
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
-  private def await[T](future: CompletableFuture[T]): T = {
-    Await.result(future.toScala, timeoutDuration)
+  private def await[T](future: Future[T]): T = {
+    Await.result(future, timeoutDuration)
   }
 
-  def wrapTest(body: MockSession => Unit): Unit = {
+  def wrapTest(body: MockSession => Future[Unit]): Unit = {
     val (out, in, cleanup) = serverBuilder()
     val session: MockSession = new MockSession(in, out, initializeBuildParams, cleanup)
-    testSessionInitialization(session)
+
+    await(testSessionInitialization(session))
     body(session)
-    testShutdown(session, cleanup)
+    await(testShutdown(session, cleanup))
   }
 
-  private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = Future {
-    val result = Await.ready(value.toScala, timeoutDuration).value.get
-    assert(result.isSuccess, "Failed to compile targets that are compilable")
-    result.get
+  private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = {
+    value.toScala.recover {
+      case _ =>
+        throw new RuntimeException("Failed to compile targets that are compilable")
+    }
   }
 
-  private def testIfFailure[T](value: CompletableFuture[T]): Future[Unit] = Future {
-    val compileResult = Await.ready(value.toScala, timeoutDuration).value.get
-    assert(compileResult.isFailure, "Compiled successfully supposedly uncompilable targets")
+  private def testIfFailure[T](value: CompletableFuture[T]): Future[Unit] = {
+    value.toScala
+      .map(_ => {
+        throw new RuntimeException("Compiled successfully supposedly uncompilable targets")
+      })
+      .recover {
+        case _ =>
+      }
   }
 
-  def testInitializeAndShutdown(): Unit = wrapTest(_ => {})
+  def testInitializeAndShutdown(): Unit = wrapTest(_ => Future.unit)
 
   def testResolveProject(): Unit = wrapTest(resolveProject)
 
@@ -80,7 +87,7 @@ class TestClient(
       session: MockSession,
       withTaskNotifications: Boolean,
       targets: java.util.List[BuildTarget]
-  ): Unit = {
+  ): Future[Unit] = Future {
     targetsCompileSuccessfully(targets, session, List.empty)
 
     if (withTaskNotifications) {
@@ -133,13 +140,16 @@ class TestClient(
   private def getAllBuildTargets(
       session: MockSession
   ) =
-    await(session.connection.server.workspaceBuildTargets()).getTargets.asScala
+    await(session.connection.server.workspaceBuildTargets().toScala).getTargets.asScala
 
   def testCompareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): Unit =
     wrapTest(
-      session => compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
+      session => {
+        compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
+        Future.successful()
+      }
     )
 
   def testDependencySourcesResults(
@@ -177,15 +187,15 @@ class TestClient(
       expectedInverseSourcesResult: InverseSourcesResult
   ): Unit =
     wrapTest(session => {
-      val inverseSourcesResult =
-        await(
-          session.connection.server
-            .buildTargetInverseSources(new InverseSourcesParams(textDocument))
-        )
-      assert(
-        inverseSourcesResult == expectedInverseSourcesResult,
-        s"Expected $expectedInverseSourcesResult, got $inverseSourcesResult"
-      )
+      session.connection.server
+        .buildTargetInverseSources(new InverseSourcesParams(textDocument))
+        .toScala
+        .map(inverseSourcesResult => {
+          assert(
+            inverseSourcesResult == expectedInverseSourcesResult,
+            s"Expected $expectedInverseSourcesResult, got $inverseSourcesResult"
+          )
+        })
     })
 
   def testCleanCacheSuccessfully(): Unit =
@@ -193,84 +203,105 @@ class TestClient(
   def testCleanCacheUnsuccessfully(): Unit =
     wrapTest(cleanCacheUnsuccessfully)
 
-  def testSessionInitialization(session: MockSession): Unit = {
-    val initializeBuildResult: InitializeBuildResult = await(
-      session.connection.server.buildInitialize(session.initializeBuildParams)
-    )
+  def testSessionInitialization(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .buildInitialize(session.initializeBuildParams)
+      .toScala
+      .map(initializeBuildResult => {
+        val bspVersion = Try(initializeBuildResult.getBspVersion)
+        assert(
+          bspVersion.isSuccess,
+          s"Was not able to obtain BSP version"
+        )
+        session.connection.server.onBuildInitialized()
+      })
 
-    val bspVersion = Try(initializeBuildResult.getBspVersion)
-    assert(
-      bspVersion.isSuccess,
-      s"Bsp version must be a number, got ${initializeBuildResult.getBspVersion}"
-    )
-    session.connection.server.onBuildInitialized()
   }
 
-  private def testShutdown(session: MockSession, cleanup: () => Unit): Unit = {
-    await(session.connection.server.buildShutdown())
-    val failedRequest =
-      Await
-        .ready(session.connection.server.workspaceBuildTargets().toScala, timeoutDuration)
-        .value
-        .get
-    assert(failedRequest.isFailure, "Server is still accepting requests after shutdown")
-    cleanup()
-    session.cleanup()
+  private def testShutdown(session: MockSession, cleanup: () => Unit): Future[Unit] = {
+    session.connection.server
+      .buildShutdown()
+      .toScala
+      .map((_) => {
+        val failedRequest =
+          Await
+            .ready(session.connection.server.workspaceBuildTargets().toScala, timeoutDuration)
+            .value
+            .get
+        assert(failedRequest.isFailure, "Server is still accepting requests after shutdown")
+        cleanup()
+        session.cleanup()
+      })
   }
 
-  def resolveProject(session: MockSession): Unit = {
-    val targets = await(session.connection.server.workspaceBuildTargets()).getTargets.asScala
-
-    val targetsId = targets.map(_.getId).asJava
-
-    await(session.connection.server.buildTargetSources(new SourcesParams(targetsId)))
-    await(
-      session.connection.server.buildTargetDependencySources(new DependencySourcesParams(targetsId))
-    )
-    await(session.connection.server.buildTargetResources(new ResourcesParams(targetsId)))
+  def resolveProject(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(buildTargets => {
+        val targets = buildTargets.getTargets.asScala
+        val targetsId = targets.map(_.getId).asJava
+        val buildTargetSources =
+          session.connection.server.buildTargetSources(new SourcesParams(targetsId)).toScala
+        val dependencySources =
+          session.connection.server
+            .buildTargetDependencySources(new DependencySourcesParams(targetsId))
+            .toScala
+        val resources =
+          session.connection.server.buildTargetResources(new ResourcesParams(targetsId)).toScala
+        Await.result(
+          Future.sequence(List(buildTargetSources, dependencySources, resources)),
+          timeoutDuration * 3
+        )
+      })
   }
 
-  def targetCapabilities(session: MockSession): Unit = {
-    val targets = await(session.connection.server.workspaceBuildTargets()).getTargets.asScala
+  def targetCapabilities(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(buildTargets => {
+        val targets = buildTargets.getTargets.asScala
+        val (compilableTargets, uncompilableTargets) =
+          targets.partition(_.getCapabilities.getCanCompile)
+        val (runnableTargets, unrunnableTargets) = targets.partition(_.getCapabilities.getCanRun)
+        val (testableTargets, untestableTargets) = targets.partition(_.getCapabilities.getCanTest)
 
-    val (compilableTargets, uncompilableTargets) =
-      targets.partition(_.getCapabilities.getCanCompile)
-    val (runnableTargets, unrunnableTargets) = targets.partition(_.getCapabilities.getCanRun)
-    val (testableTargets, untestableTargets) = targets.partition(_.getCapabilities.getCanTest)
+        val futures = ListBuffer[Future[Any]]()
+        if (compilableTargets.nonEmpty)
+          futures += testIfSuccessful(
+            session.connection.server
+              .buildTargetCompile(new CompileParams(compilableTargets.map(_.getId).asJava))
+          )
 
-    val futures = ListBuffer[Future[Any]]()
-    if (compilableTargets.nonEmpty)
-      futures += testIfSuccessful(
-        session.connection.server
-          .buildTargetCompile(new CompileParams(compilableTargets.map(_.getId).asJava))
-      )
+        if (uncompilableTargets.nonEmpty)
+          futures += testIfFailure(
+            session.connection.server
+              .buildTargetCompile(new CompileParams(uncompilableTargets.map(_.getId).asJava))
+          )
 
-    if (uncompilableTargets.nonEmpty)
-      futures += testIfFailure(
-        session.connection.server
-          .buildTargetCompile(new CompileParams(uncompilableTargets.map(_.getId).asJava))
-      )
+        futures ++= runnableTargets.map(
+          target =>
+            testIfSuccessful(session.connection.server.buildTargetRun(new RunParams(target.getId)))
+        )
+        futures ++= unrunnableTargets.map(
+          target =>
+            testIfFailure(session.connection.server.buildTargetRun(new RunParams(target.getId)))
+        )
 
-    futures ++= runnableTargets.map(
-      target =>
-        testIfSuccessful(session.connection.server.buildTargetRun(new RunParams(target.getId)))
-    )
-    futures ++= unrunnableTargets.map(
-      target => testIfFailure(session.connection.server.buildTargetRun(new RunParams(target.getId)))
-    )
+        if (testableTargets.nonEmpty)
+          futures += testIfSuccessful(
+            session.connection.server
+              .buildTargetTest(new TestParams(testableTargets.map(_.getId).asJava))
+          )
+        if (untestableTargets.nonEmpty)
+          futures += testIfFailure(
+            session.connection.server
+              .buildTargetTest(new TestParams(untestableTargets.map(_.getId).asJava))
+          )
 
-    if (testableTargets.nonEmpty)
-      futures += testIfSuccessful(
-        session.connection.server
-          .buildTargetTest(new TestParams(testableTargets.map(_.getId).asJava))
-      )
-    if (untestableTargets.nonEmpty)
-      futures += testIfFailure(
-        session.connection.server
-          .buildTargetTest(new TestParams(untestableTargets.map(_.getId).asJava))
-      )
-
-    Await.result(Future.sequence(futures), timeoutDuration.*(futures.size))
+        Await.result(Future.sequence(futures), timeoutDuration.*(futures.size))
+      })
   }
 
   private def compileTarget(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -321,7 +352,8 @@ class TestClient(
     val polledNotification = session.client.poll(
       session.client.getDidChangeBuildTarget,
       alreadySentDiagnosticsTimeout,
-      (didChange: DidChangeBuildTarget) => didChange.getChanges.asScala.exists(expectedNotification == _.getKind)
+      (didChange: DidChangeBuildTarget) =>
+        didChange.getChanges.asScala.exists(expectedNotification == _.getKind)
     )
 
     val notification = Await.ready(polledNotification, alreadySentDiagnosticsTimeout).value.get
@@ -329,18 +361,19 @@ class TestClient(
 
   }
 
-  private def targetsCompileUnsuccessfully(session: MockSession): Unit = {
-    val compileResult: CompileResult = Await.result(
-      compileTarget(
-        await(session.connection.server.workspaceBuildTargets()).getTargets.asScala,
-        session
-      ),
-      timeoutDuration
-    )
-    assert(
-      compileResult.getStatusCode != StatusCode.OK,
-      "Targets compiled successfully when they should have failed!"
-    )
+  private def targetsCompileUnsuccessfully(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(targets => {
+        compileTarget(targets.getTargets.asScala, session).map(compileResult => {
+
+          assert(
+            compileResult.getStatusCode != StatusCode.OK,
+            "Targets compiled successfully when they should have failed!"
+          )
+        })
+      })
   }
 
   private def testTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -353,48 +386,61 @@ class TestClient(
   private def targetsTestSuccessfully(
       targets: mutable.Buffer[BuildTarget],
       session: MockSession
-  ): Unit = {
-    val testResult: TestResult =
-      Await.result(testTargets(targets, session), timeoutDuration)
-    assert(testResult.getStatusCode == StatusCode.OK, "Tests to targets failed!")
+  ): Future[Unit] = {
+    testTargets(targets, session).map(testResult => {
+      assert(testResult.getStatusCode == StatusCode.OK, "Tests to targets failed!")
+    })
   }
 
-  def targetsTestUnsuccessfully(session: MockSession): Unit = {
-    val testResult: TestResult = Await.result(
-      testTargets(
-        await(session.connection.server.workspaceBuildTargets()).getTargets.asScala,
-        session
-      ),
-      timeoutDuration
-    )
-    assert(testResult.getStatusCode != StatusCode.OK, "Tests pass when they should have failed!")
+  def targetsTestUnsuccessfully(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(targets => {
+        testTargets(targets.getTargets.asScala, session).map(testResult => {
+          assert(
+            testResult.getStatusCode != StatusCode.OK,
+            "Tests pass when they should have failed!"
+          )
+        })
+      })
   }
 
   private def targetsRunSuccessfully(
       targets: mutable.Buffer[BuildTarget],
       session: MockSession
-  ): Unit = {
-    val runResults = runTargets(targets, session)
+  ): Future[Unit] = {
+    val runResultsFuture = Future.sequence(runTargets(targets, session))
 
-    runResults.foreach(
-      runResult =>
-        assert(runResult.getStatusCode == StatusCode.OK, "Target did not run successfully!")
+    runResultsFuture.map(
+      runResults =>
+        runResults.foreach(runResult => {
+          assert(runResult.getStatusCode == StatusCode.OK, "Target did not run successfully!")
+        })
     )
   }
 
-  private def targetsRunUnsuccessfully(session: MockSession): Unit = {
-    val runResults = runTargets(
-      await(session.connection.server.workspaceBuildTargets()).getTargets.asScala,
-      session
-    )
-
-    runResults.foreach(
-      runResult =>
-        assert(
-          runResult.getStatusCode != StatusCode.OK,
-          "Target ran successfully when it was supposed to fail!"
+  private def targetsRunUnsuccessfully(session: MockSession): Future[Unit] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(targets => {
+        val runResultsFuture = runTargets(
+          targets.getTargets.asScala,
+          session
         )
-    )
+        runResultsFuture.map(
+          runResults =>
+            runResults.map(runResult => {
+              assert(
+                runResult.getStatusCode != StatusCode.OK,
+                "Target ran successfully when it was supposed to fail!"
+              )
+
+            })
+        )
+      })
+
   }
 
   private def runTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -402,26 +448,28 @@ class TestClient(
       .filter(_.getCapabilities.getCanCompile)
       .map(
         target =>
-          Await.result(
-            testIfSuccessful(
-              session.connection.server.buildTargetRun(
-                new RunParams(target.getId)
-              )
-            ),
-            timeoutDuration
+          testIfSuccessful(
+            session.connection.server.buildTargetRun(
+              new RunParams(target.getId)
+            )
           )
       )
 
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
-  ): WorkspaceBuildTargetsResult = {
-    val workspaceBuildTargetsResult = await(session.connection.server.workspaceBuildTargets())
-    assert(
-      workspaceBuildTargetsResult == expectedWorkspaceBuildTargetsResult,
-      s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
-    )
-    workspaceBuildTargetsResult
+  ): Future[WorkspaceBuildTargetsResult] = {
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(workspaceBuildTargetsResult => {
+
+        assert(
+          workspaceBuildTargetsResult == expectedWorkspaceBuildTargetsResult,
+          s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
+        )
+        workspaceBuildTargetsResult
+      })
   }
 
   private def compareResults[T](
@@ -429,14 +477,18 @@ class TestClient(
       expectedResults: T,
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
-  ): Unit = {
-    val targets =
-      compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session).getTargets.asScala
-        .map(_.getId)
-    val result = await(getResults(targets.asJava))
-    assert(
-      expectedResults == result,
-      s"Expected $expectedResults, got $result"
+  ): Future[Unit] = {
+    compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session).flatMap(
+      buildTargets => {
+        val targets = buildTargets.getTargets.asScala
+          .map(_.getId)
+        getResults(targets.asJava).toScala.map(result => {
+          assert(
+            expectedResults == result,
+            s"Expected $expectedResults, got $result"
+          )
+        })
+      }
     )
   }
 
@@ -453,24 +505,33 @@ class TestClient(
     )
   }
 
-  def cleanCacheSuccessfully(session: MockSession): Unit = {
-    val cleanCacheResult: CleanCacheResult = cleanCache(session)
-    assert(cleanCacheResult.getCleaned, "Did not clean cache successfully")
+  def cleanCacheSuccessfully(session: MockSession): Future[Unit] = {
+    cleanCache(session).map(cleanCacheResult => {
+      assert(cleanCacheResult.getCleaned, "Did not clean cache successfully")
+    })
   }
 
-  def cleanCacheUnsuccessfully(session: MockSession): Unit = {
-    val cleanCacheResult: CleanCacheResult = cleanCache(session)
-    assert(!cleanCacheResult.getCleaned, "Cleaned cache successfully, when it should have failed")
+  def cleanCacheUnsuccessfully(session: MockSession): Future[Unit] = {
+    cleanCache(session).map(cleanCacheResult => {
+      assert(!cleanCacheResult.getCleaned, "Cleaned cache successfully, when it should have failed")
+    })
   }
 
   private def cleanCache(session: MockSession) = {
-    val targets = await(session.connection.server.workspaceBuildTargets()).getTargets.asScala
-      .map(_.getId)
-      .asJava
-    val cleanCacheResult = await(
-      session.connection.server.buildTargetCleanCache(new CleanCacheParams(targets))
-    )
-    cleanCacheResult
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(buildTargets => {
+        buildTargets.getTargets.asScala
+          .map(_.getId)
+          .asJava
+      })
+      .flatMap(targets => {
+        session.connection.server
+          .buildTargetCleanCache(new CleanCacheParams(targets))
+          .toScala
+          .map(cleanCacheResult => cleanCacheResult)
+      })
   }
 
   def testDidChangeNotification(
@@ -489,10 +550,9 @@ object TestClient {
 
   def testInitialStructure(
       workspacePath: java.lang.String,
-      compilerOutputDir: java.lang.String
+      customProperties: java.util.Map[String, String]
   ): TestClient = {
     val workspace = new File(workspacePath)
-    val compilerOutput = new File(workspace, compilerOutputDir)
     val (capabilities, connectionFiles) = MockCommunications.prepareSession(workspace)
     val failedConnections = connectionFiles.collect {
       case Failure(x) => x
@@ -502,8 +562,18 @@ object TestClient {
       s"Found configuration files with errors: ${failedConnections.mkString("\n - ", "\n - ", "\n")}"
     )
 
+    assert(
+      connectionFiles.nonEmpty,
+      "No configuration files found"
+    )
+
     val client =
-      MockCommunications.connect(workspace, compilerOutput, capabilities, connectionFiles.head.get)
+      MockCommunications.connect(
+        workspace,
+        capabilities,
+        connectionFiles.head.get,
+        customProperties.toMap
+      )
     client
   }
 
