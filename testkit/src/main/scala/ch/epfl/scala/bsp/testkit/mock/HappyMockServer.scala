@@ -118,7 +118,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val item1: JvmEnvironmentItem = environmentItem(testing = false)
       val result = new JvmRunEnvironmentResult(List(item1).asJava)
-      Left(result)
+      Right(result)
     }
 
   override def jvmTestEnvironment(
@@ -127,7 +127,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val item1: JvmEnvironmentItem = environmentItem(testing = true)
       val result = new JvmTestEnvironmentResult(List(item1).asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetScalacOptions(
@@ -143,7 +143,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item3 =
         new ScalacOptionsItem(targetId3, options, classpath, uriInTarget(targetId3, "out").toString)
       val result = new ScalacOptionsResult(List(item1, item2, item3).asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetScalaTestClasses(
@@ -152,7 +152,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       // TODO return some test classes
       val result = new ScalaTestClassesResult(List.empty.asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetScalaMainClasses(
@@ -161,7 +161,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val list: util.List[String] = List.empty.asJava
       val result = new ScalaMainClassesResult(List.empty.asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildInitialize(
@@ -169,17 +169,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[InitializeBuildResult] = {
     handleBuildInitializeRequest {
       val result = new InitializeBuildResult("BSP Mock Server", "1.0", "2.0", capabilities)
-      Left(result)
+      Right(result)
     }
   }
 
   override def onBuildInitialized(): Unit =
-    handleBuildInitializeRequest { Left(isInitialized.success(Right(()))) }
+    handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
 
   override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
       isShutdown.success(Right())
-      Left("boo")
+      Right("boo")
     }
   }
 
@@ -213,7 +213,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target3.setData(scalaBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] =
@@ -238,7 +238,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val items3 = new SourcesItem(targetId3, List(item3Dir, item31, item32, item33).asJava)
 
       val result = new SourcesResult(List(items1, items2, items3).asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetInverseSources(
@@ -246,7 +246,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[InverseSourcesResult] =
     handleRequest {
       val result = new InverseSourcesResult(List(targetId1, targetId2, targetId3).asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetDependencySources(
@@ -270,14 +270,14 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item3 = new DependencySourcesItem(targetId3, target3Sources)
       val result = new DependencySourcesResult(List(item1, item2, item3).asJava)
 
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetResources(params: ResourcesParams): CompletableFuture[ResourcesResult] =
     handleRequest {
       // TODO provide resources
       val result = new ResourcesResult(List.empty.asJava)
-      Left(result)
+      Right(result)
     }
 
   override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] =
@@ -291,7 +291,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       })
 
       if (uncompilableTargets.nonEmpty)
-        Right(
+        Left(
           new ResponseError(
             ResponseErrorCode.InvalidParams,
             s"Targets ${uncompilableTargets.map(_.getUri)} are not compilable",
@@ -364,7 +364,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
         val result = new CompileResult(StatusCode.OK)
         result.setOriginId(params.getOriginId)
-        Left(result)
+        Right(result)
       }
 
     }
@@ -380,7 +380,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       })
 
       if (errorTargets.nonEmpty)
-        Right(
+        Left(
           new ResponseError(
             ResponseErrorCode.InvalidParams,
             s"Target ${errorTargets.map(_.getUri)} is not compilable",
@@ -392,7 +392,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         // TODO some individual test notifications
         val result = new TestResult(StatusCode.OK)
         result.setOriginId(params.getOriginId)
-        Left(result)
+        Right(result)
       }
     }
 
@@ -401,7 +401,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       compileTargets.get(params.getTarget) match {
         case Some(target) =>
           if (!target.getCapabilities.getCanRun)
-            Right(
+            Left(
               new ResponseError(
                 ResponseErrorCode.InvalidParams,
                 s"Target ${target.getId.getUri} is not compilable",
@@ -419,7 +419,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     // TODO some task notifications
     val result = new RunResult(StatusCode.OK)
     result.setOriginId(params.getOriginId)
-    Left(result)
+    Right(result)
   }
 
   override def buildTargetCleanCache(
@@ -427,11 +427,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[CleanCacheResult] =
     handleRequest {
       val result = new CleanCacheResult("cleaned cache", true)
-      Left(result)
+      Right(result)
     }
 
   private def handleRequest[T](
-      f: => Either[T, ResponseError]
+      f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
     checkShutdown {
       checkInitialize {
@@ -441,20 +441,16 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   }
 
   private def checkInitialize[T](f: => CompletableFuture[T]): CompletableFuture[T] = {
-    if (isInitialized.isCompleted)
-      f
-    else {
-      Try(Await.result(isInitialized.future, 1.seconds)) match {
-        case Failure(_) =>
-          completeExceptionally(
-            new ResponseError(
-              ResponseErrorCode.serverNotInitialized,
-              "Cannot handle requests before receiving the initialize request",
-              null
-            )
+    Try(Await.result(isInitialized.future, 1.seconds)) match {
+      case Failure(_) =>
+        completeExceptionally(
+          new ResponseError(
+            ResponseErrorCode.serverNotInitialized,
+            "Cannot handle requests before receiving the initialize request",
+            null
           )
-        case Success(_) => f
-      }
+        )
+      case Success(_) => f
     }
   }
 
@@ -471,26 +467,19 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       f
   }
 
-  private def getValue[T](f: => Either[T, ResponseError]): CompletableFuture[T] = {
-    val future = Future(f)
-    future
-      .map {
-        case Left(value)  => value
-        case Right(error) => throw new ResponseErrorException(error)
-      }
-      .recover {
-        case exception =>
-          throw new ResponseErrorException(
-            new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null)
-          )
+  private def getValue[T](f: => Either[ResponseError, T]): CompletableFuture[T] = {
+    val handled = Try(f).toEither.left
+      .map(exception => new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null))
+      .joinRight
 
-      }
-      .toJava
-      .toCompletableFuture
+    handled match {
+      case Right(value)  => CompletableFuture.completedFuture(value)
+      case Left(error) => completeExceptionally(error)
+    }
   }
 
   private def handleBuildInitializeRequest[T](
-      f: => Either[T, ResponseError]
+      f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
     checkShutdown {
       getValue(f)
@@ -498,14 +487,14 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   }
 
   private def handleBuildShutdownRequest[T](
-      f: => Either[T, ResponseError]
+      f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
     checkInitialize {
       getValue(f)
     }
   }
 
-  private def completeExceptionally[T](error: ResponseError) = {
+  private def completeExceptionally[T](error: ResponseError): CompletableFuture[T] = {
     val future = new CompletableFuture[T]()
     future.completeExceptionally(
       new ResponseErrorException(
