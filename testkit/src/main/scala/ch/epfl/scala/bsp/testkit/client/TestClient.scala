@@ -366,14 +366,15 @@ class TestClient(
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .map(targets => {
-        compileTarget(targets.getTargets.asScala, session).map(compileResult => {
+      .flatMap(targets => {
+        compileTarget(targets.getTargets.asScala, session)
+      })
+      .map(compileResult => {
 
-          assert(
-            compileResult.getStatusCode != StatusCode.OK,
-            "Targets compiled successfully when they should have failed!"
-          )
-        })
+        assert(
+          compileResult.getStatusCode != StatusCode.OK,
+          "Targets compiled successfully when they should have failed!"
+        )
       })
   }
 
@@ -393,68 +394,57 @@ class TestClient(
     })
   }
 
-  def targetsTestUnsuccessfully(session: MockSession): Future[Unit] = {
+  def targetsTestUnsuccessfully(session: MockSession): Future[Unit] =
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .map(targets => {
-        testTargets(targets.getTargets.asScala, session).map(testResult => {
-          assert(
-            testResult.getStatusCode != StatusCode.OK,
-            "Tests pass when they should have failed!"
-          )
-        })
-      })
-  }
+      .flatMap { targets =>
+        testTargets(targets.getTargets.asScala, session)
+      }
+      .map { testResult =>
+        assert(
+          testResult.getStatusCode != StatusCode.OK,
+          "Tests pass when they should have failed!"
+        )
+      }
 
   private def targetsRunSuccessfully(
       targets: mutable.Buffer[BuildTarget],
       session: MockSession
-  ): Future[Unit] = {
-    val runResultsFuture = Future.sequence(runTargets(targets, session))
+  ): Future[Unit] =
+    runTargets(targets, session).map(targetResults => {
+      assert(
+        targetResults.forall(_.getStatusCode == StatusCode.OK),
+        "Target did not run successfully!"
+      )
+    })
 
-    runResultsFuture.map(
-      runResults =>
-        runResults.foreach(runResult => {
-          assert(runResult.getStatusCode == StatusCode.OK, "Target did not run successfully!")
-        })
-    )
-  }
-
-  private def targetsRunUnsuccessfully(session: MockSession): Future[Unit] = {
+  private def targetsRunUnsuccessfully(session: MockSession): Future[Unit] =
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .map(targets => {
-        val runResultsFuture = runTargets(
+      .flatMap(targets => {
+        runTargets(
           targets.getTargets.asScala,
           session
         )
-        runResultsFuture.map(
-          runResults =>
-            runResults.map(runResult => {
-              assert(
-                runResult.getStatusCode != StatusCode.OK,
-                "Target ran successfully when it was supposed to fail!"
-              )
-
-            })
-        )
-      })
-
-  }
+      }.map(targetResults => {
+        assert(targetResults.forall(_.getStatusCode != StatusCode.OK), "Targets were able to run!")
+      }))
 
   private def runTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
-    targets
-      .filter(_.getCapabilities.getCanCompile)
-      .map(
-        target =>
-          testIfSuccessful(
-            session.connection.server.buildTargetRun(
-              new RunParams(target.getId)
+    Future.sequence(
+      targets
+        .filter(_.getCapabilities.getCanCompile)
+        .map(
+          target =>
+            testIfSuccessful(
+              session.connection.server.buildTargetRun(
+                new RunParams(target.getId)
+              )
             )
-          )
-      )
+        )
+    )
 
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
@@ -464,7 +454,6 @@ class TestClient(
       .workspaceBuildTargets()
       .toScala
       .map(workspaceBuildTargetsResult => {
-
         assert(
           workspaceBuildTargetsResult == expectedWorkspaceBuildTargetsResult,
           s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
@@ -518,7 +507,7 @@ class TestClient(
     })
   }
 
-  private def cleanCache(session: MockSession) = {
+  private def cleanCache(session: MockSession): Future[CleanCacheResult] = {
     session.connection.server
       .workspaceBuildTargets()
       .toScala
@@ -531,7 +520,6 @@ class TestClient(
         session.connection.server
           .buildTargetCleanCache(new CleanCacheParams(targets))
           .toScala
-          .map(cleanCacheResult => cleanCacheResult)
       })
   }
 
