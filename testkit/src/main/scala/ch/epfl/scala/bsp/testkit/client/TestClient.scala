@@ -26,7 +26,7 @@ class TestClient(
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
-  def wrapTest(body: MockSession => Future[Unit]): Unit = {
+  def wrapTest(body: MockSession => Future[Any]): Unit = {
     val (out, in, cleanup) = serverBuilder()
     val session: MockSession = new MockSession(in, out, initializeBuildParams, cleanup)
 
@@ -241,7 +241,7 @@ class TestClient(
       }
   }
 
-  def resolveProject(session: MockSession): Future[Unit] = {
+  def resolveProject(session: MockSession): Future[Any] = {
     session.connection.server
       .workspaceBuildTargets()
       .toScala
@@ -258,10 +258,9 @@ class TestClient(
           session.connection.server.buildTargetResources(new ResourcesParams(targetsId)).toScala
         Future.sequence(List(buildTargetSources, dependencySources, resources))
       })
-      .map(_ => Unit)
   }
 
-  def targetCapabilities(session: MockSession): Future[Unit] = {
+  def targetCapabilities(session: MockSession): Future[Any] = {
     session.connection.server
       .workspaceBuildTargets()
       .toScala
@@ -307,7 +306,6 @@ class TestClient(
 
         Future.sequence(futures)
       })
-      .map(_ => Unit)
   }
 
   private def compileTarget(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -321,7 +319,7 @@ class TestClient(
       targets: java.util.List[BuildTarget],
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic]
-  ): Future[Unit] = {
+  ): Future[Any] = {
     compileTarget(targets.asScala, session).flatMap(result => {
       assert(result.getStatusCode == StatusCode.OK, "Targets failed to compile!")
       Future
@@ -330,14 +328,13 @@ class TestClient(
             expectedDiagnostic => obtainExpectedDiagnostic(expectedDiagnostic, session)
           )
         )
-        .map(_ => Unit)
     })
   }
 
   def targetsCompileSuccessfully(
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic] = List.empty
-  ): Future[Unit] =
+  ): Future[Any] =
     getAllBuildTargets(session).flatMap(targets => {
       targetsCompileSuccessfully(targets.asJava, session, compileDiagnostics)
     })
@@ -541,8 +538,8 @@ class TestClient(
   def testDidChangeNotification(
       buildTargetEventKind: BuildTargetEventKind,
       session: MockSession
-  ): Future[Unit] =
-    obtainExpectedNotification(buildTargetEventKind, session).map(_ => Unit)
+  ): Future[DidChangeBuildTarget] =
+    obtainExpectedNotification(buildTargetEventKind, session)
 }
 
 object TestClient {
