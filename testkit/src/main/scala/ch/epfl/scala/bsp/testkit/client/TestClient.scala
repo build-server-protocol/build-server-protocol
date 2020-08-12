@@ -319,7 +319,7 @@ class TestClient(
       targets: java.util.List[BuildTarget],
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic]
-  ): Future[Any] = {
+  ): Future[List[PublishDiagnosticsParams]] = {
     compileTarget(targets.asScala, session).flatMap(result => {
       assert(result.getStatusCode == StatusCode.OK, "Targets failed to compile!")
       Future
