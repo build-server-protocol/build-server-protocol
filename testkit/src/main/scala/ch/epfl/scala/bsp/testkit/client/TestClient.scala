@@ -26,17 +26,14 @@ class TestClient(
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
-  private def await[T](future: Future[T]): T = {
-    Await.result(future, timeoutDuration)
-  }
-
   def wrapTest(body: MockSession => Future[Unit]): Unit = {
     val (out, in, cleanup) = serverBuilder()
     val session: MockSession = new MockSession(in, out, initializeBuildParams, cleanup)
 
-    await(testSessionInitialization(session))
-    await(body(session))
-    await(testShutdown(session, cleanup))
+    val test = testSessionInitialization(session)
+      .flatMap(_ => body(session))
+      .flatMap(_ => testShutdown(session, cleanup))
+    Await.result(test, timeoutDuration * 3)
   }
 
   private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = {
@@ -76,38 +73,37 @@ class TestClient(
   ): Unit =
     wrapTest(
       session =>
-        testTargetsCompileSuccessfully(
-          session,
-          withTaskNotifications,
-          getAllBuildTargets(session).asJava
-        )
+        getAllBuildTargets(session)
+          .flatMap(targets => {
+            testTargetsCompileSuccessfully(
+              session,
+              withTaskNotifications,
+              targets.asJava
+            )
+          })
     )
 
   def testTargetsCompileSuccessfully(
       session: MockSession,
       withTaskNotifications: Boolean,
       targets: java.util.List[BuildTarget]
-  ): Future[Unit] = Future {
-    targetsCompileSuccessfully(targets, session, List.empty)
+  ): Future[Unit] =
+    targetsCompileSuccessfully(targets, session, List.empty).map(_ => {
+      if (withTaskNotifications) {
+        val taskStartNotification = session.client.poll(
+          session.client.getTaskStart,
+          alreadySentDiagnosticsTimeout,
+          (_: TaskStartParams) => true
+        )
+        val taskEndNotification = session.client.poll(
+          session.client.getTaskStart,
+          alreadySentDiagnosticsTimeout,
+          (_: TaskStartParams) => true
+        )
 
-    if (withTaskNotifications) {
-      val taskStartNotification = session.client.poll(
-        session.client.getTaskStart,
-        alreadySentDiagnosticsTimeout,
-        (_: TaskStartParams) => true
-      )
-      val taskEndNotification = session.client.poll(
-        session.client.getTaskStart,
-        alreadySentDiagnosticsTimeout,
-        (_: TaskStartParams) => true
-      )
-
-      val taskStart = Await.ready(taskStartNotification, alreadySentDiagnosticsTimeout).value.get
-      val taskEnd = Await.ready(taskEndNotification, alreadySentDiagnosticsTimeout).value.get
-      assert(taskStart.isSuccess, "No task start notification sent")
-      assert(taskEnd.isSuccess, "No task end notification sent")
-    }
-  }
+        Future.sequence(List(taskStartNotification, taskEndNotification))
+      }
+    })
 
   def testTargetsTestSuccessfully(targets: java.util.List[BuildTarget]): Unit = {
     wrapTest(
@@ -117,7 +113,10 @@ class TestClient(
 
   def testTargetsTestSuccessfully(): Unit = {
     wrapTest(
-      session => targetsTestSuccessfully(getAllBuildTargets(session), session)
+      session =>
+        getAllBuildTargets(session).flatMap(targets => {
+          targetsTestSuccessfully(targets, session)
+        })
     )
   }
 
@@ -134,13 +133,19 @@ class TestClient(
 
   def testTargetsRunSuccessfully(): Unit =
     wrapTest(
-      session => targetsRunSuccessfully(getAllBuildTargets(session), session)
+      session =>
+        getAllBuildTargets(session).flatMap(targets => {
+          targetsRunSuccessfully(targets, session)
+        })
     )
 
   private def getAllBuildTargets(
       session: MockSession
-  ) =
-    await(session.connection.server.workspaceBuildTargets().toScala).getTargets.asScala
+  ): Future[mutable.Buffer[BuildTarget]] =
+    session.connection.server
+      .workspaceBuildTargets()
+      .toScala
+      .map(targetsResult => targetsResult.getTargets.asScala)
 
   def testCompareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
@@ -221,23 +226,26 @@ class TestClient(
     session.connection.server
       .buildShutdown()
       .toScala
+      .flatMap(_ => {
+        session.connection.server.workspaceBuildTargets().toScala
+      })
       .map(_ => {
-        val failedRequest =
-          Await
-            .ready(session.connection.server.workspaceBuildTargets().toScala, timeoutDuration)
-            .value
-            .get
-        assert(failedRequest.isFailure, "Server is still accepting requests after shutdown")
         cleanup()
         session.cleanup()
+        throw new RuntimeException("Server is still accepting requests after shutdown")
       })
+      .recover {
+        case _ =>
+          cleanup()
+          session.cleanup()
+      }
   }
 
   def resolveProject(session: MockSession): Future[Unit] = {
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .map(buildTargets => {
+      .flatMap(buildTargets => {
         val targets = buildTargets.getTargets.asScala
         val targetsId = targets.map(_.getId).asJava
         val buildTargetSources =
@@ -248,18 +256,16 @@ class TestClient(
             .toScala
         val resources =
           session.connection.server.buildTargetResources(new ResourcesParams(targetsId)).toScala
-        Await.result(
-          Future.sequence(List(buildTargetSources, dependencySources, resources)),
-          timeoutDuration * 3
-        )
+        Future.sequence(List(buildTargetSources, dependencySources, resources))
       })
+      .map(_ => Unit)
   }
 
   def targetCapabilities(session: MockSession): Future[Unit] = {
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .map(buildTargets => {
+      .flatMap(buildTargets => {
         val targets = buildTargets.getTargets.asScala
         val (compilableTargets, uncompilableTargets) =
           targets.partition(_.getCapabilities.getCanCompile)
@@ -299,8 +305,9 @@ class TestClient(
               .buildTargetTest(new TestParams(untestableTargets.map(_.getId).asJava))
           )
 
-        Await.result(Future.sequence(futures), timeoutDuration.*(futures.size))
+        Future.sequence(futures)
       })
+      .map(_ => Unit)
   }
 
   private def compileTarget(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -314,50 +321,48 @@ class TestClient(
       targets: java.util.List[BuildTarget],
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic]
-  ): Unit = {
-    val compileResult: CompileResult =
-      Await.result(compileTarget(targets.asScala, session), timeoutDuration)
-    assert(compileResult.getStatusCode == StatusCode.OK, "Targets failed to compile!")
-    compileDiagnostics.foreach(
-      expectedDiagnostic => obtainExpectedDiagnostic(expectedDiagnostic, session)
-    )
+  ): Future[Unit] = {
+    compileTarget(targets.asScala, session).flatMap(result => {
+      assert(result.getStatusCode == StatusCode.OK, "Targets failed to compile!")
+      Future
+        .sequence(
+          compileDiagnostics.map(
+            expectedDiagnostic => obtainExpectedDiagnostic(expectedDiagnostic, session)
+          )
+        )
+        .map(_ => Unit)
+    })
   }
 
   def targetsCompileSuccessfully(
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic] = List.empty
-  ): Unit =
-    targetsCompileSuccessfully(getAllBuildTargets(session).asJava, session, compileDiagnostics)
+  ): Future[Unit] =
+    getAllBuildTargets(session).flatMap(targets => {
+      targetsCompileSuccessfully(targets.asJava, session, compileDiagnostics)
+    })
 
   final private def obtainExpectedDiagnostic(
       expectedDiagnostic: ExpectedDiagnostic,
       session: MockSession
-  ): Unit = {
-    val polledDiagnostic = session.client.poll(
+  ): Future[PublishDiagnosticsParams] =
+    session.client.poll(
       session.client.getPublishDiagnostics,
       alreadySentDiagnosticsTimeout,
       (diagnostics: PublishDiagnosticsParams) =>
         diagnostics.getDiagnostics.asScala.exists(expectedDiagnostic.isEqual)
     )
 
-    val diagnostic = Await.ready(polledDiagnostic, alreadySentDiagnosticsTimeout).value.get
-    assert(diagnostic.isSuccess, "Did not find expected diagnostic!")
-  }
-
   final private def obtainExpectedNotification(
       expectedNotification: BuildTargetEventKind,
       session: MockSession
-  ): Unit = {
-    val polledNotification = session.client.poll(
+  ): Future[DidChangeBuildTarget] = {
+    session.client.poll(
       session.client.getDidChangeBuildTarget,
       alreadySentDiagnosticsTimeout,
       (didChange: DidChangeBuildTarget) =>
         didChange.getChanges.asScala.exists(expectedNotification == _.getKind)
     )
-
-    val notification = Await.ready(polledNotification, alreadySentDiagnosticsTimeout).value.get
-    assert(notification.isSuccess, "Did not find expected notification!")
-
   }
 
   private def targetsCompileUnsuccessfully(session: MockSession): Future[Unit] = {
@@ -536,8 +541,8 @@ class TestClient(
   def testDidChangeNotification(
       buildTargetEventKind: BuildTargetEventKind,
       session: MockSession
-  ): Unit =
-    obtainExpectedNotification(buildTargetEventKind, session)
+  ): Future[Unit] =
+    obtainExpectedNotification(buildTargetEventKind, session).map(_ => Unit)
 }
 
 object TestClient {
