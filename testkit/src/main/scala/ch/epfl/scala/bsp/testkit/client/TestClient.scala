@@ -12,7 +12,13 @@ import scala.collection.mutable.ListBuffer
 import scala.compat.java8.DurationConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.duration.{Duration, DurationInt}
-import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
+import scala.concurrent.{
+  Await,
+  ExecutionContext,
+  ExecutionContextExecutor,
+  Future,
+  TimeoutException
+}
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
@@ -34,7 +40,14 @@ class TestClient(
     val test = testSessionInitialization(session)
       .flatMap(_ => body(session))
       .flatMap(_ => testShutdown(session, cleanup))
-    Await.result(test, timeoutDuration * 3)
+    try {
+      Await.result(test, timeoutDuration * 3)
+    } catch {
+      case _: TimeoutException =>
+        throw new RuntimeException("Failed to complete in time!")
+      case e: Throwable =>
+        throw new RuntimeException(s"Test case has failed! Got error: ${e.getCause.getMessage}")
+    }
   }
 
   private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = {
@@ -153,10 +166,7 @@ class TestClient(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): Unit =
     wrapTest(
-      session => {
-        compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
-        Future.successful()
-      }
+      session => compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
     )
 
   def testDependencySourcesResults(
@@ -169,6 +179,15 @@ class TestClient(
           targets =>
             session.connection.server
               .buildTargetDependencySources(new DependencySourcesParams(targets)),
+          (results: DependencySourcesResult) =>
+            expectedWorkspaceDependencySourcesResult.getItems.forall { item =>
+              results.getItems.exists(
+                resultItem =>
+                  resultItem.getTarget == item.getTarget && item.getSources.forall { source =>
+                    resultItem.getSources.exists(_.contains(source))
+                  }
+              )
+            },
           expectedWorkspaceDependencySourcesResult,
           expectedWorkspaceBuildTargetsResult,
           session
@@ -183,6 +202,15 @@ class TestClient(
       session =>
         compareResults(
           targets => session.connection.server.buildTargetResources(new ResourcesParams(targets)),
+          (results: ResourcesResult) =>
+            expectedResourcesResult.getItems.forall { item =>
+              results.getItems.exists(
+                resultItem =>
+                  resultItem.getTarget == item.getTarget && item.getResources.forall { source =>
+                    resultItem.getResources.exists(_.contains(source))
+                  }
+              )
+            },
           expectedResourcesResult,
           expectedWorkspaceBuildTargetsResult,
           session
@@ -233,12 +261,12 @@ class TestClient(
       })
       .transformWith {
         case Success(_) =>
-          cleanup()
-          session.cleanup()
+          session.connection.server.onBuildExit()
+          session.connection.cancelable()
           throw new RuntimeException("Server is still accepting requests after shutdown")
         case Failure(_) =>
-          cleanup()
-          session.cleanup()
+          session.connection.server.onBuildExit()
+          session.connection.cancelable()
           Future.unit
       }
   }
@@ -450,46 +478,89 @@ class TestClient(
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
-  ): Future[WorkspaceBuildTargetsResult] = {
+  ): Future[WorkspaceBuildTargetsResult] =
     session.connection.server
       .workspaceBuildTargets()
       .toScala
       .map(workspaceBuildTargetsResult => {
+        val testTargets =
+          compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
         assert(
-          workspaceBuildTargetsResult == expectedWorkspaceBuildTargetsResult,
+          testTargets,
           s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
         )
         workspaceBuildTargetsResult
       })
-  }
+
+  private def compareBuildTargets(
+      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+      workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
+  ) =
+    expectedWorkspaceBuildTargetsResult.getTargets.forall { target =>
+      workspaceBuildTargetsResult.getTargets.exists(
+        foundTarget =>
+          foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.`getDependencies` == target.getDependencies
+            && foundTarget.getCapabilities == target.getCapabilities
+      )
+    }
 
   private def compareResults[T](
       getResults: java.util.List[BuildTargetIdentifier] => CompletableFuture[T],
+      condition: T => Boolean,
       expectedResults: T,
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
   ): Future[Unit] = {
-    compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session).flatMap(
-      buildTargets => {
+    compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
+      .flatMap(buildTargets => {
         val targets = buildTargets.getTargets.asScala
           .map(_.getId)
-        getResults(targets.asJava).toScala.map(result => {
-          assert(
-            expectedResults == result,
-            s"Expected $expectedResults, got $result"
-          )
-        })
-      }
-    )
+        getResults(targets.asJava).toScala
+      })
+      .map(result => {
+        assert(
+          condition(result),
+          s"Expected $expectedResults, got $result"
+        )
+      })
   }
+
+  def testSourcesResults(
+      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+      expectedWorkspaceSourcesResult: SourcesResult
+  ): Unit =
+    wrapTest(
+      session =>
+        testSourcesResults(
+          expectedWorkspaceBuildTargetsResult,
+          expectedWorkspaceSourcesResult,
+          session
+        )
+    )
 
   def testSourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceSourcesResult: SourcesResult,
       session: MockSession
-  ): Unit = {
+  ): Future[Unit] = {
     compareResults(
       targets => session.connection.server.buildTargetSources(new SourcesParams(targets)),
+      (results: SourcesResult) =>
+        expectedWorkspaceSourcesResult.getItems.forall { sourceItem =>
+          {
+            results.getItems.exists(
+              resultItem =>
+                resultItem.getTarget == sourceItem.getTarget && sourceItem.getSources.forall(
+                  sourceFile =>
+                    resultItem.getSources.exists(
+                      resultSource =>
+                        resultSource.getUri
+                          .contains(sourceFile.getUri) && resultSource.getKind == sourceFile.getKind && resultSource.getGenerated == sourceFile.getGenerated
+                    )
+                )
+            )
+          }
+        },
       expectedWorkspaceSourcesResult,
       expectedWorkspaceBuildTargetsResult,
       session

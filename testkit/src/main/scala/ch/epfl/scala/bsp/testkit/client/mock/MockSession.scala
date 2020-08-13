@@ -1,7 +1,7 @@
 package ch.epfl.scala.bsp.testkit.client.mock
 
 import java.io.{InputStream, OutputStream}
-import java.util.concurrent.Executors
+import java.util.concurrent.{ExecutorService, Executors}
 
 import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams}
 import org.eclipse.lsp4j.jsonrpc.Launcher
@@ -13,6 +13,7 @@ case class MockSession(
     cleanup: () => Unit
 ) {
 
+  private val executors: ExecutorService = Executors.newCachedThreadPool()
   val client = new MockClient()
   val connection: MockConnection = startServerConnection
 
@@ -20,7 +21,7 @@ case class MockSession(
 
     val launcher = new Launcher.Builder[BuildServer]()
       .setRemoteInterface(classOf[BuildServer])
-      .setExecutorService(Executors.newCachedThreadPool())
+      .setExecutorService(executors)
       .setInput(in)
       .setOutput(out)
       .setLocalService(client)
@@ -38,6 +39,7 @@ case class MockSession(
       out.close()
       listening.cancel(true)
       cleanup()
+      executors.shutdown()
     }
 
     MockConnection(server, cancelable)
