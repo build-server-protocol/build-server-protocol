@@ -9,11 +9,12 @@ import ch.epfl.scala.bsp4j._
 import scala.collection.convert.ImplicitConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.compat.java8.DurationConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 import scala.jdk.CollectionConverters._
-import scala.util.{Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 class TestClient(
     serverBuilder: () => (OutputStream, InputStream, () => Unit),
@@ -45,11 +46,12 @@ class TestClient(
 
   private def testIfFailure[T](value: CompletableFuture[T]): Future[Unit] = {
     value.toScala
-      .map(_ => {
-        throw new RuntimeException("Compiled successfully supposedly uncompilable targets")
-      })
-      .recover {
-        case _ =>
+      .transformWith {
+        case Failure(_) =>
+          Future.unit
+        case Success(_) =>
+          throw new RuntimeException("Compiled successfully supposedly uncompilable targets")
+
       }
   }
 
@@ -229,15 +231,15 @@ class TestClient(
       .flatMap(_ => {
         session.connection.server.workspaceBuildTargets().toScala
       })
-      .map(_ => {
-        cleanup()
-        session.cleanup()
-        throw new RuntimeException("Server is still accepting requests after shutdown")
-      })
-      .recover {
-        case _ =>
+      .transformWith {
+        case Success(_) =>
           cleanup()
           session.cleanup()
+          throw new RuntimeException("Server is still accepting requests after shutdown")
+        case Failure(_) =>
+          cleanup()
+          session.cleanup()
+          Future.unit
       }
   }
 
@@ -366,16 +368,15 @@ class TestClient(
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .flatMap(targets => {
+      .flatMap { targets =>
         compileTarget(targets.getTargets.asScala, session)
-      })
-      .map(compileResult => {
-
+      }
+      .map { compileResult =>
         assert(
           compileResult.getStatusCode != StatusCode.OK,
           "Targets compiled successfully when they should have failed!"
         )
-      })
+      }
   }
 
   private def testTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
@@ -539,7 +540,8 @@ object TestClient {
 
   def testInitialStructure(
       workspacePath: java.lang.String,
-      customProperties: java.util.Map[String, String]
+      customProperties: java.util.Map[String, String],
+      timeoutDuration: java.time.Duration
   ): TestClient = {
     val workspace = new File(workspacePath)
     val (capabilities, connectionFiles) = MockCommunications.prepareSession(workspace)
@@ -561,10 +563,16 @@ object TestClient {
         workspace,
         capabilities,
         connectionFiles.head.get,
-        customProperties.toMap
+        customProperties.toMap,
+        timeoutDuration
       )
     client
   }
+
+  def testInitialStructure(
+      workspacePath: java.lang.String,
+      customProperties: java.util.Map[String, String]
+  ): TestClient = testInitialStructure(workspacePath, customProperties, 30.seconds.toJava)
 
   def apply(
       serverBuilder: () => (OutputStream, InputStream, () => Unit),
@@ -574,6 +582,6 @@ object TestClient {
   def apply(
       serverBuilder: () => (OutputStream, InputStream, () => Unit),
       initializeBuildParams: InitializeBuildParams,
-      timeoutDuration: Duration
-  ): TestClient = new TestClient(serverBuilder, initializeBuildParams, timeoutDuration)
+      timeoutDuration: java.time.Duration
+  ): TestClient = new TestClient(serverBuilder, initializeBuildParams, timeoutDuration.toScala)
 }

@@ -14,7 +14,8 @@ private class MockCommunications(
     details: BspConnectionDetails,
     workspace: File,
     capabilities: BuildClientCapabilities,
-    properties: Map[String, String]
+    properties: Map[String, String],
+    timeoutDuration: java.time.Duration
 ) {
   private def createInitializeBuildParams(): InitializeBuildParams = {
     val dataJson = new JsonObject
@@ -27,9 +28,7 @@ private class MockCommunications(
     initializeBuildParams
   }
 
-  private def connect(): TestClient = {
-
-
+  private def connect(): TestClient =
     TestClient(
       () => {
         val process =
@@ -40,8 +39,8 @@ private class MockCommunications(
         (process.getOutputStream, process.getInputStream, cleanup)
       },
       createInitializeBuildParams(),
+      timeoutDuration
     )
-  }
 }
 
 object MockCommunications {
@@ -78,10 +77,11 @@ object MockCommunications {
       workspace: File,
       capabilities: BuildClientCapabilities,
       details: BspConnectionDetails,
-      properties: Map[String, String]
+      properties: Map[String, String],
+      timeoutDuration: java.time.Duration
   ): TestClient = {
     val mockCommunications =
-      new MockCommunications(details, workspace, capabilities, properties)
+      new MockCommunications(details, workspace, capabilities, properties, timeoutDuration)
     mockCommunications.connect()
   }
 }
