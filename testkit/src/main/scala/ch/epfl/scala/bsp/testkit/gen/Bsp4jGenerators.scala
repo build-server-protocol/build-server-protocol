@@ -631,6 +631,21 @@ trait Bsp4jGenerators {
     items <- genJvmEnvironmentItem.list
   } yield new JvmRunEnvironmentResult(items)
 
+  lazy val genJavacOptionsItem: Gen[JavacOptionsItem] = for {
+    target <- genBuildTargetIdentifier
+    options <- arbitrary[String].list
+    classpath <- genFileUriString.list
+    classDirectory <- genFileUriString
+  } yield new JavacOptionsItem(target, options, classpath, classDirectory)
+
+  lazy val genJavacOptionsParams: Gen[JavacOptionsParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new JavacOptionsParams(targets)
+
+  lazy val genJavacOptionsResult: Gen[JavacOptionsResult] = for {
+    items <- genJavacOptionsItem.list
+  } yield new JavacOptionsResult(items)
+
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)

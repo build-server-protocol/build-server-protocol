@@ -423,4 +423,19 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
       assertSerializationRoundtrip[bsp4j.JvmEnvironmentItem, bsp4s.JvmEnvironmentItem](a)
     }
   }
+  test("JavacOptionsItem") {
+    forAll { a: bsp4j.JavacOptionsItem =>
+      assertSerializationRoundtrip[bsp4j.JavacOptionsItem, bsp4s.JavacOptionsItem](a)
+    }
+  }
+  test("JavacOptionsParams") {
+    forAll { a: bsp4j.JavacOptionsParams =>
+      assertSerializationRoundtrip[bsp4j.JavacOptionsParams, bsp4s.JavacOptionsParams](a)
+    }
+  }
+  test("JavacOptionsResult") {
+    forAll { a: bsp4j.JavacOptionsResult =>
+      assertSerializationRoundtrip[bsp4j.JavacOptionsResult, bsp4s.JavacOptionsResult](a)
+    }
+  }
 }

@@ -86,6 +86,9 @@ trait Bsp4jArbitrary {
   implicit val arbTestJvmEnvironmentResult: Arbitrary[JvmTestEnvironmentResult] = Arbitrary(genJvmTestEnvironmentResult)
   implicit val arbRunJvmEnvironmentParams: Arbitrary[JvmRunEnvironmentParams] = Arbitrary(genJvmRunEnvironmentParams)
   implicit val arbRunJvmEnvironmentResult: Arbitrary[JvmRunEnvironmentResult] = Arbitrary(genJvmRunEnvironmentResult)
+  implicit val arbJavacOptionsItem: Arbitrary[JavacOptionsItem] = Arbitrary(genJavacOptionsItem)
+  implicit val arbJavacOptionsParams: Arbitrary[JavacOptionsParams] = Arbitrary(genJavacOptionsParams)
+  implicit val arbJavacOptionsResult: Arbitrary[JavacOptionsResult] = Arbitrary(genJavacOptionsResult)
 }
 
 object Bsp4jArbitrary extends Bsp4jArbitrary
