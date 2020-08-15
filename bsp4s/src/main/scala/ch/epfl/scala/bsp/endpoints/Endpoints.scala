@@ -51,6 +51,11 @@ trait BuildTarget {
   object jvmRunEnvironment
     extends Endpoint[JvmRunEnvironmentParams, JvmRunEnvironmentResult](
       "buildTarget/jvmRunEnvironment")
+  // Java specific endpoints
+  object javacOptions
+    extends Endpoint[JavacOptionsParams, JavacOptionsResult](
+      "buildTarget/javacOptions"
+    )
 }
 
 object Workspace extends Workspace

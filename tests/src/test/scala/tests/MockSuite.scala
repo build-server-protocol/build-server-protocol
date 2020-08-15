@@ -14,7 +14,7 @@ import org.scalatest.FunSuite
 
 import scala.collection.JavaConverters._
 
-trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer
+trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer
 
 class HappyMockSuite extends FunSuite {
 
@@ -83,6 +83,21 @@ class HappyMockSuite extends FunSuite {
       val classpath = item.getClasspath.asScala
       assert(classpath.nonEmpty)
       assert(classpath.exists(_.contains("scala-library")))
+    }
+  }
+
+  def assertJavacOptions(server: MockBuildServer): Unit = {
+    val javacOptionsParams = new JavacOptionsParams(getBuildTargetIds(server))
+    val javacOptionsResult = server.buildTargetJavacOptions(javacOptionsParams).get
+    val javacOptionsItems = javacOptionsResult.getItems.asScala
+    javacOptionsItems.foreach { item =>
+      val options = item.getOptions.asScala
+      assert(options.isEmpty)
+      val uri = item.getTarget.getUri
+      assert(uri.nonEmpty)
+      val classpath = item.getClasspath.asScala
+      assert(classpath.nonEmpty)
+      assert(classpath.exists(_.contains("guava")))
     }
   }
 
@@ -202,6 +217,7 @@ class HappyMockSuite extends FunSuite {
   def assertServerEndpoints(server: MockBuildServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
+    assertJavacOptions(server)
     assertJvmTestEnvironment(server)
     assertJvmRunEnvironment(server)
     assertSources(server, client)

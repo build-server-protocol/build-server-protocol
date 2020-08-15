@@ -145,6 +145,23 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
+  override def buildTargetJavacOptions(
+      params: JavacOptionsParams
+  ): CompletableFuture[JavacOptionsResult] = {
+    handleRequest {
+      val options = List.empty[String].asJava
+      val classpath = List("guava.jar").asJava
+      val item1 =
+        new JavacOptionsItem(targetId1, options, classpath, uriInTarget(targetId1, "out").toString)
+      val item2 =
+        new JavacOptionsItem(targetId2, options, classpath, uriInTarget(targetId2, "out").toString)
+      val item3 =
+        new JavacOptionsItem(targetId3, options, classpath, uriInTarget(targetId3, "out").toString)
+      val result = new JavacOptionsResult(List(item1, item2, item3).asJava)
+      Right(result)
+    }
+  }
+
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =

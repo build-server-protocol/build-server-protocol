@@ -689,3 +689,18 @@ object DebugSessionParamsDataKind {
 }
 
 @JsonCodec final case class DebugSessionAddress(uri: String)
+
+@JsonCodec final case class JavacOptionsParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+@JsonCodec final case class JavacOptionsItem(
+    target: BuildTargetIdentifier,
+    options: List[String],
+    classpath: List[Uri],
+    classDirectory: Uri
+)
+
+@JsonCodec final case class JavacOptionsResult(
+    items: List[JavacOptionsItem]
+)
