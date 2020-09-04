@@ -44,9 +44,9 @@ class TestClient(
       Await.result(test, timeoutDuration * 3)
     } catch {
       case _: TimeoutException =>
-        throw new RuntimeException("Failed to complete in time!")
+        throw new OutOfTimeException()
       case e: Throwable =>
-        throw new RuntimeException(s"Test case has failed! Got error: ${e.getCause.getMessage}")
+        throw new TestFailedException(e)
     }
   }
 
@@ -600,6 +600,20 @@ class TestClient(
       session: MockSession
   ): Future[DidChangeBuildTarget] =
     obtainExpectedNotification(buildTargetEventKind, session)
+}
+
+class TestFailedException(e: Throwable) extends Throwable(e){
+  override def printStackTrace(): Unit = {
+    println("Test case failed!")
+    e.printStackTrace()
+  }
+}
+
+class OutOfTimeException extends Throwable{
+  override def printStackTrace(): Unit = {
+    println("Test failed to complete in time!")
+    super.printStackTrace()
+  }
 }
 
 object TestClient {
