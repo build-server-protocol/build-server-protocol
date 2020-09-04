@@ -16,8 +16,8 @@ the `dataKind` field contains "jvm".
 
 ```ts
 export interface JvmBuildTarget {
-  /** Uri representing absolute path to java home
-   * For example: file:///usr/lib/jvm/java-8-openjdk-amd64/jre */
+  /** Uri representing absolute path to jdk
+   * For example: file:///usr/lib/jvm/java-8-openjdk-amd64 */
   javaHome?: Uri;
 
   /** The java version this target is supposed to use.
