@@ -55,6 +55,7 @@ object BuildTargetTag {
   val IntegrationTest = "integration-test"
   val Benchmark = "benchmark"
   val NoIDE = "no-ide"
+  val Manual = "manual"
 }
 
 @JsonCodec final case class BuildTarget(

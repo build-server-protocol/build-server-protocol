@@ -7,4 +7,5 @@ public class BuildTargetTag {
     public static final String INTEGRATION_TEST = "integration-test";
     public static final String BENCHMARK = "benchmark";
     public static final String NO_IDE = "no-ide";
+    public static final String MANUAL = "manual";
 }

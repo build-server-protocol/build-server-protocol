@@ -101,7 +101,8 @@ trait Bsp4jGenerators {
     BuildTargetTag.INTEGRATION_TEST,
     BuildTargetTag.LIBRARY,
     BuildTargetTag.NO_IDE,
-    BuildTargetTag.TEST
+    BuildTargetTag.TEST,
+    BuildTargetTag.MANUAL
   )
 
   lazy val genCleanCacheParams: Gen[CleanCacheParams] = for {

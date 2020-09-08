@@ -184,6 +184,11 @@ export namespace BuildTargetTag {
 
   /** Target should be ignored by IDEs. */
   export const NoIDE = "no-ide";
+
+  /** Actions on the target such as build and test should only be invoked manually
+   * and explicitly. For example, triggering a build on all targets in the workspace
+   * should by default not include this target. */
+  export const Manual = "manual";
 }
 
 export interface BuildTargetCapabilities {
