@@ -31,6 +31,7 @@ trait Bsp4jGenerators {
     dependencySourcesProvider <- BoxedGen.boolean.nullable
     resourcesProvider <- BoxedGen.boolean.nullable
     buildTargetChangedProvider <- BoxedGen.boolean.nullable
+    canReload <- BoxedGen.boolean.nullable
   } yield {
     val capabilities = new BuildServerCapabilities()
     capabilities.setCompileProvider(compileProvider)
@@ -39,6 +40,7 @@ trait Bsp4jGenerators {
     capabilities.setDependencySourcesProvider(dependencySourcesProvider)
     capabilities.setResourcesProvider(resourcesProvider)
     capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)
+    capabilities.setCanReload(canReload)
     capabilities
   }
 

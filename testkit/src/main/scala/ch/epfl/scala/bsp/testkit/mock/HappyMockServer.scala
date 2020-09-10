@@ -53,6 +53,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setBuildTargetChangedProvider(true)
     c.setJvmRunEnvironmentProvider(true)
     c.setJvmTestEnvironmentProvider(true)
+    c.setCanReload(true)
     c
   }
 
@@ -191,6 +192,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
   override def onBuildInitialized(): Unit =
     handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
+
+  override def buildReload(): CompletableFuture[AnyRef] =
+    CompletableFuture.completedFuture(null)
 
   override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
@@ -515,4 +519,5 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     )
     future
   }
+
 }

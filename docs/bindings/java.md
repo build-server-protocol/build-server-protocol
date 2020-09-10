@@ -160,6 +160,7 @@ import org.eclipse.lsp4j.jsonrpc.Launcher
 class MyBuildServer extends BuildServer {
   var client: BuildClient = null // will be updated later
   def buildInitialize(params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = ???
+  def buildReload(): CompletableFuture[Object] = ???
   def buildShutdown(): CompletableFuture[Object] = ???
   def buildTargetCleanCache(params: CleanCacheParams): CompletableFuture[CleanCacheResult] = ???
   def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] = ???

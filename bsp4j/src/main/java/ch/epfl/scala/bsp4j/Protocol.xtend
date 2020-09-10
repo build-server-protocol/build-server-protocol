@@ -5,7 +5,6 @@ import com.google.gson.annotations.JsonAdapter
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
-import org.eclipse.lsp4j.util.Preconditions
 
 @JsonRpcData
 class TextDocumentIdentifier {
@@ -127,6 +126,7 @@ class BuildServerCapabilities {
   Boolean buildTargetChangedProvider
   Boolean jvmRunEnvironmentProvider
   Boolean jvmTestEnvironmentProvider
+  Boolean canReload
 }
 
 @JsonRpcData

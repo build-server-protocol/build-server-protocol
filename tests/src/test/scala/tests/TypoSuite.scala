@@ -78,11 +78,16 @@ class TypoSuite extends FunSuite {
         capabilities.setDependencySourcesProvider(true)
         capabilities.setResourcesProvider(true)
         capabilities.setBuildTargetChangedProvider(true)
+        capabilities.setCanReload(true)
         new InitializeBuildResult("test-server", "1.0.0", "2.0.0-M1", capabilities)
       }
     }
     override def onBuildInitialized(): Unit =
       ()
+
+    override def buildReload(): CompletableFuture[Object] =
+      CompletableFuture.completedFuture(null)
+
     override def buildShutdown(): CompletableFuture[Object] = {
       CompletableFuture.completedFuture(null)
     }
@@ -193,6 +198,7 @@ class TypoSuite extends FunSuite {
     Services
       .empty(scribe.Logger.root)
       .forwardRequest(s.Build.initialize)
+      .forwardRequest(s.Build.reload)
       .forwardRequest(s.Build.shutdown)
       .forwardRequest(s.Workspace.buildTargets)
       .forwardRequest(s.BuildTarget.sources)
@@ -321,7 +327,6 @@ class TypoSuite extends FunSuite {
     val java1Listening = java1Launcher.startListening()
     val java2Listening = java2Launcher.startListening()
     val scala1 = java1Launcher.getRemoteProxy
-    val scala2 = java2Launcher.getRemoteProxy
 
     val allResources = new OpenCancelable()
       .add(() => inJava1.close())
@@ -370,6 +375,7 @@ class TypoSuite extends FunSuite {
         test <- scala1
           .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
+        _ <- scala1.buildReload().toScala
         _ <- scala1.buildShutdown().toScala
         workspace <- scala1.workspaceBuildTargets().toScala
       } yield {

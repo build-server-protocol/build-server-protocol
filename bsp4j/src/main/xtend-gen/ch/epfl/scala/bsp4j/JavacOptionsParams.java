@@ -1,11 +1,11 @@
 package ch.epfl.scala.bsp4j;
 
+import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
-
-import java.util.List;
 
 @SuppressWarnings("all")
 public class JavacOptionsParams {

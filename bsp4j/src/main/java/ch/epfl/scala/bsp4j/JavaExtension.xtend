@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j
 
 import java.util.List
-import com.google.gson.annotations.SerializedName
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
 
