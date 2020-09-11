@@ -4,33 +4,31 @@ title: Build Server Protocol
 sidebar_label: Specification
 ---
 
-This document describes version 2.0 (WIP) of the build server protocol.
+This document is the specification of of the Build Server Protocol (BSP).
 
 Edits to this specification can be made via a pull request against this markdown
-document.
+document, see "edit" button at the top of this page on the website.
 
 ## Motivation
 
-The problem this document aims to address is the multiplied effort required to
-integrate between available language servers/editors and build tools. Currently,
-every language server must implement a custom integration for each supported
-build tool in order to extract compilation information such as classpaths,
-source directories or compiler diagnostics. Likewise, new build tools are
-expected to integrate with all available IDEs. The growing number of language
-servers and build tools in the wider programming community means tooling
+The goal of BSP is to reduce the effort required by tooling developers to
+integrate between available IDEs and build tools. Currently, every IDE must
+implement a custom integration for each supported build tool in order to extract
+information such as source directory layouts or compiler options. Likewise, new
+build tools are expected to integrate with all available IDEs. The growing
+number of IDEs and build tools in the wider programming community means tooling
 developers spend a lot of time working on these integrations.
 
-The Build Server Protocol aims to define common functionality that both build
-tools (servers) and language servers/editors (clients) understand. This common
-functionality enables tooling developers to provide their end users the best
-developer experience while supporting build tools and language servers with less
-effort and time.
+The Build Server Protocol defines common functionality that both build tools
+(servers) and IDEs (clients) understand. This common functionality enables
+tooling developers to provide their end users the best developer experience
+while supporting build tools and language servers with less effort and time.
 
 ## Background
 
 The Build Server Protocol takes inspiration from the Language Server Protocol
-(LSP). Unlike in the Language Server Protocol, the language server or editor is
-referred to as the “client” and a build tool such as sbt/pants/gradle/bazel is
+(LSP). Unlike in the Language Server Protocol, the language server or IDE is
+referred to as the “client” and a build tool such as sbt/Gradle/Bazel is
 referred to as the “server”.
 
 The best way to read this document is by considering it as a wishlist from the
@@ -38,6 +36,16 @@ perspective of an IDE developer.
 
 The code listings in this document are written using TypeScript syntax. Every
 data strucuture in this document has a direct translation to JSON and Protobuf.
+
+## Relationship with LSP
+
+BSP can be used together with LSP in the same architecture. The diagram below
+illustrates an example how an LSP server can also act as a BSP client.
+
+![](https://i.imgur.com/q4KEas9.png)
+
+BSP can also be used without LSP. In the example above, IntelliJ acts as a BSP
+client even if IntelliJ does not use LSP.
 
 ## Status
 
@@ -187,7 +195,7 @@ export namespace BuildTargetTag {
 
   /** Actions on the target such as build and test should only be invoked manually
    * and explicitly. For example, triggering a build on all targets in the workspace
-   * should by default not include this target. 
+   * should by default not include this target.
    *
    * The original motivation to add the "manual" tag comes from a similar functionality
    * that exists in Bazel, where targets with this tag have to be specified explicitly
@@ -678,10 +686,10 @@ export interface SourcesItem {
   /** The text documents or and directories that belong to this build target. */
   sources: SourceItem[];
   /** The root directories from where source files should be relativized.
-   * 
+   *
    * Example: ["file://Users/name/dev/metals/src/main/scala"]
    */
-  roots?: Uri[]; 
+  roots?: Uri[];
 }
 
 export interface SourceItem {

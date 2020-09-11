@@ -12,8 +12,9 @@ jobs:
       - uses: olafurpg/setup-gpg@v2
       - run: git fetch --unshallow
       - name: Publish ${{ github.ref }}
-        run: sbt ci-release
+        run: sbt ci-release docs/docusaurusPublishGhpages
         env:
+          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
