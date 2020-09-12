@@ -4,7 +4,7 @@ title: Build Server Protocol
 sidebar_label: Specification
 ---
 
-This document is the specification of of the Build Server Protocol (BSP).
+This document is the specification of the Build Server Protocol (BSP).
 
 Edits to this specification can be made via a pull request against this markdown
 document, see "edit" button at the top of this page on the website.
