@@ -53,6 +53,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setBuildTargetChangedProvider(true)
     c.setJvmRunEnvironmentProvider(true)
     c.setJvmTestEnvironmentProvider(true)
+    c.setCanReload(true)
     c
   }
 
@@ -231,6 +232,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
     }
+
+  override def workspaceReload(): CompletableFuture[AnyRef] =
+    CompletableFuture.completedFuture(null)
 
   override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] =
     handleRequest {
@@ -515,4 +519,5 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     )
     future
   }
+
 }

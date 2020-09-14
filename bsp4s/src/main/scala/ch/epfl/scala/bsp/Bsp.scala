@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp
 
 import java.net.{URI, URISyntaxException}
 
-import ch.epfl.scala.bsp.BuildTargetEventKind.{Changed, Created, Deleted}
 import io.circe.Decoder.Result
-import io.circe.derivation.JsonCodec
 import io.circe._
+import io.circe.derivation.JsonCodec
 
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
@@ -92,6 +91,8 @@ object BuildTargetDataKind {
     data: Option[Json]
 )
 
+@JsonCodec final case class Reload()
+
 @JsonCodec final case class Shutdown()
 
 @JsonCodec final case class Exit()
@@ -117,7 +118,8 @@ object BuildTargetDataKind {
     resourcesProvider: Option[Boolean],
     buildTargetChangedProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
-    jvmRunEnvironmentProvider: Option[Boolean]
+    jvmRunEnvironmentProvider: Option[Boolean],
+    canReload: Option[Boolean],
 )
 
 @JsonCodec final case class InitializeBuildResult(

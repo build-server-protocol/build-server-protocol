@@ -380,6 +380,9 @@ export interface BuildServerCapabilities {
    * via method buildTarget/resources */
   resourcesProvider?: Boolean;
 
+  /** Reloading the build state through workspace/reload is supported */
+  canReload?: Boolean
+
   /** The server sends notifications to the client on build
    * target change events via buildTarget/didChange */
   buildTargetChangedProvider?: Boolean;
@@ -610,6 +613,24 @@ export interface WorkspaceBuildTargetsResult {
 }
 ```
 
+### Reload request
+
+The `reload` request is sent from the client to instruct the build server to reload 
+the build configuration. This request should be supported by build tools that keep 
+their state in memory. If the `reload` request returns with an error, it's expected 
+that other requests respond with the previously known "good" state.
+
+Request:
+
+- method: `workspace/reload`
+- params: `null`
+
+Response:
+
+- result: `null`
+- error: code and message in case an error happens during reload. For example, 
+when the build configuration is invalid.
+
 ### Build Target Changed Notification
 
 The build target changed notification is sent from the server to the client to
@@ -655,6 +676,7 @@ export namespace BuildTargetEventKind {
 
 The `BuildTargetEventKind` information can be used by clients to trigger
 reindexing or update the user interface with the new information.
+
 
 ### Build Target Sources Request
 

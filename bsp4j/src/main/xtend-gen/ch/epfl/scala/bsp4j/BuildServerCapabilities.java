@@ -26,6 +26,8 @@ public class BuildServerCapabilities {
   
   private Boolean jvmTestEnvironmentProvider;
   
+  private Boolean canReload;
+  
   @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;
@@ -107,6 +109,15 @@ public class BuildServerCapabilities {
     this.jvmTestEnvironmentProvider = jvmTestEnvironmentProvider;
   }
   
+  @Pure
+  public Boolean getCanReload() {
+    return this.canReload;
+  }
+  
+  public void setCanReload(final Boolean canReload) {
+    this.canReload = canReload;
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -120,6 +131,7 @@ public class BuildServerCapabilities {
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
     b.add("jvmRunEnvironmentProvider", this.jvmRunEnvironmentProvider);
     b.add("jvmTestEnvironmentProvider", this.jvmTestEnvironmentProvider);
+    b.add("canReload", this.canReload);
     return b.toString();
   }
   
@@ -178,6 +190,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.jvmTestEnvironmentProvider.equals(other.jvmTestEnvironmentProvider))
       return false;
+    if (this.canReload == null) {
+      if (other.canReload != null)
+        return false;
+    } else if (!this.canReload.equals(other.canReload))
+      return false;
     return true;
   }
   
@@ -194,6 +211,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
     result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
     result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
-    return prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
+    result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
+    return prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
   }
 }

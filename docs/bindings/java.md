@@ -172,6 +172,7 @@ class MyBuildServer extends BuildServer {
   def onBuildExit(): Unit = ???
   def onBuildInitialized(): Unit = ???
   def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = ???
+  def workspaceReload(): CompletableFuture[Object] = ???
 }
 val localServer = new MyBuildServer()
 ```

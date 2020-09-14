@@ -63,6 +63,7 @@ trait Workspace {
   object buildTargets
       extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargetsResult](
         "workspace/buildTargets")
+  object reload extends Endpoint[Reload, Unit]("workspace/reload")
 }
 
 object DebugSession extends DebugSession
