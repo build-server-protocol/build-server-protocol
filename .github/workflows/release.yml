@@ -3,6 +3,7 @@ on:
   push:
     branches: [master]
     tags: ["*"]
+  workflow_dispatch:
 jobs:
   publish:
     runs-on: ubuntu-latest
