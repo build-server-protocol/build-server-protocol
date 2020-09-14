@@ -85,7 +85,7 @@ class TypoSuite extends FunSuite {
     override def onBuildInitialized(): Unit =
       ()
 
-    override def buildReload(): CompletableFuture[Object] =
+    override def workspaceReload(): CompletableFuture[Object] =
       CompletableFuture.completedFuture(null)
 
     override def buildShutdown(): CompletableFuture[Object] = {
@@ -198,9 +198,9 @@ class TypoSuite extends FunSuite {
     Services
       .empty(scribe.Logger.root)
       .forwardRequest(s.Build.initialize)
-      .forwardRequest(s.Build.reload)
       .forwardRequest(s.Build.shutdown)
       .forwardRequest(s.Workspace.buildTargets)
+      .forwardRequest(s.Workspace.reload)
       .forwardRequest(s.BuildTarget.sources)
       .forwardRequest(s.BuildTarget.inverseSources)
       .forwardRequest(s.BuildTarget.resources)
@@ -375,7 +375,7 @@ class TypoSuite extends FunSuite {
         test <- scala1
           .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
-        _ <- scala1.buildReload().toScala
+        _ <- scala1.workspaceReload().toScala
         _ <- scala1.buildShutdown().toScala
         workspace <- scala1.workspaceBuildTargets().toScala
       } yield {

@@ -8,7 +8,6 @@ trait Build {
   object initialize
       extends Endpoint[InitializeBuildParams, InitializeBuildResult]("build/initialize")
   object initialized extends Endpoint[InitializedBuildParams, Unit]("build/initialized")
-  object reload extends Endpoint[Reload, Unit]("build/reload")
   object exit extends Endpoint[Exit, Unit]("build/exit")
   object shutdown extends Endpoint[Shutdown, Unit]("build/shutdown")
   object showMessage extends Endpoint[ShowMessageParams, Unit]("build/showMessage")
@@ -64,6 +63,7 @@ trait Workspace {
   object buildTargets
       extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargetsResult](
         "workspace/buildTargets")
+  object reload extends Endpoint[Reload, Unit]("workspace/reload")
 }
 
 object DebugSession extends DebugSession

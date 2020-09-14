@@ -13,9 +13,6 @@ public interface BuildServer {
     @JsonNotification("build/initialized")
     void onBuildInitialized();
 
-    @JsonRequest("build/reload")
-    CompletableFuture<Object> buildReload();
-
     @JsonRequest("build/shutdown")
     CompletableFuture<Object> buildShutdown();
 
@@ -24,6 +21,9 @@ public interface BuildServer {
 
     @JsonRequest("workspace/buildTargets")
     CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
+
+    @JsonRequest("workspace/reload")
+    CompletableFuture<Object> workspaceReload();
 
     @JsonRequest("buildTarget/sources")
     CompletableFuture<SourcesResult> buildTargetSources(SourcesParams params);

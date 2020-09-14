@@ -372,7 +372,7 @@ export interface BuildServerCapabilities {
    * via method buildTarget/resources */
   resourcesProvider?: Boolean;
 
-  /** Reloading the build state through build/reload is supported */
+  /** Reloading the build state through workspace/reload is supported */
   canReload?: Boolean
 
   /** The server sends notifications to the client on build
@@ -413,24 +413,6 @@ Notification:
 ```ts
 export interface InitializedBuildParams {}
 ```
-
-### Reload request
-
-The `reload` request instructs the build server to reload the build configuration.
-This request should be supported by build tools that keep their state in memory.
-If the `reload` request returns with an error, it's expected that other requests 
-respond with the previously known "good" state.
-
-Request:
-
-- method: `build/reload`
-- params: `null`
-
-Response:
-
-- result: `null`
-- error: code and message in case an error happens during reload. For example, 
-when the build configuration is invalid
 
 #### Shutdown Build Request
 
@@ -622,6 +604,24 @@ export interface WorkspaceBuildTargetsResult {
   targets: BuildTarget[];
 }
 ```
+
+### Reload request
+
+The `reload` request is sent from the client to instruct the build server to reload 
+the build configuration. This request should be supported by build tools that keep 
+their state in memory. If the `reload` request returns with an error, it's expected 
+that other requests respond with the previously known "good" state.
+
+Request:
+
+- method: `workspace/reload`
+- params: `null`
+
+Response:
+
+- result: `null`
+- error: code and message in case an error happens during reload. For example, 
+when the build configuration is invalid.
 
 ### Build Target Changed Notification
 

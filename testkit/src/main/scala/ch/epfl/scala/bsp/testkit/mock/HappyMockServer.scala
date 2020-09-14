@@ -193,9 +193,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   override def onBuildInitialized(): Unit =
     handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
 
-  override def buildReload(): CompletableFuture[AnyRef] =
-    CompletableFuture.completedFuture(null)
-
   override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
       isShutdown.success(Right())
@@ -235,6 +232,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
     }
+
+  override def workspaceReload(): CompletableFuture[AnyRef] =
+    CompletableFuture.completedFuture(null)
 
   override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] =
     handleRequest {
