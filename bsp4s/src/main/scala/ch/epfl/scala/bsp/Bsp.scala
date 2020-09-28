@@ -689,6 +689,7 @@ object TestParamsDataKind {
 object DebugSessionParamsDataKind {
   val ScalaMainClass = "scala-main-class"
   val ScalaTestSuites = "scala-test-suites"
+  val ScalaAttachRemote = "scala-attach-remote"
 }
 
 @JsonCodec final case class DebugSessionAddress(uri: String)
