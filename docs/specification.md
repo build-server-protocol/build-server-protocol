@@ -61,9 +61,10 @@ Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
 [scalameta/metals](https://github.com/scalameta/metals), are currently working
 or planning to work on a BSP integrations.
 
-On the server side, [bloop](https://github.com/scalacenter/bloop) is the first
-server to implement BSP. There are ongoing efforts to implement BSP in popular
-build tools like [sbt](https://github.com/sbt/sbt/issues/3890).
+On the server side, [Bloop](https://github.com/scalacenter/bloop) was the first
+server to implement BSP. sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+and Mill ships with a [contrib.bsp module](https://www.lihaoyi.com/mill/page/contrib-modules.html#bsp---build-server-protocol)
+since [0.5.2](https://github.com/lihaoyi/mill/pull/664).
 
 We're looking for third parties that implement BSP natively in other build tools
 like Gradle, Bazel or Pants.
@@ -106,8 +107,8 @@ binary artifact). Using vocabulary of other build tools:
     configuration in each will have 4 build targets.
   - a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main
     and test configurations will have 8 build targets.
-- pants: a pants target corresponds one-to-one with a BuildTarget
-- bazel: a bazel target corresponds one-to-one with a BuildTarget
+- Pants: a pants target corresponds one-to-one with a BuildTarget
+- Bazel: a bazel target corresponds one-to-one with a BuildTarget
 
 The general idea is that the BuildTarget data structure should contain only
 information that is is fast or cheap to compute.
