@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v7
+      - uses: olafurpg/setup-scala@v10
       - name: generate xtend
         run: sbt bsp4j/xtend
-      - name: generate mdoc
-        run: sbt mdoc
+      - name: generate docs site
+        run: sbt docs/docusaurusCreateSite
       - name: compile
         run: sbt +compile +package
       - name: test

@@ -12,6 +12,14 @@
       "bsp": {
         "title": "bsp"
       },
+      "extensions/java": {
+        "title": "Java Extension",
+        "sidebar_label": "Java"
+      },
+      "extensions/jvm": {
+        "title": "JVM Extension",
+        "sidebar_label": "JVM"
+      },
       "extensions/sbt": {
         "title": "sbt Extension",
         "sidebar_label": "sbt"
