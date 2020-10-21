@@ -9,6 +9,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaTestParams {
   private List<ScalaTestClassesItem> testClasses;
   
+  private List<String> jvmOptions;
+  
   @Pure
   public List<ScalaTestClassesItem> getTestClasses() {
     return this.testClasses;
@@ -18,11 +20,21 @@ public class ScalaTestParams {
     this.testClasses = testClasses;
   }
   
+  @Pure
+  public List<String> getJvmOptions() {
+    return this.jvmOptions;
+  }
+  
+  public void setJvmOptions(final List<String> jvmOptions) {
+    this.jvmOptions = jvmOptions;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("testClasses", this.testClasses);
+    b.add("jvmOptions", this.jvmOptions);
     return b.toString();
   }
   
@@ -41,12 +53,20 @@ public class ScalaTestParams {
         return false;
     } else if (!this.testClasses.equals(other.testClasses))
       return false;
+    if (this.jvmOptions == null) {
+      if (other.jvmOptions != null)
+        return false;
+    } else if (!this.jvmOptions.equals(other.jvmOptions))
+      return false;
     return true;
   }
   
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.testClasses== null) ? 0 : this.testClasses.hashCode());
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((this.testClasses== null) ? 0 : this.testClasses.hashCode());
+    return prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
   }
 }

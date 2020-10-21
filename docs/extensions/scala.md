@@ -54,6 +54,9 @@ export interface ScalaTestParams {
   /** The test classes to be run in this test execution.
    * It is the result of `buildTarget/scalaTestClasses`. */
   testClasses?: ScalaTestClassesItem[];
+
+  /** The jvm options to run tests with. */
+  jvmOptions?: String[];
 }
 ```
 
