@@ -55,10 +55,8 @@ export interface ScalaTestParams {
    * It is the result of `buildTarget/scalaTestClasses`. */
   testClasses?: ScalaTestClassesItem[];
 
-  /** The JVM options to run tests with. In case JVM options 
-   * are also defined on the build server, they should be 
-   * concatenated with these. In case they conflict, these 
-   * should take precedence.
+  /** The JVM options to run tests with. Shouldn't be 
+   * extended or overwritten by the build server.
    */
   jvmOptions?: String[];
 }
