@@ -577,6 +577,7 @@ object ScalaPlatform {
 
 @JsonCodec final case class ScalaTestParams(
     testClasses: Option[List[ScalaTestClassesItem]],
+    jvmOptions: Option[List[String]],
 )
 
 object TestParamsDataKind {

@@ -408,9 +408,11 @@ trait Bsp4jGenerators {
 
   lazy val genScalaTestParams: Gen[ScalaTestParams] = for {
     items <- genScalaTestClassesItem.list.nullable
+    jvmOptions <- arbitrary[String].list.nullable
   } yield {
     val params = new ScalaTestParams()
     params.setTestClasses(items)
+    params.setJvmOptions(jvmOptions)
     params
   }
 
