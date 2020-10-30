@@ -89,7 +89,7 @@ const Features = props => {
     {
       title: "What is BSP?",
       content:
-        "The Build Server Protocol (BSP) provides endpoints for IDE and build tools to communicate about compiling, running, testing and debugging programs.",
+        "The Build Server Protocol (BSP) provides endpoints for IDEs and build tools to communicate about directory layouts, external dependencies, compile, test and more.",
       image: "https://i.imgur.com/LmRwu2s.png",
       imageAlign: "left"
     },
