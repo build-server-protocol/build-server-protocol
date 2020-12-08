@@ -111,7 +111,7 @@ binary artifact). Using vocabulary of other build tools:
 - Bazel: a bazel target corresponds one-to-one with a BuildTarget
 
 The general idea is that the BuildTarget data structure should contain only
-information that is is fast or cheap to compute.
+information that is fast or cheap to compute.
 
 ```ts
 export interface BuildTarget {
