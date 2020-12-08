@@ -1,1 +1,1 @@
-# ![bsp logo](resources/buildServerProtocol64.svg) Build Server Protocol
+### ![bsp logo](resources/buildServerProtocol64.svg) Build Server Protocol
