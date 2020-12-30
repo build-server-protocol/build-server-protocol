@@ -597,7 +597,6 @@ class TestClient(
   ): Future[DidChangeBuildTarget] =
     obtainExpectedNotification(buildTargetEventKind, session)
 
-
   def testJvmRunEnvironment(
       params: JvmRunEnvironmentParams,
       expectedResult: JvmRunEnvironmentResult,
@@ -616,6 +615,12 @@ class TestClient(
       })
   }
 
+  def testJvmRunEnvironment(
+      params: JvmRunEnvironmentParams,
+      expectedResult: JvmRunEnvironmentResult
+  ): Unit =
+    wrapTest(session => testJvmRunEnvironment(params, expectedResult, session))
+
   def testJvmTestEnvironment(
       params: JvmTestEnvironmentParams,
       expectedResult: JvmTestEnvironmentResult,
@@ -633,6 +638,12 @@ class TestClient(
         )
       })
   }
+
+  def testJvmTestEnvironment(
+      params: JvmTestEnvironmentParams,
+      expectedResult: JvmTestEnvironmentResult
+  ): Unit =
+    wrapTest(session => testJvmTestEnvironment(params, expectedResult, session))
 
   private def testJvmItems(
       items: java.util.List[JvmEnvironmentItem],
@@ -691,6 +702,12 @@ class TestClient(
       })
   }
 
+  def testJavacOptions(
+      params: JavacOptionsParams,
+      expectedResult: JavacOptionsResult
+  ): Unit =
+    wrapTest(session => testJavacOptions(params, expectedResult, session))
+
   def testScalacOptions(
       params: ScalacOptionsParams,
       expectedResult: ScalacOptionsResult,
@@ -716,6 +733,12 @@ class TestClient(
       })
   }
 
+  def testScalacOptions(
+      params: ScalacOptionsParams,
+      expectedResult: ScalacOptionsResult
+  ): Unit =
+    wrapTest(session => testScalacOptions(params, expectedResult, session))
+
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult,
@@ -736,13 +759,19 @@ class TestClient(
       })
   }
 
-  def testScalaTestClasses(
+  def testScalaMainClasses(
       params: ScalaMainClassesParams,
-      expectedResult: ScalaMainClassesResult,
+      expectedResult: ScalaMainClassesResult
+  ): Unit =
+    wrapTest(session => testScalaMainClasses(params, expectedResult, session))
+
+  def testScalaTestClasses(
+      params: ScalaTestClassesParams,
+      expectedResult: ScalaTestClassesResult,
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetScalaMainClasses(params)
+      .buildTargetScalaTestClasses(params)
       .toScala
       .map(result => result.getItems)
       .map(testItems => {
@@ -751,10 +780,16 @@ class TestClient(
         } && expectedResult.getItems.size() == testItems.size()
         assert(
           itemsTest,
-          s"Scalac Main CLasses Items did not match! Expected: $expectedResult, got $testItems"
+          s"Scalac Test CLasses Items did not match! Expected: $expectedResult, got $testItems"
         )
       })
   }
+
+  def testScalaTestClasses(
+      params: ScalaTestClassesParams,
+      expectedResult: ScalaTestClassesResult
+  ): Unit =
+    wrapTest(session => testScalaTestClasses(params, expectedResult, session))
 }
 
 class TestFailedException(e: Throwable) extends Throwable(e) {
