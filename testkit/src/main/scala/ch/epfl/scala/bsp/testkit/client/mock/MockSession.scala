@@ -2,9 +2,10 @@ package ch.epfl.scala.bsp.testkit.client.mock
 
 import java.io.{InputStream, OutputStream}
 import java.util.concurrent.{ExecutorService, Executors}
-
 import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams}
 import org.eclipse.lsp4j.jsonrpc.Launcher
+
+import scala.util.Try
 
 case class MockSession(
     in: java.io.InputStream,
@@ -28,7 +29,7 @@ case class MockSession(
       .create()
 
     val listening = launcher.startListening
-    new Thread (() => listening.get()).start()
+    new Thread (() => Try(listening.get())).start()
 
     val server: BuildServer = launcher.getRemoteProxy
 
