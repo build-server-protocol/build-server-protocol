@@ -691,7 +691,8 @@ class TestClient(
           expectedResult.getItems.exists(
             expectedItem =>
               testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-                item.getClassDirectory.contains(expectedItem.getClassDirectory)
+                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+                item.getTarget == expectedItem.getTarget
           ) &&
           item.getOptions == item.getOptions
         }
@@ -722,7 +723,8 @@ class TestClient(
           expectedResult.getItems.exists(
             expectedItem =>
               testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-                item.getClassDirectory.contains(expectedItem.getClassDirectory)
+                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+                item.getTarget == expectedItem.getTarget
           ) &&
           item.getOptions == item.getOptions
         }
