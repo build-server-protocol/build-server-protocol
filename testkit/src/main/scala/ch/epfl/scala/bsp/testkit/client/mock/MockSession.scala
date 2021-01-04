@@ -29,7 +29,14 @@ case class MockSession(
       .create()
 
     val listening = launcher.startListening
-    new Thread (() => Try(listening.get())).start()
+    new Thread(
+      () =>
+        try {
+          listening.get()
+        } catch {
+          case _: Throwable => //Ignore all errors while listening to the launcher
+        }
+    ).start()
 
     val server: BuildServer = launcher.getRemoteProxy
 
