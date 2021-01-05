@@ -2,7 +2,6 @@ package ch.epfl.scala.bsp.testkit.client
 
 import java.io.{File, InputStream, OutputStream}
 import java.util.concurrent.{CompletableFuture, Executors}
-
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
 
@@ -12,13 +11,7 @@ import scala.collection.mutable.ListBuffer
 import scala.compat.java8.DurationConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.duration.{Duration, DurationInt}
-import scala.concurrent.{
-  Await,
-  ExecutionContext,
-  ExecutionContextExecutor,
-  Future,
-  TimeoutException
-}
+import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, ExecutionException, Future, TimeoutException}
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
@@ -45,6 +38,8 @@ class TestClient(
     } catch {
       case _: TimeoutException =>
         throw new OutOfTimeException()
+      case e: ExecutionException =>
+        throw new TestFailedException(e.getCause)
       case e: Throwable =>
         throw new TestFailedException(e)
     }
