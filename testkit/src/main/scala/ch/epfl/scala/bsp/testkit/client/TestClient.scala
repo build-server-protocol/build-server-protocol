@@ -230,6 +230,7 @@ class TestClient(
 
   def testCleanCacheSuccessfully(): Unit =
     wrapTest(cleanCacheSuccessfully)
+
   def testCleanCacheUnsuccessfully(): Unit =
     wrapTest(cleanCacheUnsuccessfully)
 
@@ -595,16 +596,212 @@ class TestClient(
       session: MockSession
   ): Future[DidChangeBuildTarget] =
     obtainExpectedNotification(buildTargetEventKind, session)
+
+  def testJvmRunEnvironment(
+      params: JvmRunEnvironmentParams,
+      expectedResult: JvmRunEnvironmentResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .jvmRunEnvironment(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(jvmItems => {
+        val testItems = testJvmItems(jvmItems, expectedResult.getItems)
+        assert(
+          testItems,
+          s"JVM Run Environment Items did not match! Expected: $expectedResult, got $jvmItems"
+        )
+      })
+  }
+
+  def testJvmRunEnvironment(
+      params: JvmRunEnvironmentParams,
+      expectedResult: JvmRunEnvironmentResult
+  ): Unit =
+    wrapTest(session => testJvmRunEnvironment(params, expectedResult, session))
+
+  def testJvmTestEnvironment(
+      params: JvmTestEnvironmentParams,
+      expectedResult: JvmTestEnvironmentResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .jvmTestEnvironment(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(jvmItems => {
+        val testItems = testJvmItems(jvmItems, expectedResult.getItems)
+        assert(
+          testItems,
+          s"JVM Test Environment Items did not match! Expected: $expectedResult, got $jvmItems"
+        )
+      })
+  }
+
+  def testJvmTestEnvironment(
+      params: JvmTestEnvironmentParams,
+      expectedResult: JvmTestEnvironmentResult
+  ): Unit =
+    wrapTest(session => testJvmTestEnvironment(params, expectedResult, session))
+
+  private def testJvmItems(
+      items: java.util.List[JvmEnvironmentItem],
+      expectedItems: java.util.List[JvmEnvironmentItem]
+  ) = {
+    items.forall { item =>
+      expectedItems.exists(
+        expectedItem =>
+          testExpectedEnvVars(expectedItem, item) &&
+            item.getTarget == expectedItem.getTarget &&
+            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+            item.getJvmOptions == expectedItem.getJvmOptions
+      )
+    }
+  }
+
+  private def testExpectedEnvVars(expectedItem: JvmEnvironmentItem, item: JvmEnvironmentItem) = {
+    expectedItem.getEnvironmentVariables
+      .entrySet()
+      .forall(
+        entry =>
+          item.getEnvironmentVariables.containsKey(entry.getKey) && item.getEnvironmentVariables
+            .get(entry.getKey) == entry.getValue
+      )
+  }
+
+  private def testExpectedClasspath(
+      expectedClasspath: java.util.List[String],
+      classpath: java.util.List[String]
+  ) = {
+    expectedClasspath.forall(expectedUrl => classpath.exists(url => url.contains(expectedUrl)))
+  }
+
+  def testJavacOptions(
+      params: JavacOptionsParams,
+      expectedResult: JavacOptionsResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetJavacOptions(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(jvmItems => {
+        val itemsTest = jvmItems.forall { item =>
+          expectedResult.getItems.exists(
+            expectedItem =>
+              testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+                item.getTarget == expectedItem.getTarget
+          ) &&
+          item.getOptions == item.getOptions
+        }
+        assert(
+          itemsTest,
+          s"Javac Options Items did not match! Expected: $expectedResult, got $jvmItems"
+        )
+      })
+  }
+
+  def testJavacOptions(
+      params: JavacOptionsParams,
+      expectedResult: JavacOptionsResult
+  ): Unit =
+    wrapTest(session => testJavacOptions(params, expectedResult, session))
+
+  def testScalacOptions(
+      params: ScalacOptionsParams,
+      expectedResult: ScalacOptionsResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetScalacOptions(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(scalacItems => {
+        val itemsTest = scalacItems.forall { item =>
+          expectedResult.getItems.exists(
+            expectedItem =>
+              testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+                item.getTarget == expectedItem.getTarget
+          ) &&
+          item.getOptions == item.getOptions
+        }
+        assert(
+          itemsTest,
+          s"Scalac Environment Items did not match! Expected: $expectedResult, got $scalacItems"
+        )
+      })
+  }
+
+  def testScalacOptions(
+      params: ScalacOptionsParams,
+      expectedResult: ScalacOptionsResult
+  ): Unit =
+    wrapTest(session => testScalacOptions(params, expectedResult, session))
+
+  def testScalaMainClasses(
+      params: ScalaMainClassesParams,
+      expectedResult: ScalaMainClassesResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetScalaMainClasses(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(mainItems => {
+        val itemsTest = mainItems.forall { item =>
+          expectedResult.getItems.contains(item)
+        } && expectedResult.getItems.size() == mainItems.size()
+        assert(
+          itemsTest,
+          s"Scalac Main CLasses Items did not match! Expected: $expectedResult, got $mainItems"
+        )
+      })
+  }
+
+  def testScalaMainClasses(
+      params: ScalaMainClassesParams,
+      expectedResult: ScalaMainClassesResult
+  ): Unit =
+    wrapTest(session => testScalaMainClasses(params, expectedResult, session))
+
+  def testScalaTestClasses(
+      params: ScalaTestClassesParams,
+      expectedResult: ScalaTestClassesResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetScalaTestClasses(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(testItems => {
+        val itemsTest = testItems.forall { item =>
+          expectedResult.getItems.contains(item)
+        } && expectedResult.getItems.size() == testItems.size()
+        assert(
+          itemsTest,
+          s"Scalac Test CLasses Items did not match! Expected: $expectedResult, got $testItems"
+        )
+      })
+  }
+
+  def testScalaTestClasses(
+      params: ScalaTestClassesParams,
+      expectedResult: ScalaTestClassesResult
+  ): Unit =
+    wrapTest(session => testScalaTestClasses(params, expectedResult, session))
 }
 
-class TestFailedException(e: Throwable) extends Throwable(e){
+class TestFailedException(e: Throwable) extends Throwable(e) {
   override def printStackTrace(): Unit = {
     println("Test case failed!")
     e.printStackTrace()
   }
 }
 
-class OutOfTimeException extends Throwable{
+class OutOfTimeException extends Throwable {
   override def printStackTrace(): Unit = {
     println("Test failed to complete in time!")
     super.printStackTrace()
@@ -612,11 +809,6 @@ class OutOfTimeException extends Throwable{
 }
 
 object TestClient {
-  object ClientUnitTest extends Enumeration {
-    val ResolveProjectTest, TargetCapabilities, CompileSuccessfully, RunSuccessfully,
-        TestSuccessfully, CompileUnsuccessfully, RunUnsuccessfully, TestUnsuccessfully,
-        CleanCacheSuccessfully, CleanCacheUnsuccessfully = Value
-  }
 
   def testInitialStructure(
       workspacePath: java.lang.String,

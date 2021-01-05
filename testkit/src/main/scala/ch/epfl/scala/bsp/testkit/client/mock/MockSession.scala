@@ -1,11 +1,11 @@
 package ch.epfl.scala.bsp.testkit.client.mock
 
+import ch.epfl.scala.bsp.testkit.client.mock.MockSession.BspMockServer
+
 import java.io.{InputStream, OutputStream}
 import java.util.concurrent.{ExecutorService, Executors}
-import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams}
+import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams, JavaBuildServer, JvmBuildServer, ScalaBuildServer}
 import org.eclipse.lsp4j.jsonrpc.Launcher
-
-import scala.util.Try
 
 case class MockSession(
     in: java.io.InputStream,
@@ -20,8 +20,8 @@ case class MockSession(
 
   private def startServerConnection: MockConnection = {
 
-    val launcher = new Launcher.Builder[BuildServer]()
-      .setRemoteInterface(classOf[BuildServer])
+    val launcher = new Launcher.Builder[BspMockServer]()
+      .setRemoteInterface(classOf[BspMockServer])
       .setExecutorService(executors)
       .setInput(in)
       .setOutput(out)
@@ -38,7 +38,7 @@ case class MockSession(
         }
     ).start()
 
-    val server: BuildServer = launcher.getRemoteProxy
+    val server: BspMockServer = launcher.getRemoteProxy
 
     client.onConnectWithServer(server)
 
@@ -53,7 +53,7 @@ case class MockSession(
     MockConnection(server, cancelable)
   }
 
-  case class MockConnection(server: BuildServer, cancelable: () => Unit)
+  case class MockConnection(server: BspMockServer, cancelable: () => Unit)
 }
 
 object MockSession {
@@ -63,6 +63,11 @@ object MockSession {
       cleanup: () => Unit
   ): MockSession =
     new MockSession(process.getInputStream, process.getOutputStream, initializeBuildParams, cleanup)
+
+  trait BspMockServer extends BuildServer
+    with ScalaBuildServer
+    with JavaBuildServer
+    with JvmBuildServer
 
   def apply(
       in: InputStream,

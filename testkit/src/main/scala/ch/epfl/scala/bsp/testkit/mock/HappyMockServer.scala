@@ -93,7 +93,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   )
 
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
-    new URI(targetId1.getUri).resolve(filePath)
+    new URI(target.getUri).resolve(filePath)
 
   private def asDirUri(path: URI): String =
     path.toString + "/"
@@ -167,8 +167,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
     handleRequest {
-      // TODO return some test classes
-      val result = new ScalaTestClassesResult(List.empty.asJava)
+      val classes1 = List("class1").asJava
+      val classes2 = List("class2").asJava
+      val testClassesItems = List(new ScalaTestClassesItem(targetId1, classes1), new ScalaTestClassesItem(targetId2, classes2)).asJava
+      val result = new ScalaTestClassesResult(testClassesItems)
       Right(result)
     }
 
@@ -176,8 +178,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
     handleRequest {
-      val list: util.List[String] = List.empty.asJava
-      val result = new ScalaMainClassesResult(List.empty.asJava)
+      val classes1 = List(new ScalaMainClass("class1", List("arg1", "arg2").asJava, List("-deprecated").asJava)).asJava
+      val classes2 = List(new ScalaMainClass("class2", List("arg1", "arg2").asJava, List("-deprecated").asJava)).asJava
+      val mainClassesItems = List(new ScalaMainClassesItem(targetId1, classes1), new ScalaMainClassesItem(targetId1, classes2)).asJava
+      val result = new ScalaMainClassesResult(mainClassesItems)
       Right(result)
     }
 
