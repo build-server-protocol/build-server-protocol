@@ -3,9 +3,11 @@ import java.net.URI
 import java.nio.file.{Path, Paths}
 
 import org.scalacheck.Shrink
-import org.scalacheck.Shrink.shrink
+import org.scalacheck.Shrink.{removeChunks, shrink, shrinkContainer, shrinkOne}
+import org.scalacheck.util.Buildable
 
 import scala.collection.JavaConverters._
+import scala.collection.Traversable
 
 trait UtilShrinkers {
 
@@ -22,11 +24,15 @@ trait UtilShrinkers {
     } yield p.mkString("/")
   }
 
+  def shrinkHost: Shrink[String] = Shrink { host =>
+    Stream(host)
+  }
+
   implicit def shrinkUri(implicit s1: Shrink[String],
                          s2: Shrink[Int]): Shrink[URI] = Shrink { uri =>
     val shrinks = for {
       scheme <- shrink(uri.getScheme)
-      host <- shrink(uri.getHost)
+      host <- shrinkHost.shrink(uri.getHost)
       port <- shrink(uri.getPort)
       path <- shrinkUriPath.shrink(uri.getPath)
     } yield {
