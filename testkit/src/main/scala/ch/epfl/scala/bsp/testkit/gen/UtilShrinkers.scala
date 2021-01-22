@@ -1,13 +1,12 @@
 package ch.epfl.scala.bsp.testkit.gen
+
 import java.net.URI
 import java.nio.file.{Path, Paths}
 
 import org.scalacheck.Shrink
-import org.scalacheck.Shrink.{removeChunks, shrink, shrinkContainer, shrinkOne}
-import org.scalacheck.util.Buildable
+import org.scalacheck.Shrink.shrink
 
 import scala.collection.JavaConverters._
-import scala.collection.Traversable
 
 trait UtilShrinkers {
 
@@ -24,22 +23,25 @@ trait UtilShrinkers {
     } yield p.mkString("/")
   }
 
-  def shrinkHost: Shrink[String] = Shrink { host =>
-    Stream(host)
+  def shrinkUriPartToLetters: Shrink[String] = Shrink { host =>
+    Shrink.shrinkContainer[List, Char].suchThat(shrinkedHost => shrinkedHost.nonEmpty && shrinkedHost.forall(_.isLetter)).shrink(host.toList).map(_.mkString)
   }
+
+  def shrinkPortInt: Shrink[Int] = Shrink { x: Int =>
+    shrink(x)
+  }.suchThat(_ > 0)
 
   implicit def shrinkUri(implicit s1: Shrink[String],
                          s2: Shrink[Int]): Shrink[URI] = Shrink { uri =>
     val shrinks = for {
-      scheme <- shrink(uri.getScheme)
-      host <- shrinkHost.shrink(uri.getHost)
-      port <- shrink(uri.getPort)
+      scheme <- shrinkUriPartToLetters.shrink(uri.getScheme)
+      host <- shrinkUriPartToLetters.shrink(uri.getHost)
+      port <- shrinkPortInt.shrink(uri.getPort)
       path <- shrinkUriPath.shrink(uri.getPath)
     } yield {
       val a = new URI(scheme, null, host, port, path, null, null)
-      val b = new URI(scheme, null, null, port, path, null, null)
-      val c = new URI(scheme, null, host, port, null, null, null)
-      Stream(a,b,c)
+      val b = new URI(scheme, null, host, port, null, null, null)
+      Stream(a, b)
     }
 
     shrinks.flatten
