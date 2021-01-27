@@ -48,9 +48,12 @@ trait UtilShrinkers {
   }
 
   implicit def shrinkPath: Shrink[Path] = Shrink { path =>
-    shrinkRight.shrink(path.iterator.asScala.toIterable).map { parts =>
-      Paths.get(parts.mkString("/"))
-    }
+    val partIt = path.iterator()
+    if (partIt.hasNext)
+      shrinkRight.shrink(path.iterator.asScala.toIterable).map { parts =>
+        Paths.get(parts.mkString("/"))
+      }
+    else Stream.empty
   }
 
   def shrinkFileUri: Shrink[URI] = Shrink { uri: URI =>
