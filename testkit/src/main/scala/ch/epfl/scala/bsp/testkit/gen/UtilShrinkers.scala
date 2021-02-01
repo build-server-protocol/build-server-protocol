@@ -49,7 +49,7 @@ trait UtilShrinkers {
 
   implicit def shrinkPath: Shrink[Path] = Shrink { path =>
     val partIt = path.iterator()
-    if (partIt.hasNext)
+    if (partIt.hasNext && !path.startsWith(""))
       shrinkRight.shrink(path.iterator.asScala.toIterable).map { parts =>
         Paths.get(parts.mkString("/"))
       }
