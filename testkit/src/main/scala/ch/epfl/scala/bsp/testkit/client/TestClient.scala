@@ -692,9 +692,10 @@ class TestClient(
             expectedItem =>
               testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
                 item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-                item.getTarget == expectedItem.getTarget
-          ) &&
-          item.getOptions == item.getOptions
+                item.getTarget == expectedItem.getTarget &&
+                item.getOptions == expectedItem.getOptions
+
+          )
         }
         assert(
           itemsTest,
@@ -724,9 +725,9 @@ class TestClient(
             expectedItem =>
               testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
                 item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-                item.getTarget == expectedItem.getTarget
-          ) &&
-          item.getOptions == item.getOptions
+                item.getTarget == expectedItem.getTarget &&
+                item.getOptions == expectedItem.getOptions
+          )
         }
         assert(
           itemsTest,
