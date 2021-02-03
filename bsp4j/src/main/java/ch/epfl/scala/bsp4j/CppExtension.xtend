@@ -16,28 +16,3 @@ class CppBuildTarget {
   }
 }
 
-@JsonRpcData
-class CppDependenciesSourcesParams {
-  @NonNull List<BuildTargetIdentifier> targets
-  String originId
-  new(@NonNull List<BuildTargetIdentifier> targets) {
-    this.targets = targets
-  }
-}
-
-@JsonRpcData
-class CppDependenciesSourcesResult {
-  @NonNull List<CppDependenciesSourcesItem> items
-  new(@NonNull List<CppDependenciesSourcesItem> items) {
-    this.items = items
-  }
-}
-
-@JsonRpcData
-class CppDependenciesSourcesItem {
-  @NonNull BuildTargetIdentifier target
-  String packageNamePrefix
-  new(@NonNull BuildTargetIdentifier target) {
-    this.target = target
-  }
-}
