@@ -3,32 +3,31 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum CppPlatform {
 
-    CPP93(1),
-    CPP03(2),
-    CPP11(3),
-    CPP14(4),
-    CPP17(5),
-    CPP20(6);
+    CPP93("C++93"),
+    CPP03("C++03"),
+    CPP11("C++11"),
+    CPP14("C++14"),
+    CPP17("C++17"),
+    CPP20("C++20");
 
-    private final int value;
+    private final String value;
 
-    CppPlatform(int value) {
+    CppPlatform(String value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
-
-    public static CppPlatform forValue(int value) {
-        CppPlatform[] allValues = CppPlatform.values();
-        if (value < 1 || value > allValues.length)
-            throw new IllegalArgumentException("Illegal enum value: " + value);
-        return allValues[value - 1];
+    public static CppPlatform forValue(String value) {
+        Optional<CppPlatform> currentPlatform = Arrays.stream(CppPlatform.values()).filter(platform -> platform.value.equals(value)).findFirst();
+        return currentPlatform.orElseThrow(() -> new IllegalArgumentException("Illegal enum value: " + value));
     }
-
 }
