@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
 class CppBuildTarget {
-  @NonNull CppPlatform platform
+  @NonNull String version
   @NonNull List<String> options
   CppCompiler compiler
   String cCompiler
   String cppCompiler
-  new(@NonNull CppPlatform platform, @NonNull List<String> options, CppCompiler compiler, String cCompiler, String cppCompiler) {
-    this.platform = platform
+  new(@NonNull String version, @NonNull List<String> options, CppCompiler compiler, String cCompiler, String cppCompiler) {
+    this.version = version
     this.options = options
     this.compiler = compiler
     this.cCompiler = cCompiler

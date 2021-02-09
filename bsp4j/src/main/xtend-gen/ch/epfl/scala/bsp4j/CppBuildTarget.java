@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.CppCompiler;
-import ch.epfl.scala.bsp4j.CppPlatform;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
@@ -11,7 +10,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class CppBuildTarget {
   @NonNull
-  private CppPlatform platform;
+  private String version;
   
   @NonNull
   private List<String> options;
@@ -22,8 +21,8 @@ public class CppBuildTarget {
   
   private String cppCompiler;
   
-  public CppBuildTarget(@NonNull final CppPlatform platform, @NonNull final List<String> options, final CppCompiler compiler, final String cCompiler, final String cppCompiler) {
-    this.platform = platform;
+  public CppBuildTarget(@NonNull final String version, @NonNull final List<String> options, final CppCompiler compiler, final String cCompiler, final String cppCompiler) {
+    this.version = version;
     this.options = options;
     this.compiler = compiler;
     this.cCompiler = cCompiler;
@@ -32,12 +31,12 @@ public class CppBuildTarget {
   
   @Pure
   @NonNull
-  public CppPlatform getPlatform() {
-    return this.platform;
+  public String getVersion() {
+    return this.version;
   }
   
-  public void setPlatform(@NonNull final CppPlatform platform) {
-    this.platform = Preconditions.checkNotNull(platform, "platform");
+  public void setVersion(@NonNull final String version) {
+    this.version = Preconditions.checkNotNull(version, "version");
   }
   
   @Pure
@@ -81,7 +80,7 @@ public class CppBuildTarget {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("platform", this.platform);
+    b.add("version", this.version);
     b.add("options", this.options);
     b.add("compiler", this.compiler);
     b.add("cCompiler", this.cCompiler);
@@ -99,10 +98,10 @@ public class CppBuildTarget {
     if (getClass() != obj.getClass())
       return false;
     CppBuildTarget other = (CppBuildTarget) obj;
-    if (this.platform == null) {
-      if (other.platform != null)
+    if (this.version == null) {
+      if (other.version != null)
         return false;
-    } else if (!this.platform.equals(other.platform))
+    } else if (!this.version.equals(other.version))
       return false;
     if (this.options == null) {
       if (other.options != null)
@@ -132,7 +131,7 @@ public class CppBuildTarget {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.platform== null) ? 0 : this.platform.hashCode());
+    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.options== null) ? 0 : this.options.hashCode());
     result = prime * result + ((this.compiler== null) ? 0 : this.compiler.hashCode());
     result = prime * result + ((this.cCompiler== null) ? 0 : this.cCompiler.hashCode());
