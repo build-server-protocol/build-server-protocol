@@ -40,14 +40,14 @@ class MockClientSuite extends FunSuite {
     List(BuildTargetTag.TEST).asJava,
     Collections.emptyList(),
     Collections.emptyList(),
-    new BuildTargetCapabilities(true, true, false)
+    new BuildTargetCapabilities(true, true, false, false)
   )
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     Collections.emptyList(),
     Collections.emptyList(),
-    new BuildTargetCapabilities(true, false, true)
+    new BuildTargetCapabilities(true, false, true, false)
   )
 
   private val client = TestClient(

@@ -35,6 +35,7 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     for {
       compileProvider <- shrink(capabilities.getCompileProvider)
       testProvider <- shrink(capabilities.getTestProvider)
+      debugProvider <- shrink(capabilities.getDebugProvider)
       inverseSourcesProvider <- shrink(capabilities.getInverseSourcesProvider)
       dependencySourcesProvider <- shrink(capabilities.getDependencySourcesProvider)
       resourcesProvider <- shrink(capabilities.getResourcesProvider)
@@ -43,6 +44,7 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       val capabilities = new BuildServerCapabilities()
       capabilities.setCompileProvider(compileProvider)
       capabilities.setTestProvider(testProvider)
+      capabilities.setDebugProvider(debugProvider)
       capabilities.setInverseSourcesProvider(inverseSourcesProvider)
       capabilities.setDependencySourcesProvider(dependencySourcesProvider)
       capabilities.setResourcesProvider(resourcesProvider)
@@ -79,7 +81,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       canCompile <- shrink(capabilities.getCanCompile)
       canTest <- shrink(capabilities.getCanTest)
       canRun <- shrink(capabilities.getCanRun)
-    } yield new BuildTargetCapabilities(canCompile, canTest, canRun)
+      canDebug <- shrink(capabilities.getCanDebug)
+    } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
   }
 
   implicit def shrinkBuildTargetEvent: Shrink[BuildTargetEvent] = Shrink { event =>

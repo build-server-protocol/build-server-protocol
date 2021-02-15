@@ -32,11 +32,13 @@ class BuildTargetCapabilities {
   @NonNull Boolean canCompile
   @NonNull Boolean canTest
   @NonNull Boolean canRun
+  @NonNull Boolean canDebug
 
-  new (Boolean canCompile, Boolean canTest, Boolean canRun) {
+  new (Boolean canCompile, Boolean canTest, Boolean canRun, Boolean canDebug) {
     this.canCompile = canCompile
     this.canTest = canTest
     this.canRun = canRun
+    this.canDebug = canDebug
   }
 }
 
@@ -81,7 +83,6 @@ class InitializeBuildParams {
   }
 }
 
-
 @JsonRpcData
 class BuildClientCapabilities {
   @NonNull List<String> languageIds
@@ -89,7 +90,6 @@ class BuildClientCapabilities {
     this.languageIds = languageIds
   }
 }
-
 
 @JsonRpcData
 class CompileProvider {
@@ -116,10 +116,19 @@ class RunProvider {
 }
 
 @JsonRpcData
+class DebugProvider {
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
+}
+
+@JsonRpcData
 class BuildServerCapabilities {
   CompileProvider compileProvider
   TestProvider testProvider
   RunProvider runProvider
+  DebugProvider debugProvider
   Boolean inverseSourcesProvider
   Boolean dependencySourcesProvider
   Boolean resourcesProvider

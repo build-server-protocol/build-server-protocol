@@ -47,6 +47,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setCompileProvider(new CompileProvider(supportedLanguages))
     c.setTestProvider(new TestProvider(supportedLanguages))
     c.setRunProvider(new RunProvider(supportedLanguages))
+    c.setDebugProvider(new DebugProvider(supportedLanguages))
     c.setInverseSourcesProvider(true)
     c.setDependencySourcesProvider(true)
     c.setResourcesProvider(true)
@@ -68,14 +69,14 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, false)
+    new BuildTargetCapabilities(true, false, false, false)
   )
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false)
+    new BuildTargetCapabilities(true, true, false, false)
   )
 
   val target3 = new BuildTarget(
@@ -83,7 +84,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true)
+    new BuildTargetCapabilities(true, false, true, false)
   )
 
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = Map(

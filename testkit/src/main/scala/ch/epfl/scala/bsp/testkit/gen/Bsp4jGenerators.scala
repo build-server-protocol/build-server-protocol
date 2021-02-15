@@ -27,6 +27,7 @@ trait Bsp4jGenerators {
   val genBuildServerCapabilities: Gen[BuildServerCapabilities] = for {
     compileProvider <- genCompileProvider.nullable
     testProvider <- genTestProvider.nullable
+    debugProvider <- genDebugProvider.nullable
     inverseSourcesProvider <- BoxedGen.boolean.nullable
     dependencySourcesProvider <- BoxedGen.boolean.nullable
     resourcesProvider <- BoxedGen.boolean.nullable
@@ -36,6 +37,7 @@ trait Bsp4jGenerators {
     val capabilities = new BuildServerCapabilities()
     capabilities.setCompileProvider(compileProvider)
     capabilities.setTestProvider(testProvider)
+    capabilities.setDebugProvider(debugProvider)
     capabilities.setInverseSourcesProvider(inverseSourcesProvider)
     capabilities.setDependencySourcesProvider(dependencySourcesProvider)
     capabilities.setResourcesProvider(resourcesProvider)
@@ -79,7 +81,8 @@ trait Bsp4jGenerators {
     canCompile <- arbitrary[Boolean]
     canTest <- arbitrary[Boolean]
     canRun <- arbitrary[Boolean]
-  } yield new BuildTargetCapabilities(canCompile, canTest, canRun)
+    canDebug <- arbitrary[Boolean]
+  } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
 
   lazy val genBuildTargetEvent: Gen[BuildTargetEvent] = for {
     target <- genBuildTargetIdentifier
@@ -556,6 +559,10 @@ trait Bsp4jGenerators {
   lazy val genTestProvider: Gen[TestProvider] = for {
     languageIds <- genLanguageId.list
   } yield new TestProvider(languageIds)
+
+  lazy val genDebugProvider: Gen[DebugProvider] = for {
+    languageIds <- genLanguageId.list
+  } yield new DebugProvider(languageIds)
 
   lazy val genTestReport: Gen[TestReport] = for {
     target <- genBuildTargetIdentifier

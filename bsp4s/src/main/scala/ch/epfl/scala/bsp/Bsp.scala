@@ -45,6 +45,7 @@ object Uri {
     canCompile: Boolean,
     canTest: Boolean,
     canRun: Boolean,
+    canDebug: Boolean,
 )
 
 object BuildTargetTag {
@@ -109,10 +110,15 @@ object BuildTargetDataKind {
     languageIds: List[String]
 )
 
+@JsonCodec final case class DebugProvider(
+  languageIds: List[String]
+)
+
 @JsonCodec final case class BuildServerCapabilities(
     compileProvider: Option[CompileProvider],
     testProvider: Option[TestProvider],
     runProvider: Option[RunProvider],
+    debugProvider: Option[DebugProvider],
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
