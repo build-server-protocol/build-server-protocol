@@ -212,6 +212,8 @@ export interface BuildTargetCapabilities {
   canTest: Boolean;
   /** This target can be run by the BSP server. */
   canRun: Boolean;
+  /** This target can be debugged by the BSP server. */
+  canDebug: Boolean;
 }
 ```
 
@@ -369,6 +371,9 @@ export interface BuildServerCapabilities {
   /** The languages the server supports run via method buildTarget/run */
   runProvider?: RunProvider;
 
+  /** The languages the server supports debugging via method debugSession/start */
+  debugProvider?: DebugProvider;
+
   /** The server can provide a list of targets that contain a
    * single text document via the method buildTarget/inverseSources */
   inverseSourcesProvider?: Boolean;
@@ -394,6 +399,10 @@ export interface CompileProvider {
 }
 
 export interface RunProvider {
+  languageIds: String[];
+}
+
+export interface DebugProvider {
   languageIds: String[];
 }
 
@@ -1316,6 +1325,42 @@ response.
 
 The client will get a `originId` field in `RunResult` if the `originId` field in
 the `RunParams` is defined.
+
+### Debug Request
+
+The debug request is sent from the client to the server to debug build target(s). The
+server launches a [Microsoft DAP for Java](https://github.com/microsoft/vscode-java-debug) instance
+and returns a connection URI for the client to interact with.
+
+- method: `debugSession/start`
+- params: `DebugSessionParams`
+
+```ts
+export interface DebugSessionParams {
+  /** A sequence of build targets affected by the debugging action. */
+  targets: List[BuildTargetIdentifier],
+
+  /** The kind of data to expect in the `data` field. */
+  dataKind: String;
+
+  /** Language-specific metadata for this execution.
+   * See ScalaMainClass as an example. */
+  data: any;
+}
+```
+
+Response:
+
+- result: `DebugSessionAddress`, defined as follows
+- error: JSON-RPC code and message set in case an exception happens during the
+  request.
+
+```ts
+export interface DebugSessionAddress {
+  /** The Debug Adapter Protocol server's connection uri */
+  uri: Uri;
+}
+```
 
 ### Clean Cache Request
 
