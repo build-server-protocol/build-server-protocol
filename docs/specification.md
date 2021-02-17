@@ -1329,7 +1329,7 @@ the `RunParams` is defined.
 ### Debug Request
 
 The debug request is sent from the client to the server to debug build target(s). The
-server launches a [Microsoft DAP for Java](https://github.com/microsoft/vscode-java-debug) instance
+server launches a [Microsoft DAP](https://microsoft.github.io/debug-adapter-protocol/) server
 and returns a connection URI for the client to interact with.
 
 - method: `debugSession/start`
