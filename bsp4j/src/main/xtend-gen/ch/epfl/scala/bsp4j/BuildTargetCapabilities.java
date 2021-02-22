@@ -16,8 +16,7 @@ public class BuildTargetCapabilities {
   @NonNull
   private Boolean canRun;
   
-  @NonNull
-  private Boolean canDebug;
+  private Boolean canDebug = Boolean.valueOf(false);
   
   public BuildTargetCapabilities(final Boolean canCompile, final Boolean canTest, final Boolean canRun, final Boolean canDebug) {
     this.canCompile = canCompile;
@@ -57,13 +56,12 @@ public class BuildTargetCapabilities {
   }
   
   @Pure
-  @NonNull
   public Boolean getCanDebug() {
     return this.canDebug;
   }
   
-  public void setCanDebug(@NonNull final Boolean canDebug) {
-    this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
+  public void setCanDebug(final Boolean canDebug) {
+    this.canDebug = canDebug;
   }
   
   @Override
