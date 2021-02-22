@@ -32,7 +32,7 @@ class BuildTargetCapabilities {
   @NonNull Boolean canCompile
   @NonNull Boolean canTest
   @NonNull Boolean canRun
-  @NonNull Boolean canDebug
+  Boolean canDebug = false
 
   new (Boolean canCompile, Boolean canTest, Boolean canRun, Boolean canDebug) {
     this.canCompile = canCompile

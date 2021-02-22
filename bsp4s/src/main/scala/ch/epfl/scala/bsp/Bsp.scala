@@ -45,7 +45,7 @@ object Uri {
     canCompile: Boolean,
     canTest: Boolean,
     canRun: Boolean,
-    canDebug: Boolean,
+    canDebug: Boolean = false, // backward compatible default
 )
 
 object BuildTargetTag {
