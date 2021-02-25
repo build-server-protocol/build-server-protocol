@@ -793,6 +793,13 @@ class TestClient(
       expectedResult: ScalaTestClassesResult
   ): Unit =
     wrapTest(session => testScalaTestClasses(params, expectedResult, session))
+
+  def testWorkspaceReload(session: MockSession): Future[AnyRef] = session.connection.server
+    .workspaceReload()
+    .toScala
+
+  def testWorkspaceReload(): Unit =
+    wrapTest(testWorkspaceReload)
 }
 
 class TestFailedException(e: Throwable) extends Throwable(e) {
