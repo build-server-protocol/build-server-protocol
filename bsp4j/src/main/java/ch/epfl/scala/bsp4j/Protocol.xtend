@@ -32,9 +32,23 @@ class BuildTargetCapabilities {
   @NonNull Boolean canCompile
   @NonNull Boolean canTest
   @NonNull Boolean canRun
-  Boolean canDebug = false
+  @NonNull Boolean canDebug
 
-  new (Boolean canCompile, Boolean canTest, Boolean canRun, Boolean canDebug) {
+  new () {
+    this.canCompile = Boolean.FALSE
+    this.canTest = Boolean.FALSE
+    this.canRun = Boolean.FALSE
+    this.canDebug = Boolean.FALSE
+  }
+
+  new (@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun) {
+    this.canCompile = canCompile
+    this.canTest = canTest
+    this.canRun = canRun
+    this.canDebug = Boolean.FALSE
+  }
+
+  new (@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun, @NonNull Boolean canDebug) {
     this.canCompile = canCompile
     this.canTest = canTest
     this.canRun = canRun

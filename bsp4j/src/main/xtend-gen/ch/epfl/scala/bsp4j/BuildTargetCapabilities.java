@@ -16,9 +16,24 @@ public class BuildTargetCapabilities {
   @NonNull
   private Boolean canRun;
   
-  private Boolean canDebug = Boolean.valueOf(false);
+  @NonNull
+  private Boolean canDebug;
   
-  public BuildTargetCapabilities(final Boolean canCompile, final Boolean canTest, final Boolean canRun, final Boolean canDebug) {
+  public BuildTargetCapabilities() {
+    this.canCompile = Boolean.FALSE;
+    this.canTest = Boolean.FALSE;
+    this.canRun = Boolean.FALSE;
+    this.canDebug = Boolean.FALSE;
+  }
+  
+  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun) {
+    this.canCompile = canCompile;
+    this.canTest = canTest;
+    this.canRun = canRun;
+    this.canDebug = Boolean.FALSE;
+  }
+  
+  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug) {
     this.canCompile = canCompile;
     this.canTest = canTest;
     this.canRun = canRun;
@@ -56,12 +71,13 @@ public class BuildTargetCapabilities {
   }
   
   @Pure
+  @NonNull
   public Boolean getCanDebug() {
     return this.canDebug;
   }
   
-  public void setCanDebug(final Boolean canDebug) {
-    this.canDebug = canDebug;
+  public void setCanDebug(@NonNull final Boolean canDebug) {
+    this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
   }
   
   @Override
