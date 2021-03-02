@@ -16,10 +16,28 @@ public class BuildTargetCapabilities {
   @NonNull
   private Boolean canRun;
   
-  public BuildTargetCapabilities(final Boolean canCompile, final Boolean canTest, final Boolean canRun) {
+  @NonNull
+  private Boolean canDebug;
+  
+  public BuildTargetCapabilities() {
+    this.canCompile = Boolean.FALSE;
+    this.canTest = Boolean.FALSE;
+    this.canRun = Boolean.FALSE;
+    this.canDebug = Boolean.FALSE;
+  }
+  
+  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun) {
     this.canCompile = canCompile;
     this.canTest = canTest;
     this.canRun = canRun;
+    this.canDebug = Boolean.FALSE;
+  }
+  
+  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug) {
+    this.canCompile = canCompile;
+    this.canTest = canTest;
+    this.canRun = canRun;
+    this.canDebug = canDebug;
   }
   
   @Pure
@@ -52,6 +70,16 @@ public class BuildTargetCapabilities {
     this.canRun = Preconditions.checkNotNull(canRun, "canRun");
   }
   
+  @Pure
+  @NonNull
+  public Boolean getCanDebug() {
+    return this.canDebug;
+  }
+  
+  public void setCanDebug(@NonNull final Boolean canDebug) {
+    this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -59,6 +87,7 @@ public class BuildTargetCapabilities {
     b.add("canCompile", this.canCompile);
     b.add("canTest", this.canTest);
     b.add("canRun", this.canRun);
+    b.add("canDebug", this.canDebug);
     return b.toString();
   }
   
@@ -87,6 +116,11 @@ public class BuildTargetCapabilities {
         return false;
     } else if (!this.canRun.equals(other.canRun))
       return false;
+    if (this.canDebug == null) {
+      if (other.canDebug != null)
+        return false;
+    } else if (!this.canDebug.equals(other.canDebug))
+      return false;
     return true;
   }
   
@@ -97,6 +131,7 @@ public class BuildTargetCapabilities {
     int result = 1;
     result = prime * result + ((this.canCompile== null) ? 0 : this.canCompile.hashCode());
     result = prime * result + ((this.canTest== null) ? 0 : this.canTest.hashCode());
-    return prime * result + ((this.canRun== null) ? 0 : this.canRun.hashCode());
+    result = prime * result + ((this.canRun== null) ? 0 : this.canRun.hashCode());
+    return prime * result + ((this.canDebug== null) ? 0 : this.canDebug.hashCode());
   }
 }

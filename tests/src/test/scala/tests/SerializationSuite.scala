@@ -75,4 +75,25 @@ class SerializationSuite extends FunSuite {
 
     assert(bsp4sValueDecoded == bsp4sValue)
   }
+
+  test("BuildTargetCapabilities - backward compatible canDebug") {
+    val legacyJson =
+      """
+        |{
+        |  "canCompile": true,
+        |  "canTest": true,
+        |  "canRun": true
+        |}""".stripMargin
+
+    val bsp4jValue = gson.fromJson(legacyJson, classOf[bsp4j.BuildTargetCapabilities])
+    val bsp4sValue = decode[bsp4s.BuildTargetCapabilities](legacyJson).right.get
+
+    assert(bsp4jValue.getCanCompile == bsp4sValue.canCompile)
+    assert(bsp4jValue.getCanTest == bsp4sValue.canTest)
+    assert(bsp4jValue.getCanRun == bsp4sValue.canRun)
+    assert(bsp4jValue.getCanDebug == bsp4sValue.canDebug)
+
+    assert(bsp4jValue.getCanDebug == false)
+    assert(bsp4sValue.canDebug == false)
+  }
 }

@@ -74,6 +74,7 @@ class TypoSuite extends FunSuite {
         capabilities.setCompileProvider(new CompileProvider(Collections.singletonList("scala")))
         capabilities.setTestProvider(new TestProvider(Collections.singletonList("scala")))
         capabilities.setRunProvider(new RunProvider(Collections.singletonList("scala")))
+        capabilities.setDebugProvider(new DebugProvider(Collections.singletonList("scala")))
         capabilities.setInverseSourcesProvider(true)
         capabilities.setDependencySourcesProvider(true)
         capabilities.setResourcesProvider(true)
@@ -95,7 +96,7 @@ class TypoSuite extends FunSuite {
       ()
     override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = {
       CompletableFuture.completedFuture {
-        val capabilities = new BuildTargetCapabilities(true, true, true)
+        val capabilities = new BuildTargetCapabilities(true, true, true, true)
         val target = new BuildTarget(
           buildTargetUri,
           Collections.singletonList("tag"),

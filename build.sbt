@@ -31,6 +31,7 @@ lazy val bsp4s = project
     libraryDependencies ++= List(
       "io.circe" %% "circe-core" % "0.9.0",
       "io.circe" %% "circe-derivation" % "0.9.0-M4",
+      "io.circe" %% "circe-generic-extras" % "0.9.0",
       "org.scalameta" %% "lsp4s" % "0.2.0"
     )
   )

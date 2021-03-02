@@ -5,6 +5,8 @@ import java.net.{URI, URISyntaxException}
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.derivation.JsonCodec
+import io.circe.generic.extras._
+import io.circe.generic.extras.semiauto.{deriveDecoder, deriveEncoder}
 
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
@@ -41,10 +43,17 @@ object Uri {
     uri: Uri
 )
 
-@JsonCodec final case class BuildTargetCapabilities(
+object BuildTargetCapabilities {
+  implicit val config: Configuration = Configuration.default.withDefaults
+  implicit val jsonDecoder: Decoder[BuildTargetCapabilities] = deriveDecoder
+  implicit val jsonEncoder: Encoder[BuildTargetCapabilities] = deriveEncoder
+}
+
+final case class BuildTargetCapabilities(
     canCompile: Boolean,
     canTest: Boolean,
     canRun: Boolean,
+    canDebug: Boolean = false, // backward compatible default
 )
 
 object BuildTargetTag {
@@ -109,10 +118,15 @@ object BuildTargetDataKind {
     languageIds: List[String]
 )
 
+@JsonCodec final case class DebugProvider(
+  languageIds: List[String]
+)
+
 @JsonCodec final case class BuildServerCapabilities(
     compileProvider: Option[CompileProvider],
     testProvider: Option[TestProvider],
     runProvider: Option[RunProvider],
+    debugProvider: Option[DebugProvider],
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],

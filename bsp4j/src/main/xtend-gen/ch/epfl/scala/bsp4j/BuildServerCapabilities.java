@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import ch.epfl.scala.bsp4j.CompileProvider;
+import ch.epfl.scala.bsp4j.DebugProvider;
 import ch.epfl.scala.bsp4j.RunProvider;
 import ch.epfl.scala.bsp4j.TestProvider;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -13,6 +14,8 @@ public class BuildServerCapabilities {
   private TestProvider testProvider;
   
   private RunProvider runProvider;
+  
+  private DebugProvider debugProvider;
   
   private Boolean inverseSourcesProvider;
   
@@ -53,6 +56,15 @@ public class BuildServerCapabilities {
   
   public void setRunProvider(final RunProvider runProvider) {
     this.runProvider = runProvider;
+  }
+  
+  @Pure
+  public DebugProvider getDebugProvider() {
+    return this.debugProvider;
+  }
+  
+  public void setDebugProvider(final DebugProvider debugProvider) {
+    this.debugProvider = debugProvider;
   }
   
   @Pure
@@ -125,6 +137,7 @@ public class BuildServerCapabilities {
     b.add("compileProvider", this.compileProvider);
     b.add("testProvider", this.testProvider);
     b.add("runProvider", this.runProvider);
+    b.add("debugProvider", this.debugProvider);
     b.add("inverseSourcesProvider", this.inverseSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
@@ -159,6 +172,11 @@ public class BuildServerCapabilities {
       if (other.runProvider != null)
         return false;
     } else if (!this.runProvider.equals(other.runProvider))
+      return false;
+    if (this.debugProvider == null) {
+      if (other.debugProvider != null)
+        return false;
+    } else if (!this.debugProvider.equals(other.debugProvider))
       return false;
     if (this.inverseSourcesProvider == null) {
       if (other.inverseSourcesProvider != null)
@@ -206,6 +224,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.compileProvider== null) ? 0 : this.compileProvider.hashCode());
     result = prime * result + ((this.testProvider== null) ? 0 : this.testProvider.hashCode());
     result = prime * result + ((this.runProvider== null) ? 0 : this.runProvider.hashCode());
+    result = prime * result + ((this.debugProvider== null) ? 0 : this.debugProvider.hashCode());
     result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
