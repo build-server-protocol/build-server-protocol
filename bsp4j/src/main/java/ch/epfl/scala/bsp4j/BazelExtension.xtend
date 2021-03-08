@@ -24,9 +24,9 @@ class BazelDependenciesResult {
 @JsonRpcData
 class BazelDependenciesItem {
   @NonNull BuildTargetIdentifier target
-  String packageNamePrefix
-  new(@NonNull BuildTargetIdentifier target, String packageNamePrefix) {
+  String dependencyPathPrefix
+  new(@NonNull BuildTargetIdentifier target, String dependencyPathPrefix) {
     this.target = target
-    this.packageNamePrefix = packageNamePrefix
+    this.dependencyPathPrefix = dependencyPathPrefix
   }
 }

@@ -11,11 +11,11 @@ public class BazelDependenciesItem {
   @NonNull
   private BuildTargetIdentifier target;
   
-  private String packageNamePrefix;
+  private String dependencyPathPrefix;
   
-  public BazelDependenciesItem(@NonNull final BuildTargetIdentifier target, final String packageNamePrefix) {
+  public BazelDependenciesItem(@NonNull final BuildTargetIdentifier target, final String dependencyPathPrefix) {
     this.target = target;
-    this.packageNamePrefix = packageNamePrefix;
+    this.dependencyPathPrefix = dependencyPathPrefix;
   }
   
   @Pure
@@ -29,12 +29,12 @@ public class BazelDependenciesItem {
   }
   
   @Pure
-  public String getPackageNamePrefix() {
-    return this.packageNamePrefix;
+  public String getDependencyPathPrefix() {
+    return this.dependencyPathPrefix;
   }
   
-  public void setPackageNamePrefix(final String packageNamePrefix) {
-    this.packageNamePrefix = packageNamePrefix;
+  public void setDependencyPathPrefix(final String dependencyPathPrefix) {
+    this.dependencyPathPrefix = dependencyPathPrefix;
   }
   
   @Override
@@ -42,7 +42,7 @@ public class BazelDependenciesItem {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
-    b.add("packageNamePrefix", this.packageNamePrefix);
+    b.add("dependencyPathPrefix", this.dependencyPathPrefix);
     return b.toString();
   }
   
@@ -61,10 +61,10 @@ public class BazelDependenciesItem {
         return false;
     } else if (!this.target.equals(other.target))
       return false;
-    if (this.packageNamePrefix == null) {
-      if (other.packageNamePrefix != null)
+    if (this.dependencyPathPrefix == null) {
+      if (other.dependencyPathPrefix != null)
         return false;
-    } else if (!this.packageNamePrefix.equals(other.packageNamePrefix))
+    } else if (!this.dependencyPathPrefix.equals(other.dependencyPathPrefix))
       return false;
     return true;
   }
@@ -75,6 +75,6 @@ public class BazelDependenciesItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.packageNamePrefix== null) ? 0 : this.packageNamePrefix.hashCode());
+    return prime * result + ((this.dependencyPathPrefix== null) ? 0 : this.dependencyPathPrefix.hashCode());
   }
 }

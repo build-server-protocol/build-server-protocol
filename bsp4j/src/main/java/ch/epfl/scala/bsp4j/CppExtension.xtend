@@ -7,13 +7,22 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 @JsonRpcData
 class CppBuildTarget {
   @NonNull String version
-  @NonNull List<String> options
-  CppCompiler compiler
+  @NonNull List<String> copts
+  @NonNull List<String> linkopts
+  boolean linkshared
+  String compiler
   String cCompiler
   String cppCompiler
-  new(@NonNull String version, @NonNull List<String> options, CppCompiler compiler, String cCompiler, String cppCompiler) {
+  new(@NonNull String version,
+   @NonNull List<String> copts,
+   @NonNull List<String> linkopts,
+   String compiler,
+   String cCompiler,
+   String cppCompiler) {
     this.version = version
-    this.options = options
+    this.copts = copts
+    this.linkopts = linkopts
+    this.linkshared = linkshared
     this.compiler = compiler
     this.cCompiler = cCompiler
     this.cppCompiler = cppCompiler

@@ -1,6 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.CppCompiler;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
@@ -13,17 +12,24 @@ public class CppBuildTarget {
   private String version;
   
   @NonNull
-  private List<String> options;
+  private List<String> copts;
   
-  private CppCompiler compiler;
+  @NonNull
+  private List<String> linkopts;
+  
+  private boolean linkshared;
+  
+  private String compiler;
   
   private String cCompiler;
   
   private String cppCompiler;
   
-  public CppBuildTarget(@NonNull final String version, @NonNull final List<String> options, final CppCompiler compiler, final String cCompiler, final String cppCompiler) {
+  public CppBuildTarget(@NonNull final String version, @NonNull final List<String> copts, @NonNull final List<String> linkopts, final String compiler, final String cCompiler, final String cppCompiler) {
     this.version = version;
-    this.options = options;
+    this.copts = copts;
+    this.linkopts = linkopts;
+    this.linkshared = this.linkshared;
     this.compiler = compiler;
     this.cCompiler = cCompiler;
     this.cppCompiler = cppCompiler;
@@ -41,20 +47,39 @@ public class CppBuildTarget {
   
   @Pure
   @NonNull
-  public List<String> getOptions() {
-    return this.options;
+  public List<String> getCopts() {
+    return this.copts;
   }
   
-  public void setOptions(@NonNull final List<String> options) {
-    this.options = Preconditions.checkNotNull(options, "options");
+  public void setCopts(@NonNull final List<String> copts) {
+    this.copts = Preconditions.checkNotNull(copts, "copts");
   }
   
   @Pure
-  public CppCompiler getCompiler() {
+  @NonNull
+  public List<String> getLinkopts() {
+    return this.linkopts;
+  }
+  
+  public void setLinkopts(@NonNull final List<String> linkopts) {
+    this.linkopts = Preconditions.checkNotNull(linkopts, "linkopts");
+  }
+  
+  @Pure
+  public boolean isLinkshared() {
+    return this.linkshared;
+  }
+  
+  public void setLinkshared(final boolean linkshared) {
+    this.linkshared = linkshared;
+  }
+  
+  @Pure
+  public String getCompiler() {
     return this.compiler;
   }
   
-  public void setCompiler(final CppCompiler compiler) {
+  public void setCompiler(final String compiler) {
     this.compiler = compiler;
   }
   
@@ -81,7 +106,9 @@ public class CppBuildTarget {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("version", this.version);
-    b.add("options", this.options);
+    b.add("copts", this.copts);
+    b.add("linkopts", this.linkopts);
+    b.add("linkshared", this.linkshared);
     b.add("compiler", this.compiler);
     b.add("cCompiler", this.cCompiler);
     b.add("cppCompiler", this.cppCompiler);
@@ -103,10 +130,17 @@ public class CppBuildTarget {
         return false;
     } else if (!this.version.equals(other.version))
       return false;
-    if (this.options == null) {
-      if (other.options != null)
+    if (this.copts == null) {
+      if (other.copts != null)
         return false;
-    } else if (!this.options.equals(other.options))
+    } else if (!this.copts.equals(other.copts))
+      return false;
+    if (this.linkopts == null) {
+      if (other.linkopts != null)
+        return false;
+    } else if (!this.linkopts.equals(other.linkopts))
+      return false;
+    if (other.linkshared != this.linkshared)
       return false;
     if (this.compiler == null) {
       if (other.compiler != null)
@@ -132,7 +166,9 @@ public class CppBuildTarget {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.options== null) ? 0 : this.options.hashCode());
+    result = prime * result + ((this.copts== null) ? 0 : this.copts.hashCode());
+    result = prime * result + ((this.linkopts== null) ? 0 : this.linkopts.hashCode());
+    result = prime * result + (this.linkshared ? 1231 : 1237);
     result = prime * result + ((this.compiler== null) ? 0 : this.compiler.hashCode());
     result = prime * result + ((this.cCompiler== null) ? 0 : this.cCompiler.hashCode());
     return prime * result + ((this.cppCompiler== null) ? 0 : this.cppCompiler.hashCode());
