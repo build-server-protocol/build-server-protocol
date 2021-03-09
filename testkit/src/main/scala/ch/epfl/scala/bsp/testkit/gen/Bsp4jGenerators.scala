@@ -659,6 +659,22 @@ trait Bsp4jGenerators {
     items <- genJavacOptionsItem.list
   } yield new JavacOptionsResult(items)
 
+  lazy val genCppBuildTarget: Gen[CppBuildTarget] = for {
+    version <- arbitrary[String]
+    copts <- arbitrary[String].list
+    defines <- arbitrary[String].list
+    linkopts <- arbitrary[String].list
+    linkshared <- arbitrary[Boolean]
+    compiler <- arbitrary[String]
+    cCompiler <- arbitrary[String]
+    cppCompiler <- arbitrary[String]
+  } yield {
+    val cppBuildTarget = new CppBuildTarget(version, copts, defines, linkopts, compiler, cCompiler, cppCompiler)
+    cppBuildTarget.setLinkshared(linkshared)
+
+    cppBuildTarget
+  }
+
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)

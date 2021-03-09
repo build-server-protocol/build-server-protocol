@@ -61,10 +61,12 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
   val baseUri: URI = base.getCanonicalFile.toURI
   private val languageIds = List("scala").asJava
+  private val cppLanguageId = List("cpp").asJava
 
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
+  val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
@@ -88,10 +90,19 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     new BuildTargetCapabilities(true, false, true, false)
   )
 
+  val target4 = new BuildTarget(
+    targetId4,
+    List(BuildTargetTag.APPLICATION).asJava,
+    cppLanguageId,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true)
+  )
+
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = Map(
     targetId1 -> target1,
     targetId2 -> target2,
-    targetId3 -> target3
+    targetId3 -> target3,
+    targetId4 -> target4
   )
 
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
@@ -238,6 +249,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target3.setBaseDirectory(targetId3.getUri)
       target3.setDataKind(BuildTargetDataKind.SBT)
       target3.setData(sbtBuildTarget)
+
+      target4.setDisplayName("target 4")
+      target4.setBaseDirectory(targetId4.getUri)
+      target4.setDataKind(BuildTargetDataKind.CPP)
+      target4.setData(BuildTargetDataKind.CPP)//TODO: Add cpp build target
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
