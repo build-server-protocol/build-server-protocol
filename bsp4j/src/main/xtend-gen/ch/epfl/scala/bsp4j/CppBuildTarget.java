@@ -15,6 +15,9 @@ public class CppBuildTarget {
   private List<String> copts;
   
   @NonNull
+  private List<String> defines;
+  
+  @NonNull
   private List<String> linkopts;
   
   private boolean linkshared;
@@ -25,9 +28,10 @@ public class CppBuildTarget {
   
   private String cppCompiler;
   
-  public CppBuildTarget(@NonNull final String version, @NonNull final List<String> copts, @NonNull final List<String> linkopts, final String compiler, final String cCompiler, final String cppCompiler) {
+  public CppBuildTarget(@NonNull final String version, @NonNull final List<String> copts, @NonNull final List<String> defines, @NonNull final List<String> linkopts, final String compiler, final String cCompiler, final String cppCompiler) {
     this.version = version;
     this.copts = copts;
+    this.defines = defines;
     this.linkopts = linkopts;
     this.linkshared = this.linkshared;
     this.compiler = compiler;
@@ -53,6 +57,16 @@ public class CppBuildTarget {
   
   public void setCopts(@NonNull final List<String> copts) {
     this.copts = Preconditions.checkNotNull(copts, "copts");
+  }
+  
+  @Pure
+  @NonNull
+  public List<String> getDefines() {
+    return this.defines;
+  }
+  
+  public void setDefines(@NonNull final List<String> defines) {
+    this.defines = Preconditions.checkNotNull(defines, "defines");
   }
   
   @Pure
@@ -107,6 +121,7 @@ public class CppBuildTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("version", this.version);
     b.add("copts", this.copts);
+    b.add("defines", this.defines);
     b.add("linkopts", this.linkopts);
     b.add("linkshared", this.linkshared);
     b.add("compiler", this.compiler);
@@ -134,6 +149,11 @@ public class CppBuildTarget {
       if (other.copts != null)
         return false;
     } else if (!this.copts.equals(other.copts))
+      return false;
+    if (this.defines == null) {
+      if (other.defines != null)
+        return false;
+    } else if (!this.defines.equals(other.defines))
       return false;
     if (this.linkopts == null) {
       if (other.linkopts != null)
@@ -167,6 +187,7 @@ public class CppBuildTarget {
     int result = 1;
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.copts== null) ? 0 : this.copts.hashCode());
+    result = prime * result + ((this.defines== null) ? 0 : this.defines.hashCode());
     result = prime * result + ((this.linkopts== null) ? 0 : this.linkopts.hashCode());
     result = prime * result + (this.linkshared ? 1231 : 1237);
     result = prime * result + ((this.compiler== null) ? 0 : this.compiler.hashCode());

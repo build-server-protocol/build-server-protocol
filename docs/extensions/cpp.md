@@ -37,6 +37,11 @@ export interface CppBuildTarget {
     * For example: -Iexternal/gtest/include */
   copts: String[];
   
+  /** Attributes prepended with -D
+    * and added to the compile command line
+    * For example: gcc */
+  defines: String[];
+  
   /** Attributes added to the linker command
     * For example: -pthread */
   linkopts: String[];
