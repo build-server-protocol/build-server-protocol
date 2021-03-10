@@ -52,13 +52,15 @@ class HappyMockSuite extends FunSuite {
   def assertWorkspaceBuildTargets(server: MockBuildServer): Unit = {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
-    assert(buildTargets.length == 3)
+    assert(buildTargets.length == 4)
     val scalaBuildTarget = buildTargets.head.asTarget[ScalaBuildTarget]
     val jvmBuildTarget = buildTargets(1).asTarget[JvmBuildTarget]
     val sbtBuildTarget = buildTargets(2).asTarget[SbtBuildTarget]
+    val cppBuildTarget = buildTargets(3).asTarget[CppBuildTarget]
     compareScalaBuildTarget(scalaBuildTarget)
     compareJvmBuildTarget(jvmBuildTarget)
     compareSbtBuildTarget(sbtBuildTarget)
+    compareCppBuildTargets(cppBuildTarget)
   }
 
   def compareSbtBuildTarget(sbtBuildTarget: SbtBuildTarget): Unit = {
@@ -84,6 +86,12 @@ class HappyMockSuite extends FunSuite {
     }
     assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
     compareJvmBuildTarget(scalaBuildTarget.getJvmBuildTarget)
+  }
+
+  private def compareCppBuildTargets(cppBuildTarget: CppBuildTarget): Unit = {
+    assert(cppBuildTarget.getVersion == "C++11")
+    assert(cppBuildTarget.getCCompiler == "/usr/bin/gcc")
+    assert(cppBuildTarget.getCppCompiler == "/usr/bin/g++")
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
