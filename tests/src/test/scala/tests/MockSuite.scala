@@ -14,7 +14,7 @@ import org.scalatest.FunSuite
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
-trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer
+trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer with CppBuildServer
 
 class HappyMockSuite extends FunSuite {
 
@@ -119,6 +119,24 @@ class HappyMockSuite extends FunSuite {
       val classpath = item.getClasspath.asScala
       assert(classpath.nonEmpty)
       assert(classpath.exists(_.contains("guava")))
+    }
+  }
+
+  def assertCppOptions(server: MockBuildServer): Unit = {
+    val cppOptionsParams = new CppOptionsParams(getBuildTargetIds(server))
+    val cppOptionsResult = server.buildTargetCppOptions(cppOptionsParams).get
+    val cppOptionsItems = cppOptionsResult.getItems.asScala
+    cppOptionsItems.foreach { item =>
+      val options = item.getCopts.asScala
+      assert(options.nonEmpty)
+      assert(options.exists(_.contains("-Iexternal/gtest/include")))
+      val defines = item.getDefines.asScala
+      assert(defines.nonEmpty)
+      assert(defines.exists(_.contains("BOOST_FALLTHROUGH")))
+      val linkopts = item.getLinkopts.asScala
+      assert(linkopts.nonEmpty)
+      assert(linkopts.exists(_.contains("-pthread")))
+      assert(!item.isLinkshared)
     }
   }
 

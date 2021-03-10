@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 
 import scala.jdk.CollectionConverters._
 
-abstract class AbstractBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer
+abstract class AbstractBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer with CppBuildServer
 
 abstract class AbstractMockServer extends AbstractBuildServer {
   var client: BuildClient

@@ -661,19 +661,30 @@ trait Bsp4jGenerators {
 
   lazy val genCppBuildTarget: Gen[CppBuildTarget] = for {
     version <- arbitrary[String]
+    compiler <- arbitrary[String]
+    cCompiler <- arbitrary[String]
+    cppCompiler <- arbitrary[String]
+  } yield new CppBuildTarget(version, compiler, cCompiler, cppCompiler)
+
+  lazy val genCppOptionsItem: Gen[CppOptionsItem] = for {
+    target <- genBuildTargetIdentifier
     copts <- arbitrary[String].list
     defines <- arbitrary[String].list
     linkopts <- arbitrary[String].list
     linkshared <- arbitrary[Boolean]
-    compiler <- arbitrary[String]
-    cCompiler <- arbitrary[String]
-    cppCompiler <- arbitrary[String]
   } yield {
-    val cppBuildTarget = new CppBuildTarget(version, copts, defines, linkopts, compiler, cCompiler, cppCompiler)
-    cppBuildTarget.setLinkshared(linkshared)
-
-    cppBuildTarget
+    val cppOptionsItem = new CppOptionsItem(target, copts, defines, linkopts)
+    cppOptionsItem.setLinkshared(linkshared)
+    cppOptionsItem
   }
+
+  lazy val genCppOptionsParams: Gen[CppOptionsParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new CppOptionsParams(targets)
+
+  lazy val genCppOptionsResult: Gen[CppOptionsResult] = for {
+    items <- genCppOptionsItem.list
+  } yield new CppOptionsResult(items)
 
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)

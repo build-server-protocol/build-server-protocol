@@ -31,25 +31,54 @@ export interface CppBuildTarget {
   /** Uri representating path to the c++ compiler. 
     * For example: file:///usr/bin/g++ */
   cppCompiler?: Uri;
+  
+}
+```
+
+## Cpp Options Request
+
+The build target cpp options request is sent from the client to the server to
+query for the list of compiler options necessary to compile in a given list of
+targets.
+
+- method: `buildTarget/cppOptions`
+- params: `CppOptionsParams`
+
+```ts
+export interface CppOptionsParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+Response:
+
+- result: `CppOptionsResult`, defined as follows
+
+```ts
+export interface CppOptionsResult {
+  items: List[CppOptionsItem];
+}
+
+export interface CppOptionsItem {
+  target: BuildTargetIdentifier;
 
   /** Attributes added in the given order to COPTS
-    * before compiling the target. 
-    * For example: -Iexternal/gtest/include */
+   * before compiling the target.
+   * For example: -Iexternal/gtest/include */
   copts: String[];
-  
+    
   /** Attributes prepended with -D
-    * and added to the compile command line
-    * For example: gcc */
+   * and added to the compile command line
+   * For example: BOOST_FALLTHROUGH */
   defines: String[];
-  
+    
   /** Attributes added to the linker command
     * For example: -pthread */
   linkopts: String[];
-  
+    
   /** Create a shared library.
-    * The presence of this flag means that linking occurs with the -shared flag 
-    * For example: gcc */
+   * The presence of this flag means that linking occurs with the -shared flag
+   * For example: gcc */
   linkshared?: Boolean;
-  
 }
 ```

@@ -767,8 +767,19 @@ object DebugSessionParamsDataKind {
     compiler: String,
     cCompiler: Uri,
     cppCompiler: Uri,
+)
+
+@JsonCodec final case class CppOptionsParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+@JsonCodec final case class CppOptionsItem(
     copts: List[String],
     defines: List[String],
     linkopts: List[String],
     linkshared: Boolean,
+)
+
+@JsonCodec final case class CppOptionsResult(
+    items: List[CppOptionsItem]
 )

@@ -176,6 +176,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
+  override def buildTargetCppOptions(params: CppOptionsParams): CompletableFuture[CppOptionsResult] = {
+    handleRequest{
+      val copts = List("-Iexternal/gtest/include").asJava
+      val defines = List("BOOST_FALLTHROUGH").asJava
+      val linkopts = List("-pthread").asJava
+      val item = new CppOptionsItem(targetId4, copts, defines, linkopts)
+      val result = new CppOptionsResult(List(item).asJava)
+      Right(result)
+    }
+  }
+
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
