@@ -660,10 +660,10 @@ trait Bsp4jGenerators {
   } yield new JavacOptionsResult(items)
 
   lazy val genCppBuildTarget: Gen[CppBuildTarget] = for {
-    version <- arbitrary[String]
-    compiler <- arbitrary[String]
-    cCompiler <- arbitrary[String]
-    cppCompiler <- arbitrary[String]
+    version <- arbitrary[String].nullable
+    compiler <- arbitrary[String].nullable
+    cCompiler <- genFileUriString.nullable
+    cppCompiler <- genFileUriString.nullable
   } yield new CppBuildTarget(version, compiler, cCompiler, cppCompiler)
 
   lazy val genCppOptionsItem: Gen[CppOptionsItem] = for {

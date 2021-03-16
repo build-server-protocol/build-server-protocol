@@ -18,11 +18,11 @@ the `dataKind` field contains "cpp".
 export interface CppBuildTarget {
   /** The c++ version this target is supposed to use. 
     * For example: C++11 */
-  version: String;
+  version?: String;
 
   /** The type of compiler this target is supposed to use. 
     * For example: gcc */
-  compiler: String;
+  compiler?: String;
 
   /** Uri representating path to the c compiler. 
     * For example: file:///usr/bin/gcc */

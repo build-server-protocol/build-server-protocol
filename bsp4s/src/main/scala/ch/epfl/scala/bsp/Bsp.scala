@@ -763,7 +763,7 @@ object DebugSessionParamsDataKind {
 )
 
 @JsonCodec final case class CppBuildTarget(
-    version: String,
+    version: Option[String],
     compiler: Option[String],
     cCompiler: Option[Uri],
     cppCompiler: Option[Uri],

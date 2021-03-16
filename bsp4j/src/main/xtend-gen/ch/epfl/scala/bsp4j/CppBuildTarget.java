@@ -1,13 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CppBuildTarget {
-  @NonNull
   private String version;
   
   private String compiler;
@@ -16,7 +13,7 @@ public class CppBuildTarget {
   
   private String cppCompiler;
   
-  public CppBuildTarget(@NonNull final String version, final String compiler, final String cCompiler, final String cppCompiler) {
+  public CppBuildTarget(final String version, final String compiler, final String cCompiler, final String cppCompiler) {
     this.version = version;
     this.compiler = compiler;
     this.cCompiler = cCompiler;
@@ -24,13 +21,12 @@ public class CppBuildTarget {
   }
   
   @Pure
-  @NonNull
   public String getVersion() {
     return this.version;
   }
   
-  public void setVersion(@NonNull final String version) {
-    this.version = Preconditions.checkNotNull(version, "version");
+  public void setVersion(final String version) {
+    this.version = version;
   }
   
   @Pure
