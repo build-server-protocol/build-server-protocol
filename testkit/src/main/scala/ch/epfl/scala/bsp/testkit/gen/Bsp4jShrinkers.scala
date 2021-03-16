@@ -38,6 +38,7 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       debugProvider <- shrink(capabilities.getDebugProvider)
       inverseSourcesProvider <- shrink(capabilities.getInverseSourcesProvider)
       dependencySourcesProvider <- shrink(capabilities.getDependencySourcesProvider)
+      dependencyModulesProvider <- shrink(capabilities.getDependencyModulesProvider)
       resourcesProvider <- shrink(capabilities.getResourcesProvider)
       buildTargetChangedProvider <- shrink(capabilities.getBuildTargetChangedProvider)
     } yield {
@@ -49,6 +50,7 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       capabilities.setDependencySourcesProvider(dependencySourcesProvider)
       capabilities.setResourcesProvider(resourcesProvider)
       capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)
+      capabilities.setDependencyModulesProvider(dependencyModulesProvider)
       capabilities
     }
   }

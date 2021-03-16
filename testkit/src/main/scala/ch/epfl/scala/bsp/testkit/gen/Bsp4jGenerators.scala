@@ -30,6 +30,7 @@ trait Bsp4jGenerators {
     debugProvider <- genDebugProvider.nullable
     inverseSourcesProvider <- BoxedGen.boolean.nullable
     dependencySourcesProvider <- BoxedGen.boolean.nullable
+    dependencyModulesProvider <- BoxedGen.boolean.nullable
     resourcesProvider <- BoxedGen.boolean.nullable
     buildTargetChangedProvider <- BoxedGen.boolean.nullable
     canReload <- BoxedGen.boolean.nullable
@@ -43,6 +44,7 @@ trait Bsp4jGenerators {
     capabilities.setResourcesProvider(resourcesProvider)
     capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)
     capabilities.setCanReload(canReload)
+    capabilities.setDependencyModulesProvider(dependencyModulesProvider)
     capabilities
   }
 

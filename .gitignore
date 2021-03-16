@@ -11,6 +11,8 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+project/metals.sbt
+project/project
 
 # Scala-IDE specific
 .scala_dependencies
@@ -27,3 +29,7 @@ node_modules
 out/
 
 *._trace
+
+.bloop
+.metals/
+.vscode

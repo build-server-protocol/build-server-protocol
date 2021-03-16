@@ -49,6 +49,9 @@ public interface BuildServer {
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
+    @JsonRequest("buildTarget/dependencyModules")
+    CompletableFuture<DependencyModulesResult> buildTargetDependencyModules(DependencyModulesParams params);
+
     default void onConnectWithClient(BuildClient server) {
 
     }

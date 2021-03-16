@@ -34,6 +34,7 @@ trait BuildTarget {
   object dependencySources
       extends Endpoint[DependencySourcesParams, DependencySourcesResult](
         "buildTarget/dependencySources")
+  object dependencyModules extends Endpoint[DependencyModulesParams, DependencyModulesResult]("buildTarget/dependencyModules")
   object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
   // Scala specific endpoints

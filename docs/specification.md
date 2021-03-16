@@ -382,6 +382,10 @@ export interface BuildServerCapabilities {
    * via method buildTarget/dependencySources */
   dependencySourcesProvider?: Boolean;
 
+  /** The server cam provide a list of dependency modules (libraries with meta information)
+   * via method buildTarget/dependencyModules */
+  dependencyModulesProvider?: Boolean;
+
   /** The server provides all the resource dependencies
    * via method buildTarget/resources */
   resourcesProvider?: Boolean;
@@ -810,6 +814,50 @@ export interface DependencySourcesItem {
    * target's dependencies.
    * Can be source files, jar files, zip files, or directories. */
   sources: Uri[];
+}
+```
+
+### Dependency Modules Request
+
+The build target dependency modules request is sent from the client to the
+server to query for the libraries of build target dependencies that are external
+to the workspace including meta information about library and their sources.
+It's an extended version of `buildTarget/sources`.
+
+- method: `buildTarget/dependencyModules`
+- params: `DependencyModulesParams`
+
+```ts
+export interface DependencyModulesParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+Response:
+
+- result: `DependencyModulesResult`, defined as follows
+
+```ts
+export interface DependencyModulesResult {
+  items: DependencyModulesItem[];
+}
+export interface DependencyModulesItem {
+  target: BuildTargetIdentifier;
+  modules: DependencyModule[];
+}
+export interface DependencyModule {
+  /** Module name */
+  name: String;
+
+  /** Module version */
+  version: String;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: String;
+
+  /** Language-specific metadata about this module.
+   * See MavenDependencyModule as an example. */
+  data?: any;
 }
 ```
 

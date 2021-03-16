@@ -21,6 +21,8 @@ public class BuildServerCapabilities {
   
   private Boolean dependencySourcesProvider;
   
+  private Boolean dependencyModulesProvider;
+  
   private Boolean resourcesProvider;
   
   private Boolean buildTargetChangedProvider;
@@ -86,6 +88,15 @@ public class BuildServerCapabilities {
   }
   
   @Pure
+  public Boolean getDependencyModulesProvider() {
+    return this.dependencyModulesProvider;
+  }
+  
+  public void setDependencyModulesProvider(final Boolean dependencyModulesProvider) {
+    this.dependencyModulesProvider = dependencyModulesProvider;
+  }
+  
+  @Pure
   public Boolean getResourcesProvider() {
     return this.resourcesProvider;
   }
@@ -140,6 +151,7 @@ public class BuildServerCapabilities {
     b.add("debugProvider", this.debugProvider);
     b.add("inverseSourcesProvider", this.inverseSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
+    b.add("dependencyModulesProvider", this.dependencyModulesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
     b.add("jvmRunEnvironmentProvider", this.jvmRunEnvironmentProvider);
@@ -188,6 +200,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.dependencySourcesProvider.equals(other.dependencySourcesProvider))
       return false;
+    if (this.dependencyModulesProvider == null) {
+      if (other.dependencyModulesProvider != null)
+        return false;
+    } else if (!this.dependencyModulesProvider.equals(other.dependencyModulesProvider))
+      return false;
     if (this.resourcesProvider == null) {
       if (other.resourcesProvider != null)
         return false;
@@ -227,6 +244,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.debugProvider== null) ? 0 : this.debugProvider.hashCode());
     result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
+    result = prime * result + ((this.dependencyModulesProvider== null) ? 0 : this.dependencyModulesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
     result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
     result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());

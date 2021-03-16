@@ -20,6 +20,10 @@
         "title": "JVM Extension",
         "sidebar_label": "JVM"
       },
+      "extensions/maven": {
+        "title": "Maven Extension",
+        "sidebar_label": "Maven"
+      },
       "extensions/sbt": {
         "title": "sbt Extension",
         "sidebar_label": "sbt"
