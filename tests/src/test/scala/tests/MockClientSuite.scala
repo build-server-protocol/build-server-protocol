@@ -1,6 +1,6 @@
 package tests
 
-import java.nio.file.Files
+import java.nio.file.{Files, Paths}
 import java.util.Collections
 import java.util.concurrent.Executors
 import ch.epfl.scala.bsp.testkit.client.TestClient
@@ -35,18 +35,28 @@ class MockClientSuite extends FunSuite {
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
 
+  private val languageIds = List("scala").asJava
+
+  val target1 = new BuildTarget(
+    targetId1,
+    List(BuildTargetTag.LIBRARY).asJava,
+    languageIds,
+    Collections.emptyList(),
+    new BuildTargetCapabilities(true, false, false, false)
+  )
+
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
-    Collections.emptyList(),
-    Collections.emptyList(),
+    languageIds,
+    List(targetId1).asJava,
     new BuildTargetCapabilities(true, true, false, false)
   )
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
-    Collections.emptyList(),
-    Collections.emptyList(),
+    languageIds,
+    List(targetId1).asJava,
     new BuildTargetCapabilities(true, false, true, false)
   )
 
@@ -208,6 +218,35 @@ class MockClientSuite extends FunSuite {
       case Failure(_) =>
       case Success(_) => fail("Test Classes should expect all item classes to be defined!")
     }
+  }
+
+  test("Workspace Build Targets"){
+    val targets = List(target1, target2, target3).asJava
+    val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
+    val javaVersion = sys.props.get("java.vm.specification.version")
+    val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
+    val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
+    val scalaBuildTarget =
+      new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
+
+    scalaBuildTarget.setJvmBuildTarget(jvmBuildTarget)
+    target2.setDisplayName("target 1")
+    target1.setBaseDirectory(targetId1.getUri)
+    target1.setDataKind(BuildTargetDataKind.SCALA)
+    target1.setData(scalaBuildTarget)
+
+    target2.setDisplayName("target 2")
+    target2.setBaseDirectory(targetId2.getUri)
+    target2.setDataKind(BuildTargetDataKind.SCALA)
+    target2.setData(scalaBuildTarget)
+
+    target3.setDisplayName("target 3")
+    target3.setBaseDirectory(targetId3.getUri)
+    target3.setDataKind(BuildTargetDataKind.SCALA)
+    target3.setData(scalaBuildTarget)
+
+    val workspaceBuildTargetsResult = new WorkspaceBuildTargetsResult(targets)
+    client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)
   }
 
 

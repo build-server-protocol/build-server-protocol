@@ -1,17 +1,18 @@
 package ch.epfl.scala.bsp.testkit.client
 
-import java.io.{File, InputStream, OutputStream}
-import java.util.concurrent.{CompletableFuture, Executors}
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
+import com.google.gson.{Gson, JsonElement}
 
+import java.io.{File, InputStream, OutputStream}
+import java.util.concurrent.{CompletableFuture, Executors}
 import scala.collection.convert.ImplicitConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.compat.java8.DurationConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.duration.{Duration, DurationInt}
-import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, ExecutionException, Future, TimeoutException}
+import scala.concurrent._
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
@@ -25,6 +26,8 @@ class TestClient(
 
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+
+  private implicit val gson: Gson = new Gson()
 
   def wrapTest(body: MockSession => Future[Any]): Unit = {
     val (out, in, cleanup) = serverBuilder()
@@ -471,6 +474,34 @@ class TestClient(
         )
     )
 
+  private def extractJdkData(data: JsonElement)(implicit gson: Gson): Option[JvmBuildTarget] =
+    Option(gson.fromJson[JvmBuildTarget](data, classOf[JvmBuildTarget]))
+
+  private def extractScalaSdkData(data: JsonElement)(implicit gson: Gson): Option[ScalaBuildTarget] =
+    Option(gson.fromJson[ScalaBuildTarget](data, classOf[ScalaBuildTarget]))
+
+  private def extractSbtData(data: JsonElement)(implicit gson: Gson): Option[SbtBuildTarget] =
+    Option(gson.fromJson[SbtBuildTarget](data, classOf[SbtBuildTarget]))
+
+  def convertJsonObjectToData(workspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
+    val targets = workspaceBuildTargetsResult.getTargets
+    targets.forEach {
+      target =>
+        Option(target.getData)
+          .map(_.asInstanceOf[JsonElement])
+          .flatMap(data => target.getDataKind match {
+            case BuildTargetDataKind.JVM =>
+              extractJdkData(data)
+            case BuildTargetDataKind.SCALA =>
+              extractScalaSdkData(data)
+            case BuildTargetDataKind.SBT =>
+              extractSbtData(data)
+          })
+          .map(target.setData(_))
+    }
+    new WorkspaceBuildTargetsResult(targets)
+  }
+
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
@@ -478,6 +509,7 @@ class TestClient(
     session.connection.server
       .workspaceBuildTargets()
       .toScala
+      .map(workspaceBuildTargetsResult => convertJsonObjectToData(workspaceBuildTargetsResult))
       .map(workspaceBuildTargetsResult => {
         val testTargets =
           compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
@@ -488,15 +520,57 @@ class TestClient(
         workspaceBuildTargetsResult
       })
 
+  private def compareBuildTargetData(foundTarget: BuildTarget, target: BuildTarget): Boolean = {
+    List(Option(target.getData), Option(foundTarget.getData)) match {
+      case List(Some(targetData), Some(foundTargetData)) => targetData.getClass.isAssignableFrom(foundTargetData.getClass) &&
+        compareBuildTargetData(foundTargetData, targetData)
+      case List(None, None) => true
+      case _ => false
+    }
+
+  }
+
+  private def compareBuildTargetData(foundTargetData: AnyRef, targetData: AnyRef): Boolean =
+    List(foundTargetData, targetData) match {
+      case List(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) =>
+        compareScalaBuildTargets(foundScalaTarget, targetScalaTarget)
+      case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =>
+        targetJvmTarget == foundJvmTarget
+      case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =>
+        compareSbtBuildTargets(foundSbtTarget, targetSbtTarget)
+    }
+
+  private def compareSbtBuildTargets(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) = {
+    targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
+      targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
+      targetSbtTarget.getParent == foundSbtTarget.getParent &&
+      targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
+      targetSbtTarget.getClasspath.forall {
+        classpath => foundSbtTarget.getClasspath.exists(_.contains(classpath))
+      } &&
+      compareBuildTargetData(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
+  }
+
+  private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) = {
+    targetScalaTarget.getJars.forall {
+      targetJar => foundScalaTarget.getJars.exists(_.contains(targetJar))
+    } &&
+      targetScalaTarget.getPlatform == foundScalaTarget.getPlatform &&
+      targetScalaTarget.getScalaBinaryVersion == foundScalaTarget.getScalaBinaryVersion &&
+      targetScalaTarget.getScalaOrganization == foundScalaTarget.getScalaOrganization &&
+      targetScalaTarget.getScalaVersion == foundScalaTarget.getScalaVersion &&
+      compareBuildTargetData(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
+  }
+
   private def compareBuildTargets(
-      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
-      workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
-  ) =
+                                   expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+                                   workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
+                                 ) =
     expectedWorkspaceBuildTargetsResult.getTargets.forall { target =>
       workspaceBuildTargetsResult.getTargets.exists(
         foundTarget =>
-          foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.`getDependencies` == target.getDependencies
-            && foundTarget.getCapabilities == target.getCapabilities
+          foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.getDependencies == target.getDependencies
+            && foundTarget.getCapabilities == target.getCapabilities && foundTarget.getDataKind == target.getDataKind && compareBuildTargetData(foundTarget, target)
       )
     }
 
