@@ -339,12 +339,11 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     for {
       sbtVersion <- shrink(a.getSbtVersion)
       autoImports <- shrink(a.getAutoImports)
-      classpath <- shrink(a.getClasspath)
       scalaBuildTarget <- shrink(a.getScalaBuildTarget)
       children <- shrink(a.getChildren)
       parent <- shrink(a.getParent)
     } yield {
-      val target = new SbtBuildTarget(sbtVersion, autoImports, classpath, scalaBuildTarget, children)
+      val target = new SbtBuildTarget(sbtVersion, autoImports, scalaBuildTarget, children)
       target.setParent(parent)
       target
     }
@@ -392,7 +391,7 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       val mainClass = new ScalaMainClass(className, arguments, jvmOptions)
       mainClass.setEnvironmentVariables(environmentVariables)
       mainClass
-    } 
+    }
   }
 
   implicit def shrinkScalaMainClassesItem: Shrink[ScalaMainClassesItem] = Shrink { a =>
