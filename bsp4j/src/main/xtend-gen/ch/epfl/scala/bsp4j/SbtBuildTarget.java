@@ -17,9 +17,6 @@ public class SbtBuildTarget {
   private List<String> autoImports;
   
   @NonNull
-  private List<String> classpath;
-  
-  @NonNull
   private ScalaBuildTarget scalaBuildTarget;
   
   private BuildTargetIdentifier parent;
@@ -27,7 +24,7 @@ public class SbtBuildTarget {
   @NonNull
   private List<BuildTargetIdentifier> children;
   
-  public SbtBuildTarget(@NonNull final String sbtVersion, @NonNull final List<String> autoImports, @NonNull final List<String> classpath, @NonNull final ScalaBuildTarget scalaBuildTarget, @NonNull final List<BuildTargetIdentifier> children) {
+  public SbtBuildTarget(@NonNull final String sbtVersion, @NonNull final List<String> autoImports, @NonNull final ScalaBuildTarget scalaBuildTarget, @NonNull final List<BuildTargetIdentifier> children) {
     this.sbtVersion = sbtVersion;
     this.autoImports = autoImports;
     this.scalaBuildTarget = scalaBuildTarget;
@@ -52,16 +49,6 @@ public class SbtBuildTarget {
   
   public void setAutoImports(@NonNull final List<String> autoImports) {
     this.autoImports = Preconditions.checkNotNull(autoImports, "autoImports");
-  }
-  
-  @Pure
-  @NonNull
-  public List<String> getClasspath() {
-    return this.classpath;
-  }
-  
-  public void setClasspath(@NonNull final List<String> classpath) {
-    this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
   
   @Pure
@@ -99,7 +86,6 @@ public class SbtBuildTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("sbtVersion", this.sbtVersion);
     b.add("autoImports", this.autoImports);
-    b.add("classpath", this.classpath);
     b.add("scalaBuildTarget", this.scalaBuildTarget);
     b.add("parent", this.parent);
     b.add("children", this.children);
@@ -126,11 +112,6 @@ public class SbtBuildTarget {
         return false;
     } else if (!this.autoImports.equals(other.autoImports))
       return false;
-    if (this.classpath == null) {
-      if (other.classpath != null)
-        return false;
-    } else if (!this.classpath.equals(other.classpath))
-      return false;
     if (this.scalaBuildTarget == null) {
       if (other.scalaBuildTarget != null)
         return false;
@@ -156,7 +137,6 @@ public class SbtBuildTarget {
     int result = 1;
     result = prime * result + ((this.sbtVersion== null) ? 0 : this.sbtVersion.hashCode());
     result = prime * result + ((this.autoImports== null) ? 0 : this.autoImports.hashCode());
-    result = prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
     result = prime * result + ((this.scalaBuildTarget== null) ? 0 : this.scalaBuildTarget.hashCode());
     result = prime * result + ((this.parent== null) ? 0 : this.parent.hashCode());
     return prime * result + ((this.children== null) ? 0 : this.children.hashCode());
