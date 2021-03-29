@@ -537,19 +537,8 @@ class TestClient(
       case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =>
         targetJvmTarget == foundJvmTarget
       case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =>
-        compareSbtBuildTargets(foundSbtTarget, targetSbtTarget)
+        targetSbtTarget == foundSbtTarget
     }
-
-  private def compareSbtBuildTargets(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) = {
-    targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
-      targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
-      targetSbtTarget.getParent == foundSbtTarget.getParent &&
-      targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
-      targetSbtTarget.getClasspath.forall {
-        classpath => foundSbtTarget.getClasspath.exists(_.contains(classpath))
-      } &&
-      compareBuildTargetData(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
-  }
 
   private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) = {
     targetScalaTarget.getJars.forall {
