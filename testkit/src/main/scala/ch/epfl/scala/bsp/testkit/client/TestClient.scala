@@ -535,10 +535,23 @@ class TestClient(
       case List(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) =>
         compareScalaBuildTargets(foundScalaTarget, targetScalaTarget)
       case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =>
-        targetJvmTarget == foundJvmTarget
+        compareJvmTarget(foundJvmTarget, targetJvmTarget)
       case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =>
-        targetSbtTarget == foundSbtTarget
+        compareSbtBuildTarget(foundSbtTarget, targetSbtTarget)
     }
+
+  private def compareSbtBuildTarget(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) = {
+    targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
+      targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
+      targetSbtTarget.getParent == foundSbtTarget.getParent &&
+      targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
+      compareScalaBuildTargets(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
+  }
+
+  private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) = {
+    foundJvmTarget.getJavaHome.contains(targetJvmTarget.getJavaHome) &&
+      targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
+  }
 
   private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) = {
     targetScalaTarget.getJars.forall {
@@ -548,7 +561,7 @@ class TestClient(
       targetScalaTarget.getScalaBinaryVersion == foundScalaTarget.getScalaBinaryVersion &&
       targetScalaTarget.getScalaOrganization == foundScalaTarget.getScalaOrganization &&
       targetScalaTarget.getScalaVersion == foundScalaTarget.getScalaVersion &&
-      compareBuildTargetData(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
+      compareJvmTarget(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
   }
 
   private def compareBuildTargets(
