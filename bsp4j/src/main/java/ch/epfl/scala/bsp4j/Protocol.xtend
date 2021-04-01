@@ -145,6 +145,7 @@ class BuildServerCapabilities {
   DebugProvider debugProvider
   Boolean inverseSourcesProvider
   Boolean dependencySourcesProvider
+  Boolean dependencyModulesProvider
   Boolean resourcesProvider
   Boolean buildTargetChangedProvider
   Boolean jvmRunEnvironmentProvider
@@ -640,4 +641,45 @@ class DebugSessionAddress {
     new(@NonNull String uri){
         this.uri = uri;
     }
+}
+
+@JsonRpcData
+class DependencyModulesParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
+class DependencyModulesResult {
+  @NonNull List<DependencyModulesItem> items
+
+  new(@NonNull List<DependencyModulesItem> items) {
+    this.items = items
+  }
+}
+
+@JsonRpcData
+class DependencyModulesItem {
+  @NonNull BuildTargetIdentifier target
+  @NonNull List<DependencyModule> modules
+
+  new (@NonNull BuildTargetIdentifier target, @NonNull List<DependencyModule> modules) {
+    this.target = target
+    this.modules = modules
+  }
+}
+
+@JsonRpcData
+class DependencyModule {
+  @NonNull String name
+  @NonNull String version
+  String dataKind
+  @JsonAdapter(JsonElementTypeAdapter.Factory) Object data
+
+  new (@NonNull String name, @NonNull String version) {
+    this.name = name
+    this.version = version
+  }
 }

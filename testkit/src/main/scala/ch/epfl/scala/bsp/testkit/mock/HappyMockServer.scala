@@ -55,6 +55,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setJvmRunEnvironmentProvider(true)
     c.setJvmTestEnvironmentProvider(true)
     c.setCanReload(true)
+    c.setDependencyModulesProvider(true)
     c
   }
 
@@ -454,6 +455,43 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new CleanCacheResult("cleaned cache", true)
       Right(result)
     }
+
+  override def buildTargetDependencyModules(
+    params: DependencyModulesParams
+  ): CompletableFuture[DependencyModulesResult] = {
+    handleRequest {
+      def jvmModule(targetId: BuildTargetIdentifier, org: String, name: String, version: String): DependencyModule = {
+        val fullName = s"$org-$name-$version"
+        val module = new DependencyModule(
+          s"$org-$name",
+          version
+        )
+        val artifacts = List(None, Some("-sources")).map{ classifier =>
+          val path = s"lib/$fullName${classifier.getOrElse("")}.jar"
+          val artifact = new MavenDependencyModuleArtifact(uriInTarget(targetId, path).toString)
+          classifier.foreach(artifact.setClassifier)
+          artifact
+        }.asJava
+        val data = new MavenDependencyModule(org, name, version, artifacts)
+        module.setData(data)
+        module.setDataKind("maven")
+        module
+      }
+
+      val target1Modules = List(jvmModule(targetId1, "org.library1", "0.0.1", "jvm")).asJava
+      val target2Modules = List(jvmModule(targetId2, "org.library2_2.13", "0.0.1", "jvm")).asJava
+      val target3Modules = List(jvmModule(targetId3, "org.library3_2.13", "0.0.1", "jvm")).asJava
+
+      val result = new DependencyModulesResult(
+        List(
+          new DependencyModulesItem(targetId1, target1Modules),
+          new DependencyModulesItem(targetId2, target2Modules),
+          new DependencyModulesItem(targetId3, target3Modules)
+        ).asJava
+      ) 
+      Right(result)
+    }
+  }
 
   private def handleRequest[T](
       f: => Either[ResponseError, T]

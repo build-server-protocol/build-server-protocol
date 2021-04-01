@@ -66,6 +66,8 @@ class TypoSuite extends FunSuite {
 
   // Java server client that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
+
+
     override def buildInitialize(
         params: InitializeBuildParams
     ): CompletableFuture[InitializeBuildResult] = {
@@ -80,6 +82,7 @@ class TypoSuite extends FunSuite {
         capabilities.setResourcesProvider(true)
         capabilities.setBuildTargetChangedProvider(true)
         capabilities.setCanReload(true)
+        capabilities.setDependencyModulesProvider(true)
         new InitializeBuildResult("test-server", "1.0.0", "2.0.0-M1", capabilities)
       }
     }
@@ -165,6 +168,28 @@ class TypoSuite extends FunSuite {
         new CleanCacheResult("clean", true)
       }
     }
+
+    override def buildTargetDependencyModules(
+      params: DependencyModulesParams
+    ): CompletableFuture[DependencyModulesResult] = {
+      CompletableFuture.completedFuture {
+        val item =
+          new DependencyModulesItem(
+            buildTargetUri,
+            Collections.singletonList {
+              val item = new DependencyModule("org-some-library", "0.0.1")
+              val jvmArtifact =
+                new MavenDependencyModuleArtifact("uri")
+              val jvmModuleData =
+                new MavenDependencyModule("org", "some-library", "0.0.1", List(jvmArtifact).asJava)
+              item.setData(jvmModuleData)
+              item.setDataKind("maven")
+              item
+            }
+          )
+        new DependencyModulesResult(List(item).asJava)
+      }
+    }
   }
 
   // extension methods to abstract over lsp4s service creation.
@@ -203,6 +228,7 @@ class TypoSuite extends FunSuite {
       .forwardRequest(s.Workspace.buildTargets)
       .forwardRequest(s.Workspace.reload)
       .forwardRequest(s.BuildTarget.sources)
+      .forwardRequest(s.BuildTarget.dependencyModules)
       .forwardRequest(s.BuildTarget.inverseSources)
       .forwardRequest(s.BuildTarget.resources)
       .forwardRequest(s.BuildTarget.compile)
@@ -362,6 +388,7 @@ class TypoSuite extends FunSuite {
             .toScala
         }
         sources <- scala1.buildTargetSources(new SourcesParams(buildTargetUris)).toScala
+        depModules <- scala1.buildTargetDependencyModules(new DependencyModulesParams(buildTargetUris)).toScala
         inverseSources <- scala1
           .buildTargetInverseSources(new InverseSourcesParams(textDocumentIdentifier))
           .toScala

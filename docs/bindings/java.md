@@ -164,6 +164,7 @@ class MyBuildServer extends BuildServer {
   def buildTargetCleanCache(params: CleanCacheParams): CompletableFuture[CleanCacheResult] = ???
   def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] = ???
   def buildTargetDependencySources(params: DependencySourcesParams): CompletableFuture[DependencySourcesResult] = ???
+  def buildTargetDependencyModules(params: DependencyModulesParams): CompletableFuture[DependencyModulesResult] = ???
   def buildTargetInverseSources(params: InverseSourcesParams): CompletableFuture[InverseSourcesResult] = ???
   def buildTargetResources(params: ResourcesParams): CompletableFuture[ResourcesResult] = ???
   def buildTargetRun(params: RunParams): CompletableFuture[RunResult] = ???

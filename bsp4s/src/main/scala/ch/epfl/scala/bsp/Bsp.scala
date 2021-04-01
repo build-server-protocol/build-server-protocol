@@ -129,6 +129,7 @@ object BuildTargetDataKind {
     debugProvider: Option[DebugProvider],
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
+    dependencyModulesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
     buildTargetChangedProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
@@ -356,6 +357,43 @@ object SourceItemKind {
 
 @JsonCodec final case class DependencySourcesResult(
     items: List[DependencySourcesItem]
+)
+
+@JsonCodec final case class DependencyModulesParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+@JsonCodec final case class DependencyModule(
+  name: String,
+  version: String,
+  dataKind: Option[String],
+  data: Option[Json]
+)
+
+object DependencyModuleDataKind {
+  val maven = "maven"
+}
+
+@JsonCodec final case class DependencyModulesItem(
+  target: BuildTargetIdentifier,
+  modules: List[DependencyModule]
+)
+
+@JsonCodec final case class DependencyModulesResult(
+  items: List[DependencyModulesItem]
+)
+
+@JsonCodec final case class MavenDependencyModuleArtifact(
+  uri: String,
+  classifier: Option[String],
+)
+
+@JsonCodec final case class MavenDependencyModule(
+  organization: String,
+  name: String,
+  version: String,
+  artifacts: List[MavenDependencyModuleArtifact],
+  scope: Option[String]
 )
 
 // Request: 'buildTarget/resources', C -> S
