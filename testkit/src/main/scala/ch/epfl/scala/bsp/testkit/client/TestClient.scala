@@ -502,6 +502,21 @@ class TestClient(
     new WorkspaceBuildTargetsResult(targets)
   }
 
+  private def convertDataToTargetData(expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
+    val targets = expectedWorkspaceBuildTargetsResult.getTargets
+    targets.forEach{
+      target =>
+        Option(target.getData)
+          .map(data => target.getDataKind match {
+            case BuildTargetDataKind.JVM => data.asInstanceOf[JvmBuildTarget]
+            case BuildTargetDataKind.SCALA => data.asInstanceOf[ScalaBuildTarget]
+            case BuildTargetDataKind.SBT => data.asInstanceOf[SbtBuildTarget]
+          })
+          .map(target.setData(_))
+    }
+    new WorkspaceBuildTargetsResult(targets)
+  }
+
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
@@ -512,7 +527,7 @@ class TestClient(
       .map(workspaceBuildTargetsResult => convertJsonObjectToData(workspaceBuildTargetsResult))
       .map(workspaceBuildTargetsResult => {
         val testTargets =
-          compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
+          compareBuildTargets(convertDataToTargetData(expectedWorkspaceBuildTargetsResult), workspaceBuildTargetsResult)
         assert(
           testTargets,
           s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
@@ -522,8 +537,7 @@ class TestClient(
 
   private def compareBuildTargetData(foundTarget: BuildTarget, target: BuildTarget): Boolean = {
     List(Option(target.getData), Option(foundTarget.getData)) match {
-      case List(Some(targetData), Some(foundTargetData)) => targetData.getClass.isAssignableFrom(foundTargetData.getClass) &&
-        compareBuildTargetData(foundTargetData, targetData)
+      case List(Some(targetData), Some(foundTargetData)) => compareBuildTargetData(foundTargetData, targetData)
       case List(None, None) => true
       case _ => false
     }
@@ -532,28 +546,35 @@ class TestClient(
 
   private def compareBuildTargetData(foundTargetData: AnyRef, targetData: AnyRef): Boolean =
     List(foundTargetData, targetData) match {
-      case List(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) =>
-        compareScalaBuildTargets(foundScalaTarget, targetScalaTarget)
-      case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =>
-        compareJvmTarget(foundJvmTarget, targetJvmTarget)
-      case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =>
-        compareSbtBuildTarget(foundSbtTarget, targetSbtTarget)
+      case List(foundScalaTarget: ScalaBuildTarget, targetScalaTarget) =>
+        compareScalaBuildTargets(foundScalaTarget, targetScalaTarget.asInstanceOf[ScalaBuildTarget])
+      case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget) =>
+        compareJvmTarget(foundJvmTarget, targetJvmTarget.asInstanceOf[JvmBuildTarget])
+      case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget) =>
+        compareSbtBuildTarget(foundSbtTarget, targetSbtTarget.asInstanceOf[SbtBuildTarget])
     }
 
-  private def compareSbtBuildTarget(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) = {
+  private def compareSbtBuildTarget(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =
     targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
       targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
       targetSbtTarget.getParent == foundSbtTarget.getParent &&
       targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
       compareScalaBuildTargets(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
-  }
 
-  private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) = {
-    foundJvmTarget.getJavaHome.contains(targetJvmTarget.getJavaHome) &&
+  private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =
+    compareJavaHome(foundJvmTarget, targetJvmTarget)  &&
       targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
+
+  private def compareJavaHome(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) = {
+    List(Option(foundJvmTarget.getJavaHome), Option(targetJvmTarget.getJavaHome)) match {
+      case List(Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.contains(targetJavaHome)
+      case List(None, None) => true
+      case List(Some(_), None) => false
+      case List(None, Some(_)) => false
+    }
   }
 
-  private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) = {
+  private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) =
     targetScalaTarget.getJars.forall {
       targetJar => foundScalaTarget.getJars.exists(_.contains(targetJar))
     } &&
@@ -562,7 +583,6 @@ class TestClient(
       targetScalaTarget.getScalaOrganization == foundScalaTarget.getScalaOrganization &&
       targetScalaTarget.getScalaVersion == foundScalaTarget.getScalaVersion &&
       compareJvmTarget(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
-  }
 
   private def compareBuildTargets(
                                    expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
