@@ -896,6 +896,91 @@ class TestClient(
 
   def testWorkspaceReload(): Unit =
     wrapTest(testWorkspaceReload)
+
+  def testProjectImport(javacOptionsFlag: Boolean = true, scalacOptionsFlag: Boolean = true): Unit =
+    wrapTest(testProjectImport(_, javacOptionsFlag, scalacOptionsFlag))
+
+  private def testProjectImport(session: MockSession,
+                                javacOptionsFlag: Boolean,
+                                scalacOptionsFlag: Boolean): Future[Unit] =
+    getAllBuildTargets(session)
+      .flatMap(testProjectTargetsImport(session, _, javacOptionsFlag, scalacOptionsFlag))
+
+  private def testProjectTargetsImport(session: MockSession,
+                                       targets: mutable.Buffer[BuildTarget],
+                                       javacOptionsFlag: Boolean,
+                                       scalacOptionsFlag: Boolean): Future[Unit] = {
+    val bspServer = session.connection.server
+    val targetIds = targets.map(_.getId).asJava
+
+    val sources = fetchSources(bspServer, targetIds)
+    val dependencySources = fetchDependencySources(bspServer, targetIds)
+    val resources = fetchResources(bspServer, targetIds)
+    val javacOptions = if (javacOptionsFlag) fetchJavacOptions(bspServer, targets) else Future.unit
+    val scalacOptions = if (scalacOptionsFlag) fetchScalacOptions(bspServer, targets) else Future.unit
+
+    Future
+      .sequence(Seq(sources, dependencySources, resources, javacOptions, scalacOptions))
+      .map(_ => Unit)
+  }
+
+  private def fetchSources(bspServer: MockSession.BspMockServer,
+                           targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+    val sourcesParams = new SourcesParams(targetIds)
+
+    bspServer
+      .buildTargetSources(sourcesParams)
+      .toScala
+      .map(_ => Unit)
+  }
+
+  private def fetchDependencySources(bspServer: MockSession.BspMockServer,
+                           targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+    val dependencySourcesParams = new DependencySourcesParams(targetIds)
+
+    bspServer
+      .buildTargetDependencySources(dependencySourcesParams)
+      .toScala
+      .map(_ => Unit)
+  }
+
+  private def fetchResources(bspServer: MockSession.BspMockServer,
+                                     targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+    val resourcesParams = new ResourcesParams(targetIds)
+
+    bspServer
+      .buildTargetResources(resourcesParams)
+      .toScala
+      .map(_ => Unit)
+  }
+
+  private def fetchJavacOptions(bspServer: MockSession.BspMockServer,
+                                targets: mutable.Buffer[BuildTarget]): Future[Unit] = {
+    val javaTargetIds = getTargetsIdsForLanguage(targets, "java")
+    val javacOptionsParams = new JavacOptionsParams(javaTargetIds)
+
+    bspServer
+      .buildTargetJavacOptions(javacOptionsParams)
+      .toScala
+      .map(_ => Unit)
+  }
+
+  private def fetchScalacOptions(bspServer: MockSession.BspMockServer,
+                                 targets: mutable.Buffer[BuildTarget]): Future[Unit] = {
+    val scalaTargetIds = getTargetsIdsForLanguage(targets, "scala")
+    val scalacOptionsParams = new ScalacOptionsParams(scalaTargetIds)
+
+    bspServer
+      .buildTargetScalacOptions(scalacOptionsParams)
+      .toScala
+      .map(_ => Unit)
+  }
+
+
+  private def getTargetsIdsForLanguage(targets: mutable.Buffer[BuildTarget], languageId: String): util.List[BuildTargetIdentifier] =
+    targets
+      .filter(_.getLanguageIds.contains(languageId))
+      .map(_.getId).asJava
 }
 
 class TestFailedException(e: Throwable) extends Throwable(e) {
