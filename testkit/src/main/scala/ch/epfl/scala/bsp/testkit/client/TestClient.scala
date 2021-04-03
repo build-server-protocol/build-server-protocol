@@ -921,7 +921,7 @@ class TestClient(
 
     Future
       .sequence(Seq(sources, dependencySources, resources, javacOptions, scalacOptions))
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
   private def fetchSources(bspServer: MockSession.BspMockServer,
@@ -931,7 +931,7 @@ class TestClient(
     bspServer
       .buildTargetSources(sourcesParams)
       .toScala
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
   private def fetchDependencySources(bspServer: MockSession.BspMockServer,
@@ -941,7 +941,7 @@ class TestClient(
     bspServer
       .buildTargetDependencySources(dependencySourcesParams)
       .toScala
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
   private def fetchResources(bspServer: MockSession.BspMockServer,
@@ -951,7 +951,7 @@ class TestClient(
     bspServer
       .buildTargetResources(resourcesParams)
       .toScala
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
   private def fetchJavacOptions(bspServer: MockSession.BspMockServer,
@@ -962,7 +962,7 @@ class TestClient(
     bspServer
       .buildTargetJavacOptions(javacOptionsParams)
       .toScala
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
   private def fetchScalacOptions(bspServer: MockSession.BspMockServer,
@@ -973,7 +973,7 @@ class TestClient(
     bspServer
       .buildTargetScalacOptions(scalacOptionsParams)
       .toScala
-      .map(_ => Unit)
+      .map(_ => ())
   }
 
 
