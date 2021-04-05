@@ -68,8 +68,6 @@ class TestClient(
 
   def testInitializeAndShutdown(): Unit = wrapTest(_ => Future.unit)
 
-  def testResolveProject(): Unit = wrapTest(resolveProject)
-
   def testTargetCapabilities(): Unit = wrapTest(targetCapabilities)
 
   def testTargetsCompileUnsuccessfully(): Unit =
@@ -268,25 +266,6 @@ class TestClient(
           session.connection.cancelable()
           Future.unit
       }
-  }
-
-  def resolveProject(session: MockSession): Future[Any] = {
-    session.connection.server
-      .workspaceBuildTargets()
-      .toScala
-      .flatMap(buildTargets => {
-        val targets = buildTargets.getTargets.asScala
-        val targetsId = targets.map(_.getId).asJava
-        val buildTargetSources =
-          session.connection.server.buildTargetSources(new SourcesParams(targetsId)).toScala
-        val dependencySources =
-          session.connection.server
-            .buildTargetDependencySources(new DependencySourcesParams(targetsId))
-            .toScala
-        val resources =
-          session.connection.server.buildTargetResources(new ResourcesParams(targetsId)).toScala
-        Future.sequence(List(buildTargetSources, dependencySources, resources))
-      })
   }
 
   def targetCapabilities(session: MockSession): Future[Any] = {
@@ -897,10 +876,10 @@ class TestClient(
   def testWorkspaceReload(): Unit =
     wrapTest(testWorkspaceReload)
 
-  def testProjectImport(javacOptionsFlag: Boolean = true, scalacOptionsFlag: Boolean = true): Unit =
-    wrapTest(testProjectImport(_, javacOptionsFlag, scalacOptionsFlag))
+  def testResolveProject(javacOptionsFlag: Boolean = false, scalacOptionsFlag: Boolean = false): Unit =
+    wrapTest(testResolveProject(_, javacOptionsFlag, scalacOptionsFlag))
 
-  private def testProjectImport(session: MockSession,
+  private def testResolveProject(session: MockSession,
                                 javacOptionsFlag: Boolean,
                                 scalacOptionsFlag: Boolean): Future[Unit] =
     getAllBuildTargets(session)
