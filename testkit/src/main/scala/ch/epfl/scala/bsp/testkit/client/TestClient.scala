@@ -27,7 +27,7 @@ class TestClient(
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
-  private implicit val gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
 
   def wrapTest(body: MockSession => Future[Any]): Unit = {
     val (out, in, cleanup) = serverBuilder()
@@ -474,13 +474,13 @@ class TestClient(
         )
     )
 
-  private def extractJdkData(data: JsonElement)(implicit gson: Gson): Option[JvmBuildTarget] =
+  private def extractJdkData(data: JsonElement, gson: Gson): Option[JvmBuildTarget] =
     Option(gson.fromJson[JvmBuildTarget](data, classOf[JvmBuildTarget]))
 
-  private def extractScalaSdkData(data: JsonElement)(implicit gson: Gson): Option[ScalaBuildTarget] =
+  private def extractScalaSdkData(data: JsonElement, gson: Gson): Option[ScalaBuildTarget] =
     Option(gson.fromJson[ScalaBuildTarget](data, classOf[ScalaBuildTarget]))
 
-  private def extractSbtData(data: JsonElement)(implicit gson: Gson): Option[SbtBuildTarget] =
+  private def extractSbtData(data: JsonElement, gson: Gson): Option[SbtBuildTarget] =
     Option(gson.fromJson[SbtBuildTarget](data, classOf[SbtBuildTarget]))
 
   def convertJsonObjectToData(workspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
@@ -491,11 +491,11 @@ class TestClient(
           .map(_.asInstanceOf[JsonElement])
           .flatMap(data => target.getDataKind match {
             case BuildTargetDataKind.JVM =>
-              extractJdkData(data)
+              extractJdkData(data, gson)
             case BuildTargetDataKind.SCALA =>
-              extractScalaSdkData(data)
+              extractScalaSdkData(data, gson)
             case BuildTargetDataKind.SBT =>
-              extractSbtData(data)
+              extractSbtData(data, gson)
           })
           .map(target.setData(_))
     }
@@ -536,21 +536,21 @@ class TestClient(
       })
 
   private def compareBuildTargetData(foundTarget: BuildTarget, target: BuildTarget): Boolean = {
-    List(Option(target.getData), Option(foundTarget.getData)) match {
-      case List(Some(targetData), Some(foundTargetData)) => compareBuildTargetData(foundTargetData, targetData)
-      case List(None, None) => true
+    (Option(target.getData), Option(foundTarget.getData)) match {
+      case (Some(targetData), Some(foundTargetData)) => compareBuildTargetData(foundTargetData, targetData)
+      case (None, None) => true
       case _ => false
     }
 
   }
 
   private def compareBuildTargetData(foundTargetData: AnyRef, targetData: AnyRef): Boolean =
-    List(foundTargetData, targetData) match {
-      case List(foundScalaTarget: ScalaBuildTarget, targetScalaTarget) =>
+    (foundTargetData, targetData) match {
+      case (foundScalaTarget: ScalaBuildTarget, targetScalaTarget) =>
         compareScalaBuildTargets(foundScalaTarget, targetScalaTarget.asInstanceOf[ScalaBuildTarget])
-      case List(foundJvmTarget: JvmBuildTarget, targetJvmTarget) =>
+      case (foundJvmTarget: JvmBuildTarget, targetJvmTarget) =>
         compareJvmTarget(foundJvmTarget, targetJvmTarget.asInstanceOf[JvmBuildTarget])
-      case List(foundSbtTarget: SbtBuildTarget, targetSbtTarget) =>
+      case (foundSbtTarget: SbtBuildTarget, targetSbtTarget) =>
         compareSbtBuildTarget(foundSbtTarget, targetSbtTarget.asInstanceOf[SbtBuildTarget])
     }
 
@@ -566,11 +566,11 @@ class TestClient(
       targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
 
   private def compareJavaHome(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) = {
-    List(Option(foundJvmTarget.getJavaHome), Option(targetJvmTarget.getJavaHome)) match {
-      case List(Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.contains(targetJavaHome)
-      case List(None, None) => true
-      case List(Some(_), None) => false
-      case List(None, Some(_)) => false
+    (Option(foundJvmTarget.getJavaHome), Option(targetJvmTarget.getJavaHome)) match {
+      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.contains(targetJavaHome)
+      case (None, None) => true
+      case (Some(_), None) => false
+      case (None, Some(_)) => false
     }
   }
 
