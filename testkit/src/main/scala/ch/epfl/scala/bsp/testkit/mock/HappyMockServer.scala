@@ -219,6 +219,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val scalaBuildTarget =
         new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
       scalaBuildTarget.setJvmBuildTarget(jvmBuildTarget)
+      val autoImports = List("task-key").asJava
+      val children = List(targetId3).asJava
+      val sbtBuildTarget =
+        new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
 
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
@@ -227,13 +231,13 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
       target2.setDisplayName("target 2")
       target2.setBaseDirectory(targetId2.getUri)
-      target2.setDataKind(BuildTargetDataKind.SCALA)
-      target2.setData(scalaBuildTarget)
+      target2.setDataKind(BuildTargetDataKind.JVM)
+      target2.setData(jvmBuildTarget)
 
       target3.setDisplayName("target 3")
       target3.setBaseDirectory(targetId3.getUri)
-      target3.setDataKind(BuildTargetDataKind.SCALA)
-      target3.setData(scalaBuildTarget)
+      target3.setDataKind(BuildTargetDataKind.SBT)
+      target3.setData(sbtBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)

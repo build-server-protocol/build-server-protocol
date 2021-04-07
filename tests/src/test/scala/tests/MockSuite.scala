@@ -1,10 +1,9 @@
 package tests
 
 import java.io.File
-import java.nio.file.Files
+import java.nio.file.{Files, Paths}
 import java.util
 import java.util.Collections
-
 import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp.testkit.mock.MockServer
 import ch.epfl.scala.bsp4j._
@@ -13,6 +12,7 @@ import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.FunSuite
 
 import scala.collection.JavaConverters._
+import scala.reflect.ClassTag
 
 trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer
 
@@ -43,9 +43,9 @@ class HappyMockSuite extends FunSuite {
   private val gson = new Gson()
 
   implicit class XtensionBuildTarget(buildTarget: BuildTarget) {
-    def asScalaBuildTarget: ScalaBuildTarget = {
-      gson.fromJson[ScalaBuildTarget](buildTarget.getData.asInstanceOf[JsonElement],
-        classOf[ScalaBuildTarget])
+    def asTarget[T: ClassTag]: T = {
+      gson.fromJson[T](buildTarget.getData.asInstanceOf[JsonElement],
+        implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]])
     }
   }
 
@@ -53,16 +53,37 @@ class HappyMockSuite extends FunSuite {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
     assert(buildTargets.length == 3)
-    val scalaBuildTargets = buildTargets.map(_.asScalaBuildTarget)
-    scalaBuildTargets.foreach { scalaBuildTarget =>
-      assert(scalaBuildTarget != null)
-      assert(scalaBuildTarget.getScalaVersion == "2.12.7")
-      val scalaJars = scalaBuildTarget.getJars.asScala
-      List("scala-compiler", "scala-reflect", "scala-library").foreach { scalaJar =>
-        assert(scalaJars.exists(_.contains(scalaJar)), (scalaJars, scalaJar))
-      }
-      assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
+    val scalaBuildTarget = buildTargets.head.asTarget[ScalaBuildTarget]
+    val jvmBuildTarget = buildTargets(1).asTarget[JvmBuildTarget]
+    val sbtBuildTarget = buildTargets(2).asTarget[SbtBuildTarget]
+    compareScalaBuildTarget(scalaBuildTarget)
+    compareJvmBuildTarget(jvmBuildTarget)
+    compareSbtBuildTarget(sbtBuildTarget)
+  }
+
+  def compareSbtBuildTarget(sbtBuildTarget: SbtBuildTarget): Unit = {
+    assert(sbtBuildTarget.getSbtVersion == "1.0.0")
+    assert(sbtBuildTarget.getAutoImports == List("task-key").asJava)
+    compareScalaBuildTarget(sbtBuildTarget.getScalaBuildTarget)
+  }
+
+  def compareJvmBuildTarget(jvmBuildTarget: JvmBuildTarget): Unit = {
+    val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
+    val javaVersion = sys.props.get("java.vm.specification.version")
+
+    assert(Option(jvmBuildTarget.getJavaHome) == javaHome)
+    assert(Option(jvmBuildTarget.getJavaVersion) == javaVersion)
+  }
+
+  private def compareScalaBuildTarget(scalaBuildTarget: ScalaBuildTarget): Unit = {
+    assert(scalaBuildTarget != null)
+    assert(scalaBuildTarget.getScalaVersion == "2.12.7")
+    val scalaJars = scalaBuildTarget.getJars.asScala
+    List("scala-compiler", "scala-reflect", "scala-library").foreach { scalaJar =>
+      assert(scalaJars.exists(_.contains(scalaJar)), (scalaJars, scalaJar))
     }
+    assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
+    compareJvmBuildTarget(scalaBuildTarget.getJvmBuildTarget)
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
@@ -170,8 +191,8 @@ class HappyMockSuite extends FunSuite {
     assert(client.logMessages.nonEmpty)
     assert(client.showMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
-    assert(client.taskStarts.exists{p => p.getTaskId.getId == "subtask1id"})
-    assert(client.taskFinishes.exists{p => p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK })
+    assert(client.taskStarts.exists { p => p.getTaskId.getId == "subtask1id" })
+    assert(client.taskFinishes.exists { p => p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK })
     assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
@@ -208,7 +229,7 @@ class HappyMockSuite extends FunSuite {
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val tests = serverCapabilities.getCompileProvider.getLanguageIds.asScala
 
-    val languages = List("scala","java").sorted
+    val languages = List("scala", "java").sorted
     assert(compiles.sorted == languages)
     assert(runs.sorted == languages)
     assert(tests.sorted == languages)
