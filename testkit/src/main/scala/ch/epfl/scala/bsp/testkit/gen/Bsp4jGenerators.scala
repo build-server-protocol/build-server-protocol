@@ -324,12 +324,11 @@ trait Bsp4jGenerators {
   lazy val genSbtBuildTarget: Gen[SbtBuildTarget] = for {
     sbtVersion <- arbitrary[String]
     autoImports <- arbitrary[String].list
-    classpath <- arbitrary[String].list
     scalaBuildTarget <- genScalaBuildTarget
     children <- genBuildTargetIdentifier.list
     parent <- genBuildTargetIdentifier.nullable
   } yield {
-    val target = new SbtBuildTarget(sbtVersion, autoImports, classpath, scalaBuildTarget, children)
+    val target = new SbtBuildTarget(sbtVersion, autoImports, scalaBuildTarget, children)
     target.setParent(parent)
     target
   }
