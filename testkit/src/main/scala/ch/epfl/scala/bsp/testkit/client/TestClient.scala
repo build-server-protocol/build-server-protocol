@@ -483,6 +483,9 @@ class TestClient(
   private def extractSbtData(data: JsonElement, gson: Gson): Option[SbtBuildTarget] =
     Option(gson.fromJson[SbtBuildTarget](data, classOf[SbtBuildTarget]))
 
+  def extractCppData(data: JsonElement, gson: Gson): Option[CppBuildTarget] =
+    Option(gson.fromJson[CppBuildTarget](data, classOf[CppBuildTarget]))
+
   def convertJsonObjectToData(workspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
     val targets = workspaceBuildTargetsResult.getTargets
     targets.forEach {
@@ -496,21 +499,8 @@ class TestClient(
               extractScalaSdkData(data, gson)
             case BuildTargetDataKind.SBT =>
               extractSbtData(data, gson)
-          })
-          .map(target.setData(_))
-    }
-    new WorkspaceBuildTargetsResult(targets)
-  }
-
-  private def convertDataToTargetData(expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
-    val targets = expectedWorkspaceBuildTargetsResult.getTargets
-    targets.forEach{
-      target =>
-        Option(target.getData)
-          .map(data => target.getDataKind match {
-            case BuildTargetDataKind.JVM => data.asInstanceOf[JvmBuildTarget]
-            case BuildTargetDataKind.SCALA => data.asInstanceOf[ScalaBuildTarget]
-            case BuildTargetDataKind.SBT => data.asInstanceOf[SbtBuildTarget]
+            case BuildTargetDataKind.CPP =>
+              extractCppData(data, gson)
           })
           .map(target.setData(_))
     }
@@ -527,7 +517,7 @@ class TestClient(
       .map(workspaceBuildTargetsResult => convertJsonObjectToData(workspaceBuildTargetsResult))
       .map(workspaceBuildTargetsResult => {
         val testTargets =
-          compareBuildTargets(convertDataToTargetData(expectedWorkspaceBuildTargetsResult), workspaceBuildTargetsResult)
+          compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
         assert(
           testTargets,
           s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
@@ -552,7 +542,17 @@ class TestClient(
         compareJvmTarget(foundJvmTarget, targetJvmTarget.asInstanceOf[JvmBuildTarget])
       case (foundSbtTarget: SbtBuildTarget, targetSbtTarget) =>
         compareSbtBuildTarget(foundSbtTarget, targetSbtTarget.asInstanceOf[SbtBuildTarget])
+      case (foundCppTarget: CppBuildTarget, targetCppTarget) =>
+        compareCppBuildTarget(foundCppTarget, targetCppTarget.asInstanceOf[CppBuildTarget])
     }
+
+  def compareCppBuildTarget(foundCppTarget: CppBuildTarget, targetCppTarget: CppBuildTarget): Boolean = {
+    Option(foundCppTarget.getVersion) == Option(targetCppTarget.getVersion) &&
+      Option(foundCppTarget.getCompiler) == Option(targetCppTarget.getCompiler) &&
+      compareNullablePaths(foundCppTarget.getCCompiler, targetCppTarget.getCCompiler) &&
+      compareNullablePaths(foundCppTarget.getCompiler, targetCppTarget.getCompiler)
+
+  }
 
   private def compareSbtBuildTarget(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =
     targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
@@ -562,12 +562,12 @@ class TestClient(
       compareScalaBuildTargets(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
 
   private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =
-    compareJavaHome(foundJvmTarget, targetJvmTarget)  &&
+    compareNullablePaths(foundJvmTarget.getJavaHome, targetJvmTarget.getJavaHome)  &&
       targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
 
-  private def compareJavaHome(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) = {
-    (Option(foundJvmTarget.getJavaHome), Option(targetJvmTarget.getJavaHome)) match {
-      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.contains(targetJavaHome)
+  private def compareNullablePaths(foundPath: String, targetPath: String) = {
+    (Option(foundPath), Option(targetPath)) match {
+      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.endsWith(targetJavaHome)
       case (None, None) => true
       case (Some(_), None) => false
       case (None, Some(_)) => false
