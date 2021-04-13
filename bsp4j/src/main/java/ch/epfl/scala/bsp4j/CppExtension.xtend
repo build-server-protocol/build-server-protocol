@@ -52,6 +52,5 @@ class CppOptionsItem {
     this.copts = copts
     this.defines = defines
     this.linkopts = linkopts
-    this.linkshared = linkshared
    }
 }
