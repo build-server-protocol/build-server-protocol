@@ -164,6 +164,19 @@ class MockClientSuite extends FunSuite {
     )
   }
 
+  test("Run  cppOptions") {
+    val copts = List("-Iexternal/gtest/include").asJava
+    val defines = List("BOOST_FALLTHROUGH").asJava
+    val linkopts = List("-pthread").asJava
+    val item = new CppOptionsItem(targetId4, copts, defines, linkopts)
+    val cppOptionsItem = List(item).asJava
+
+    client.testCppOptions(
+      new CppOptionsParams(Collections.emptyList()),
+      new CppOptionsResult(cppOptionsItem)
+    )
+  }
+
   test("Run Scala Test Classes") {
     val classes1 = List("class1").asJava
     val classes2 = List("class2").asJava

@@ -838,6 +838,32 @@ class TestClient(
   ): Unit =
     wrapTest(session => testScalacOptions(params, expectedResult, session))
 
+  def testCppOptions(
+      params: CppOptionsParams,
+      expectedResult: CppOptionsResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetCppOptions(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(cppItems => {
+        val itemsTest = cppItems.forall { item =>
+          expectedResult.getItems.contains(item)
+        }
+        assert(
+          itemsTest,
+          s"Cpp Environment Items did not match! Expected: $expectedResult, got $cppItems"
+        )
+      })
+  }
+
+  def testCppOptions(
+      params: CppOptionsParams,
+      expectedResult: CppOptionsResult
+  ): Unit =
+    wrapTest(session => testCppOptions(params, expectedResult, session))
+
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult,
