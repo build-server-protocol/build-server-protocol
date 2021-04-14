@@ -956,7 +956,7 @@ class TestClient(
   }
 
 
-  private def getTargetsIdsForLanguage(targets: mutable.Buffer[BuildTarget], languageId: String): util.List[BuildTargetIdentifier] =
+  private def getTargetsIdsForLanguage(targets: mutable.Buffer[BuildTarget], languageId: String): java.util.List[BuildTargetIdentifier] =
     targets
       .filter(_.getLanguageIds.contains(languageId))
       .map(_.getId).asJava
