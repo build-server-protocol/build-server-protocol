@@ -880,8 +880,8 @@ class TestClient(
     wrapTest(testResolveProject(_, javacOptionsFlag, scalacOptionsFlag))
 
   def testResolveProject(session: MockSession,
-                         javacOptionsFlag: Boolean = false,
-                         scalacOptionsFlag: Boolean = false): Future[Unit] =
+                         javacOptionsFlag: Boolean,
+                         scalacOptionsFlag: Boolean): Future[Unit] =
     getAllBuildTargets(session)
       .flatMap(testProjectTargetsImport(session, _, javacOptionsFlag, scalacOptionsFlag))
 
@@ -914,7 +914,7 @@ class TestClient(
   }
 
   private def fetchDependencySources(bspServer: MockSession.BspMockServer,
-                           targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+                                     targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
     val dependencySourcesParams = new DependencySourcesParams(targetIds)
 
     bspServer
@@ -924,7 +924,7 @@ class TestClient(
   }
 
   private def fetchResources(bspServer: MockSession.BspMockServer,
-                                     targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+                             targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
     val resourcesParams = new ResourcesParams(targetIds)
 
     bspServer

@@ -84,7 +84,7 @@ class MockClientSuite extends FunSuite {
     client.wrapTest(
       session => {
         client
-          .testResolveProject(session)
+          .testResolveProject(session, false, false)
           .map(_ => client.targetsCompileSuccessfully(session))
           .flatMap(_ => client.cleanCacheSuccessfully(session))
       }
