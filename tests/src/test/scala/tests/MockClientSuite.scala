@@ -83,9 +83,12 @@ class MockClientSuite extends FunSuite {
   test("Running batch tests") {
     client.wrapTest(
       session => {
-        client.targetsCompileSuccessfully(session)
+        client
+          .testResolveProject(session)
+          .map(_ => client.targetsCompileSuccessfully(session))
           .flatMap(_ => client.cleanCacheSuccessfully(session))
-      })
+      }
+    )
   }
 
   test("Test Compile of all targets") {

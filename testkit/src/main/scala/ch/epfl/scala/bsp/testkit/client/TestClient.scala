@@ -879,9 +879,9 @@ class TestClient(
   def testResolveProject(javacOptionsFlag: Boolean = false, scalacOptionsFlag: Boolean = false): Unit =
     wrapTest(testResolveProject(_, javacOptionsFlag, scalacOptionsFlag))
 
-  private def testResolveProject(session: MockSession,
-                                javacOptionsFlag: Boolean,
-                                scalacOptionsFlag: Boolean): Future[Unit] =
+  def testResolveProject(session: MockSession,
+                         javacOptionsFlag: Boolean = false,
+                         scalacOptionsFlag: Boolean = false): Future[Unit] =
     getAllBuildTargets(session)
       .flatMap(testProjectTargetsImport(session, _, javacOptionsFlag, scalacOptionsFlag))
 
