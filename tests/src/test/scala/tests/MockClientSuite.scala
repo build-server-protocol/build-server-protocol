@@ -1,16 +1,16 @@
 package tests
 
-import java.nio.file.{Files, Paths}
-import java.util.Collections
-import java.util.concurrent.Executors
 import ch.epfl.scala.bsp.testkit.client.TestClient
 import ch.epfl.scala.bsp.testkit.mock.MockServer
-import ch.epfl.scala.bsp.testkit.mock.MockServer.{LocalMockServer, clientLauncher}
+import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp4j._
 import com.google.common.collect.Lists
 import org.scalatest.FunSuite
 
 import java.net.URI
+import java.nio.file.{Files, Paths}
+import java.util.Collections
+import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
@@ -34,6 +34,7 @@ class MockClientSuite extends FunSuite {
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
+  val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
 
   private val languageIds = List("scala").asJava
 
@@ -57,6 +58,13 @@ class MockClientSuite extends FunSuite {
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+  val target4 = new BuildTarget(
+    targetId4,
+    List(BuildTargetTag.APPLICATION).asJava,
+    List("cpp").asJava,
+    List.empty.asJava,
     new BuildTargetCapabilities(true, false, true, false)
   )
 
@@ -156,6 +164,19 @@ class MockClientSuite extends FunSuite {
     )
   }
 
+  test("Run  cppOptions") {
+    val copts = List("-Iexternal/gtest/include").asJava
+    val defines = List("BOOST_FALLTHROUGH").asJava
+    val linkopts = List("-pthread").asJava
+    val item = new CppOptionsItem(targetId4, copts, defines, linkopts)
+    val cppOptionsItem = List(item).asJava
+
+    client.testCppOptions(
+      new CppOptionsParams(Collections.emptyList()),
+      new CppOptionsResult(cppOptionsItem)
+    )
+  }
+
   test("Run Scala Test Classes") {
     val classes1 = List("class1").asJava
     val classes2 = List("class2").asJava
@@ -221,7 +242,7 @@ class MockClientSuite extends FunSuite {
   }
 
   test("Workspace Build Targets"){
-    val targets = List(target1, target2, target3).asJava
+    val targets = List(target1, target2, target3, target4).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
     val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
@@ -233,6 +254,8 @@ class MockClientSuite extends FunSuite {
     val children = List(targetId3).asJava
     val sbtBuildTarget =
       new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
+    val cppBuildTarget =
+      new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
 
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)
@@ -248,6 +271,11 @@ class MockClientSuite extends FunSuite {
     target3.setBaseDirectory(targetId3.getUri)
     target3.setDataKind(BuildTargetDataKind.SBT)
     target3.setData(sbtBuildTarget)
+
+    target4.setDisplayName("target 4")
+    target3.setBaseDirectory(targetId4.getUri)
+    target4.setDataKind(BuildTargetDataKind.CPP)
+    target4.setData(cppBuildTarget)
 
     val workspaceBuildTargetsResult = new WorkspaceBuildTargetsResult(targets)
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)

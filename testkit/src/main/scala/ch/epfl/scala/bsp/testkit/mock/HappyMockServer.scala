@@ -61,10 +61,12 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
   val baseUri: URI = base.getCanonicalFile.toURI
   private val languageIds = List("scala").asJava
+  private val cppLanguageId = List("cpp").asJava
 
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
+  val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
@@ -88,10 +90,19 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     new BuildTargetCapabilities(true, false, true, false)
   )
 
+  val target4 = new BuildTarget(
+    targetId4,
+    List(BuildTargetTag.APPLICATION).asJava,
+    cppLanguageId,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = Map(
     targetId1 -> target1,
     targetId2 -> target2,
-    targetId3 -> target3
+    targetId3 -> target3,
+    targetId4 -> target4
   )
 
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
@@ -165,6 +176,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
+  override def buildTargetCppOptions(params: CppOptionsParams): CompletableFuture[CppOptionsResult] = {
+    handleRequest{
+      val copts = List("-Iexternal/gtest/include").asJava
+      val defines = List("BOOST_FALLTHROUGH").asJava
+      val linkopts = List("-pthread").asJava
+      val item = new CppOptionsItem(targetId4, copts, defines, linkopts)
+      val result = new CppOptionsResult(List(item).asJava)
+      Right(result)
+    }
+  }
+
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
@@ -223,6 +245,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val children = List(targetId3).asJava
       val sbtBuildTarget =
         new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
+      val cppBuildTarget =
+        new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
 
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
@@ -238,6 +262,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target3.setBaseDirectory(targetId3.getUri)
       target3.setDataKind(BuildTargetDataKind.SBT)
       target3.setData(sbtBuildTarget)
+
+      target4.setDisplayName("target 4")
+      target4.setBaseDirectory(targetId4.getUri)
+      target4.setDataKind(BuildTargetDataKind.CPP)
+      target4.setData(cppBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
@@ -492,7 +521,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           new DependencyModulesItem(targetId2, target2Modules),
           new DependencyModulesItem(targetId3, target3Modules)
         ).asJava
-      ) 
+      )
       Right(result)
     }
   }

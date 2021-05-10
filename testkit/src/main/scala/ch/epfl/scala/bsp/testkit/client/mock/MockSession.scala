@@ -4,7 +4,7 @@ import ch.epfl.scala.bsp.testkit.client.mock.MockSession.BspMockServer
 
 import java.io.{InputStream, OutputStream}
 import java.util.concurrent.{ExecutorService, Executors}
-import ch.epfl.scala.bsp4j.{BuildServer, InitializeBuildParams, JavaBuildServer, JvmBuildServer, ScalaBuildServer}
+import ch.epfl.scala.bsp4j.{BuildServer, CppBuildServer, InitializeBuildParams, JavaBuildServer, JvmBuildServer, ScalaBuildServer}
 import org.eclipse.lsp4j.jsonrpc.Launcher
 
 case class MockSession(
@@ -68,6 +68,7 @@ object MockSession {
     with ScalaBuildServer
     with JavaBuildServer
     with JvmBuildServer
+    with CppBuildServer
 
   def apply(
       in: InputStream,
