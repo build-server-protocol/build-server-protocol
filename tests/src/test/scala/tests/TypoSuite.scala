@@ -30,11 +30,11 @@ import scala.compat.java8.FutureConverters._
 import scala.concurrent.Await
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
-import scala.meta.jsonrpc.Connection
-import scala.meta.jsonrpc.Endpoint
-import scala.meta.jsonrpc.InputOutput
-import scala.meta.jsonrpc.JsonRpcClient
-import scala.meta.jsonrpc.Services
+import jsonrpc4s.Services
+import jsonrpc4s.Endpoint
+import jsonrpc4s.RpcClient
+import jsonrpc4s.Connection
+import jsonrpc4s.InputOutput
 
 class TypoSuite extends FunSuite {
 
@@ -194,21 +194,27 @@ class TypoSuite extends FunSuite {
 
   // extension methods to abstract over lsp4s service creation.
   implicit class XtensionServices(services: Services) {
-    def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: JsonRpcClient): Services = {
-      services.requestAsync(endpoint)(a => endpoint.request(a))
+    def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: RpcClient): Services = {
+      //services.requestAsync(endpoint)(a => endpoint.request(a))
+
+      // FIXME  returns a Task[RpcReponse[B]] but needs a Task[B]
+      // Not fully sure how to fix this one
+
+      //services.requestAsync(endpoint)(a => endpoint.request(a))
+      ???
     }
     def ignoreNotification[A](endpoint: Endpoint[A, Unit]): Services = {
       services.notification(endpoint)(_ => ())
     }
     def forwardNotification[A](
         endpoint: Endpoint[A, Unit]
-    )(implicit client: JsonRpcClient): Services = {
+    )(implicit client: RpcClient): Services = {
       services.notification(endpoint)(a => endpoint.notify(a))
     }
   }
 
   // Scala build client that records all notifications.
-  def silentScalaClient(implicit client: JsonRpcClient): Services =
+  def silentScalaClient(implicit client: RpcClient): Services =
     Services
       .empty(scribe.Logger.root)
       .ignoreNotification(s.Build.showMessage)
@@ -220,7 +226,7 @@ class TypoSuite extends FunSuite {
       .ignoreNotification(s.BuildTarget.didChange)
 
   // Scala build server that delegates all requests to a client.
-  def forwardingScalaServer(implicit client: JsonRpcClient): Services = {
+  def forwardingScalaServer(implicit client: RpcClient): Services = {
     Services
       .empty(scribe.Logger.root)
       .forwardRequest(s.Build.initialize)
@@ -299,7 +305,7 @@ class TypoSuite extends FunSuite {
   }
 
   def startScalaConnection(in: InputStream, out: OutputStream)(
-      fn: JsonRpcClient => Services
+      fn: RpcClient=> Services
   )(implicit s: Scheduler): Connection = {
     val logger = scribe.Logger.root
     Connection(new InputOutput(in, out), logger, logger)(fn)

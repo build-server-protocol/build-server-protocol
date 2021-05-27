@@ -4,11 +4,13 @@ import java.net.URI
 
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder, JsonElement}
-import io.circe.syntax._
-import io.circe.parser.decode
 import org.scalatest.FunSuite
+import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
+import com.github.plokhotnyuk.jsoniter_scala.core.writeToArray
+import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 
 import scala.collection.JavaConverters._
+import jsonrpc4s.RawJson
 
 class SerializationSuite extends FunSuite {
 
@@ -18,18 +20,24 @@ class SerializationSuite extends FunSuite {
     val buildTarget = new URI("anUri")
 
     val target = bsp4s.BuildTargetIdentifier(bsp4s.Uri(buildTarget))
-    val id = bsp4s.TaskId("task", Some(List("p1","p2","p3")))
+    val id = bsp4s.TaskId("task", Some(List("p1", "p2", "p3")))
     val report = bsp4s.CompileReport(target, Some("origin"), 13, 12, Some(77))
     val bsp4sValue = bsp4s.TaskFinishParams(
-      id, Some(12345), Some("message"), bsp4s.StatusCode.Ok,
-      Some(bsp4s.TaskDataKind.CompileReport), Some(report.asJson))
+      id,
+      Some(12345),
+      Some("message"),
+      bsp4s.StatusCode.Ok,
+      Some(bsp4s.TaskDataKind.CompileReport),
+      Option(RawJson(writeToArray(report)))
+    )
 
-    val bsp4sJson = bsp4sValue.asJson.toString()
+    val bsp4sJson = writeToString(bsp4sValue)
     val bsp4jValue = gson.fromJson(bsp4sJson, classOf[bsp4j.TaskFinishParams])
     val bsp4jJson = gson.toJson(bsp4jValue)
-    val bsp4sValueDecoded = decode[bsp4s.TaskFinishParams](bsp4jJson).right.get
+    val bsp4sValueDecoded = readFromString[bsp4s.TaskFinishParams](bsp4jJson)
 
-    val bsp4jValueData = gson.fromJson(bsp4jValue.getData.asInstanceOf[JsonElement], classOf[bsp4j.CompileReport])
+    val bsp4jValueData =
+      gson.fromJson(bsp4jValue.getData.asInstanceOf[JsonElement], classOf[bsp4j.CompileReport])
 
     assert(bsp4jValue.getTaskId.getId == bsp4sValue.taskId.id)
     assert(bsp4jValue.getTaskId.getParents.asScala == bsp4sValue.taskId.parents.get)
@@ -50,8 +58,9 @@ class SerializationSuite extends FunSuite {
     val buildTarget = new URI("build.target")
     val textDocument = new URI("text.document")
 
-    val range1 = bsp4s.Range(bsp4s.Position(1,1), bsp4s.Position(1,12))
-    val diagnostic1 = bsp4s.Diagnostic(range1, Some(bsp4s.DiagnosticSeverity.Error), None, None, "message", None)
+    val range1 = bsp4s.Range(bsp4s.Position(1, 1), bsp4s.Position(1, 12))
+    val diagnostic1 =
+      bsp4s.Diagnostic(range1, Some(bsp4s.DiagnosticSeverity.Error), None, None, "message", None)
 
     val bsp4sValue = bsp4s.PublishDiagnosticsParams(
       bsp4s.TextDocumentIdentifier(bsp4s.Uri(textDocument)),
@@ -61,17 +70,24 @@ class SerializationSuite extends FunSuite {
       reset = false
     )
 
-    val bsp4sJson = bsp4sValue.asJson.toString()
+    //val bsp4sJson = bsp4sValue.asJson.toString()
+    val bsp4sJson = writeToString(bsp4sValue)
     val bsp4jValue = gson.fromJson(bsp4sJson, classOf[bsp4j.PublishDiagnosticsParams])
     val bsp4jJson = gson.toJson(bsp4jValue)
-    val bsp4sValueDecoded = decode[bsp4s.PublishDiagnosticsParams](bsp4jJson).right.get
+    //val bsp4sValueDecoded = decode[bsp4s.PublishDiagnosticsParams](bsp4jJson).right.get
+    val bsp4sValueDecoded = readFromString[bsp4s.PublishDiagnosticsParams](bsp4jJson)
 
     assert(bsp4jValue.getBuildTarget.getUri == bsp4sValue.buildTarget.uri.value)
     assert(bsp4jValue.getOriginId == bsp4sValue.originId.get)
     assert(bsp4jValue.getReset == bsp4sValue.reset)
     assert(bsp4jValue.getTextDocument.getUri == bsp4sValue.textDocument.uri.value)
     assert(bsp4jValue.getDiagnostics.get(0).getMessage == bsp4sValue.diagnostics.head.message)
-    assert(bsp4jValue.getDiagnostics.get(0).getSeverity.getValue == bsp4sValue.diagnostics.head.severity.get.id)
+    assert(
+      bsp4jValue.getDiagnostics
+        .get(0)
+        .getSeverity
+        .getValue == bsp4sValue.diagnostics.head.severity.get.id
+    )
 
     assert(bsp4sValueDecoded == bsp4sValue)
   }
@@ -86,7 +102,7 @@ class SerializationSuite extends FunSuite {
         |}""".stripMargin
 
     val bsp4jValue = gson.fromJson(legacyJson, classOf[bsp4j.BuildTargetCapabilities])
-    val bsp4sValue = decode[bsp4s.BuildTargetCapabilities](legacyJson).right.get
+    val bsp4sValue = readFromString[bsp4s.BuildTargetCapabilities](legacyJson)
 
     assert(bsp4jValue.getCanCompile == bsp4sValue.canCompile)
     assert(bsp4jValue.getCanTest == bsp4sValue.canTest)

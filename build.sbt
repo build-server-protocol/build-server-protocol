@@ -97,7 +97,8 @@ lazy val tests = project
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0",
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0",
-      "org.scalatest" %% "scalatest" % "3.0.5"
+      "org.scalatest" %% "scalatest" % "3.0.5",
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.8.2"
     )
   )
   .dependsOn(bsp4s, bsp4j, `bsp-testkit`)

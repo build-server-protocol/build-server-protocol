@@ -41,7 +41,7 @@ final case class TextDocumentIdentifier(
 
 object TextDocumentIdentifier {
   implicit val codec: JsonValueCodec[TextDocumentIdentifier] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class BuildTargetIdentifier(
@@ -50,7 +50,7 @@ final case class BuildTargetIdentifier(
 
 object BuildTargetIdentifier {
   implicit val codec: JsonValueCodec[BuildTargetIdentifier] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class BuildTargetCapabilities(
@@ -62,7 +62,7 @@ final case class BuildTargetCapabilities(
 
 object BuildTargetCapabilities {
   implicit val codec: JsonValueCodec[BuildTargetCapabilities] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object BuildTargetTag {
@@ -89,7 +89,7 @@ final case class BuildTarget(
 
 object BuildTarget {
   implicit val codec: JsonValueCodec[BuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object BuildTargetDataKind {
@@ -103,7 +103,7 @@ final case class BuildClientCapabilities(
 
 object BuildClientCapabilities {
   implicit val codec: JsonValueCodec[BuildClientCapabilities] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Notification: 'build/initialized', C -> S
@@ -111,7 +111,7 @@ final case class InitializedBuildParams()
 
 object InitializedBuildParams {
   implicit val codec: JsonValueCodec[InitializedBuildParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'build/initialize', C -> S
@@ -126,28 +126,28 @@ final case class InitializeBuildParams(
 
 object InitializeBuildParams {
   implicit val codec: JsonValueCodec[InitializeBuildParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Reload()
 
 object Reload {
   implicit val codec: JsonValueCodec[Reload] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Shutdown()
 
 object Shutdown {
   implicit val codec: JsonValueCodec[Shutdown] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Exit()
 
 object Exit {
   implicit val codec: JsonValueCodec[Exit] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CompileProvider(
@@ -156,7 +156,7 @@ final case class CompileProvider(
 
 object CompileProvider {
   implicit val codec: JsonValueCodec[CompileProvider] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestProvider(
@@ -165,7 +165,7 @@ final case class TestProvider(
 
 object TestProvider {
   implicit val codec: JsonValueCodec[TestProvider] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class RunProvider(
@@ -174,7 +174,7 @@ final case class RunProvider(
 
 object RunProvider {
   implicit val codec: JsonValueCodec[RunProvider] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DebugProvider(
@@ -183,7 +183,7 @@ final case class DebugProvider(
 
 object DebugProvider {
   implicit val codec: JsonValueCodec[DebugProvider] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class BuildServerCapabilities(
@@ -203,7 +203,7 @@ final case class BuildServerCapabilities(
 
 object BuildServerCapabilities {
   implicit val codec: JsonValueCodec[BuildServerCapabilities] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class InitializeBuildResult(
@@ -216,7 +216,7 @@ final case class InitializeBuildResult(
 
 object InitializeBuildResult {
   implicit val codec: JsonValueCodec[InitializeBuildResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 sealed abstract class MessageType(val id: Int)
@@ -248,7 +248,7 @@ final case class TaskId(
 
 object TaskId {
   implicit val codec: JsonValueCodec[TaskId] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ShowMessageParams(
@@ -260,7 +260,7 @@ final case class ShowMessageParams(
 
 object ShowMessageParams {
   implicit val codec: JsonValueCodec[ShowMessageParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class LogMessageParams(
@@ -272,7 +272,7 @@ final case class LogMessageParams(
 
 object LogMessageParams {
   implicit val codec: JsonValueCodec[LogMessageParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Position(
@@ -282,7 +282,7 @@ final case class Position(
 
 object Position {
   implicit val codec: JsonValueCodec[Position] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Range(
@@ -292,7 +292,7 @@ final case class Range(
 
 object Range {
   implicit val codec: JsonValueCodec[Range] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 case class Location(
@@ -301,7 +301,7 @@ case class Location(
 )
 object Location {
   implicit val codec: JsonValueCodec[Location] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 sealed abstract class DiagnosticSeverity(val id: Int)
@@ -334,7 +334,7 @@ final case class DiagnosticRelatedInformation(
 
 object DiagnosticRelatedInformation {
   implicit val codec: JsonValueCodec[DiagnosticRelatedInformation] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class Diagnostic(
@@ -348,7 +348,7 @@ final case class Diagnostic(
 
 object Diagnostic {
   implicit val codec: JsonValueCodec[Diagnostic] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class PublishDiagnosticsParams(
@@ -361,14 +361,14 @@ final case class PublishDiagnosticsParams(
 
 object PublishDiagnosticsParams {
   implicit val codec: JsonValueCodec[PublishDiagnosticsParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class WorkspaceBuildTargetsRequest()
 
 object WorkspaceBuildTargetsRequest {
   implicit val codec: JsonValueCodec[WorkspaceBuildTargetsRequest] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'workspace/buildTargets'
@@ -378,7 +378,7 @@ final case class WorkspaceBuildTargetsResult(
 
 object WorkspaceBuildTargetsResult {
   implicit val codec: JsonValueCodec[WorkspaceBuildTargetsResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 sealed abstract class BuildTargetEventKind(val id: Int)
@@ -411,7 +411,7 @@ final case class BuildTargetEvent(
 
 object BuildTargetEvent {
   implicit val codec: JsonValueCodec[BuildTargetEvent] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Notification: 'buildTarget/didChange', S -> C
@@ -421,7 +421,7 @@ final case class DidChangeBuildTarget(
 
 object DidChangeBuildTarget {
   implicit val codec: JsonValueCodec[DidChangeBuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/sources', C -> S
@@ -431,7 +431,7 @@ final case class SourcesParams(
 
 object SourcesParams {
   implicit val codec: JsonValueCodec[SourcesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class SourcesResult(
@@ -440,7 +440,7 @@ final case class SourcesResult(
 
 object SourcesResult {
   implicit val codec: JsonValueCodec[SourcesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class SourcesItem(
@@ -451,7 +451,7 @@ final case class SourcesItem(
 
 object SourcesItem {
   implicit val codec: JsonValueCodec[SourcesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class SourceItem(
@@ -462,7 +462,7 @@ final case class SourceItem(
 
 object SourceItem {
   implicit val codec: JsonValueCodec[SourceItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 sealed abstract class SourceItemKind(val id: Int)
@@ -491,7 +491,7 @@ final case class InverseSourcesParams(
 
 object InverseSourcesParams {
   implicit val codec: JsonValueCodec[InverseSourcesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class InverseSourcesResult(
@@ -500,7 +500,7 @@ final case class InverseSourcesResult(
 
 object InverseSourcesResult {
   implicit val codec: JsonValueCodec[InverseSourcesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/dependencySources', C -> S
@@ -510,7 +510,7 @@ final case class DependencySourcesParams(
 
 object DependencySourcesParams {
   implicit val codec: JsonValueCodec[DependencySourcesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DependencySourcesItem(
@@ -520,7 +520,7 @@ final case class DependencySourcesItem(
 
 object DependencySourcesItem {
   implicit val codec: JsonValueCodec[DependencySourcesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DependencySourcesResult(
@@ -529,7 +529,7 @@ final case class DependencySourcesResult(
 
 object DependencySourcesResult {
   implicit val codec: JsonValueCodec[DependencySourcesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DependencyModulesParams(
@@ -538,7 +538,7 @@ final case class DependencyModulesParams(
 
 object DependencyModulesParams {
   implicit val codec: JsonValueCodec[DependencyModulesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DependencyModule(
@@ -550,7 +550,7 @@ final case class DependencyModule(
 
 object DependencyModule {
   implicit val codec: JsonValueCodec[DependencyModule] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object DependencyModuleDataKind {
@@ -564,7 +564,7 @@ final case class DependencyModulesItem(
 
 object DependencyModulesItem {
   implicit val codec: JsonValueCodec[DependencyModulesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DependencyModulesResult(
@@ -573,7 +573,7 @@ final case class DependencyModulesResult(
 
 object DependencyModulesResult {
   implicit val codec: JsonValueCodec[DependencyModulesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class MavenDependencyModuleArtifact(
@@ -583,7 +583,7 @@ final case class MavenDependencyModuleArtifact(
 
 object MavenDependencyModuleArtifact {
   implicit val codec: JsonValueCodec[MavenDependencyModuleArtifact] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class MavenDependencyModule(
@@ -596,7 +596,7 @@ final case class MavenDependencyModule(
 
 object MavenDependencyModule {
   implicit val codec: JsonValueCodec[MavenDependencyModule] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/resources', C -> S
@@ -606,7 +606,7 @@ final case class ResourcesParams(
 
 object ResourcesParams {
   implicit val codec: JsonValueCodec[ResourcesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ResourcesResult(
@@ -615,7 +615,7 @@ final case class ResourcesResult(
 
 object ResourcesResult {
   implicit val codec: JsonValueCodec[ResourcesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ResourcesItem(
@@ -625,7 +625,7 @@ final case class ResourcesItem(
 
 object ResourcesItem {
   implicit val codec: JsonValueCodec[ResourcesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/compile', C -> S
@@ -637,7 +637,7 @@ final case class CompileParams(
 
 object CompileParams {
   implicit val codec: JsonValueCodec[CompileParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CompileResult(
@@ -649,7 +649,7 @@ final case class CompileResult(
 
 object CompileResult {
   implicit val codec: JsonValueCodec[CompileResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CompileReport(
@@ -662,7 +662,7 @@ final case class CompileReport(
 
 object CompileReport {
   implicit val codec: JsonValueCodec[CompileReport] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CompileTask(
@@ -671,7 +671,7 @@ final case class CompileTask(
 
 object CompileTask {
   implicit val codec: JsonValueCodec[CompileTask] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestParams(
@@ -684,7 +684,7 @@ final case class TestParams(
 
 object TestParams {
   implicit val codec: JsonValueCodec[TestParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestResult(
@@ -696,7 +696,7 @@ final case class TestResult(
 
 object TestResult {
   implicit val codec: JsonValueCodec[TestResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestReport(
@@ -712,7 +712,7 @@ final case class TestReport(
 
 object TestReport {
   implicit val codec: JsonValueCodec[TestReport] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestTask(
@@ -721,7 +721,7 @@ final case class TestTask(
 
 object TestTask {
   implicit val codec: JsonValueCodec[TestTask] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestStart(
@@ -731,7 +731,7 @@ final case class TestStart(
 
 object TestStart {
   implicit val codec: JsonValueCodec[TestStart] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TestFinish(
@@ -745,7 +745,7 @@ final case class TestFinish(
 
 object TestFinish {
   implicit val codec: JsonValueCodec[TestFinish] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 sealed abstract class TestStatus(val code: Int)
@@ -783,7 +783,7 @@ final case class RunParams(
 
 object RunParams {
   implicit val codec: JsonValueCodec[RunParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object RunParamsDataKind {
@@ -818,7 +818,7 @@ final case class RunResult(
 
 object RunResult {
   implicit val codec: JsonValueCodec[RunResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CleanCacheParams(
@@ -827,7 +827,7 @@ final case class CleanCacheParams(
 
 object CleanCacheParams {
   implicit val codec: JsonValueCodec[CleanCacheParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CleanCacheResult(
@@ -837,7 +837,7 @@ final case class CleanCacheResult(
 
 object CleanCacheResult {
   implicit val codec: JsonValueCodec[CleanCacheResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TaskStartParams(
@@ -850,7 +850,7 @@ final case class TaskStartParams(
 
 object TaskStartParams {
   implicit val codec: JsonValueCodec[TaskStartParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TaskProgressParams(
@@ -866,7 +866,7 @@ final case class TaskProgressParams(
 
 object TaskProgressParams {
   implicit val codec: JsonValueCodec[TaskProgressParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class TaskFinishParams(
@@ -880,7 +880,7 @@ final case class TaskFinishParams(
 
 object TaskFinishParams {
   implicit val codec: JsonValueCodec[TaskFinishParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object TaskDataKind {
@@ -920,7 +920,7 @@ final case class JvmBuildTarget(
 
 object JvmBuildTarget {
   implicit val codec: JsonValueCodec[JvmBuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaBuildTarget(
@@ -934,7 +934,7 @@ final case class ScalaBuildTarget(
 
 object ScalaBuildTarget {
   implicit val codec: JsonValueCodec[ScalaBuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaTestParams(
@@ -944,7 +944,7 @@ final case class ScalaTestParams(
 
 object ScalaTestParams {
   implicit val codec: JsonValueCodec[ScalaTestParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object TestParamsDataKind {
@@ -958,7 +958,7 @@ final case class ScalacOptionsParams(
 
 object ScalacOptionsParams {
   implicit val codec: JsonValueCodec[ScalacOptionsParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JvmTestEnvironmentParams(
@@ -968,7 +968,7 @@ final case class JvmTestEnvironmentParams(
 
 object JvmTestEnvironmentParams {
   implicit val codec: JsonValueCodec[JvmTestEnvironmentParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JvmEnvironmentItem(
@@ -981,7 +981,7 @@ final case class JvmEnvironmentItem(
 
 object JvmEnvironmentItem {
   implicit val codec: JsonValueCodec[JvmEnvironmentItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JvmTestEnvironmentResult(
@@ -990,7 +990,7 @@ final case class JvmTestEnvironmentResult(
 
 object JvmTestEnvironmentResult {
   implicit val codec: JsonValueCodec[JvmTestEnvironmentResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JvmRunEnvironmentParams(
@@ -1000,7 +1000,7 @@ final case class JvmRunEnvironmentParams(
 
 object JvmRunEnvironmentParams {
   implicit val codec: JsonValueCodec[JvmRunEnvironmentParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JvmRunEnvironmentResult(
@@ -1009,7 +1009,7 @@ final case class JvmRunEnvironmentResult(
 
 object JvmRunEnvironmentResult {
   implicit val codec: JsonValueCodec[JvmRunEnvironmentResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalacOptionsItem(
@@ -1021,7 +1021,7 @@ final case class ScalacOptionsItem(
 
 object ScalacOptionsItem {
   implicit val codec: JsonValueCodec[ScalacOptionsItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalacOptionsResult(
@@ -1030,7 +1030,7 @@ final case class ScalacOptionsResult(
 
 object ScalacOptionsResult {
   implicit val codec: JsonValueCodec[ScalacOptionsResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/scalaTestClasses', C -> S
@@ -1041,7 +1041,7 @@ final case class ScalaTestClassesParams(
 
 object ScalaTestClassesParams {
   implicit val codec: JsonValueCodec[ScalaTestClassesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaTestClassesItem(
@@ -1052,7 +1052,7 @@ final case class ScalaTestClassesItem(
 
 object ScalaTestClassesItem {
   implicit val codec: JsonValueCodec[ScalaTestClassesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaTestClassesResult(
@@ -1061,7 +1061,7 @@ final case class ScalaTestClassesResult(
 
 object ScalaTestClassesResult {
   implicit val codec: JsonValueCodec[ScalaTestClassesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 // Request: 'buildTarget/scalaMainClasses', C -> S
@@ -1072,7 +1072,7 @@ final case class ScalaMainClassesParams(
 
 object ScalaMainClassesParams {
   implicit val codec: JsonValueCodec[ScalaMainClassesParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaMainClass(
@@ -1084,7 +1084,7 @@ final case class ScalaMainClass(
 
 object ScalaMainClass {
   implicit val codec: JsonValueCodec[ScalaMainClass] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaMainClassesItem(
@@ -1095,7 +1095,7 @@ final case class ScalaMainClassesItem(
 
 object ScalaMainClassesItem {
   implicit val codec: JsonValueCodec[ScalaMainClassesItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class ScalaMainClassesResult(
@@ -1104,7 +1104,7 @@ final case class ScalaMainClassesResult(
 
 object ScalaMainClassesResult {
   implicit val codec: JsonValueCodec[ScalaMainClassesResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class SbtBuildTarget(
@@ -1117,7 +1117,7 @@ final case class SbtBuildTarget(
 
 object SbtBuildTarget {
   implicit val codec: JsonValueCodec[SbtBuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class BspConnectionDetails(
@@ -1130,7 +1130,7 @@ final case class BspConnectionDetails(
 
 object BspConnectionDetails {
   implicit val codec: JsonValueCodec[BspConnectionDetails] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class DebugSessionParams(
@@ -1141,7 +1141,7 @@ final case class DebugSessionParams(
 
 object DebugSessionParams {
   implicit val codec: JsonValueCodec[DebugSessionParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 object DebugSessionParamsDataKind {
@@ -1154,7 +1154,7 @@ final case class DebugSessionAddress(uri: String)
 
 object DebugSessionAddress {
   implicit val codec: JsonValueCodec[DebugSessionAddress] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JavacOptionsParams(
@@ -1163,7 +1163,7 @@ final case class JavacOptionsParams(
 
 object JavacOptionsParams {
   implicit val codec: JsonValueCodec[JavacOptionsParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JavacOptionsItem(
@@ -1175,7 +1175,7 @@ final case class JavacOptionsItem(
 
 object JavacOptionsItem {
   implicit val codec: JsonValueCodec[JavacOptionsItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class JavacOptionsResult(
@@ -1184,7 +1184,7 @@ final case class JavacOptionsResult(
 
 object JavacOptionsResult {
   implicit val codec: JsonValueCodec[JavacOptionsResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CppBuildTarget(
@@ -1196,7 +1196,7 @@ final case class CppBuildTarget(
 
 object CppBuildTarget {
   implicit val codec: JsonValueCodec[CppBuildTarget] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CppOptionsParams(
@@ -1205,7 +1205,7 @@ final case class CppOptionsParams(
 
 object CppOptionsParams {
   implicit val codec: JsonValueCodec[CppOptionsParams] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CppOptionsItem(
@@ -1218,7 +1218,7 @@ final case class CppOptionsItem(
 
 object CppOptionsItem {
   implicit val codec: JsonValueCodec[CppOptionsItem] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
 
 final case class CppOptionsResult(
@@ -1227,5 +1227,5 @@ final case class CppOptionsResult(
 
 object CppOptionsResult {
   implicit val codec: JsonValueCodec[CppOptionsResult] =
-    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(true))
+    JsonCodecMaker.make(CodecMakerConfig.withTransientEmpty(false))
 }
