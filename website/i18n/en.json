@@ -12,6 +12,10 @@
       "bsp": {
         "title": "bsp"
       },
+      "extensions/cpp": {
+        "title": "C++ Extension",
+        "sidebar_label": "cpp"
+      },
       "extensions/java": {
         "title": "Java Extension",
         "sidebar_label": "Java"

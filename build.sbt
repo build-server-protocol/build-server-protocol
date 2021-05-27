@@ -1,6 +1,6 @@
 inThisBuild(
   List(
-    scalaVersion := "2.12.11",
+    scalaVersion := "2.12.13",
     organization := "ch.epfl.scala",
     homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -51,7 +51,7 @@ lazy val bsp4s = project
     Compile / doc / sources := Nil,
     libraryDependencies ++= List(
       "me.vican.jorge" %% "jsonrpc4s" % "1.0.0+23-a0cabe67",
-      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.6.0"
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.8.2"
     )
   )
 
