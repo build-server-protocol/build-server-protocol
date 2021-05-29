@@ -35,6 +35,9 @@ import jsonrpc4s.Endpoint
 import jsonrpc4s.RpcClient
 import jsonrpc4s.Connection
 import jsonrpc4s.InputOutput
+import monix.eval.Task
+import jsonrpc4s.RpcSuccess
+import jsonrpc4s.RpcFailure
 
 class TypoSuite extends FunSuite {
 
@@ -66,7 +69,6 @@ class TypoSuite extends FunSuite {
 
   // Java server client that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
-
 
     override def buildInitialize(
         params: InitializeBuildParams
@@ -170,7 +172,7 @@ class TypoSuite extends FunSuite {
     }
 
     override def buildTargetDependencyModules(
-      params: DependencyModulesParams
+        params: DependencyModulesParams
     ): CompletableFuture[DependencyModulesResult] = {
       CompletableFuture.completedFuture {
         val item =
@@ -195,13 +197,12 @@ class TypoSuite extends FunSuite {
   // extension methods to abstract over lsp4s service creation.
   implicit class XtensionServices(services: Services) {
     def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: RpcClient): Services = {
-      //services.requestAsync(endpoint)(a => endpoint.request(a))
-
-      // FIXME  returns a Task[RpcReponse[B]] but needs a Task[B]
-      // Not fully sure how to fix this one
-
-      //services.requestAsync(endpoint)(a => endpoint.request(a))
-      ???
+      services.requestAsync(endpoint) { a =>
+        endpoint.request(a).flatMap {
+          case err: RpcFailure[B]   => Task.raiseError(err)
+          case RpcSuccess(value, _) => Task.now(value)
+        }
+      }
     }
     def ignoreNotification[A](endpoint: Endpoint[A, Unit]): Services = {
       services.notification(endpoint)(_ => ())
@@ -305,7 +306,7 @@ class TypoSuite extends FunSuite {
   }
 
   def startScalaConnection(in: InputStream, out: OutputStream)(
-      fn: RpcClient=> Services
+      fn: RpcClient => Services
   )(implicit s: Scheduler): Connection = {
     val logger = scribe.Logger.root
     Connection(new InputOutput(in, out), logger, logger)(fn)
@@ -394,7 +395,9 @@ class TypoSuite extends FunSuite {
             .toScala
         }
         sources <- scala1.buildTargetSources(new SourcesParams(buildTargetUris)).toScala
-        depModules <- scala1.buildTargetDependencyModules(new DependencyModulesParams(buildTargetUris)).toScala
+        depModules <- scala1
+          .buildTargetDependencyModules(new DependencyModulesParams(buildTargetUris))
+          .toScala
         inverseSources <- scala1
           .buildTargetInverseSources(new InverseSourcesParams(textDocumentIdentifier))
           .toScala

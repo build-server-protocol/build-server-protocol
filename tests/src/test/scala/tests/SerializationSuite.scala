@@ -34,7 +34,7 @@ class SerializationSuite extends FunSuite {
     val bsp4sJson = writeToString(bsp4sValue)
     val bsp4jValue = gson.fromJson(bsp4sJson, classOf[bsp4j.TaskFinishParams])
     val bsp4jJson = gson.toJson(bsp4jValue)
-    val bsp4sValueDecoded = readFromString[bsp4s.TaskFinishParams](bsp4jJson)
+    val bsp4sValueDecoded = readFromString[bsp4s.TaskFinishParams](bsp4sJson)
 
     val bsp4jValueData =
       gson.fromJson(bsp4jValue.getData.asInstanceOf[JsonElement], classOf[bsp4j.CompileReport])
