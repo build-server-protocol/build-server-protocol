@@ -38,6 +38,8 @@ import jsonrpc4s.InputOutput
 import monix.eval.Task
 import jsonrpc4s.RpcSuccess
 import jsonrpc4s.RpcFailure
+import scala.util.Failure
+import scala.util.Success
 
 class TypoSuite extends FunSuite {
 
@@ -49,7 +51,7 @@ class TypoSuite extends FunSuite {
   val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
     Collections.singletonList(textDocumentIdentifier)
 
-  // Java build client that ignored all notifications.
+  // Java build client that ignores all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
     override def onBuildShowMessage(params: ShowMessageParams): Unit =
       ()
@@ -67,7 +69,7 @@ class TypoSuite extends FunSuite {
       ()
   }
 
-  // Java server client that responds with hardcoded constants
+  // Java build server that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
 
     override def buildInitialize(
@@ -420,7 +422,7 @@ class TypoSuite extends FunSuite {
         val expected = trace2.toString()
         assertNoDiff(obtained, expected)
       }
-      Await.result(result, Duration("5s"))
+      Await.result(result, Duration("20s"))
     } finally {
       allResources.cancel()
     }

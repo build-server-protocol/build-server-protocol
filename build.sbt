@@ -50,7 +50,7 @@ lazy val bsp4s = project
     Test / publishArtifact := false,
     Compile / doc / sources := Nil,
     libraryDependencies ++= List(
-      "me.vican.jorge" %% "jsonrpc4s" % "1.0.0+23-a0cabe67",
+      "me.vican.jorge" %% "jsonrpc4s" % "0.1.0",
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.8.2"
     )
   )

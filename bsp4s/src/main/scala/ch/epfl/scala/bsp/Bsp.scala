@@ -57,7 +57,7 @@ final case class BuildTargetCapabilities(
     canCompile: Boolean,
     canTest: Boolean,
     canRun: Boolean,
-    canDebug: Boolean = false, // backward compatible default
+    canDebug: Boolean = false // backward compatible default
 )
 
 object BuildTargetCapabilities {
@@ -129,18 +129,40 @@ object InitializeBuildParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+object NullAllowingCodecWrapper {
+
+  def apply[A](codec: JsonValueCodec[A]): JsonValueCodec[A] =
+    new JsonValueCodec[A] {
+      override def decodeValue(in: JsonReader, default: A): A =
+        if (in.isNextToken('n')) {
+          in.readNullOrError[String]("x", "expected value or null")
+          nullValue
+        } else {
+          in.rollbackToken()
+          codec.decodeValue(in, default)
+        }
+
+      override def encodeValue(x: A, out: JsonWriter): Unit =
+        if (x == null) out.writeNull()
+        else codec.encodeValue(x, out)
+
+      override val nullValue: A = null.asInstanceOf[A]
+    }
+
+}
+
 final case class Reload()
 
 object Reload {
   implicit val codec: JsonValueCodec[Reload] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
+    NullAllowingCodecWrapper(JsonCodecMaker.make)
 }
 
 final case class Shutdown()
 
 object Shutdown {
   implicit val codec: JsonValueCodec[Shutdown] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
+    NullAllowingCodecWrapper(JsonCodecMaker.make)
 }
 
 final case class Exit()
@@ -178,7 +200,7 @@ object RunProvider {
 }
 
 final case class DebugProvider(
-  languageIds: List[String]
+    languageIds: List[String]
 )
 
 object DebugProvider {
@@ -198,7 +220,7 @@ final case class BuildServerCapabilities(
     buildTargetChangedProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
     jvmRunEnvironmentProvider: Option[Boolean],
-    canReload: Option[Boolean],
+    canReload: Option[Boolean]
 )
 
 object BuildServerCapabilities {
@@ -368,7 +390,7 @@ final case class WorkspaceBuildTargetsRequest()
 
 object WorkspaceBuildTargetsRequest {
   implicit val codec: JsonValueCodec[WorkspaceBuildTargetsRequest] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
+    NullAllowingCodecWrapper(JsonCodecMaker.make)
 }
 
 // Request: 'workspace/buildTargets'
@@ -542,10 +564,10 @@ object DependencyModulesParams {
 }
 
 final case class DependencyModule(
-  name: String,
-  version: String,
-  dataKind: Option[String],
-  data: Option[RawJson]
+    name: String,
+    version: String,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object DependencyModule {
@@ -558,8 +580,8 @@ object DependencyModuleDataKind {
 }
 
 final case class DependencyModulesItem(
-  target: BuildTargetIdentifier,
-  modules: List[DependencyModule]
+    target: BuildTargetIdentifier,
+    modules: List[DependencyModule]
 )
 
 object DependencyModulesItem {
@@ -568,7 +590,7 @@ object DependencyModulesItem {
 }
 
 final case class DependencyModulesResult(
-  items: List[DependencyModulesItem]
+    items: List[DependencyModulesItem]
 )
 
 object DependencyModulesResult {
@@ -577,8 +599,8 @@ object DependencyModulesResult {
 }
 
 final case class MavenDependencyModuleArtifact(
-  uri: String,
-  classifier: Option[String],
+    uri: String,
+    classifier: Option[String]
 )
 
 object MavenDependencyModuleArtifact {
@@ -587,11 +609,11 @@ object MavenDependencyModuleArtifact {
 }
 
 final case class MavenDependencyModule(
-  organization: String,
-  name: String,
-  version: String,
-  artifacts: List[MavenDependencyModuleArtifact],
-  scope: Option[String]
+    organization: String,
+    name: String,
+    version: String,
+    artifacts: List[MavenDependencyModuleArtifact],
+    scope: Option[String]
 )
 
 object MavenDependencyModule {
@@ -1191,7 +1213,7 @@ final case class CppBuildTarget(
     version: Option[String],
     compiler: Option[String],
     cCompiler: Option[Uri],
-    cppCompiler: Option[Uri],
+    cppCompiler: Option[Uri]
 )
 
 object CppBuildTarget {
@@ -1213,7 +1235,7 @@ final case class CppOptionsItem(
     copts: List[String],
     defines: List[String],
     linkopts: List[String],
-    linkshared: Boolean,
+    linkshared: Boolean
 )
 
 object CppOptionsItem {
