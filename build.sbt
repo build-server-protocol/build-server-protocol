@@ -70,8 +70,8 @@ lazy val bsp4j = project
     },
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.8.1",
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.8.1"
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.9.0",
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.9.0"
     )
   )
 
