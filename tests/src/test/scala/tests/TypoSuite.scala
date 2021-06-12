@@ -246,11 +246,16 @@ class TypoSuite extends FunSuite {
     def normalizeJson(jsonTrace: String): String = {
       val params = "Params: "
       val result = "Result: "
+      val error = "Error: "
       val paramsIndex = jsonTrace.indexOf(params)
       val startIndex =
-        if (paramsIndex < 0) jsonTrace.indexOf(result)
-        else paramsIndex
-      val json = jsonTrace.substring(startIndex + params.length())
+        (if (paramsIndex < 0) jsonTrace.indexOf(result)
+        else paramsIndex) + params.length()
+      val errorIndex = jsonTrace.indexOf(error, startIndex)
+      val endIndex =
+        if(errorIndex < 0) jsonTrace.length()
+        else errorIndex
+      val json = jsonTrace.substring(startIndex, endIndex)
       val elem = gsonParser.parse(json)
       if (elem.isJsonObject()) {
         val obj = elem.getAsJsonObject
