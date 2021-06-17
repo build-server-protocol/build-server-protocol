@@ -1,6 +1,6 @@
 inThisBuild(
   List(
-    scalaVersion := "2.12.13",
+    scalaVersion := V.scala213,
     organization := "ch.epfl.scala",
     homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -27,6 +27,12 @@ inThisBuild(
   )
 )
 
+lazy val V = new {
+  val scala212 = "2.12.14"
+  val scala213 = "2.13.6"
+  val supportedScalaVersions = List(scala212, scala213)
+}
+
 import java.io.File
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
 import org.eclipse.xtend.core.XtendStandaloneSetup
@@ -47,6 +53,7 @@ publish / skip := true
 lazy val bsp4s = project
   .in(file("bsp4s"))
   .settings(
+    crossScalaVersions := V.supportedScalaVersions,
     Test / publishArtifact := false,
     Compile / doc / sources := Nil,
     libraryDependencies ++= List(
@@ -98,7 +105,7 @@ lazy val tests = project
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0",
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0",
-      "org.scalatest" %% "scalatest" % "3.0.5",
+      "org.scalatest" %% "scalatest" % "3.0.9",
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.8.2"
     )
   )
@@ -116,7 +123,7 @@ lazy val `bsp-testkit` = project
       "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.1",
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.6"
     ),
-    crossScalaVersions := List("2.12.11", "2.13.2")
+    crossScalaVersions := V.supportedScalaVersions
   )
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
@@ -125,6 +132,7 @@ lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j)
   .settings(
+    scalaVersion := V.scala212,
     publish / skip := true,
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "target" / "docs",
     mdocVariables := Map(
