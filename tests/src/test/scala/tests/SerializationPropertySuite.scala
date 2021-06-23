@@ -4,25 +4,30 @@ import ch.epfl.scala.bsp.testkit.gen.Bsp4jGenerators
 import ch.epfl.scala.bsp.testkit.gen.bsp4jArbitrary._
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder}
-import io.circe.parser.decode
-import io.circe.syntax._
-import io.circe.{Decoder, Encoder}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{Assertion, Assertions, FunSuite}
+import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
+import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
+import scala.util.Try
+import scala.util.Failure
+import scala.util.Success
 
 class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyChecks {
 
   implicit val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
 
-  def assertSerializationRoundtrip[T4j,T4s](bsp4jValue: T4j)(implicit encoder: Encoder[T4s], decoder: Decoder[T4s]): Assertion = {
+  def assertSerializationRoundtrip[T4j, T4s](
+      bsp4jValue: T4j
+  )(implicit codec: JsonValueCodec[T4s]): Assertion = {
     val bsp4jJson = gson.toJson(bsp4jValue)
-    val bsp4sValueDecoded = decode[T4s](bsp4jJson) match {
-      case Left(problem) =>
-        if (problem.getCause == null) Assertions.fail(problem.getMessage)
-        else Assertions.fail(problem.getMessage, problem.getCause)
-      case Right(value) => value
+
+    val bsp4sValueDecoded = Try(readFromString(bsp4jJson)) match {
+      case Failure(exception) =>
+        Assertions.fail(exception.getMessage())
+      case Success(value) => value
     }
-    val bsp4sJson = bsp4sValueDecoded.asJson.toString()
+    val bsp4sJson = writeToString(bsp4sValueDecoded)
     val bsp4jValueDecoded = gson.fromJson[T4j](bsp4sJson, bsp4jValue.getClass)
 
     assert(bsp4jValue == bsp4jValueDecoded)
@@ -30,17 +35,21 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
 
   test("BspConnectionDetails") {
     forAll { bspConnectionDetails: bsp4j.BspConnectionDetails =>
-      assertSerializationRoundtrip[bsp4j.BspConnectionDetails, bsp4s.BspConnectionDetails](bspConnectionDetails)
+      assertSerializationRoundtrip[bsp4j.BspConnectionDetails, bsp4s.BspConnectionDetails](
+        bspConnectionDetails
+      )
     }
   }
   test("BuildClientCapabilities") {
-    forAll { buildClientCapabilities: bsp4j.BuildClientCapabilities  =>
-      assertSerializationRoundtrip[bsp4j.BuildClientCapabilities, bsp4s.BuildClientCapabilities](buildClientCapabilities)
+    forAll { buildClientCapabilities: bsp4j.BuildClientCapabilities =>
+      assertSerializationRoundtrip[bsp4j.BuildClientCapabilities, bsp4s.BuildClientCapabilities](
+        buildClientCapabilities
+      )
     }
   }
   test("BuildServerCapabilities") {
     forAll { a: bsp4j.BuildServerCapabilities =>
-      assertSerializationRoundtrip[bsp4j.BuildServerCapabilities,bsp4s.BuildServerCapabilities](a)
+      assertSerializationRoundtrip[bsp4j.BuildServerCapabilities, bsp4s.BuildServerCapabilities](a)
     }
   }
   test("BuildTarget") {
@@ -130,7 +139,10 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
   }
   test("DiagnosticRelatedInformation") {
     forAll { a: bsp4j.DiagnosticRelatedInformation =>
-      assertSerializationRoundtrip[bsp4j.DiagnosticRelatedInformation, bsp4s.DiagnosticRelatedInformation](a)
+      assertSerializationRoundtrip[
+        bsp4j.DiagnosticRelatedInformation,
+        bsp4s.DiagnosticRelatedInformation
+      ](a)
     }
   }
   test("DiagnosticSeverity") {
@@ -185,7 +197,9 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
   }
   test("PublishDiagnosticsParams") {
     forAll { a: bsp4j.PublishDiagnosticsParams =>
-      assertSerializationRoundtrip[bsp4j.PublishDiagnosticsParams, bsp4s.PublishDiagnosticsParams](a)
+      assertSerializationRoundtrip[bsp4j.PublishDiagnosticsParams, bsp4s.PublishDiagnosticsParams](
+        a
+      )
     }
   }
   test("Range") {
@@ -395,17 +409,24 @@ class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyCh
   }
   test("WorkspaceBuildTargetsResult") {
     forAll { a: bsp4j.WorkspaceBuildTargetsResult =>
-      assertSerializationRoundtrip[bsp4j.WorkspaceBuildTargetsResult, bsp4s.WorkspaceBuildTargetsResult](a)
+      assertSerializationRoundtrip[
+        bsp4j.WorkspaceBuildTargetsResult,
+        bsp4s.WorkspaceBuildTargetsResult
+      ](a)
     }
   }
   test("JvmTestEnvironmentParams") {
     forAll { a: bsp4j.JvmTestEnvironmentParams =>
-      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentParams, bsp4s.JvmTestEnvironmentParams](a)
+      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentParams, bsp4s.JvmTestEnvironmentParams](
+        a
+      )
     }
   }
   test("JvmTestEnvironmentResult") {
     forAll { a: bsp4j.JvmTestEnvironmentResult =>
-      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentResult, bsp4s.JvmTestEnvironmentResult](a)
+      assertSerializationRoundtrip[bsp4j.JvmTestEnvironmentResult, bsp4s.JvmTestEnvironmentResult](
+        a
+      )
     }
   }
   test("JvmRunEnvironmentParams") {

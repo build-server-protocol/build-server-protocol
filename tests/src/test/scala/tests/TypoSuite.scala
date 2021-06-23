@@ -30,11 +30,16 @@ import scala.compat.java8.FutureConverters._
 import scala.concurrent.Await
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
-import scala.meta.jsonrpc.Connection
-import scala.meta.jsonrpc.Endpoint
-import scala.meta.jsonrpc.InputOutput
-import scala.meta.jsonrpc.JsonRpcClient
-import scala.meta.jsonrpc.Services
+import jsonrpc4s.Services
+import jsonrpc4s.Endpoint
+import jsonrpc4s.RpcClient
+import jsonrpc4s.Connection
+import jsonrpc4s.InputOutput
+import monix.eval.Task
+import jsonrpc4s.RpcSuccess
+import jsonrpc4s.RpcFailure
+import scala.util.Failure
+import scala.util.Success
 
 class TypoSuite extends FunSuite {
 
@@ -46,7 +51,7 @@ class TypoSuite extends FunSuite {
   val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
     Collections.singletonList(textDocumentIdentifier)
 
-  // Java build client that ignored all notifications.
+  // Java build client that ignores all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
     override def onBuildShowMessage(params: ShowMessageParams): Unit =
       ()
@@ -64,9 +69,8 @@ class TypoSuite extends FunSuite {
       ()
   }
 
-  // Java server client that responds with hardcoded constants
+  // Java build server that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
-
 
     override def buildInitialize(
         params: InitializeBuildParams
@@ -170,7 +174,7 @@ class TypoSuite extends FunSuite {
     }
 
     override def buildTargetDependencyModules(
-      params: DependencyModulesParams
+        params: DependencyModulesParams
     ): CompletableFuture[DependencyModulesResult] = {
       CompletableFuture.completedFuture {
         val item =
@@ -194,21 +198,26 @@ class TypoSuite extends FunSuite {
 
   // extension methods to abstract over lsp4s service creation.
   implicit class XtensionServices(services: Services) {
-    def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: JsonRpcClient): Services = {
-      services.requestAsync(endpoint)(a => endpoint.request(a))
+    def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: RpcClient): Services = {
+      services.requestAsync(endpoint) { a =>
+        endpoint.request(a).flatMap {
+          case err: RpcFailure[B]   => Task.raiseError(err)
+          case RpcSuccess(value, _) => Task.now(value)
+        }
+      }
     }
     def ignoreNotification[A](endpoint: Endpoint[A, Unit]): Services = {
       services.notification(endpoint)(_ => ())
     }
     def forwardNotification[A](
         endpoint: Endpoint[A, Unit]
-    )(implicit client: JsonRpcClient): Services = {
+    )(implicit client: RpcClient): Services = {
       services.notification(endpoint)(a => endpoint.notify(a))
     }
   }
 
   // Scala build client that records all notifications.
-  def silentScalaClient(implicit client: JsonRpcClient): Services =
+  def silentScalaClient(implicit client: RpcClient): Services =
     Services
       .empty(scribe.Logger.root)
       .ignoreNotification(s.Build.showMessage)
@@ -220,7 +229,7 @@ class TypoSuite extends FunSuite {
       .ignoreNotification(s.BuildTarget.didChange)
 
   // Scala build server that delegates all requests to a client.
-  def forwardingScalaServer(implicit client: JsonRpcClient): Services = {
+  def forwardingScalaServer(implicit client: RpcClient): Services = {
     Services
       .empty(scribe.Logger.root)
       .forwardRequest(s.Build.initialize)
@@ -304,7 +313,7 @@ class TypoSuite extends FunSuite {
   }
 
   def startScalaConnection(in: InputStream, out: OutputStream)(
-      fn: JsonRpcClient => Services
+      fn: RpcClient => Services
   )(implicit s: Scheduler): Connection = {
     val logger = scribe.Logger.root
     Connection(new InputOutput(in, out), logger, logger)(fn)
@@ -393,7 +402,9 @@ class TypoSuite extends FunSuite {
             .toScala
         }
         sources <- scala1.buildTargetSources(new SourcesParams(buildTargetUris)).toScala
-        depModules <- scala1.buildTargetDependencyModules(new DependencyModulesParams(buildTargetUris)).toScala
+        depModules <- scala1
+          .buildTargetDependencyModules(new DependencyModulesParams(buildTargetUris))
+          .toScala
         inverseSources <- scala1
           .buildTargetInverseSources(new InverseSourcesParams(textDocumentIdentifier))
           .toScala
@@ -416,7 +427,7 @@ class TypoSuite extends FunSuite {
         val expected = trace2.toString()
         assertNoDiff(obtained, expected)
       }
-      Await.result(result, Duration("5s"))
+      Await.result(result, Duration("20s"))
     } finally {
       allResources.cancel()
     }
