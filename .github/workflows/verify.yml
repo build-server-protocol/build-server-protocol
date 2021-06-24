@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v10
+      - uses: olafurpg/setup-scala@v11
+        with:
+          java-version: adopt@1.11
       - name: generate xtend
         run: sbt bsp4j/xtend
       - name: generate docs site
