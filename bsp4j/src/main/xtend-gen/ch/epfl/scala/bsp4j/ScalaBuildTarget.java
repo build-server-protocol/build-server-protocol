@@ -1,7 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.JvmBuildTarget;
-import ch.epfl.scala.bsp4j.ScalaPlatform;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;

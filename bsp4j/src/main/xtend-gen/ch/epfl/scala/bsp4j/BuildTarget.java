@@ -1,7 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.BuildTargetCapabilities;
-import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;

@@ -1,6 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.ScalaTestClassesItem;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;

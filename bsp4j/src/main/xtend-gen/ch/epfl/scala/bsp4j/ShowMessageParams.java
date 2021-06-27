@@ -1,7 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.MessageType;
-import ch.epfl.scala.bsp4j.TaskId;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;

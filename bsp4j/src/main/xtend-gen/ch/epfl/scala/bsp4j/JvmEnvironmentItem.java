@@ -1,6 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
