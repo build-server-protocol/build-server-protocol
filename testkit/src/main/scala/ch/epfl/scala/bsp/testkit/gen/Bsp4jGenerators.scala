@@ -96,7 +96,8 @@ trait Bsp4jGenerators {
     event
   }
 
-  lazy val genBuildTargetEventKind: Gen[BuildTargetEventKind] = Gen.oneOf(BuildTargetEventKind.values)
+  lazy val genBuildTargetEventKind: Gen[BuildTargetEventKind] =
+    Gen.oneOf(BuildTargetEventKind.values)
 
   lazy val genBuildTargetIdentifier: Gen[BuildTargetIdentifier] = for {
     uri <- genUri
@@ -341,7 +342,8 @@ trait Bsp4jGenerators {
     jars <- genFileUriString.list
     jvmBuildTarget <- genJvmBuildTarget.nullable
   } yield {
-    val target = new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+    val target =
+      new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
     target.setJvmBuildTarget(jvmBuildTarget)
     target
   }
@@ -458,7 +460,6 @@ trait Bsp4jGenerators {
   lazy val genSourcesResult: Gen[SourcesResult] = for {
     items <- genSourcesItem.list
   } yield new SourcesResult(items)
-
 
   lazy val genStatusCode: Gen[StatusCode] = Gen.oneOf(StatusCode.values)
 
@@ -593,12 +594,12 @@ trait Bsp4jGenerators {
   }
 
   lazy val genTestStart: Gen[TestStart] = for {
-      displayName <- arbitrary[String]
-      location <- genLocation.nullable
-    } yield {
-      val testStart = new TestStart(displayName)
-      testStart.setLocation(location)
-      testStart
+    displayName <- arbitrary[String]
+    location <- genLocation.nullable
+  } yield {
+    val testStart = new TestStart(displayName)
+    testStart.setLocation(location)
+    testStart
   }
 
   lazy val genTestStatus: Gen[TestStatus] = Gen.oneOf(TestStatus.values)

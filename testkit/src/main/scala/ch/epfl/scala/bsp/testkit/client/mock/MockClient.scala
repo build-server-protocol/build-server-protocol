@@ -45,22 +45,26 @@ class MockClient extends BuildClient {
   def poll[T](notifications: List[T], duration: Duration, condition: T => Boolean): Future[T] = {
     val promise = Promise[T]()
     val timer = new Timer()
-    timer.scheduleAtFixedRate(new TimerTask {
-      private var durationLeft = duration
-      override def run(): Unit = {
-        notifications.find(condition) match {
-          case Some(value) =>
-            promise.success(value)
-            timer.cancel()
-          case None =>
-            durationLeft = durationLeft - interval
-            if(durationLeft.toSeconds <= 0) {
-              promise.failure(new Throwable("No notification found"))
+    timer.scheduleAtFixedRate(
+      new TimerTask {
+        private var durationLeft = duration
+        override def run(): Unit = {
+          notifications.find(condition) match {
+            case Some(value) =>
+              promise.success(value)
               timer.cancel()
-            }
+            case None =>
+              durationLeft = durationLeft - interval
+              if (durationLeft.toSeconds <= 0) {
+                promise.failure(new Throwable("No notification found"))
+                timer.cancel()
+              }
+          }
         }
-      }
-    }, 0, interval.toMillis)
+      },
+      0,
+      interval.toMillis
+    )
     promise.future
   }
 

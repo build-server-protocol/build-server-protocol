@@ -14,11 +14,19 @@ import org.scalatest.FunSuite
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
-trait MockBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer with CppBuildServer
+trait MockBuildServer
+    extends BuildServer
+    with ScalaBuildServer
+    with JvmBuildServer
+    with JavaBuildServer
+    with CppBuildServer
 
 class HappyMockSuite extends FunSuite {
 
-  def connectToBuildServer(localClient: BuildClient, baseDir: File): (MockBuildServer, Cancelable) = {
+  def connectToBuildServer(
+      localClient: BuildClient,
+      baseDir: File
+  ): (MockBuildServer, Cancelable) = {
 
     val LocalMockServer(runningMock, clientIn, clientOut) = MockServer.startMockServer(baseDir)
 
@@ -44,8 +52,10 @@ class HappyMockSuite extends FunSuite {
 
   implicit class XtensionBuildTarget(buildTarget: BuildTarget) {
     def asTarget[T: ClassTag]: T = {
-      gson.fromJson[T](buildTarget.getData.asInstanceOf[JsonElement],
-        implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]])
+      gson.fromJson[T](
+        buildTarget.getData.asInstanceOf[JsonElement],
+        implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]
+      )
     }
   }
 
@@ -218,14 +228,17 @@ class HappyMockSuite extends FunSuite {
     assert(client.showMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
     assert(client.taskStarts.exists { p => p.getTaskId.getId == "subtask1id" })
-    assert(client.taskFinishes.exists { p => p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK })
+    assert(client.taskFinishes.exists { p =>
+      p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK
+    })
     assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
 
   def assertTest(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
-    val testableTargets = getBuildTargets(server).asScala.filter(_.getCapabilities.getCanTest).map(_.getId).asJava
+    val testableTargets =
+      getBuildTargets(server).asScala.filter(_.getCapabilities.getCanTest).map(_.getId).asJava
     val params = new TestParams(testableTargets)
     val testResult = server.buildTargetTest(params).get()
     assert(testResult.getOriginId == params.getOriginId)
@@ -283,7 +296,13 @@ class HappyMockSuite extends FunSuite {
     val (server, cancel) = connectToBuildServer(client, testDirectory.toFile)
     try {
       val capabilities = new BuildClientCapabilities(Collections.singletonList("scala"))
-      val initializeParams = new InitializeBuildParams("test-client", "1.0.0", "2.0.0-M1", testDirectory.toUri.toString, capabilities)
+      val initializeParams = new InitializeBuildParams(
+        "test-client",
+        "1.0.0",
+        "2.0.0-M1",
+        testDirectory.toUri.toString,
+        capabilities
+      )
       val serverCapabilities = server.buildInitialize(initializeParams).get().getCapabilities
       server.onBuildInitialized()
       try {

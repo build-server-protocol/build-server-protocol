@@ -16,7 +16,6 @@ class TestBuildClient extends BuildClient {
   val taskProgresses: ListBuffer[TaskProgressParams] = ListBuffer.empty
   val taskFinishes: ListBuffer[TaskFinishParams] = ListBuffer.empty
 
-
   def reset(): Unit = {
     showMessages.clear()
     logMessages.clear()

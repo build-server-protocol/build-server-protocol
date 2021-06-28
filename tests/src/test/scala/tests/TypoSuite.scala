@@ -259,10 +259,10 @@ class TypoSuite extends FunSuite {
       val paramsIndex = jsonTrace.indexOf(params)
       val startIndex =
         (if (paramsIndex < 0) jsonTrace.indexOf(result)
-        else paramsIndex) + params.length()
+         else paramsIndex) + params.length()
       val errorIndex = jsonTrace.indexOf(error, startIndex)
       val endIndex =
-        if(errorIndex < 0) jsonTrace.length()
+        if (errorIndex < 0) jsonTrace.length()
         else errorIndex
       val json = jsonTrace.substring(startIndex, endIndex)
       val elem = gsonParser.parse(json)

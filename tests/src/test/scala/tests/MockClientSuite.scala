@@ -89,14 +89,12 @@ class MockClientSuite extends FunSuite {
   }
 
   test("Running batch tests") {
-    client.wrapTest(
-      session => {
-        client
-          .testResolveProject(session, false, false)
-          .map(_ => client.targetsCompileSuccessfully(session))
-          .flatMap(_ => client.cleanCacheSuccessfully(session))
-      }
-    )
+    client.wrapTest(session => {
+      client
+        .testResolveProject(session, false, false)
+        .map(_ => client.targetsCompileSuccessfully(session))
+        .flatMap(_ => client.cleanCacheSuccessfully(session))
+    })
   }
 
   test("Test Compile of all targets") {
@@ -241,7 +239,7 @@ class MockClientSuite extends FunSuite {
     }
   }
 
-  test("Workspace Build Targets"){
+  test("Workspace Build Targets") {
     val targets = List(target1, target2, target3, target4).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
@@ -281,7 +279,6 @@ class MockClientSuite extends FunSuite {
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)
   }
 
-
   private lazy val environmentItem = {
     val classpath = List("scala-library").asJava
     val jvmOptions = List("-Xms256m").asJava
@@ -297,12 +294,18 @@ class MockClientSuite extends FunSuite {
     List(item1).asJava
   }
 
-  test("Jvm Run Environment"){
-    client.testJvmRunEnvironment(new JvmRunEnvironmentParams(Collections.emptyList()), new JvmRunEnvironmentResult(environmentItem))
+  test("Jvm Run Environment") {
+    client.testJvmRunEnvironment(
+      new JvmRunEnvironmentParams(Collections.emptyList()),
+      new JvmRunEnvironmentResult(environmentItem)
+    )
   }
 
-  test("Jvm Test Environment"){
-    client.testJvmTestEnvironment(new JvmTestEnvironmentParams(Collections.emptyList()), new JvmTestEnvironmentResult(environmentItem))
+  test("Jvm Test Environment") {
+    client.testJvmTestEnvironment(
+      new JvmTestEnvironmentParams(Collections.emptyList()),
+      new JvmTestEnvironmentResult(environmentItem)
+    )
   }
 
 }

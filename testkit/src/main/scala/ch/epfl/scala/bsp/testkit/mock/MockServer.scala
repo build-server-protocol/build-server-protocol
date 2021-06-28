@@ -22,7 +22,7 @@ object MockServer {
         val scriptPath = System.getProperty("script.path")
         val scriptFile = new File(scriptPath)
 
-        val configFile = new File(cwd,".bsp/mockserver.json")
+        val configFile = new File(cwd, ".bsp/mockserver.json")
         if (createConnectionFile(scriptFile, configFile))
           println(s"config file written: $configFile")
         else
@@ -37,8 +37,7 @@ object MockServer {
         System.err.println("Mock server listening")
         running.get()
       case _ =>
-        System.err.println(
-          """supported commands:
+        System.err.println("""supported commands:
             |config - create .bsp configuration in working directory
             |bsp - start bsp server
             |""".stripMargin)
@@ -54,7 +53,7 @@ object MockServer {
         List(s"$scriptFile", "bsp").asJava,
         "1.0",
         "2.0",
-        List("java","scala").asJava
+        List("java", "scala").asJava
       )
       val detailsJson = new Gson().toJson(details)
       val json = List(detailsJson).asJava
@@ -63,7 +62,11 @@ object MockServer {
     }
   }
 
-  case class LocalMockServer(running: Future[_], clientIn: PipedInputStream, clientOut: PipedOutputStream)
+  case class LocalMockServer(
+      running: Future[_],
+      clientIn: PipedInputStream,
+      clientOut: PipedOutputStream
+  )
 
   def startMockServer(testBaseDir: File): LocalMockServer = {
 
@@ -81,7 +84,11 @@ object MockServer {
     LocalMockServer(running, clientIn, clientOut)
   }
 
-  def clientLauncher(server: AbstractMockServer, in: InputStream, out: OutputStream): Launcher[BuildClient] =
+  def clientLauncher(
+      server: AbstractMockServer,
+      in: InputStream,
+      out: OutputStream
+  ): Launcher[BuildClient] =
     new Launcher.Builder[BuildClient]()
       .setOutput(out)
       .setInput(in)
@@ -89,6 +96,5 @@ object MockServer {
       .setExecutorService(executorService)
       .setRemoteInterface(classOf[BuildClient])
       .create()
-
 
 }

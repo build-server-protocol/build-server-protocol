@@ -6,10 +6,13 @@ case class ExpectedDiagnostic(range: Range, severity: DiagnosticSeverity, code: 
   def isEqual(obj: Any): Boolean = {
     if (obj == null)
       false
-    else obj match {
-      case diagnostic: Diagnostic => range == diagnostic.getRange && severity == diagnostic.getSeverity && code == diagnostic.getCode
-      case expectedDiagnostic: ExpectedDiagnostic => range == expectedDiagnostic.range && severity == expectedDiagnostic.severity && code == expectedDiagnostic.code
-      case _ => false
-    }
+    else
+      obj match {
+        case diagnostic: Diagnostic =>
+          range == diagnostic.getRange && severity == diagnostic.getSeverity && code == diagnostic.getCode
+        case expectedDiagnostic: ExpectedDiagnostic =>
+          range == expectedDiagnostic.range && severity == expectedDiagnostic.severity && code == expectedDiagnostic.code
+        case _ => false
+      }
   }
 }

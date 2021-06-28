@@ -49,9 +49,8 @@ class TestClient(
   }
 
   private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = {
-    value.toScala.recover {
-      case _ =>
-        throw new RuntimeException("Failed to compile targets that are compilable")
+    value.toScala.recover { case _ =>
+      throw new RuntimeException("Failed to compile targets that are compilable")
     }
   }
 
@@ -82,16 +81,15 @@ class TestClient(
   def testTargetsCompileSuccessfully(
       withTaskNotifications: Boolean
   ): Unit =
-    wrapTest(
-      session =>
-        getAllBuildTargets(session)
-          .flatMap(targets => {
-            testTargetsCompileSuccessfully(
-              session,
-              withTaskNotifications,
-              targets.asJava
-            )
-          })
+    wrapTest(session =>
+      getAllBuildTargets(session)
+        .flatMap(targets => {
+          testTargetsCompileSuccessfully(
+            session,
+            withTaskNotifications,
+            targets.asJava
+          )
+        })
     )
 
   def testTargetsCompileSuccessfully(
@@ -117,17 +115,14 @@ class TestClient(
     })
 
   def testTargetsTestSuccessfully(targets: java.util.List[BuildTarget]): Unit = {
-    wrapTest(
-      session => targetsTestSuccessfully(targets.asScala, session)
-    )
+    wrapTest(session => targetsTestSuccessfully(targets.asScala, session))
   }
 
   def testTargetsTestSuccessfully(): Unit = {
-    wrapTest(
-      session =>
-        getAllBuildTargets(session).flatMap(targets => {
-          targetsTestSuccessfully(targets, session)
-        })
+    wrapTest(session =>
+      getAllBuildTargets(session).flatMap(targets => {
+        targetsTestSuccessfully(targets, session)
+      })
     )
   }
 
@@ -138,16 +133,13 @@ class TestClient(
     wrapTest(targetsRunUnsuccessfully)
 
   def testTargetsRunSuccessfully(targets: java.util.List[BuildTarget]): Unit =
-    wrapTest(
-      session => targetsRunSuccessfully(targets.asScala, session)
-    )
+    wrapTest(session => targetsRunSuccessfully(targets.asScala, session))
 
   def testTargetsRunSuccessfully(): Unit =
-    wrapTest(
-      session =>
-        getAllBuildTargets(session).flatMap(targets => {
-          targetsRunSuccessfully(targets, session)
-        })
+    wrapTest(session =>
+      getAllBuildTargets(session).flatMap(targets => {
+        targetsRunSuccessfully(targets, session)
+      })
     )
 
   private def getAllBuildTargets(
@@ -161,56 +153,52 @@ class TestClient(
   def testCompareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): Unit =
-    wrapTest(
-      session => compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
+    wrapTest(session =>
+      compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
     )
 
   def testDependencySourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceDependencySourcesResult: DependencySourcesResult
   ): Unit =
-    wrapTest(
-      session =>
-        compareResults(
-          targets =>
-            session.connection.server
-              .buildTargetDependencySources(new DependencySourcesParams(targets)),
-          (results: DependencySourcesResult) =>
-            expectedWorkspaceDependencySourcesResult.getItems.forall { item =>
-              results.getItems.exists(
-                resultItem =>
-                  resultItem.getTarget == item.getTarget && item.getSources.forall { source =>
-                    resultItem.getSources.exists(_.contains(source))
-                  }
-              )
-            },
-          expectedWorkspaceDependencySourcesResult,
-          expectedWorkspaceBuildTargetsResult,
-          session
-        )
+    wrapTest(session =>
+      compareResults(
+        targets =>
+          session.connection.server
+            .buildTargetDependencySources(new DependencySourcesParams(targets)),
+        (results: DependencySourcesResult) =>
+          expectedWorkspaceDependencySourcesResult.getItems.forall { item =>
+            results.getItems.exists(resultItem =>
+              resultItem.getTarget == item.getTarget && item.getSources.forall { source =>
+                resultItem.getSources.exists(_.contains(source))
+              }
+            )
+          },
+        expectedWorkspaceDependencySourcesResult,
+        expectedWorkspaceBuildTargetsResult,
+        session
+      )
     )
 
   def testResourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedResourcesResult: ResourcesResult
   ): Unit =
-    wrapTest(
-      session =>
-        compareResults(
-          targets => session.connection.server.buildTargetResources(new ResourcesParams(targets)),
-          (results: ResourcesResult) =>
-            expectedResourcesResult.getItems.forall { item =>
-              results.getItems.exists(
-                resultItem =>
-                  resultItem.getTarget == item.getTarget && item.getResources.forall { source =>
-                    resultItem.getResources.exists(_.contains(source))
-                  }
-              )
-            },
-          expectedResourcesResult,
-          expectedWorkspaceBuildTargetsResult,
-          session
-        )
+    wrapTest(session =>
+      compareResults(
+        targets => session.connection.server.buildTargetResources(new ResourcesParams(targets)),
+        (results: ResourcesResult) =>
+          expectedResourcesResult.getItems.forall { item =>
+            results.getItems.exists(resultItem =>
+              resultItem.getTarget == item.getTarget && item.getResources.forall { source =>
+                resultItem.getResources.exists(_.contains(source))
+              }
+            )
+          },
+        expectedResourcesResult,
+        expectedWorkspaceBuildTargetsResult,
+        session
+      )
     )
 
   def testInverseSourcesResults(
@@ -292,13 +280,11 @@ class TestClient(
               .buildTargetCompile(new CompileParams(uncompilableTargets.map(_.getId).asJava))
           )
 
-        futures ++= runnableTargets.map(
-          target =>
-            testIfSuccessful(session.connection.server.buildTargetRun(new RunParams(target.getId)))
+        futures ++= runnableTargets.map(target =>
+          testIfSuccessful(session.connection.server.buildTargetRun(new RunParams(target.getId)))
         )
-        futures ++= unrunnableTargets.map(
-          target =>
-            testIfFailure(session.connection.server.buildTargetRun(new RunParams(target.getId)))
+        futures ++= unrunnableTargets.map(target =>
+          testIfFailure(session.connection.server.buildTargetRun(new RunParams(target.getId)))
         )
 
         if (testableTargets.nonEmpty)
@@ -332,8 +318,8 @@ class TestClient(
       assert(result.getStatusCode == StatusCode.OK, "Targets failed to compile!")
       Future
         .sequence(
-          compileDiagnostics.map(
-            expectedDiagnostic => obtainExpectedDiagnostic(expectedDiagnostic, session)
+          compileDiagnostics.map(expectedDiagnostic =>
+            obtainExpectedDiagnostic(expectedDiagnostic, session)
           )
         )
     })
@@ -430,26 +416,30 @@ class TestClient(
     session.connection.server
       .workspaceBuildTargets()
       .toScala
-      .flatMap(targets => {
-        runTargets(
-          targets.getTargets.asScala,
-          session
-        )
-      }.map(targetResults => {
-        assert(targetResults.forall(_.getStatusCode != StatusCode.OK), "Targets were able to run!")
-      }))
+      .flatMap(targets =>
+        {
+          runTargets(
+            targets.getTargets.asScala,
+            session
+          )
+        }.map(targetResults => {
+          assert(
+            targetResults.forall(_.getStatusCode != StatusCode.OK),
+            "Targets were able to run!"
+          )
+        })
+      )
 
   private def runTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
     Future.sequence(
       targets
         .filter(_.getCapabilities.getCanCompile)
-        .map(
-          target =>
-            testIfSuccessful(
-              session.connection.server.buildTargetRun(
-                new RunParams(target.getId)
-              )
+        .map(target =>
+          testIfSuccessful(
+            session.connection.server.buildTargetRun(
+              new RunParams(target.getId)
             )
+          )
         )
     )
 
@@ -465,13 +455,15 @@ class TestClient(
   def extractCppData(data: JsonElement, gson: Gson): Option[CppBuildTarget] =
     Option(gson.fromJson[CppBuildTarget](data, classOf[CppBuildTarget]))
 
-  def convertJsonObjectToData(workspaceBuildTargetsResult: WorkspaceBuildTargetsResult): WorkspaceBuildTargetsResult = {
+  def convertJsonObjectToData(
+      workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
+  ): WorkspaceBuildTargetsResult = {
     val targets = workspaceBuildTargetsResult.getTargets
-    targets.forEach {
-      target =>
-        Option(target.getData)
-          .map(_.asInstanceOf[JsonElement])
-          .flatMap(data => target.getDataKind match {
+    targets.forEach { target =>
+      Option(target.getData)
+        .map(_.asInstanceOf[JsonElement])
+        .flatMap(data =>
+          target.getDataKind match {
             case BuildTargetDataKind.JVM =>
               extractJdkData(data, gson)
             case BuildTargetDataKind.SCALA =>
@@ -480,8 +472,9 @@ class TestClient(
               extractSbtData(data, gson)
             case BuildTargetDataKind.CPP =>
               extractCppData(data, gson)
-          })
-          .map(target.setData(_))
+          }
+        )
+        .map(target.setData(_))
     }
     new WorkspaceBuildTargetsResult(targets)
   }
@@ -506,9 +499,10 @@ class TestClient(
 
   private def compareBuildTargetData(foundTarget: BuildTarget, target: BuildTarget): Boolean = {
     (Option(target.getData), Option(foundTarget.getData)) match {
-      case (Some(targetData), Some(foundTargetData)) => compareBuildTargetData(foundTargetData, targetData)
+      case (Some(targetData), Some(foundTargetData)) =>
+        compareBuildTargetData(foundTargetData, targetData)
       case (None, None) => true
-      case _ => false
+      case _            => false
     }
 
   }
@@ -525,37 +519,50 @@ class TestClient(
         compareCppBuildTarget(foundCppTarget, targetCppTarget.asInstanceOf[CppBuildTarget])
     }
 
-  def compareCppBuildTarget(foundCppTarget: CppBuildTarget, targetCppTarget: CppBuildTarget): Boolean = {
+  def compareCppBuildTarget(
+      foundCppTarget: CppBuildTarget,
+      targetCppTarget: CppBuildTarget
+  ): Boolean = {
     Option(foundCppTarget.getVersion) == Option(targetCppTarget.getVersion) &&
-      Option(foundCppTarget.getCompiler) == Option(targetCppTarget.getCompiler) &&
-      compareNullablePaths(foundCppTarget.getCCompiler, targetCppTarget.getCCompiler) &&
-      compareNullablePaths(foundCppTarget.getCompiler, targetCppTarget.getCompiler)
+    Option(foundCppTarget.getCompiler) == Option(targetCppTarget.getCompiler) &&
+    compareNullablePaths(foundCppTarget.getCCompiler, targetCppTarget.getCCompiler) &&
+    compareNullablePaths(foundCppTarget.getCompiler, targetCppTarget.getCompiler)
 
   }
 
-  private def compareSbtBuildTarget(foundSbtTarget: SbtBuildTarget, targetSbtTarget: SbtBuildTarget) =
+  private def compareSbtBuildTarget(
+      foundSbtTarget: SbtBuildTarget,
+      targetSbtTarget: SbtBuildTarget
+  ) =
     targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
       targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
       targetSbtTarget.getParent == foundSbtTarget.getParent &&
       targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
-      compareScalaBuildTargets(foundSbtTarget.getScalaBuildTarget, targetSbtTarget.getScalaBuildTarget)
+      compareScalaBuildTargets(
+        foundSbtTarget.getScalaBuildTarget,
+        targetSbtTarget.getScalaBuildTarget
+      )
 
   private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =
-    compareNullablePaths(foundJvmTarget.getJavaHome, targetJvmTarget.getJavaHome)  &&
+    compareNullablePaths(foundJvmTarget.getJavaHome, targetJvmTarget.getJavaHome) &&
       targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
 
   private def compareNullablePaths(foundPath: String, targetPath: String) = {
     (Option(foundPath), Option(targetPath)) match {
-      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) => foundJavaHome.endsWith(targetJavaHome)
-      case (None, None) => true
+      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) =>
+        foundJavaHome.endsWith(targetJavaHome)
+      case (None, None)    => true
       case (Some(_), None) => false
       case (None, Some(_)) => false
     }
   }
 
-  private def compareScalaBuildTargets(foundScalaTarget: ScalaBuildTarget, targetScalaTarget: ScalaBuildTarget) =
-    targetScalaTarget.getJars.forall {
-      targetJar => foundScalaTarget.getJars.exists(_.contains(targetJar))
+  private def compareScalaBuildTargets(
+      foundScalaTarget: ScalaBuildTarget,
+      targetScalaTarget: ScalaBuildTarget
+  ) =
+    targetScalaTarget.getJars.forall { targetJar =>
+      foundScalaTarget.getJars.exists(_.contains(targetJar))
     } &&
       targetScalaTarget.getPlatform == foundScalaTarget.getPlatform &&
       targetScalaTarget.getScalaBinaryVersion == foundScalaTarget.getScalaBinaryVersion &&
@@ -564,14 +571,16 @@ class TestClient(
       compareJvmTarget(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
 
   private def compareBuildTargets(
-                                   expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
-                                   workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
-                                 ) =
+      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+      workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
+  ) =
     expectedWorkspaceBuildTargetsResult.getTargets.forall { target =>
-      workspaceBuildTargetsResult.getTargets.exists(
-        foundTarget =>
-          foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.getDependencies == target.getDependencies
-            && foundTarget.getCapabilities == target.getCapabilities && foundTarget.getDataKind == target.getDataKind && compareBuildTargetData(foundTarget, target)
+      workspaceBuildTargetsResult.getTargets.exists(foundTarget =>
+        foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.getDependencies == target.getDependencies
+          && foundTarget.getCapabilities == target.getCapabilities && foundTarget.getDataKind == target.getDataKind && compareBuildTargetData(
+            foundTarget,
+            target
+          )
       )
     }
 
@@ -600,13 +609,12 @@ class TestClient(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceSourcesResult: SourcesResult
   ): Unit =
-    wrapTest(
-      session =>
-        testSourcesResults(
-          expectedWorkspaceBuildTargetsResult,
-          expectedWorkspaceSourcesResult,
-          session
-        )
+    wrapTest(session =>
+      testSourcesResults(
+        expectedWorkspaceBuildTargetsResult,
+        expectedWorkspaceSourcesResult,
+        session
+      )
     )
 
   def testSourcesResults(
@@ -619,16 +627,16 @@ class TestClient(
       (results: SourcesResult) =>
         expectedWorkspaceSourcesResult.getItems.forall { sourceItem =>
           {
-            results.getItems.exists(
-              resultItem =>
-                resultItem.getTarget == sourceItem.getTarget && sourceItem.getSources.forall(
-                  sourceFile =>
-                    resultItem.getSources.exists(
-                      resultSource =>
-                        resultSource.getUri
-                          .contains(sourceFile.getUri) && resultSource.getKind == sourceFile.getKind && resultSource.getGenerated == sourceFile.getGenerated
-                    )
-                )
+            results.getItems.exists(resultItem =>
+              resultItem.getTarget == sourceItem.getTarget && sourceItem.getSources.forall(
+                sourceFile =>
+                  resultItem.getSources.exists(resultSource =>
+                    resultSource.getUri
+                      .contains(
+                        sourceFile.getUri
+                      ) && resultSource.getKind == sourceFile.getKind && resultSource.getGenerated == sourceFile.getGenerated
+                  )
+              )
             )
           }
         },
@@ -725,12 +733,11 @@ class TestClient(
       expectedItems: java.util.List[JvmEnvironmentItem]
   ) = {
     items.forall { item =>
-      expectedItems.exists(
-        expectedItem =>
-          testExpectedEnvVars(expectedItem, item) &&
-            item.getTarget == expectedItem.getTarget &&
-            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-            item.getJvmOptions == expectedItem.getJvmOptions
+      expectedItems.exists(expectedItem =>
+        testExpectedEnvVars(expectedItem, item) &&
+          item.getTarget == expectedItem.getTarget &&
+          testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+          item.getJvmOptions == expectedItem.getJvmOptions
       )
     }
   }
@@ -738,10 +745,9 @@ class TestClient(
   private def testExpectedEnvVars(expectedItem: JvmEnvironmentItem, item: JvmEnvironmentItem) = {
     expectedItem.getEnvironmentVariables
       .entrySet()
-      .forall(
-        entry =>
-          item.getEnvironmentVariables.containsKey(entry.getKey) && item.getEnvironmentVariables
-            .get(entry.getKey) == entry.getValue
+      .forall(entry =>
+        item.getEnvironmentVariables.containsKey(entry.getKey) && item.getEnvironmentVariables
+          .get(entry.getKey) == entry.getValue
       )
   }
 
@@ -763,13 +769,11 @@ class TestClient(
       .map(result => result.getItems)
       .map(jvmItems => {
         val itemsTest = jvmItems.forall { item =>
-          expectedResult.getItems.exists(
-            expectedItem =>
-              testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-                item.getTarget == expectedItem.getTarget &&
-                item.getOptions == expectedItem.getOptions
-
+          expectedResult.getItems.exists(expectedItem =>
+            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+              item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+              item.getTarget == expectedItem.getTarget &&
+              item.getOptions == expectedItem.getOptions
           )
         }
         assert(
@@ -796,12 +800,11 @@ class TestClient(
       .map(result => result.getItems)
       .map(scalacItems => {
         val itemsTest = scalacItems.forall { item =>
-          expectedResult.getItems.exists(
-            expectedItem =>
-              testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-                item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-                item.getTarget == expectedItem.getTarget &&
-                item.getOptions == expectedItem.getOptions
+          expectedResult.getItems.exists(expectedItem =>
+            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
+              item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
+              item.getTarget == expectedItem.getTarget &&
+              item.getOptions == expectedItem.getOptions
           )
         }
         assert(
@@ -902,19 +905,26 @@ class TestClient(
   def testWorkspaceReload(): Unit =
     wrapTest(testWorkspaceReload)
 
-  def testResolveProject(javacOptionsFlag: Boolean = false, scalacOptionsFlag: Boolean = false): Unit =
+  def testResolveProject(
+      javacOptionsFlag: Boolean = false,
+      scalacOptionsFlag: Boolean = false
+  ): Unit =
     wrapTest(testResolveProject(_, javacOptionsFlag, scalacOptionsFlag))
 
-  def testResolveProject(session: MockSession,
-                         javacOptionsFlag: Boolean,
-                         scalacOptionsFlag: Boolean): Future[Unit] =
+  def testResolveProject(
+      session: MockSession,
+      javacOptionsFlag: Boolean,
+      scalacOptionsFlag: Boolean
+  ): Future[Unit] =
     getAllBuildTargets(session)
       .flatMap(testProjectTargetsImport(session, _, javacOptionsFlag, scalacOptionsFlag))
 
-  private def testProjectTargetsImport(session: MockSession,
-                                       targets: mutable.Buffer[BuildTarget],
-                                       javacOptionsFlag: Boolean,
-                                       scalacOptionsFlag: Boolean): Future[Unit] = {
+  private def testProjectTargetsImport(
+      session: MockSession,
+      targets: mutable.Buffer[BuildTarget],
+      javacOptionsFlag: Boolean,
+      scalacOptionsFlag: Boolean
+  ): Future[Unit] = {
     val bspServer = session.connection.server
     val targetIds = targets.map(_.getId).asJava
 
@@ -922,15 +932,18 @@ class TestClient(
     val dependencySources = fetchDependencySources(bspServer, targetIds)
     val resources = fetchResources(bspServer, targetIds)
     val javacOptions = if (javacOptionsFlag) fetchJavacOptions(bspServer, targets) else Future.unit
-    val scalacOptions = if (scalacOptionsFlag) fetchScalacOptions(bspServer, targets) else Future.unit
+    val scalacOptions =
+      if (scalacOptionsFlag) fetchScalacOptions(bspServer, targets) else Future.unit
 
     Future
       .sequence(Seq(sources, dependencySources, resources, javacOptions, scalacOptions))
       .map(_ => ())
   }
 
-  private def fetchSources(bspServer: MockSession.BspMockServer,
-                           targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+  private def fetchSources(
+      bspServer: MockSession.BspMockServer,
+      targetIds: java.util.List[BuildTargetIdentifier]
+  ): Future[Unit] = {
     val sourcesParams = new SourcesParams(targetIds)
 
     bspServer
@@ -939,8 +952,10 @@ class TestClient(
       .map(_ => ())
   }
 
-  private def fetchDependencySources(bspServer: MockSession.BspMockServer,
-                                     targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+  private def fetchDependencySources(
+      bspServer: MockSession.BspMockServer,
+      targetIds: java.util.List[BuildTargetIdentifier]
+  ): Future[Unit] = {
     val dependencySourcesParams = new DependencySourcesParams(targetIds)
 
     bspServer
@@ -949,8 +964,10 @@ class TestClient(
       .map(_ => ())
   }
 
-  private def fetchResources(bspServer: MockSession.BspMockServer,
-                             targetIds: java.util.List[BuildTargetIdentifier]): Future[Unit] = {
+  private def fetchResources(
+      bspServer: MockSession.BspMockServer,
+      targetIds: java.util.List[BuildTargetIdentifier]
+  ): Future[Unit] = {
     val resourcesParams = new ResourcesParams(targetIds)
 
     bspServer
@@ -959,8 +976,10 @@ class TestClient(
       .map(_ => ())
   }
 
-  private def fetchJavacOptions(bspServer: MockSession.BspMockServer,
-                                targets: mutable.Buffer[BuildTarget]): Future[Unit] = {
+  private def fetchJavacOptions(
+      bspServer: MockSession.BspMockServer,
+      targets: mutable.Buffer[BuildTarget]
+  ): Future[Unit] = {
     val javaTargetIds = getTargetsIdsForLanguage(targets, "java")
     val javacOptionsParams = new JavacOptionsParams(javaTargetIds)
 
@@ -970,8 +989,10 @@ class TestClient(
       .map(_ => ())
   }
 
-  private def fetchScalacOptions(bspServer: MockSession.BspMockServer,
-                                 targets: mutable.Buffer[BuildTarget]): Future[Unit] = {
+  private def fetchScalacOptions(
+      bspServer: MockSession.BspMockServer,
+      targets: mutable.Buffer[BuildTarget]
+  ): Future[Unit] = {
     val scalaTargetIds = getTargetsIdsForLanguage(targets, "scala")
     val scalacOptionsParams = new ScalacOptionsParams(scalaTargetIds)
 
@@ -981,11 +1002,14 @@ class TestClient(
       .map(_ => ())
   }
 
-
-  private def getTargetsIdsForLanguage(targets: mutable.Buffer[BuildTarget], languageId: String): java.util.List[BuildTargetIdentifier] =
+  private def getTargetsIdsForLanguage(
+      targets: mutable.Buffer[BuildTarget],
+      languageId: String
+  ): java.util.List[BuildTargetIdentifier] =
     targets
       .filter(_.getLanguageIds.contains(languageId))
-      .map(_.getId).asJava
+      .map(_.getId)
+      .asJava
 }
 
 class TestFailedException(e: Throwable) extends Throwable(e) {
@@ -1011,8 +1035,8 @@ object TestClient {
   ): TestClient = {
     val workspace = new File(workspacePath)
     val (capabilities, connectionFiles) = MockCommunications.prepareSession(workspace)
-    val failedConnections = connectionFiles.collect {
-      case Failure(x) => x
+    val failedConnections = connectionFiles.collect { case Failure(x) =>
+      x
     }
     assert(
       failedConnections.isEmpty,
