@@ -31,6 +31,9 @@ lazy val V = new {
   val scala212 = "2.12.14"
   val scala213 = "2.13.6"
   val supportedScalaVersions = List(scala212, scala213)
+  val jsoniter = "2.9.0"
+  val java8Compat = "1.0.0"
+  val lsp4j = "0.12.0"
 }
 
 import java.io.File
@@ -58,7 +61,7 @@ lazy val bsp4s = project
     Compile / doc / sources := Nil,
     libraryDependencies ++= List(
       "me.vican.jorge" %% "jsonrpc4s" % "0.1.0",
-      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.8.2"
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % V.jsoniter
     )
   )
 
@@ -92,8 +95,8 @@ lazy val bsp4j = project
     },
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % "0.12.0",
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % "0.12.0"
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
     )
   )
 
@@ -103,10 +106,10 @@ lazy val tests = project
     publish / skip := true,
     libraryDependencies ++= List(
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
-      "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0",
-      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.0.0",
+      "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
+      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.4.0",
       "org.scalatest" %% "scalatest" % "3.0.9",
-      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.8.2"
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % V.jsoniter
     )
   )
   .dependsOn(bsp4s, bsp4j, `bsp-testkit`)
@@ -120,8 +123,8 @@ lazy val `bsp-testkit` = project
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
     libraryDependencies ++= List(
       "org.scalacheck" %% "scalacheck" % "1.15.2",
-      "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.1",
-      "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.6"
+      "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4"
     ),
     crossScalaVersions := V.supportedScalaVersions
   )
