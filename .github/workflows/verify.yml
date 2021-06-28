@@ -29,4 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: olafurpg/setup-scala@v11
+        with:
+          java-version: adopt@1.8
       - run: sbt docs/docusaurusCreateSite
