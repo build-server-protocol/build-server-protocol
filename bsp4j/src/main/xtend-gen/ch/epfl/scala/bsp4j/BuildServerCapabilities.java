@@ -1,9 +1,5 @@
 package ch.epfl.scala.bsp4j;
 
-import ch.epfl.scala.bsp4j.CompileProvider;
-import ch.epfl.scala.bsp4j.DebugProvider;
-import ch.epfl.scala.bsp4j.RunProvider;
-import ch.epfl.scala.bsp4j.TestProvider;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 

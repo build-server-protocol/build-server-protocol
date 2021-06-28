@@ -28,8 +28,8 @@ inThisBuild(
 )
 
 import java.io.File
-import org.eclipse.xtend.core.XtendInjectorSingleton
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
+import org.eclipse.xtend.core.XtendStandaloneSetup
 
 // force javac to fork by setting javaHome to get error messages during compilation,
 // see https://github.com/sbt/zinc/issues/520
@@ -68,7 +68,8 @@ lazy val bsp4j = project
     Compile / javaHome := inferJavaHome(),
     Compile / doc / javaHome := inferJavaHome(),
     TaskKey[Unit]("xtend") := {
-      val compiler = XtendInjectorSingleton.INJECTOR.getInstance(classOf[XtendBatchCompiler])
+      val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
+      val compiler = injector.getInstance(classOf[XtendBatchCompiler])
       val classpath = (Compile / dependencyClasspath).value.map(_.data).mkString(File.pathSeparator)
       compiler.setClassPath(classpath)
       val sourceDir = (Compile / sourceDirectory).value / "java"

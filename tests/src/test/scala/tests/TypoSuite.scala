@@ -427,7 +427,7 @@ class TypoSuite extends FunSuite {
         val expected = trace2.toString()
         assertNoDiff(obtained, expected)
       }
-      Await.result(result, Duration("20s"))
+      Await.result(result, Duration("30s"))
     } finally {
       allResources.cancel()
     }
