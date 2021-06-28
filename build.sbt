@@ -143,3 +143,13 @@ lazy val docs = project
     )
   )
   .enablePlugins(DocusaurusPlugin)
+
+addCommandAlias(
+  "scalaFormat",
+  "scalafmtAll ; scalafmtSbt"
+)
+
+addCommandAlias(
+  "checkScalaFormat",
+  "scalafmtCheckAll ; scalafmtSbtCheck"
+)

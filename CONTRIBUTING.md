@@ -12,3 +12,11 @@ sbt
 > ~; bsp4j/xtend ; bsp4j/compile
 ```
 
+## Formatting
+
+To ensure the Scala sources are formatted correctly you can run:
+
+```sh
+sbt scalaFormat
+```
+
