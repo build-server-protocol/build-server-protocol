@@ -5,7 +5,7 @@ import ch.epfl.scala.bsp.testkit.mock.MockServer
 import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp4j._
 import com.google.common.collect.Lists
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import java.net.URI
 import java.nio.file.{Files, Paths}
@@ -15,7 +15,7 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
-class MockClientSuite extends FunSuite {
+class MockClientSuite extends AnyFunSuite {
 
   private val testDirectory = Files.createTempDirectory("bsp.MockClientSuite")
   private val initializeBuildParams =

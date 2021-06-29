@@ -34,6 +34,7 @@ lazy val V = new {
   val jsoniter = "2.9.0"
   val java8Compat = "1.0.0"
   val lsp4j = "0.12.0"
+  val scalacheck = "1.15.4"
 }
 
 import java.io.File
@@ -108,7 +109,9 @@ lazy val tests = project
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.4.0",
-      "org.scalatest" %% "scalatest" % "3.0.9",
+      "org.scalatest" %% "scalatest" % "3.2.9",
+      "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0",
+      "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % V.jsoniter
     )
   )
@@ -122,7 +125,7 @@ lazy val `bsp-testkit` = project
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
     libraryDependencies ++= List(
-      "org.scalacheck" %% "scalacheck" % "1.15.4",
+      "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4"
     ),
