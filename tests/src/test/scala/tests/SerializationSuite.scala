@@ -4,7 +4,7 @@ import java.net.URI
 
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder, JsonElement}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToArray
 import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
@@ -12,7 +12,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import scala.collection.JavaConverters._
 import jsonrpc4s.RawJson
 
-class SerializationSuite extends FunSuite {
+class SerializationSuite extends AnyFunSuite {
 
   val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
 

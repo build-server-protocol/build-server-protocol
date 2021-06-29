@@ -9,7 +9,7 @@ import ch.epfl.scala.bsp.testkit.mock.MockServer
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import org.eclipse.lsp4j.jsonrpc.Launcher
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
@@ -21,7 +21,7 @@ trait MockBuildServer
     with JavaBuildServer
     with CppBuildServer
 
-class HappyMockSuite extends FunSuite {
+class HappyMockSuite extends AnyFunSuite {
 
   def connectToBuildServer(
       localClient: BuildClient,

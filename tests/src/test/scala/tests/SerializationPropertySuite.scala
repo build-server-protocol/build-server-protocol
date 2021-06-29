@@ -4,16 +4,17 @@ import ch.epfl.scala.bsp.testkit.gen.Bsp4jGenerators
 import ch.epfl.scala.bsp.testkit.gen.bsp4jArbitrary._
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{Assertion, Assertions, FunSuite}
+import org.scalatest.{Assertion, Assertions}
+import org.scalatest.funsuite.AnyFunSuite
 import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class SerializationPropertySuite extends FunSuite with GeneratorDrivenPropertyChecks {
+class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChecks {
 
   implicit val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
 

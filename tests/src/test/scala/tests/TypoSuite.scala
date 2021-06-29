@@ -23,7 +23,7 @@ import java.util.concurrent.Executors
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
 import org.eclipse.lsp4j.jsonrpc.Launcher
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
@@ -41,7 +41,7 @@ import jsonrpc4s.RpcFailure
 import scala.util.Failure
 import scala.util.Success
 
-class TypoSuite extends FunSuite {
+class TypoSuite extends AnyFunSuite {
 
   // Constants for for incoming/outgoing messages.
   val buildTargetUri = new BuildTargetIdentifier("build-target-identifier")
