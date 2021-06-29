@@ -37,7 +37,10 @@ trait BuildTarget {
         "buildTarget/dependencySources"
       )
 
-  object dependencyModules extends Endpoint[DependencyModulesParams, DependencyModulesResult]("buildTarget/dependencyModules")
+  object dependencyModules
+      extends Endpoint[DependencyModulesParams, DependencyModulesResult](
+        "buildTarget/dependencyModules"
+      )
 
   object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
@@ -57,19 +60,19 @@ trait BuildTarget {
         "buildTarget/jvmTestEnvironment"
       )
   object jvmRunEnvironment
-    extends Endpoint[JvmRunEnvironmentParams, JvmRunEnvironmentResult](
-      "buildTarget/jvmRunEnvironment"
-    )
+      extends Endpoint[JvmRunEnvironmentParams, JvmRunEnvironmentResult](
+        "buildTarget/jvmRunEnvironment"
+      )
   // Java specific endpoints
   object javacOptions
-    extends Endpoint[JavacOptionsParams, JavacOptionsResult](
-      "buildTarget/javacOptions"
-    )
+      extends Endpoint[JavacOptionsParams, JavacOptionsResult](
+        "buildTarget/javacOptions"
+      )
   // C++ specific endpoints
   object cppOptions
-    extends Endpoint[CppOptionsParams, CppOptionsResult](
-      "buildTarget/cppOptions"
-    )
+      extends Endpoint[CppOptionsParams, CppOptionsResult](
+        "buildTarget/cppOptions"
+      )
 }
 
 object Workspace extends Workspace

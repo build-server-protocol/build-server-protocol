@@ -5,7 +5,12 @@ import com.google.gson.GsonBuilder
 
 import scala.jdk.CollectionConverters._
 
-abstract class AbstractBuildServer extends BuildServer with ScalaBuildServer with JvmBuildServer with JavaBuildServer with CppBuildServer
+abstract class AbstractBuildServer
+    extends BuildServer
+    with ScalaBuildServer
+    with JvmBuildServer
+    with JavaBuildServer
+    with CppBuildServer
 
 abstract class AbstractMockServer extends AbstractBuildServer {
   var client: BuildClient
@@ -16,10 +21,12 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   // notification helpers
 
-  def logMessage(message: String,
-                 messageType: MessageType = MessageType.INFORMATION,
-                 task: Option[TaskId] = None,
-                 origin: Option[String] = None): Unit = {
+  def logMessage(
+      message: String,
+      messageType: MessageType = MessageType.INFORMATION,
+      task: Option[TaskId] = None,
+      origin: Option[String] = None
+  ): Unit = {
     val params = new LogMessageParams(messageType, message)
     task.foreach(params.setTask)
     origin.foreach(params.setOriginId)
@@ -27,10 +34,12 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     client.onBuildLogMessage(params)
   }
 
-  def showMessage(message: String,
-                  messageType: MessageType = MessageType.INFORMATION,
-                  task: Option[TaskId] = None,
-                  origin: Option[String] = None): Unit = {
+  def showMessage(
+      message: String,
+      messageType: MessageType = MessageType.INFORMATION,
+      task: Option[TaskId] = None,
+      origin: Option[String] = None
+  ): Unit = {
     val params = new ShowMessageParams(messageType, message)
     task.foreach(params.setTask)
     origin.foreach(params.setOriginId)
@@ -38,21 +47,25 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     client.onBuildShowMessage(params)
   }
 
-  def publishDiagnostics(doc: TextDocumentIdentifier,
-                         target: BuildTargetIdentifier,
-                         diagnostics: List[Diagnostic],
-                         origin: Option[String] = None,
-                         reset: Boolean = false): Unit = {
+  def publishDiagnostics(
+      doc: TextDocumentIdentifier,
+      target: BuildTargetIdentifier,
+      diagnostics: List[Diagnostic],
+      origin: Option[String] = None,
+      reset: Boolean = false
+  ): Unit = {
     val params = new PublishDiagnosticsParams(doc, target, diagnostics.asJava, reset)
     origin.foreach(params.setOriginId)
 
     client.onBuildPublishDiagnostics(params)
   }
 
-  def taskStart(taskId: TaskId,
-                message: String,
-                dataKind: Option[String],
-                data: Option[AnyRef]): Unit = {
+  def taskStart(
+      taskId: TaskId,
+      message: String,
+      dataKind: Option[String],
+      data: Option[AnyRef]
+  ): Unit = {
     val time = System.currentTimeMillis()
     val params = new TaskStartParams(taskId)
     params.setEventTime(time)
@@ -63,12 +76,14 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     client.onBuildTaskStart(params)
   }
 
-  def taskProgress(taskId: TaskId,
-                   message: String,
-                   total: Long,
-                   progress: Long,
-                   dataKind: Option[String],
-                   data: Option[AnyRef]): Unit = {
+  def taskProgress(
+      taskId: TaskId,
+      message: String,
+      total: Long,
+      progress: Long,
+      dataKind: Option[String],
+      data: Option[AnyRef]
+  ): Unit = {
     val time = System.currentTimeMillis()
     val params = new TaskProgressParams(taskId)
     params.setEventTime(time)
@@ -81,11 +96,13 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     client.onBuildTaskProgress(params)
   }
 
-  def taskFinish(taskId: TaskId,
-                 message: String,
-                 statusCode: StatusCode,
-                 dataKind: Option[String],
-                 data: Option[AnyRef]): Unit = {
+  def taskFinish(
+      taskId: TaskId,
+      message: String,
+      statusCode: StatusCode,
+      dataKind: Option[String],
+      data: Option[AnyRef]
+  ): Unit = {
     val time = System.currentTimeMillis()
     val params = new TaskFinishParams(taskId, statusCode)
     params.setEventTime(time)
@@ -102,15 +119,17 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     taskStart(taskId, message, Some(TaskDataKind.COMPILE_TASK), Some(data))
   }
 
-  def compileReport(taskId: TaskId,
-                    message: String,
-                    target: BuildTargetIdentifier,
-                    status: StatusCode,
-                    time: Long = System.currentTimeMillis): Unit = {
+  def compileReport(
+      taskId: TaskId,
+      message: String,
+      target: BuildTargetIdentifier,
+      status: StatusCode,
+      time: Long = System.currentTimeMillis
+  ): Unit = {
     val origin = taskId.getParents.asScala.headOption
     val data = status match {
-      case StatusCode.OK => new CompileReport(target, 0, 0)
-      case StatusCode.ERROR => new CompileReport(target, 1, 0)
+      case StatusCode.OK        => new CompileReport(target, 0, 0)
+      case StatusCode.ERROR     => new CompileReport(target, 1, 0)
       case StatusCode.CANCELLED => new CompileReport(target, 0, 1)
     }
     origin.foreach(data.setOriginId)

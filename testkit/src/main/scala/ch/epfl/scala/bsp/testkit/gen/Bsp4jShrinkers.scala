@@ -31,35 +31,37 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     shrink(a.getLanguageIds).map(new BuildClientCapabilities(_))
   }
 
-  implicit def shrinkBuildServerCapabilities: Shrink[BuildServerCapabilities] = Shrink { capabilities =>
-    for {
-      compileProvider <- shrink(capabilities.getCompileProvider)
-      testProvider <- shrink(capabilities.getTestProvider)
-      debugProvider <- shrink(capabilities.getDebugProvider)
-      inverseSourcesProvider <- shrink(capabilities.getInverseSourcesProvider)
-      dependencySourcesProvider <- shrink(capabilities.getDependencySourcesProvider)
-      dependencyModulesProvider <- shrink(capabilities.getDependencyModulesProvider)
-      resourcesProvider <- shrink(capabilities.getResourcesProvider)
-      buildTargetChangedProvider <- shrink(capabilities.getBuildTargetChangedProvider)
-    } yield {
-      val capabilities = new BuildServerCapabilities()
-      capabilities.setCompileProvider(compileProvider)
-      capabilities.setTestProvider(testProvider)
-      capabilities.setDebugProvider(debugProvider)
-      capabilities.setInverseSourcesProvider(inverseSourcesProvider)
-      capabilities.setDependencySourcesProvider(dependencySourcesProvider)
-      capabilities.setResourcesProvider(resourcesProvider)
-      capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)
-      capabilities.setDependencyModulesProvider(dependencyModulesProvider)
-      capabilities
-    }
+  implicit def shrinkBuildServerCapabilities: Shrink[BuildServerCapabilities] = Shrink {
+    capabilities =>
+      for {
+        compileProvider <- shrink(capabilities.getCompileProvider)
+        testProvider <- shrink(capabilities.getTestProvider)
+        debugProvider <- shrink(capabilities.getDebugProvider)
+        inverseSourcesProvider <- shrink(capabilities.getInverseSourcesProvider)
+        dependencySourcesProvider <- shrink(capabilities.getDependencySourcesProvider)
+        dependencyModulesProvider <- shrink(capabilities.getDependencyModulesProvider)
+        resourcesProvider <- shrink(capabilities.getResourcesProvider)
+        buildTargetChangedProvider <- shrink(capabilities.getBuildTargetChangedProvider)
+      } yield {
+        val capabilities = new BuildServerCapabilities()
+        capabilities.setCompileProvider(compileProvider)
+        capabilities.setTestProvider(testProvider)
+        capabilities.setDebugProvider(debugProvider)
+        capabilities.setInverseSourcesProvider(inverseSourcesProvider)
+        capabilities.setDependencySourcesProvider(dependencySourcesProvider)
+        capabilities.setResourcesProvider(resourcesProvider)
+        capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)
+        capabilities.setDependencyModulesProvider(dependencyModulesProvider)
+        capabilities
+      }
   }
 
-  implicit def shrinkBuildTarget(sl: Shrink[JList[String]],
-                                 s2: Shrink[JList[BuildTargetIdentifier]],
-                                 s3: Shrink[JList[BuildTargetCapabilities]],
-                                 s4: Shrink[String]
-                                ): Shrink[BuildTarget] = Shrink { target =>
+  implicit def shrinkBuildTarget(
+      sl: Shrink[JList[String]],
+      s2: Shrink[JList[BuildTargetIdentifier]],
+      s3: Shrink[JList[BuildTargetCapabilities]],
+      s4: Shrink[String]
+  ): Shrink[BuildTarget] = Shrink { target =>
     for {
       id <- shrink(target.getId)
       tags <- shrink(target.getTags)
@@ -78,13 +80,14 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     }
   }
 
-  implicit def shrinkBuildTargetCapabilities: Shrink[BuildTargetCapabilities] = Shrink { capabilities =>
-    for {
-      canCompile <- shrink(capabilities.getCanCompile)
-      canTest <- shrink(capabilities.getCanTest)
-      canRun <- shrink(capabilities.getCanRun)
-      canDebug <- shrink(capabilities.getCanDebug)
-    } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
+  implicit def shrinkBuildTargetCapabilities: Shrink[BuildTargetCapabilities] = Shrink {
+    capabilities =>
+      for {
+        canCompile <- shrink(capabilities.getCanCompile)
+        canTest <- shrink(capabilities.getCanTest)
+        canRun <- shrink(capabilities.getCanRun)
+        canDebug <- shrink(capabilities.getCanDebug)
+      } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
   }
 
   implicit def shrinkBuildTargetEvent: Shrink[BuildTargetEvent] = Shrink { event =>
@@ -130,9 +133,11 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     shrink(a.getLanguageIds).map(new CompileProvider(_))
   }
 
-  implicit def shrinkCompileReport(s1: Shrink[Int],
-                                   s2: Shrink[Long],
-                                   s3: Shrink[String]): Shrink[CompileReport] = Shrink { report =>
+  implicit def shrinkCompileReport(
+      s1: Shrink[Int],
+      s2: Shrink[Long],
+      s3: Shrink[String]
+  ): Shrink[CompileReport] = Shrink { report =>
     for {
       target <- shrink(report.getTarget)
       errors <- shrink(report.getErrors)
@@ -194,11 +199,12 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     }
   }
 
-  implicit def shrinkDiagnosticRelatedInformation: Shrink[DiagnosticRelatedInformation] = Shrink { a =>
-    for {
-      location <- shrink(a.getLocation)
-      message <- shrink(a.getMessage)
-    } yield new DiagnosticRelatedInformation(location, message)
+  implicit def shrinkDiagnosticRelatedInformation: Shrink[DiagnosticRelatedInformation] = Shrink {
+    a =>
+      for {
+        location <- shrink(a.getLocation)
+        message <- shrink(a.getMessage)
+      } yield new DiagnosticRelatedInformation(location, message)
   }
 
   implicit def shrinkDidChangeBuildTarget: Shrink[DidChangeBuildTarget] = Shrink { a =>
@@ -213,7 +219,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       rootUri <- shrink(a.getRootUri)
       capabilities <- shrink(a.getCapabilities)
     } yield {
-      val params = new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
+      val params =
+        new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
       params.setData(a.getData)
       params
     }
@@ -360,7 +367,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       jars <- shrink(a.getJars)
       jvmBuildTarget <- shrink(a.getJvmBuildTarget)
     } yield {
-      val target = new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
+      val target =
+        new ScalaBuildTarget(scalaOrganization, scalaVersion, scalaBinaryVersion, platform, jars)
       target.setJvmBuildTarget(jvmBuildTarget)
       target
     }
@@ -633,8 +641,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     shrink(a.getUri).map(new TextDocumentIdentifier(_))
   }
 
-  implicit def shrinkWorkspaceBuildTargetsResult: Shrink[WorkspaceBuildTargetsResult] = Shrink { a =>
-    shrink(a.getTargets).map(new WorkspaceBuildTargetsResult(_))
+  implicit def shrinkWorkspaceBuildTargetsResult: Shrink[WorkspaceBuildTargetsResult] = Shrink {
+    a =>
+      shrink(a.getTargets).map(new WorkspaceBuildTargetsResult(_))
   }
 
 }

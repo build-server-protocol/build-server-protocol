@@ -176,8 +176,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def buildTargetCppOptions(params: CppOptionsParams): CompletableFuture[CppOptionsResult] = {
-    handleRequest{
+  override def buildTargetCppOptions(
+      params: CppOptionsParams
+  ): CompletableFuture[CppOptionsResult] = {
+    handleRequest {
       val copts = List("-Iexternal/gtest/include").asJava
       val defines = List("BOOST_FALLTHROUGH").asJava
       val linkopts = List("-pthread").asJava
@@ -193,7 +195,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val classes1 = List("class1").asJava
       val classes2 = List("class2").asJava
-      val testClassesItems = List(new ScalaTestClassesItem(targetId1, classes1), new ScalaTestClassesItem(targetId2, classes2)).asJava
+      val testClassesItems = List(
+        new ScalaTestClassesItem(targetId1, classes1),
+        new ScalaTestClassesItem(targetId2, classes2)
+      ).asJava
       val result = new ScalaTestClassesResult(testClassesItems)
       Right(result)
     }
@@ -202,9 +207,16 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
     handleRequest {
-      val classes1 = List(new ScalaMainClass("class1", List("arg1", "arg2").asJava, List("-deprecated").asJava)).asJava
-      val classes2 = List(new ScalaMainClass("class2", List("arg1", "arg2").asJava, List("-deprecated").asJava)).asJava
-      val mainClassesItems = List(new ScalaMainClassesItem(targetId1, classes1), new ScalaMainClassesItem(targetId1, classes2)).asJava
+      val classes1 = List(
+        new ScalaMainClass("class1", List("arg1", "arg2").asJava, List("-deprecated").asJava)
+      ).asJava
+      val classes2 = List(
+        new ScalaMainClass("class2", List("arg1", "arg2").asJava, List("-deprecated").asJava)
+      ).asJava
+      val mainClassesItems = List(
+        new ScalaMainClassesItem(targetId1, classes1),
+        new ScalaMainClassesItem(targetId1, classes2)
+      ).asJava
       val result = new ScalaMainClassesResult(mainClassesItems)
       Right(result)
     }
@@ -490,16 +502,21 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
 
   override def buildTargetDependencyModules(
-    params: DependencyModulesParams
+      params: DependencyModulesParams
   ): CompletableFuture[DependencyModulesResult] = {
     handleRequest {
-      def jvmModule(targetId: BuildTargetIdentifier, org: String, name: String, version: String): DependencyModule = {
+      def jvmModule(
+          targetId: BuildTargetIdentifier,
+          org: String,
+          name: String,
+          version: String
+      ): DependencyModule = {
         val fullName = s"$org-$name-$version"
         val module = new DependencyModule(
           s"$org-$name",
           version
         )
-        val artifacts = List(None, Some("-sources")).map{ classifier =>
+        val artifacts = List(None, Some("-sources")).map { classifier =>
           val path = s"lib/$fullName${classifier.getOrElse("")}.jar"
           val artifact = new MavenDependencyModuleArtifact(uriInTarget(targetId, path).toString)
           classifier.foreach(artifact.setClassifier)
@@ -571,8 +588,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
 
   private def getValue[T](f: => Either[ResponseError, T]): Either[ResponseError, T] =
     Try(f).toEither.left
-      .map(
-        exception => new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null)
+      .map(exception =>
+        new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null)
       )
       .joinRight
 

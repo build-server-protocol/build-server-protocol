@@ -4,7 +4,14 @@ import ch.epfl.scala.bsp.testkit.client.mock.MockSession.BspMockServer
 
 import java.io.{InputStream, OutputStream}
 import java.util.concurrent.{ExecutorService, Executors}
-import ch.epfl.scala.bsp4j.{BuildServer, CppBuildServer, InitializeBuildParams, JavaBuildServer, JvmBuildServer, ScalaBuildServer}
+import ch.epfl.scala.bsp4j.{
+  BuildServer,
+  CppBuildServer,
+  InitializeBuildParams,
+  JavaBuildServer,
+  JvmBuildServer,
+  ScalaBuildServer
+}
 import org.eclipse.lsp4j.jsonrpc.Launcher
 
 case class MockSession(
@@ -29,13 +36,12 @@ case class MockSession(
       .create()
 
     val listening = launcher.startListening
-    new Thread(
-      () =>
-        try {
-          listening.get()
-        } catch {
-          case _: Throwable => //Ignore all errors while listening to the launcher
-        }
+    new Thread(() =>
+      try {
+        listening.get()
+      } catch {
+        case _: Throwable => //Ignore all errors while listening to the launcher
+      }
     ).start()
 
     val server: BspMockServer = launcher.getRemoteProxy
@@ -64,11 +70,12 @@ object MockSession {
   ): MockSession =
     new MockSession(process.getInputStream, process.getOutputStream, initializeBuildParams, cleanup)
 
-  trait BspMockServer extends BuildServer
-    with ScalaBuildServer
-    with JavaBuildServer
-    with JvmBuildServer
-    with CppBuildServer
+  trait BspMockServer
+      extends BuildServer
+      with ScalaBuildServer
+      with JavaBuildServer
+      with JvmBuildServer
+      with CppBuildServer
 
   def apply(
       in: InputStream,
