@@ -122,7 +122,7 @@ lazy val `bsp-testkit` = project
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
     libraryDependencies ++= List(
-      "org.scalacheck" %% "scalacheck" % "1.15.2",
+      "org.scalacheck" %% "scalacheck" % "1.15.4",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4"
     ),
