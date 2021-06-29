@@ -21,7 +21,7 @@ class SerializationSuite extends FunSuite {
 
     val target = bsp4s.BuildTargetIdentifier(bsp4s.Uri(buildTarget))
     val id = bsp4s.TaskId("task", Some(List("p1", "p2", "p3")))
-    val report = bsp4s.CompileReport(target, Some("origin"), 13, 12, Some(77))
+    val report = bsp4s.CompileReport(target, Some("origin"), 13, 12, Some(77), None)
     val bsp4sValue = bsp4s.TaskFinishParams(
       id,
       Some(12345),

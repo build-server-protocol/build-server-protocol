@@ -1138,7 +1138,10 @@ export interface CompileReport {
   warnings: Int;
 
   /** The total number of milliseconds it took to compile the target. */
-  time?: Int];
+  time?: Int;
+
+  /** The compilation was a noOp compilation. */
+  noOp?: Boolean;
 }
 ```
 

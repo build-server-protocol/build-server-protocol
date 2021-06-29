@@ -679,7 +679,8 @@ final case class CompileReport(
     originId: Option[String],
     errors: Int,
     warnings: Int,
-    time: Option[Long]
+    time: Option[Long],
+    noOp: Option[Boolean]
 )
 
 object CompileReport {

@@ -20,6 +20,8 @@ public class CompileReport {
   
   private Long time;
   
+  private Boolean noOp;
+  
   public CompileReport(@NonNull final BuildTargetIdentifier target, @NonNull final Integer errors, @NonNull final Integer warnings) {
     this.target = target;
     this.errors = errors;
@@ -74,6 +76,15 @@ public class CompileReport {
     this.time = time;
   }
   
+  @Pure
+  public Boolean getNoOp() {
+    return this.noOp;
+  }
+  
+  public void setNoOp(final Boolean noOp) {
+    this.noOp = noOp;
+  }
+  
   @Override
   @Pure
   public String toString() {
@@ -83,6 +94,7 @@ public class CompileReport {
     b.add("errors", this.errors);
     b.add("warnings", this.warnings);
     b.add("time", this.time);
+    b.add("noOp", this.noOp);
     return b.toString();
   }
   
@@ -121,6 +133,11 @@ public class CompileReport {
         return false;
     } else if (!this.time.equals(other.time))
       return false;
+    if (this.noOp == null) {
+      if (other.noOp != null)
+        return false;
+    } else if (!this.noOp.equals(other.noOp))
+      return false;
     return true;
   }
   
@@ -133,6 +150,7 @@ public class CompileReport {
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.errors== null) ? 0 : this.errors.hashCode());
     result = prime * result + ((this.warnings== null) ? 0 : this.warnings.hashCode());
-    return prime * result + ((this.time== null) ? 0 : this.time.hashCode());
+    result = prime * result + ((this.time== null) ? 0 : this.time.hashCode());
+    return prime * result + ((this.noOp== null) ? 0 : this.noOp.hashCode());
   }
 }
