@@ -436,6 +436,7 @@ class CompileReport {
   @NonNull Integer errors
   @NonNull Integer warnings
   Long time
+  Boolean noOp
   new(@NonNull BuildTargetIdentifier target, @NonNull Integer errors, @NonNull Integer warnings) {
     this.target = target
     this.errors = errors
