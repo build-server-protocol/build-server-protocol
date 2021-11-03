@@ -40,7 +40,7 @@ case class MockSession(
       try {
         listening.get()
       } catch {
-        case _: Throwable => //Ignore all errors while listening to the launcher
+        case _: Throwable => // Ignore all errors while listening to the launcher
       }
     ).start()
 

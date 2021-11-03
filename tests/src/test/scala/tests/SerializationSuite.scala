@@ -70,11 +70,11 @@ class SerializationSuite extends AnyFunSuite {
       reset = false
     )
 
-    //val bsp4sJson = bsp4sValue.asJson.toString()
+    // val bsp4sJson = bsp4sValue.asJson.toString()
     val bsp4sJson = writeToString(bsp4sValue)
     val bsp4jValue = gson.fromJson(bsp4sJson, classOf[bsp4j.PublishDiagnosticsParams])
     val bsp4jJson = gson.toJson(bsp4jValue)
-    //val bsp4sValueDecoded = decode[bsp4s.PublishDiagnosticsParams](bsp4jJson).right.get
+    // val bsp4sValueDecoded = decode[bsp4s.PublishDiagnosticsParams](bsp4jJson).right.get
     val bsp4sValueDecoded = readFromString[bsp4s.PublishDiagnosticsParams](bsp4jJson)
 
     assert(bsp4jValue.getBuildTarget.getUri == bsp4sValue.buildTarget.uri.value)
