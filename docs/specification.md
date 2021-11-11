@@ -147,7 +147,7 @@ export interface BuildTarget {
   languageIds: String[];
 
   /** The direct upstream build target dependencies of this build target */
-  dependencies: BuildTargetIdentifer[];
+  dependencies: BuildTargetIdentifier[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
   dataKind?: String;
@@ -224,7 +224,7 @@ it is unique within the workspace. Clients should not infer metadata out of the
 URI structure such as the path or query parameters, use `BuildTarget` instead.
 
 ```ts
-export interface BuildTargetIdentifer {
+export interface BuildTargetIdentifier {
   /** The target’s Uri */
   uri: Uri;
 }
@@ -718,7 +718,7 @@ export interface SourcesResult {
 }
 
 export interface SourcesItem {
-  target: BuildTargetIdentifer;
+  target: BuildTargetIdentifier;
   /** The text documents or and directories that belong to this build target. */
   sources: SourceItem[];
   /** The root directories from where source files should be relativized.
