@@ -5,6 +5,6 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.3")
 
 libraryDependencies ++= Seq(
   "org.eclipse.xtend" % "org.eclipse.xtend.core" % "2.25.0",
-  "org.eclipse.platform" % "org.eclipse.equinox.common" % "3.14.100",
+  "org.eclipse.platform" % "org.eclipse.equinox.common" % "3.15.100",
   "org.eclipse.platform" % "org.eclipse.equinox.app" % "1.6.0"
 )
