@@ -79,6 +79,15 @@ lazy val bsp4j = project
     Compile / javaHome := inferJavaHome(),
     Compile / doc / javaHome := inferJavaHome(),
     TaskKey[Unit]("xtend") := {
+      /* @dos65 notes:
+       *  I have no idea but without direct preloading of this class
+       *  `createInjectorAndDoEMFRegistration` fails with
+       *  ```
+       *   java.lang.SecurityException: class "org.eclipse.core.runtime.OperationCanceledException"'s
+       *   signer information does not match signer information of other classes in the same package
+       *  ```
+       */
+      this.getClass.getClassLoader.loadClass("org.eclipse.core.runtime.OperationCanceledException")
       val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
       val compiler = injector.getInstance(classOf[XtendBatchCompiler])
       val classpath = (Compile / dependencyClasspath).value.map(_.data).mkString(File.pathSeparator)
