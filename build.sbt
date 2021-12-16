@@ -31,7 +31,7 @@ lazy val V = new {
   val scala212 = "2.12.15"
   val scala213 = "2.13.7"
   val supportedScalaVersions = List(scala212, scala213)
-  val jsoniter = "2.11.1"
+  val jsoniter = "2.12.0"
   val java8Compat = "1.0.2"
   val lsp4j = "0.12.0"
   val scalacheck = "1.15.4"
@@ -79,6 +79,15 @@ lazy val bsp4j = project
     Compile / javaHome := inferJavaHome(),
     Compile / doc / javaHome := inferJavaHome(),
     TaskKey[Unit]("xtend") := {
+      /* @dos65 notes:
+       *  I have no idea but without direct preloading of this class
+       *  `createInjectorAndDoEMFRegistration` fails with
+       *  ```
+       *   java.lang.SecurityException: class "org.eclipse.core.runtime.OperationCanceledException"'s
+       *   signer information does not match signer information of other classes in the same package
+       *  ```
+       */
+      this.getClass.getClassLoader.loadClass("org.eclipse.core.runtime.OperationCanceledException")
       val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
       val compiler = injector.getInstance(classOf[XtendBatchCompiler])
       val classpath = (Compile / dependencyClasspath).value.map(_.data).mkString(File.pathSeparator)
@@ -120,7 +129,7 @@ lazy val tests = project
 lazy val `bsp-testkit` = project
   .in(file("testkit"))
   .settings(
-    Compile / mainClass := Some("ch.epfl.scala.bsp.mock.MockServer"),
+    Compile / mainClass := Some("ch.epfl.scala.bsp.testkit.mock.MockServer"),
     executableScriptName := "mockbsp",
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",

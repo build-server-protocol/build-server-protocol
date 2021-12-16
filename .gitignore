@@ -33,3 +33,4 @@ out/
 .bloop
 .metals/
 .vscode
+.bsp
