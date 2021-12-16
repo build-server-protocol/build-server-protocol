@@ -71,10 +71,18 @@ lazy val bsp4j = project
   .settings(
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
-    Compile / javacOptions ++= List(
-      "-Xlint:all",
-      "-Werror"
-    ),
+    Compile / javacOptions ++= {
+      val specifyRelease =
+        if (sys.props("java.version").startsWith("1.8"))
+          List.empty
+        else
+          List("--release", "8")
+
+      List(
+        "-Xlint:all",
+        "-Werror"
+      ) ++ specifyRelease
+    },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
     Compile / javaHome := inferJavaHome(),
     Compile / doc / javaHome := inferJavaHome(),
