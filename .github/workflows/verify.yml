@@ -6,17 +6,12 @@ on:
     branches: [master]
 jobs:
   generate-and-test:
-    name: on ${{ matrix.java }}
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [adopt@1.8, adopt@1.11]
     steps:
       - uses: actions/checkout@v2
       - uses: olafurpg/setup-scala@v11
         with:
-          java-version: ${{ matrix.java }}
+          java-version: adopt@1.11
       - name: generate xtend
         run: sbt bsp4j/xtend
       - name: compile
