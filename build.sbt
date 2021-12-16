@@ -137,7 +137,7 @@ lazy val tests = project
 lazy val `bsp-testkit` = project
   .in(file("testkit"))
   .settings(
-    Compile / mainClass := Some("ch.epfl.scala.bsp.mock.MockServer"),
+    Compile / mainClass := Some("ch.epfl.scala.bsp.testkit.mock.MockServer"),
     executableScriptName := "mockbsp",
     bashScriptExtraDefines += """addJava "-Dscript.path=${app_home}/"""" + executableScriptName.value,
     batScriptExtraDefines += """call :add_java "-Dscript.path=%APP_HOME%\\"""" + executableScriptName.value + ".bat",
