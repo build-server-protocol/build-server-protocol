@@ -703,7 +703,7 @@ workspace, see `buildTarget/dependencySources`.
 - params: `BuildTargetSourcesParams`
 
 ```ts
-export interface SourcesParams {
+export interface BuildTargetSourcesParams {
   targets: BuildTargetIdentifier[];
 }
 ```
