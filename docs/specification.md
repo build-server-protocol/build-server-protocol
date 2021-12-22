@@ -61,13 +61,15 @@ Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
 [scalameta/metals](https://github.com/scalameta/metals), are currently working
 or planning to work on a BSP integrations.
 
-On the server side, [Bloop](https://github.com/scalacenter/bloop) was the first
-server to implement BSP. sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
-and Mill ships with a [contrib.bsp module](https://www.lihaoyi.com/mill/page/contrib-modules.html#bsp---build-server-protocol)
-since [0.5.2](https://github.com/lihaoyi/mill/pull/664).
+On the server side, 
+* [Bloop](https://github.com/scalacenter/bloop) was the first
+server to implement BSP
+* sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+* Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+* Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
 
 We're looking for third parties that implement BSP natively in other build tools
-like Gradle, Bazel or Pants.
+such as Gradle.
 
 The Build Server Protocol has been designed to be language-agnostic. We're
 looking for ways to collaborate with other programming language communities and
@@ -700,7 +702,7 @@ target. The sources response must not include sources that are external to the
 workspace, see `buildTarget/dependencySources`.
 
 - method: `buildTarget/sources`
-- params: `BuildTargetSourcesParams`
+- params: `SourcesParams`
 
 ```ts
 export interface SourcesParams {
