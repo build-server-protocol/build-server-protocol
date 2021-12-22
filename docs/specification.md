@@ -1097,7 +1097,7 @@ export interface CompileResult {
   statusCode: Int;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind: String;
+  dataKind?: String;
 
   /** A field containing language-specific information, like products
    * of compilation or compiler-specific metadata the client needs to know. */
