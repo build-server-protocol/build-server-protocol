@@ -50,6 +50,7 @@ class TypoSuite extends AnyFunSuite {
   val textDocumentIdentifier = new TextDocumentIdentifier("tti")
   val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
     Collections.singletonList(textDocumentIdentifier)
+  val outputPathUri = "file:///target/"
 
   // Java build client that ignores all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
@@ -150,6 +151,17 @@ class TypoSuite extends AnyFunSuite {
         new ResourcesResult(Collections.singletonList(item))
       }
     }
+    override def buildTargetOutputPaths(
+        params: OutputPathsParams
+    ): CompletableFuture[OutputPathsResult] = {
+      CompletableFuture.completedFuture {
+        val item = new OutputPathsItem(
+          buildTargetUri,
+          Collections.singletonList(new OutputPathItem(outputPathUri, OutputPathItemKind.DIRECTORY))
+        )
+        new OutputPathsResult(Collections.singletonList(item))
+      }
+    }
     override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] = {
       CompletableFuture.completedFuture {
         new CompileResult(StatusCode.OK)
@@ -248,6 +260,7 @@ class TypoSuite extends AnyFunSuite {
       .forwardRequest(s.BuildTarget.dependencyModules)
       .forwardRequest(s.BuildTarget.inverseSources)
       .forwardRequest(s.BuildTarget.resources)
+      .forwardRequest(s.BuildTarget.outputPaths)
       .forwardRequest(s.BuildTarget.compile)
       .forwardRequest(s.BuildTarget.run)
       .forwardRequest(s.BuildTarget.test)
@@ -418,6 +431,9 @@ class TypoSuite extends AnyFunSuite {
           .toScala
         resources <- scala1
           .buildTargetResources(new ResourcesParams(buildTargetUris))
+          .toScala
+        outputPaths <- scala1
+          .buildTargetOutputPaths(new OutputPathsParams(buildTargetUris))
           .toScala
         clean <- scala1
           .buildTargetCleanCache(new CleanCacheParams(buildTargetUris))

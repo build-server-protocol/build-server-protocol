@@ -20,7 +20,9 @@ public class BuildServerCapabilities {
   private Boolean dependencyModulesProvider;
   
   private Boolean resourcesProvider;
-  
+
+  private Boolean outputPathsProvider;
+
   private Boolean buildTargetChangedProvider;
   
   private Boolean jvmRunEnvironmentProvider;
@@ -100,7 +102,16 @@ public class BuildServerCapabilities {
   public void setResourcesProvider(final Boolean resourcesProvider) {
     this.resourcesProvider = resourcesProvider;
   }
-  
+
+  @Pure
+  public Boolean getOutputPathsProvider() {
+    return this.outputPathsProvider;
+  }
+
+  public void setOutputPathsProvider(final Boolean outputPathsProvider) {
+    this.outputPathsProvider = outputPathsProvider;
+  }
+
   @Pure
   public Boolean getBuildTargetChangedProvider() {
     return this.buildTargetChangedProvider;
@@ -149,6 +160,7 @@ public class BuildServerCapabilities {
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("dependencyModulesProvider", this.dependencyModulesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
+    b.add("outputPathsProvider", this.outputPathsProvider);
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
     b.add("jvmRunEnvironmentProvider", this.jvmRunEnvironmentProvider);
     b.add("jvmTestEnvironmentProvider", this.jvmTestEnvironmentProvider);
@@ -206,6 +218,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.resourcesProvider.equals(other.resourcesProvider))
       return false;
+    if (this.outputPathsProvider == null) {
+      if (other.outputPathsProvider != null)
+        return false;
+    } else if (!this.outputPathsProvider.equals(other.outputPathsProvider))
+      return false;
     if (this.buildTargetChangedProvider == null) {
       if (other.buildTargetChangedProvider != null)
         return false;
@@ -242,6 +259,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
     result = prime * result + ((this.dependencyModulesProvider== null) ? 0 : this.dependencyModulesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
+    result = prime * result + ((this.outputPathsProvider== null) ? 0 : this.outputPathsProvider.hashCode());
     result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
     result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
     result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());

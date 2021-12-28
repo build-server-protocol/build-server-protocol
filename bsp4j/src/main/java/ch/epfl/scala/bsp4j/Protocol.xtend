@@ -147,6 +147,7 @@ class BuildServerCapabilities {
   Boolean dependencySourcesProvider
   Boolean dependencyModulesProvider
   Boolean resourcesProvider
+  Boolean outputPathsProvider
   Boolean buildTargetChangedProvider
   Boolean jvmRunEnvironmentProvider
   Boolean jvmTestEnvironmentProvider
@@ -404,6 +405,43 @@ class ResourcesItem {
   new(@NonNull BuildTargetIdentifier target, @NonNull List<String> resources) {
     this.target = target
     this.resources = resources
+  }
+}
+
+@JsonRpcData
+class OutputPathsParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
+class OutputPathsResult {
+  @NonNull List<OutputPathsItem> items
+  new(@NonNull List<OutputPathsItem> items) {
+    this.items = items
+  }
+}
+
+@JsonRpcData
+class OutputPathsItem {
+  @NonNull BuildTargetIdentifier target
+  @NonNull List<OutputPathItem> outputPaths
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<OutputPathItem> outputPaths) {
+    this.target = target
+    this.outputPaths = outputPaths
+  }
+}
+
+@JsonRpcData
+class OutputPathItem {
+  @NonNull String uri
+  @NonNull OutputPathItemKind kind
+
+  new(@NonNull String uri, @NonNull OutputPathItemKind kind) {
+    this.uri = uri
+    this.kind = kind
   }
 }
 

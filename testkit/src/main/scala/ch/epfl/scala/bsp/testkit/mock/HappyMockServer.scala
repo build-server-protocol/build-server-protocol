@@ -380,6 +380,32 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
+  override def buildTargetOutputPaths(
+      params: OutputPathsParams
+  ): CompletableFuture[OutputPathsResult] =
+    handleRequest {
+      val outputDir1 = new URI(targetId1.getUri).resolve("log/")
+      val item1 = new OutputPathItem(asDirUri(outputDir1), OutputPathItemKind.DIRECTORY)
+      val items1 = new OutputPathsItem(targetId1, List(item1).asJava)
+
+      val outputDir2 = new URI(targetId2.getUri).resolve("target/")
+      val item2 = new OutputPathItem(asDirUri(outputDir2), OutputPathItemKind.DIRECTORY)
+      val items2 = new OutputPathsItem(targetId2, List(item2).asJava)
+
+      val outputDir3 = new URI(targetId3.getUri).resolve("work/")
+      val outputFile1 = new URI(targetId3.getUri).resolve("tmp/file1")
+      val outputFile2 = new URI(targetId3.getUri).resolve("tmp/below/file2")
+      val outputFile3 = new URI(targetId3.getUri).resolve("tmp/file3")
+      val item3Dir = new OutputPathItem(asDirUri(outputDir3), OutputPathItemKind.DIRECTORY)
+      val item31 = new OutputPathItem(outputFile1.toString, OutputPathItemKind.FILE)
+      val item32 = new OutputPathItem(outputFile2.toString, OutputPathItemKind.FILE)
+      val item33 = new OutputPathItem(outputFile3.toString, OutputPathItemKind.FILE)
+      val items3 = new OutputPathsItem(targetId3, List(item3Dir, item31, item32, item33).asJava)
+
+      val result = new OutputPathsResult(List(items1, items2, items3).asJava)
+      Right(result)
+    }
+
   override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] =
     handleRequest {
       val uncompilableTargets = params.getTargets.asScala.filter(targetIdentifier => {

@@ -461,6 +461,29 @@ trait Bsp4jGenerators {
     items <- genSourcesItem.list
   } yield new SourcesResult(items)
 
+  lazy val genOutputPathItem: Gen[OutputPathItem] = for {
+    uri <- genFileUriString
+    kind <- genOutputPathItemKind
+  } yield new OutputPathItem(uri, kind)
+
+  lazy val genOutputPathItemKind: Gen[OutputPathItemKind] =
+    Gen.oneOf(OutputPathItemKind.values)
+
+  lazy val genOutputPathsItem: Gen[OutputPathsItem] = for {
+    target <- genBuildTargetIdentifier
+    outputPaths <- genOutputPathItem.list
+  } yield {
+    new OutputPathsItem(target, outputPaths)
+  }
+
+  lazy val genOutputPathsParams: Gen[OutputPathsParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new OutputPathsParams(targets)
+
+  lazy val genOutputPathsResult: Gen[OutputPathsResult] = for {
+    items <- genOutputPathsItem.list
+  } yield new OutputPathsResult(items)
+
   lazy val genStatusCode: Gen[StatusCode] = Gen.oneOf(StatusCode.values)
 
   lazy val genTaskDataKind: Gen[String] = Gen.oneOf(

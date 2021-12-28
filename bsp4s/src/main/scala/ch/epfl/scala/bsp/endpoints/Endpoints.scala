@@ -44,6 +44,9 @@ trait BuildTarget {
 
   object resources extends Endpoint[ResourcesParams, ResourcesResult]("buildTarget/resources")
 
+  object outputPaths
+      extends Endpoint[OutputPathsParams, OutputPathsResult]("buildTarget/outputPaths")
+
   // Scala specific endpoints
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")

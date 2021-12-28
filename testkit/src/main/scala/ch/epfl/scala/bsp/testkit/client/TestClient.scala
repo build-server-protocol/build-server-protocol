@@ -591,6 +591,47 @@ class TestClient(
     )
   }
 
+  def testOutputPathsResults(
+      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+      expectedWorkspaceOutputPathsResult: OutputPathsResult
+  ): Unit =
+    wrapTest(session =>
+      testOutputPathsResult(
+        expectedWorkspaceBuildTargetsResult,
+        expectedWorkspaceOutputPathsResult,
+        session
+      )
+    )
+
+  def testOutputPathsResult(
+      expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
+      expectedWorkspaceOutputPathsResult: OutputPathsResult,
+      session: MockSession
+  ): Future[Unit] = {
+    compareResults(
+      targets => session.connection.server.buildTargetOutputPaths(new OutputPathsParams(targets)),
+      (results: OutputPathsResult) =>
+        expectedWorkspaceOutputPathsResult.getItems.forall { outputPathsItem =>
+          {
+            results.getItems.exists(resultItem =>
+              resultItem.getTarget == outputPathsItem.getTarget && outputPathsItem.getOutputPaths
+                .forall(outputPathItem =>
+                  resultItem.getOutputPaths.exists(resultOutputPath =>
+                    resultOutputPath.getUri
+                      .contains(
+                        outputPathItem.getUri
+                      ) && resultOutputPath.getKind == outputPathItem.getKind
+                  )
+                )
+            )
+          }
+        },
+      expectedWorkspaceOutputPathsResult,
+      expectedWorkspaceBuildTargetsResult,
+      session
+    )
+  }
+
   def cleanCacheSuccessfully(session: MockSession): Future[Unit] = {
     cleanCache(session).map(cleanCacheResult => {
       assert(cleanCacheResult.getCleaned, "Did not clean cache successfully")

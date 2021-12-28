@@ -76,6 +76,13 @@ trait Bsp4jArbitrary {
   implicit val arbResourcesItem: Arbitrary[ResourcesItem] = Arbitrary(genResourcesItem)
   implicit val arbResourcesParams: Arbitrary[ResourcesParams] = Arbitrary(genResourcesParams)
   implicit val arbResourcesResult: Arbitrary[ResourcesResult] = Arbitrary(genResourcesResult)
+  implicit val arbOutputPathItem: Arbitrary[OutputPathItem] = Arbitrary(genOutputPathItem)
+  implicit val arbOutputPathItemKind: Arbitrary[OutputPathItemKind] = Arbitrary(
+    genOutputPathItemKind
+  )
+  implicit val arbOutputPathsItem: Arbitrary[OutputPathsItem] = Arbitrary(genOutputPathsItem)
+  implicit val arbOutputPathsParams: Arbitrary[OutputPathsParams] = Arbitrary(genOutputPathsParams)
+  implicit val arbOutputPathsResult: Arbitrary[OutputPathsResult] = Arbitrary(genOutputPathsResult)
   implicit val arbRunParams: Arbitrary[RunParams] = Arbitrary(genRunParams)
   implicit val arbRunProvider: Arbitrary[RunProvider] = Arbitrary(genRunProvider)
   implicit val arbRunResult: Arbitrary[RunResult] = Arbitrary(genRunResult)
