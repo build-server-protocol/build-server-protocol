@@ -14,9 +14,18 @@ public class ScalaTestClassesItem {
   @NonNull
   private List<String> classes;
   
+  private String framework;
+  
   public ScalaTestClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classes) {
     this.target = target;
     this.classes = classes;
+    this.framework = null;
+  }
+  
+  public ScalaTestClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classes, final String framework) {
+    this.target = target;
+    this.classes = classes;
+    this.framework = framework;
   }
   
   @Pure
@@ -39,12 +48,22 @@ public class ScalaTestClassesItem {
     this.classes = Preconditions.checkNotNull(classes, "classes");
   }
   
+  @Pure
+  public String getFramework() {
+    return this.framework;
+  }
+  
+  public void setFramework(final String framework) {
+    this.framework = framework;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
     b.add("classes", this.classes);
+    b.add("framework", this.framework);
     return b.toString();
   }
   
@@ -68,6 +87,11 @@ public class ScalaTestClassesItem {
         return false;
     } else if (!this.classes.equals(other.classes))
       return false;
+    if (this.framework == null) {
+      if (other.framework != null)
+        return false;
+    } else if (!this.framework.equals(other.framework))
+      return false;
     return true;
   }
   
@@ -77,6 +101,7 @@ public class ScalaTestClassesItem {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.classes== null) ? 0 : this.classes.hashCode());
+    result = prime * result + ((this.classes== null) ? 0 : this.classes.hashCode());
+    return prime * result + ((this.framework== null) ? 0 : this.framework.hashCode());
   }
 }

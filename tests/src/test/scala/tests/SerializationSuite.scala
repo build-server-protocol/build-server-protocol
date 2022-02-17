@@ -112,4 +112,22 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4jValue.getCanDebug == false)
     assert(bsp4sValue.canDebug == false)
   }
+
+  test("ScalaTestClassesItem - backward compatible framework") {
+    val legacyJson =
+      """
+        |{
+        |  "target": {"uri": ""},
+        |  "classes": []
+        |}""".stripMargin
+
+    val bsp4jValue = gson.fromJson(legacyJson, classOf[bsp4j.ScalaTestClassesItem])
+    val bsp4sValue = readFromString[bsp4s.ScalaTestClassesItem](legacyJson)
+
+    assert(bsp4jValue.getTarget().getUri == bsp4sValue.target.uri.value)
+    assert(bsp4jValue.getClasses().asScala.toList == bsp4sValue.classes)
+
+    assert(bsp4jValue.getFramework() == null)
+    assert(bsp4sValue.framework == None)
+  }
 }

@@ -1070,7 +1070,9 @@ object ScalaTestClassesParams {
 final case class ScalaTestClassesItem(
     target: BuildTargetIdentifier,
     // Fully qualified names of test classes
-    classes: List[String]
+    classes: List[String],
+    // test framework name
+    framework: Option[String]
 )
 
 object ScalaTestClassesItem {
