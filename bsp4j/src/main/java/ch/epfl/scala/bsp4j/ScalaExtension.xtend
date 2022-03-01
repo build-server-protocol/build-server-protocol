@@ -126,3 +126,39 @@ class ScalaMainClass {
     this.jvmOptions = jvmOptions
   }
 }
+
+@JsonRpcData
+class ScalaTestSuites {
+  @NonNull List<ScalaTestSuiteSelection> suites
+  /**
+   * Additional jvmOptions which will be passed to the forked JVM
+   */
+  @NonNull List<String> jvmOptions
+  /**
+   * Enviroment variables should be an array of strings in format KEY=VALUE
+   */
+  @NonNull List<String> environmentVariables
+  new(@NonNull List<ScalaTestSuiteSelection> suites, @NonNull List<String> jvmOptions, @NonNull List<String> environmentVariables) {
+    this.suites = suites
+    this.jvmOptions = jvmOptions
+    this.environmentVariables = environmentVariables
+  }
+}
+
+@JsonRpcData
+class ScalaTestSuiteSelection {
+  /**
+    * Fully qualified name of the test suite class
+    */
+  @NonNull String className
+  /**
+    * List of tests which should be run within this test suite.
+    * Empty collection means that all of them are supposed to be executed.
+    */
+  @NonNull List<String> tests
+
+  new(@NonNull String className, @NonNull List<String> tests) {
+    this.className = className
+    this.tests = tests
+  }
+}
