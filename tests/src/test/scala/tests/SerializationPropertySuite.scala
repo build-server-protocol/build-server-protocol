@@ -25,7 +25,7 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
 
     val bsp4sValueDecoded = Try(readFromString(bsp4jJson)) match {
       case Failure(exception) =>
-        Assertions.fail(exception.getMessage())
+        Assertions.fail(exception.getMessage)
       case Success(value) => value
     }
     val bsp4sJson = writeToString(bsp4sValueDecoded)
@@ -478,6 +478,26 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
   test("CppOptionsResult") {
     forAll { a: bsp4j.CppOptionsResult =>
       assertSerializationRoundtrip[bsp4j.CppOptionsResult, bsp4s.CppOptionsResult](a)
+    }
+  }
+  test("PythonBuildTarget") {
+    forAll { a: bsp4j.PythonBuildTarget =>
+      assertSerializationRoundtrip[bsp4j.PythonBuildTarget, bsp4s.PythonBuildTarget](a)
+    }
+  }
+  test("PythonOptionsItem") {
+    forAll { a: bsp4j.PythonOptionsItem =>
+      assertSerializationRoundtrip[bsp4j.PythonOptionsItem, bsp4s.PythonOptionsItem](a)
+    }
+  }
+  test("PythonOptionsParams") {
+    forAll { a: bsp4j.PythonOptionsParams =>
+      assertSerializationRoundtrip[bsp4j.PythonOptionsParams, bsp4s.PythonOptionsParams](a)
+    }
+  }
+  test("PythonOptionsResult") {
+    forAll { a: bsp4j.PythonOptionsResult =>
+      assertSerializationRoundtrip[bsp4j.PythonOptionsResult, bsp4s.PythonOptionsResult](a)
     }
   }
 }

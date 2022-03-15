@@ -163,6 +163,14 @@ trait Bsp4jArbitrary {
   implicit val arbCppOptionsItem: Arbitrary[CppOptionsItem] = Arbitrary(genCppOptionsItem)
   implicit val arbCppOptionsParams: Arbitrary[CppOptionsParams] = Arbitrary(genCppOptionsParams)
   implicit val arbCppOptionsResult: Arbitrary[CppOptionsResult] = Arbitrary(genCppOptionsResult)
+  implicit val arbPythonBuildTarget: Arbitrary[PythonBuildTarget] = Arbitrary(genPythonBuildTarget)
+  implicit val arbPythonOptionsItem: Arbitrary[PythonOptionsItem] = Arbitrary(genPythonOptionsItem)
+  implicit val arbPythonOptionsParams: Arbitrary[PythonOptionsParams] = Arbitrary(
+    genPythonOptionsParams
+  )
+  implicit val arbPythonOptionsResult: Arbitrary[PythonOptionsResult] = Arbitrary(
+    genPythonOptionsResult
+  )
 }
 
 object Bsp4jArbitrary extends Bsp4jArbitrary

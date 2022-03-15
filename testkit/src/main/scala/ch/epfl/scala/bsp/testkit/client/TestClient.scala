@@ -458,6 +458,9 @@ class TestClient(
   def extractCppData(data: JsonElement, gson: Gson): Option[CppBuildTarget] =
     Option(gson.fromJson[CppBuildTarget](data, classOf[CppBuildTarget]))
 
+  def extractPythonData(data: JsonElement, gson: Gson): Option[PythonBuildTarget] =
+    Option(gson.fromJson[PythonBuildTarget](data, classOf[PythonBuildTarget]))
+
   def convertJsonObjectToData(
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): WorkspaceBuildTargetsResult = {
@@ -475,6 +478,8 @@ class TestClient(
               extractSbtData(data, gson)
             case BuildTargetDataKind.CPP =>
               extractCppData(data, gson)
+            case BuildTargetDataKind.PYTHON =>
+              extractPythonData(data, gson)
           }
         )
         .map(target.setData(_))
@@ -789,6 +794,32 @@ class TestClient(
       expectedResult: CppOptionsResult
   ): Unit =
     wrapTest(session => testCppOptions(params, expectedResult, session))
+
+  def testPythonOptions(
+      params: PythonOptionsParams,
+      expectedResult: PythonOptionsResult,
+      session: MockSession
+  ): Future[Unit] = {
+    session.connection.server
+      .buildTargetPythonOptions(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(pythonItems => {
+        val itemsTest = pythonItems.forall { item =>
+          expectedResult.getItems.contains(item)
+        }
+        assert(
+          itemsTest,
+          s"Python Environment Items did not match! Expected: $expectedResult, got $pythonItems"
+        )
+      })
+  }
+
+  def testPythonOptions(
+      params: PythonOptionsParams,
+      expectedResult: PythonOptionsResult
+  ): Unit =
+    wrapTest(session => testPythonOptions(params, expectedResult, session))
 
   def testScalaMainClasses(
       params: ScalaMainClassesParams,

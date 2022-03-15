@@ -20,6 +20,7 @@ trait MockBuildServer
     with JvmBuildServer
     with JavaBuildServer
     with CppBuildServer
+    with PythonBuildServer
 
 class HappyMockSuite extends AnyFunSuite {
 
@@ -62,15 +63,17 @@ class HappyMockSuite extends AnyFunSuite {
   def assertWorkspaceBuildTargets(server: MockBuildServer): Unit = {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
-    assert(buildTargets.length == 4)
+    assert(buildTargets.length == 5)
     val scalaBuildTarget = buildTargets.head.asTarget[ScalaBuildTarget]
     val jvmBuildTarget = buildTargets(1).asTarget[JvmBuildTarget]
     val sbtBuildTarget = buildTargets(2).asTarget[SbtBuildTarget]
     val cppBuildTarget = buildTargets(3).asTarget[CppBuildTarget]
+    val pythonBuildTarget = buildTargets(4).asTarget[PythonBuildTarget]
     compareScalaBuildTarget(scalaBuildTarget)
     compareJvmBuildTarget(jvmBuildTarget)
     compareSbtBuildTarget(sbtBuildTarget)
     compareCppBuildTargets(cppBuildTarget)
+    comparePythonBuildTarget(pythonBuildTarget)
   }
 
   def compareSbtBuildTarget(sbtBuildTarget: SbtBuildTarget): Unit = {
@@ -102,6 +105,11 @@ class HappyMockSuite extends AnyFunSuite {
     assert(cppBuildTarget.getVersion == "C++11")
     assert(cppBuildTarget.getCCompiler == "/usr/bin/gcc")
     assert(cppBuildTarget.getCppCompiler == "/usr/bin/g++")
+  }
+
+  private def comparePythonBuildTarget(pythonBuildTarget: PythonBuildTarget): Unit = {
+    assert(pythonBuildTarget.getVersion == "3.9")
+    assert(pythonBuildTarget.getInterpreter == "/usr/bin/python")
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
@@ -155,6 +163,17 @@ class HappyMockSuite extends AnyFunSuite {
       assert(linkopts.nonEmpty)
       assert(linkopts.exists(_.contains("-pthread")))
       assert(!item.isLinkshared)
+    }
+  }
+
+  def assertPythonOptions(server: MockBuildServer): Unit = {
+    val pythonOptionsParams = new PythonOptionsParams(getBuildTargetIds(server))
+    val pythonOptionsResult = server.buildTargetPythonOptions(pythonOptionsParams).get
+    val pythonOptionsItems = pythonOptionsResult.getItems.asScala
+    pythonOptionsItems.foreach { item =>
+      val options = item.getInterpreterOptions.asScala
+      assert(options.nonEmpty)
+      assert(options.exists(_.contains("-E")))
     }
   }
 
@@ -268,7 +287,7 @@ class HappyMockSuite extends AnyFunSuite {
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val tests = serverCapabilities.getCompileProvider.getLanguageIds.asScala
 
-    val languages = List("scala", "java").sorted
+    val languages = List("scala", "java", "cpp", "python").sorted
     assert(compiles.sorted == languages)
     assert(runs.sorted == languages)
     assert(tests.sorted == languages)
@@ -278,6 +297,8 @@ class HappyMockSuite extends AnyFunSuite {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
     assertJavacOptions(server)
+    assertCppOptions(server)
+    assertPythonOptions(server)
     assertJvmTestEnvironment(server)
     assertJvmRunEnvironment(server)
     assertSources(server, client)
