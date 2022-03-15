@@ -81,9 +81,17 @@ class ScalaTestClassesResult {
 class ScalaTestClassesItem {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classes
+  String framework
   new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classes) {
     this.target = target
     this.classes = classes
+    this.framework = null
+  }
+
+  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classes, String framework) {
+    this.target = target
+    this.classes = classes
+    this.framework = framework
   }
 }
 

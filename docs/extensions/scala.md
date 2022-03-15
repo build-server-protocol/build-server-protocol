@@ -55,7 +55,7 @@ export interface ScalaTestParams {
    * It is the result of `buildTarget/scalaTestClasses`. */
   testClasses?: ScalaTestClassesItem[];
 
-  /** The JVM options to run tests with. They replace any options 
+  /** The JVM options to run tests with. They replace any options
    * that are defined by the build server if defined.
    */
   jvmOptions?: String[];
@@ -151,6 +151,13 @@ export interface ScalaTestClassesResult {
 export interface ScalaTestClassesItem {
   /** The build target that contains the test classes. */
   target: BuildTargetIdentifier;
+
+  /**
+   * Name of the the framework to which classes belong. 
+   * It's optional in order to maintain compatibility, however it is expected 
+   * from the newer implementations to not leave that field unspecified.
+   */
+  framework?: String;
 
   /** The fully qualified names of the test classes in this target */
   classes: String[];
