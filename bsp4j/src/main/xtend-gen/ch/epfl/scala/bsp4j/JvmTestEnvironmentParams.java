@@ -11,8 +11,16 @@ public class JvmTestEnvironmentParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
   
+  private String originId;
+  
   public JvmTestEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
+    this.originId = null;
+  }
+  
+  public JvmTestEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets, final String originId) {
+    this.targets = targets;
+    this.originId = originId;
   }
   
   @Pure
@@ -25,11 +33,21 @@ public class JvmTestEnvironmentParams {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
   
+  @Pure
+  public String getOriginId() {
+    return this.originId;
+  }
+  
+  public void setOriginId(final String originId) {
+    this.originId = originId;
+  }
+  
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
+    b.add("originId", this.originId);
     return b.toString();
   }
   
@@ -48,12 +66,20 @@ public class JvmTestEnvironmentParams {
         return false;
     } else if (!this.targets.equals(other.targets))
       return false;
+    if (this.originId == null) {
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     return true;
   }
   
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.targets== null) ? 0 : this.targets.hashCode());
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }
