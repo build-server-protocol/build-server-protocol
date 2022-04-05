@@ -165,6 +165,14 @@ class TypoSuite extends AnyFunSuite {
         new RunResult(StatusCode.ERROR)
       }
     }
+
+    override def debugSessionStart(
+        params: DebugSessionParams
+    ): CompletableFuture[DebugSessionAddress] =
+      CompletableFuture.completedFuture {
+        new DebugSessionAddress("tcp://127.0.0.1:51379")
+      }
+
     override def buildTargetCleanCache(
         params: CleanCacheParams
     ): CompletableFuture[CleanCacheResult] = {

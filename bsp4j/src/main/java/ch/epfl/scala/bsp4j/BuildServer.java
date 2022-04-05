@@ -46,6 +46,9 @@ public interface BuildServer {
     @JsonRequest("buildTarget/run")
     CompletableFuture<RunResult> buildTargetRun(RunParams params);
 
+    @JsonRequest("debugSession/start")
+    CompletableFuture<DebugSessionAddress> debugSessionStart(DebugSessionParams params);
+
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 

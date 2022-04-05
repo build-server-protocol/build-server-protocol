@@ -170,6 +170,7 @@ class MyBuildServer extends BuildServer {
   def buildTargetRun(params: RunParams): CompletableFuture[RunResult] = ???
   def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] = ???
   def buildTargetTest(params: TestParams): CompletableFuture[TestResult] = ???
+  def debugSessionStart(params: DebugSessionParams): CompletableFuture[DebugSessionAddress] = ???
   def onBuildExit(): Unit = ???
   def onBuildInitialized(): Unit = ???
   def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = ???
