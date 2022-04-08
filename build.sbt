@@ -34,7 +34,7 @@ lazy val V = new {
   val jsoniter = "2.13.6"
   val java8Compat = "1.0.2"
   val lsp4j = "0.12.0"
-  val scalacheck = "1.15.4"
+  val scalacheck = "1.16.0"
 }
 
 import java.io.File
