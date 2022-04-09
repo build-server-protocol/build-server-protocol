@@ -365,7 +365,7 @@ final case class Diagnostic(
     code: Option[String],
     source: Option[String],
     message: String,
-    relatedInformation: Option[DiagnosticRelatedInformation]
+    relatedInformation: Option[List[DiagnosticRelatedInformation]]
 )
 
 object Diagnostic {

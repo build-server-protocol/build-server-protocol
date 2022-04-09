@@ -250,7 +250,7 @@ class Diagnostic {
   String code
   String source
   @NonNull String message
-  DiagnosticRelatedInformation relatedInformation
+  List<DiagnosticRelatedInformation> relatedInformation
   new(@NonNull Range range, @NonNull String message) {
     this.range = range
     this.message = message
