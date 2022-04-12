@@ -3,6 +3,9 @@ package ch.epfl.scala.bsp.testkit.client
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
+import de.danielbechler.diff.ObjectDifferBuilder
+import de.danielbechler.diff.node.{DiffNode, ToMapPrintingVisitor}
+import de.danielbechler.diff.path.NodePath
 
 import java.io.{File, InputStream, OutputStream}
 import java.util.concurrent.{CompletableFuture, Executors}
@@ -488,101 +491,40 @@ class TestClient(
       .toScala
       .map(workspaceBuildTargetsResult => convertJsonObjectToData(workspaceBuildTargetsResult))
       .map(workspaceBuildTargetsResult => {
-        val testTargets =
+        val testTargetsDiff =
           compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
         assert(
-          testTargets,
-          s"Workspace Build Targets did not match! Expected: $expectedWorkspaceBuildTargetsResult, got $workspaceBuildTargetsResult"
+          !testTargetsDiff.hasChanges,
+          s"Workspace Build Targets did not match!\n${
+              val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
+              testTargetsDiff.visit(visitor)
+              visitor.getMessagesAsString
+            }"
         )
         workspaceBuildTargetsResult
       })
 
-  private def compareBuildTargetData(foundTarget: BuildTarget, target: BuildTarget): Boolean = {
-    (Option(target.getData), Option(foundTarget.getData)) match {
-      case (Some(targetData), Some(foundTargetData)) =>
-        compareBuildTargetData(foundTargetData, targetData)
-      case (None, None) => true
-      case _            => false
-    }
-
-  }
-
-  private def compareBuildTargetData(foundTargetData: AnyRef, targetData: AnyRef): Boolean =
-    (foundTargetData, targetData) match {
-      case (foundScalaTarget: ScalaBuildTarget, targetScalaTarget) =>
-        compareScalaBuildTargets(foundScalaTarget, targetScalaTarget.asInstanceOf[ScalaBuildTarget])
-      case (foundJvmTarget: JvmBuildTarget, targetJvmTarget) =>
-        compareJvmTarget(foundJvmTarget, targetJvmTarget.asInstanceOf[JvmBuildTarget])
-      case (foundSbtTarget: SbtBuildTarget, targetSbtTarget) =>
-        compareSbtBuildTarget(foundSbtTarget, targetSbtTarget.asInstanceOf[SbtBuildTarget])
-      case (foundCppTarget: CppBuildTarget, targetCppTarget) =>
-        compareCppBuildTarget(foundCppTarget, targetCppTarget.asInstanceOf[CppBuildTarget])
-    }
-
-  def compareCppBuildTarget(
-      foundCppTarget: CppBuildTarget,
-      targetCppTarget: CppBuildTarget
-  ): Boolean = {
-    Option(foundCppTarget.getVersion) == Option(targetCppTarget.getVersion) &&
-    Option(foundCppTarget.getCompiler) == Option(targetCppTarget.getCompiler) &&
-    compareNullablePaths(foundCppTarget.getCCompiler, targetCppTarget.getCCompiler) &&
-    compareNullablePaths(foundCppTarget.getCompiler, targetCppTarget.getCompiler)
-
-  }
-
-  private def compareSbtBuildTarget(
-      foundSbtTarget: SbtBuildTarget,
-      targetSbtTarget: SbtBuildTarget
-  ) =
-    targetSbtTarget.getAutoImports == foundSbtTarget.getAutoImports &&
-      targetSbtTarget.getChildren == foundSbtTarget.getChildren &&
-      targetSbtTarget.getParent == foundSbtTarget.getParent &&
-      targetSbtTarget.getSbtVersion == foundSbtTarget.getSbtVersion &&
-      compareScalaBuildTargets(
-        foundSbtTarget.getScalaBuildTarget,
-        targetSbtTarget.getScalaBuildTarget
-      )
-
-  private def compareJvmTarget(foundJvmTarget: JvmBuildTarget, targetJvmTarget: JvmBuildTarget) =
-    compareNullablePaths(foundJvmTarget.getJavaHome, targetJvmTarget.getJavaHome) &&
-      targetJvmTarget.getJavaVersion == foundJvmTarget.getJavaVersion
-
-  private def compareNullablePaths(foundPath: String, targetPath: String) = {
-    (Option(foundPath), Option(targetPath)) match {
-      case (Some(foundJavaHome: String), Some(targetJavaHome: String)) =>
-        foundJavaHome.endsWith(targetJavaHome)
-      case (None, None)    => true
-      case (Some(_), None) => false
-      case (None, Some(_)) => false
-    }
-  }
-
-  private def compareScalaBuildTargets(
-      foundScalaTarget: ScalaBuildTarget,
-      targetScalaTarget: ScalaBuildTarget
-  ) =
-    targetScalaTarget.getJars.forall { targetJar =>
-      foundScalaTarget.getJars.exists(_.contains(targetJar))
-    } &&
-      targetScalaTarget.getPlatform == foundScalaTarget.getPlatform &&
-      targetScalaTarget.getScalaBinaryVersion == foundScalaTarget.getScalaBinaryVersion &&
-      targetScalaTarget.getScalaOrganization == foundScalaTarget.getScalaOrganization &&
-      targetScalaTarget.getScalaVersion == foundScalaTarget.getScalaVersion &&
-      compareJvmTarget(foundScalaTarget.getJvmBuildTarget, targetScalaTarget.getJvmBuildTarget)
-
   private def compareBuildTargets(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
-  ) =
-    expectedWorkspaceBuildTargetsResult.getTargets.forall { target =>
-      workspaceBuildTargetsResult.getTargets.exists(foundTarget =>
-        foundTarget.getId == target.getId && foundTarget.getLanguageIds == target.getLanguageIds && foundTarget.getDependencies == target.getDependencies
-          && foundTarget.getCapabilities == target.getCapabilities && foundTarget.getDataKind == target.getDataKind && compareBuildTargetData(
-            foundTarget,
-            target
-          )
-      )
-    }
+  ): DiffNode = {
+    ObjectDifferBuilder
+      .startBuilding()
+      .inclusion()
+      .exclude()
+      .propertyName("displayName")
+      .propertyName("baseDirectory")
+      .propertyName("tags")
+      .and()
+      .identity()
+      .ofCollectionItems(NodePath.`with`("targets"))
+      .via((working: Any, base: Any) => {
+        working.asInstanceOf[BuildTarget].getId == base.asInstanceOf[BuildTarget].getId
+      })
+      .and()
+      .build()
+      .compare(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
+  }
 
   private def compareResults[T](
       getResults: java.util.List[BuildTargetIdentifier] => CompletableFuture[T],
