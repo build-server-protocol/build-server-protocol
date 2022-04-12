@@ -184,7 +184,7 @@ trait Bsp4jGenerators {
     severity <- genDiagnosticSeverity.nullable
     code <- arbitrary[String].nullable
     source <- arbitrary[String].nullable
-    relatedInformation <- genDiagnosticRelatedInformation.nullable
+    relatedInformation <- genDiagnosticRelatedInformation.list.nullable
   } yield {
     val diagnostic = new Diagnostic(range, message)
     diagnostic.setSeverity(severity)

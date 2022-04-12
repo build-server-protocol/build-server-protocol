@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -19,7 +20,7 @@ public class Diagnostic {
   @NonNull
   private String message;
   
-  private DiagnosticRelatedInformation relatedInformation;
+  private List<DiagnosticRelatedInformation> relatedInformation;
   
   public Diagnostic(@NonNull final Range range, @NonNull final String message) {
     this.range = range;
@@ -74,11 +75,11 @@ public class Diagnostic {
   }
   
   @Pure
-  public DiagnosticRelatedInformation getRelatedInformation() {
+  public List<DiagnosticRelatedInformation> getRelatedInformation() {
     return this.relatedInformation;
   }
   
-  public void setRelatedInformation(final DiagnosticRelatedInformation relatedInformation) {
+  public void setRelatedInformation(final List<DiagnosticRelatedInformation> relatedInformation) {
     this.relatedInformation = relatedInformation;
   }
   

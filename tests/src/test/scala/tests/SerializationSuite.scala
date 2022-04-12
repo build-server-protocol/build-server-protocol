@@ -59,8 +59,19 @@ class SerializationSuite extends AnyFunSuite {
     val textDocument = new URI("text.document")
 
     val range1 = bsp4s.Range(bsp4s.Position(1, 1), bsp4s.Position(1, 12))
+    val location = bsp4s.Location(bsp4s.Uri(new URI("other")), range1)
+
+    val relatedInformation = bsp4s.DiagnosticRelatedInformation(location, "message")
+
     val diagnostic1 =
-      bsp4s.Diagnostic(range1, Some(bsp4s.DiagnosticSeverity.Error), None, None, "message", None)
+      bsp4s.Diagnostic(
+        range1,
+        Some(bsp4s.DiagnosticSeverity.Error),
+        None,
+        None,
+        "message",
+        Some(List(relatedInformation))
+      )
 
     val bsp4sValue = bsp4s.PublishDiagnosticsParams(
       bsp4s.TextDocumentIdentifier(bsp4s.Uri(textDocument)),
