@@ -493,6 +493,13 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     Right(result)
   }
 
+  override def debugSessionStart(
+      params: DebugSessionParams
+  ): CompletableFuture[DebugSessionAddress] =
+    handleRequest {
+      Right(new DebugSessionAddress("tcp://127.0.0.1:51379"))
+    }
+
   override def buildTargetCleanCache(
       params: CleanCacheParams
   ): CompletableFuture[CleanCacheResult] =
