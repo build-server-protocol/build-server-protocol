@@ -18,8 +18,16 @@ class JvmBuildTarget {
 @JsonRpcData
 class JvmTestEnvironmentParams {
   @NonNull List<BuildTargetIdentifier> targets
+  String originId
+
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
+    this.originId = null
+  }
+
+  new(@NonNull List<BuildTargetIdentifier> targets, String originId) {
+    this.targets = targets
+    this.originId = originId
   }
 }
 
@@ -52,8 +60,16 @@ class JvmTestEnvironmentResult {
 @JsonRpcData
 class JvmRunEnvironmentParams {
   @NonNull List<BuildTargetIdentifier> targets
+  String originId
+
   new(@NonNull List<BuildTargetIdentifier> targets) {
     this.targets = targets
+    this.originId = null
+  }
+
+  new(@NonNull List<BuildTargetIdentifier> targets, String originId) {
+    this.targets = targets
+    this.originId = originId
   }
 }
 
