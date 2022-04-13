@@ -1132,6 +1132,23 @@ object ScalaMainClassesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+case class ScalaTestSuites(
+    classes: List[ScalaTestSuiteSelection],
+    jvmOptions: List[String],
+    environmentVariables: List[String],
+)
+object ScalaTestSuites {
+  implicit val codec: JsonValueCodec[ScalaTestSuites] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+case class ScalaTestSuiteSelection(
+    className: String,
+    tests: List[String]
+)
+object ScalaTestSuiteSelection {
+  implicit val codec: JsonValueCodec[ScalaTestSuiteSelection] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],
@@ -1172,6 +1189,7 @@ object DebugSessionParams {
 object DebugSessionParamsDataKind {
   val ScalaMainClass = "scala-main-class"
   val ScalaTestSuites = "scala-test-suites"
+  val ScalaTestSuitesSelection = "scala-test-suites-selection"
   val ScalaAttachRemote = "scala-attach-remote"
 }
 
