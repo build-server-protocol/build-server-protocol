@@ -495,11 +495,9 @@ class TestClient(
           compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
         assert(
           !testTargetsDiff.hasChanges,
-          s"Workspace Build Targets did not match!\n${
-              val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
-              testTargetsDiff.visit(visitor)
-              visitor.getMessagesAsString
-            }"
+          s"Workspace Build Targets did not match!\n${val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
+            testTargetsDiff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
         workspaceBuildTargetsResult
       })
