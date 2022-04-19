@@ -1135,10 +1135,11 @@ object ScalaMainClassesResult {
 case class ScalaTestSuites(
     classes: List[ScalaTestSuiteSelection],
     jvmOptions: List[String],
-    environmentVariables: List[String],
+    environmentVariables: List[String]
 )
 object ScalaTestSuites {
-  implicit val codec: JsonValueCodec[ScalaTestSuites] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestSuites] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 case class ScalaTestSuiteSelection(
@@ -1146,7 +1147,8 @@ case class ScalaTestSuiteSelection(
     tests: List[String]
 )
 object ScalaTestSuiteSelection {
-  implicit val codec: JsonValueCodec[ScalaTestSuiteSelection] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestSuiteSelection] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class SbtBuildTarget(

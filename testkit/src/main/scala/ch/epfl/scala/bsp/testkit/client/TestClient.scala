@@ -495,11 +495,9 @@ class TestClient(
           compareBuildTargets(expectedWorkspaceBuildTargetsResult, workspaceBuildTargetsResult)
         assert(
           !testTargetsDiff.hasChanges,
-          s"Workspace Build Targets did not match!\n${
-              val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
-              testTargetsDiff.visit(visitor)
-              visitor.getMessagesAsString
-            }"
+          s"Workspace Build Targets did not match!\n${val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
+            testTargetsDiff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
         workspaceBuildTargetsResult
       })
@@ -635,11 +633,9 @@ class TestClient(
         val testItemsDiff = testJvmItems(jvmItems, expectedResult.getItems)
         assert(
           !testItemsDiff.hasChanges,
-          s"JVM Run Environment Items did not match!\n${
-            val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
+          s"JVM Run Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
             testItemsDiff.visit(visitor)
-            visitor.getMessagesAsString
-          }"
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -663,11 +659,9 @@ class TestClient(
         val testItemsDiff = testJvmItems(jvmItems, expectedResult.getItems)
         assert(
           !testItemsDiff.hasChanges,
-          s"JVM Test Environment Items did not match!\n${
-            val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
+          s"JVM Test Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
             testItemsDiff.visit(visitor)
-            visitor.getMessagesAsString
-          }"
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -687,7 +681,9 @@ class TestClient(
       .identity()
       .ofCollectionItems(NodePath.withRoot())
       .via((working: Any, base: Any) => {
-        working.asInstanceOf[JvmEnvironmentItem].getTarget == base.asInstanceOf[JvmEnvironmentItem].getTarget
+        working
+          .asInstanceOf[JvmEnvironmentItem]
+          .getTarget == base.asInstanceOf[JvmEnvironmentItem].getTarget
       })
       .and()
       .build()
@@ -709,18 +705,18 @@ class TestClient(
           .identity()
           .ofCollectionItems(NodePath.withRoot())
           .via((working: Any, base: Any) => {
-            working.asInstanceOf[JavacOptionsItem].getTarget == base.asInstanceOf[JavacOptionsItem].getTarget
+            working
+              .asInstanceOf[JavacOptionsItem]
+              .getTarget == base.asInstanceOf[JavacOptionsItem].getTarget
           })
           .and()
           .build()
           .compare(javacOptionsItems, expectedResult.getItems)
         assert(
           diff.hasChanges,
-          s"Javac Options Items did not match!\n${
-            val visitor = new ToMapPrintingVisitor(javacOptionsItems, expectedResult.getItems)
+          s"Javac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(javacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString
-          }"
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -746,18 +742,18 @@ class TestClient(
           .identity()
           .ofCollectionItems(NodePath.withRoot())
           .via((working: Any, base: Any) => {
-            working.asInstanceOf[ScalacOptionsItem].getTarget == base.asInstanceOf[ScalacOptionsItem].getTarget
+            working
+              .asInstanceOf[ScalacOptionsItem]
+              .getTarget == base.asInstanceOf[ScalacOptionsItem].getTarget
           })
           .and()
           .build()
           .compare(scalacOptionsItems, expectedResult.getItems)
         assert(
           diff.hasChanges,
-          s"Scalac Options Items did not match!\n${
-            val visitor = new ToMapPrintingVisitor(scalacOptionsItems, expectedResult.getItems)
+          s"Scalac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(scalacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString
-          }"
+            visitor.getMessagesAsString }"
         )
       })
   }
