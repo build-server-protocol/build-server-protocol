@@ -279,10 +279,10 @@ class MockClientSuite extends AnyFunSuite {
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)
   }
 
-  private lazy val environmentItem = {
-    val classpath = List("scala-library").asJava
+  private def environmentItem(testing: Boolean) = {
+    val classpath = List("scala-library.jar").asJava
     val jvmOptions = List("-Xms256m").asJava
-    val environmentVariables = Map("A" -> "a").asJava
+    val environmentVariables = Map("A" -> "a", "TESTING" -> testing.toString).asJava
     val workdir = "/tmp"
     val item1 = new JvmEnvironmentItem(
       targetId1,
@@ -297,14 +297,14 @@ class MockClientSuite extends AnyFunSuite {
   test("Jvm Run Environment") {
     client.testJvmRunEnvironment(
       new JvmRunEnvironmentParams(Collections.emptyList()),
-      new JvmRunEnvironmentResult(environmentItem)
+      new JvmRunEnvironmentResult(environmentItem(testing = false))
     )
   }
 
   test("Jvm Test Environment") {
     client.testJvmTestEnvironment(
       new JvmTestEnvironmentParams(Collections.emptyList()),
-      new JvmTestEnvironmentResult(environmentItem)
+      new JvmTestEnvironmentResult(environmentItem(testing = true))
     )
   }
 

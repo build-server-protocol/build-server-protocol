@@ -630,10 +630,12 @@ class TestClient(
       .toScala
       .map(result => result.getItems)
       .map(jvmItems => {
-        val testItems = testJvmItems(jvmItems, expectedResult.getItems)
+        val testItemsDiff = testJvmItems(jvmItems, expectedResult.getItems)
         assert(
-          testItems,
-          s"JVM Run Environment Items did not match! Expected: $expectedResult, got $jvmItems"
+          !testItemsDiff.hasChanges,
+          s"JVM Run Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
+            testItemsDiff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -654,10 +656,12 @@ class TestClient(
       .toScala
       .map(result => result.getItems)
       .map(jvmItems => {
-        val testItems = testJvmItems(jvmItems, expectedResult.getItems)
+        val testItemsDiff = testJvmItems(jvmItems, expectedResult.getItems)
         assert(
-          testItems,
-          s"JVM Test Environment Items did not match! Expected: $expectedResult, got $jvmItems"
+          !testItemsDiff.hasChanges,
+          s"JVM Test Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
+            testItemsDiff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -671,31 +675,19 @@ class TestClient(
   private def testJvmItems(
       items: java.util.List[JvmEnvironmentItem],
       expectedItems: java.util.List[JvmEnvironmentItem]
-  ) = {
-    items.forall { item =>
-      expectedItems.exists(expectedItem =>
-        testExpectedEnvVars(expectedItem, item) &&
-          item.getTarget == expectedItem.getTarget &&
-          testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-          item.getJvmOptions == expectedItem.getJvmOptions
-      )
-    }
-  }
-
-  private def testExpectedEnvVars(expectedItem: JvmEnvironmentItem, item: JvmEnvironmentItem) = {
-    expectedItem.getEnvironmentVariables
-      .entrySet()
-      .forall(entry =>
-        item.getEnvironmentVariables.containsKey(entry.getKey) && item.getEnvironmentVariables
-          .get(entry.getKey) == entry.getValue
-      )
-  }
-
-  private def testExpectedClasspath(
-      expectedClasspath: java.util.List[String],
-      classpath: java.util.List[String]
-  ) = {
-    expectedClasspath.forall(expectedUrl => classpath.exists(url => url.contains(expectedUrl)))
+  ): DiffNode = {
+    ObjectDifferBuilder
+      .startBuilding()
+      .identity()
+      .ofCollectionItems(NodePath.withRoot())
+      .via((working: Any, base: Any) => {
+        working
+          .asInstanceOf[JvmEnvironmentItem]
+          .getTarget == base.asInstanceOf[JvmEnvironmentItem].getTarget
+      })
+      .and()
+      .build()
+      .compare(items, expectedItems)
   }
 
   def testJavacOptions(
@@ -707,18 +699,24 @@ class TestClient(
       .buildTargetJavacOptions(params)
       .toScala
       .map(result => result.getItems)
-      .map(jvmItems => {
-        val itemsTest = jvmItems.forall { item =>
-          expectedResult.getItems.exists(expectedItem =>
-            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-              item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-              item.getTarget == expectedItem.getTarget &&
-              item.getOptions == expectedItem.getOptions
-          )
-        }
+      .map(javacOptionsItems => {
+        val diff = ObjectDifferBuilder
+          .startBuilding()
+          .identity()
+          .ofCollectionItems(NodePath.withRoot())
+          .via((working: Any, base: Any) => {
+            working
+              .asInstanceOf[JavacOptionsItem]
+              .getTarget == base.asInstanceOf[JavacOptionsItem].getTarget
+          })
+          .and()
+          .build()
+          .compare(javacOptionsItems, expectedResult.getItems)
         assert(
-          itemsTest,
-          s"Javac Options Items did not match! Expected: $expectedResult, got $jvmItems"
+          diff.hasChanges,
+          s"Javac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(javacOptionsItems, expectedResult.getItems)
+            diff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -738,18 +736,24 @@ class TestClient(
       .buildTargetScalacOptions(params)
       .toScala
       .map(result => result.getItems)
-      .map(scalacItems => {
-        val itemsTest = scalacItems.forall { item =>
-          expectedResult.getItems.exists(expectedItem =>
-            testExpectedClasspath(expectedItem.getClasspath, item.getClasspath) &&
-              item.getClassDirectory.contains(expectedItem.getClassDirectory) &&
-              item.getTarget == expectedItem.getTarget &&
-              item.getOptions == expectedItem.getOptions
-          )
-        }
+      .map(scalacOptionsItems => {
+        val diff = ObjectDifferBuilder
+          .startBuilding()
+          .identity()
+          .ofCollectionItems(NodePath.withRoot())
+          .via((working: Any, base: Any) => {
+            working
+              .asInstanceOf[ScalacOptionsItem]
+              .getTarget == base.asInstanceOf[ScalacOptionsItem].getTarget
+          })
+          .and()
+          .build()
+          .compare(scalacOptionsItems, expectedResult.getItems)
         assert(
-          itemsTest,
-          s"Scalac Environment Items did not match! Expected: $expectedResult, got $scalacItems"
+          diff.hasChanges,
+          s"Scalac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(scalacOptionsItems, expectedResult.getItems)
+            diff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
