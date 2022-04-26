@@ -129,11 +129,28 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
+
   test("Run javacOptions") {
+    val classDirectory = "file:" + testDirectory.resolve("out").toString
     val javacOptionsItems = List(
-      new JavacOptionsItem(targetId1, Collections.emptyList(), List("guava").asJava, "out"),
-      new JavacOptionsItem(targetId2, Collections.emptyList(), List("guava").asJava, "out"),
-      new JavacOptionsItem(targetId3, Collections.emptyList(), List("guava").asJava, "out")
+      new JavacOptionsItem(
+        targetId1,
+        Collections.emptyList(),
+        List("guava.jar").asJava,
+        classDirectory
+      ),
+      new JavacOptionsItem(
+        targetId2,
+        Collections.emptyList(),
+        List("guava.jar").asJava,
+        classDirectory
+      ),
+      new JavacOptionsItem(
+        targetId3,
+        Collections.emptyList(),
+        List("guava.jar").asJava,
+        classDirectory
+      )
     ).asJava
 
     client.testJavacOptions(
@@ -142,25 +159,27 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
+
   test("Run scalacOptions") {
+    val classDirectory = "file:" + testDirectory.resolve("out").toString
     val scalacOptionsItems = List(
       new ScalacOptionsItem(
         targetId1,
         Collections.emptyList(),
-        List("scala-library").asJava,
-        "out"
+        List("scala-library.jar").asJava,
+        classDirectory
       ),
       new ScalacOptionsItem(
         targetId2,
         Collections.emptyList(),
-        List("scala-library").asJava,
-        "out"
+        List("scala-library.jar").asJava,
+        classDirectory
       ),
       new ScalacOptionsItem(
         targetId3,
         Collections.emptyList(),
-        List("scala-library").asJava,
-        "out"
+        List("scala-library.jar").asJava,
+        classDirectory
       )
     ).asJava
 
