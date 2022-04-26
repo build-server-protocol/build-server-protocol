@@ -713,7 +713,7 @@ class TestClient(
           .build()
           .compare(javacOptionsItems, expectedResult.getItems)
         assert(
-          diff.hasChanges,
+          !diff.hasChanges,
           s"Javac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(javacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
             visitor.getMessagesAsString }"
@@ -750,7 +750,7 @@ class TestClient(
           .build()
           .compare(scalacOptionsItems, expectedResult.getItems)
         assert(
-          diff.hasChanges,
+          !diff.hasChanges,
           s"Scalac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(scalacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
             visitor.getMessagesAsString }"
@@ -773,13 +773,15 @@ class TestClient(
       .buildTargetCppOptions(params)
       .toScala
       .map(result => result.getItems)
-      .map(cppItems => {
-        val itemsTest = cppItems.forall { item =>
-          expectedResult.getItems.contains(item)
-        }
+      .map(cppOptionsItems => {
+        val diff = ObjectDifferBuilder
+          .buildDefault()
+          .compare(cppOptionsItems, expectedResult.getItems)
         assert(
-          itemsTest,
-          s"Cpp Environment Items did not match! Expected: $expectedResult, got $cppItems"
+          !diff.hasChanges,
+          s"Cpp Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(cppOptionsItems, expectedResult.getItems)
+            diff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -800,12 +802,14 @@ class TestClient(
       .toScala
       .map(result => result.getItems)
       .map(mainItems => {
-        val itemsTest = mainItems.forall { item =>
-          expectedResult.getItems.contains(item)
-        } && expectedResult.getItems.size() == mainItems.size()
+        val diff = ObjectDifferBuilder
+          .buildDefault()
+          .compare(mainItems, expectedResult.getItems)
         assert(
-          itemsTest,
-          s"Scalac Main CLasses Items did not match! Expected: $expectedResult, got $mainItems"
+          !diff.hasChanges,
+          s"Scalac Main Classes Items did not match!\n${val visitor = new ToMapPrintingVisitor(mainItems, expectedResult.getItems)
+            diff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
@@ -826,12 +830,23 @@ class TestClient(
       .toScala
       .map(result => result.getItems)
       .map(testItems => {
-        val itemsTest = testItems.forall { item =>
-          expectedResult.getItems.contains(item)
-        } && expectedResult.getItems.size() == testItems.size()
+        val diff = ObjectDifferBuilder
+          .startBuilding()
+          .identity()
+          .ofCollectionItems(NodePath.withRoot())
+          .via((working: Any, base: Any) => {
+            working
+              .asInstanceOf[ScalaTestClassesItem]
+              .getTarget == base.asInstanceOf[ScalaTestClassesItem].getTarget
+          })
+          .and()
+          .build()
+          .compare(testItems, expectedResult.getItems)
         assert(
-          itemsTest,
-          s"Scalac Test CLasses Items did not match! Expected: $expectedResult, got $testItems"
+          !diff.hasChanges,
+          s"Scalac Test Classes Items did not match!\n${val visitor = new ToMapPrintingVisitor(testItems, expectedResult.getItems)
+            diff.visit(visitor)
+            visitor.getMessagesAsString }"
         )
       })
   }
