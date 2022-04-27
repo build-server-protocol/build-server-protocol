@@ -129,7 +129,6 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
-
   test("Run javacOptions") {
     val classDirectory = "file:" + testDirectory.resolve("out").toString
     val javacOptionsItems = List(
@@ -158,7 +157,6 @@ class MockClientSuite extends AnyFunSuite {
       new JavacOptionsResult(javacOptionsItems)
     )
   }
-
 
   test("Run scalacOptions") {
     val classDirectory = "file:" + testDirectory.resolve("out").toString

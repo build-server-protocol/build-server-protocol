@@ -689,7 +689,7 @@ trait Bsp4jGenerators {
 
   lazy val genPythonBuildTarget: Gen[PythonBuildTarget] = for {
     version <- arbitrary[String].nullable
-    interpreter <- arbitrary[String].nullable
+    interpreter <- genFileUriString.nullable
   } yield new PythonBuildTarget(version, interpreter)
 
   lazy val genPythonOptionsItem: Gen[PythonOptionsItem] = for {
