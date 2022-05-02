@@ -73,6 +73,11 @@ trait BuildTarget {
       extends Endpoint[CppOptionsParams, CppOptionsResult](
         "buildTarget/cppOptions"
       )
+  // Python specific endpoints
+  object pythonOptions
+      extends Endpoint[PythonOptionsParams, PythonOptionsResult](
+        "buildTarget/pythonOptions"
+      )
 }
 
 object Workspace extends Workspace

@@ -1274,3 +1274,37 @@ object CppOptionsResult {
   implicit val codec: JsonValueCodec[CppOptionsResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
+
+final case class PythonBuildTarget(
+    version: Option[String],
+    interpreter: Option[Uri]
+)
+
+object PythonBuildTarget {
+  implicit val codec: JsonValueCodec[PythonBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class PythonOptionsParams(targets: List[BuildTargetIdentifier])
+
+object PythonOptionsParams {
+  implicit val codec: JsonValueCodec[PythonOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class PythonOptionsItem(
+    target: BuildTargetIdentifier,
+    interpreterOptions: List[String]
+)
+
+object PythonOptionsItem {
+  implicit val codec: JsonValueCodec[PythonOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class PythonOptionsResult(items: List[PythonOptionsItem])
+
+object PythonOptionsResult {
+  implicit val codec: JsonValueCodec[PythonOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}

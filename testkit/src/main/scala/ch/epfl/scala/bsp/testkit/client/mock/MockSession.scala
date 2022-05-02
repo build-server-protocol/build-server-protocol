@@ -10,6 +10,7 @@ import ch.epfl.scala.bsp4j.{
   InitializeBuildParams,
   JavaBuildServer,
   JvmBuildServer,
+  PythonBuildServer,
   ScalaBuildServer
 }
 import org.eclipse.lsp4j.jsonrpc.Launcher
@@ -76,6 +77,7 @@ object MockSession {
       with JavaBuildServer
       with JvmBuildServer
       with CppBuildServer
+      with PythonBuildServer
 
   def apply(
       in: InputStream,

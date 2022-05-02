@@ -687,6 +687,24 @@ trait Bsp4jGenerators {
     items <- genCppOptionsItem.list
   } yield new CppOptionsResult(items)
 
+  lazy val genPythonBuildTarget: Gen[PythonBuildTarget] = for {
+    version <- arbitrary[String].nullable
+    interpreter <- genFileUriString.nullable
+  } yield new PythonBuildTarget(version, interpreter)
+
+  lazy val genPythonOptionsItem: Gen[PythonOptionsItem] = for {
+    target <- genBuildTargetIdentifier
+    interpreterOpts <- arbitrary[String].list
+  } yield new PythonOptionsItem(target, interpreterOpts)
+
+  lazy val genPythonOptionsParams: Gen[PythonOptionsParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new PythonOptionsParams(targets)
+
+  lazy val genPythonOptionsResult: Gen[PythonOptionsResult] = for {
+    items <- genPythonOptionsItem.list
+  } yield new PythonOptionsResult(items)
+
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)

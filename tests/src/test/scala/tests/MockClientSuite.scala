@@ -35,6 +35,7 @@ class MockClientSuite extends AnyFunSuite {
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
+  val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
 
   private val languageIds = List("scala").asJava
 
@@ -64,6 +65,13 @@ class MockClientSuite extends AnyFunSuite {
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     List("cpp").asJava,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+  val target5 = new BuildTarget(
+    targetId5,
+    List(BuildTargetTag.APPLICATION).asJava,
+    List("python").asJava,
     List.empty.asJava,
     new BuildTargetCapabilities(true, false, true, false)
   )
@@ -121,7 +129,7 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
-  test("Run  javacOptions") {
+  test("Run javacOptions") {
     val classDirectory = "file:" + testDirectory.resolve("out").toString
     val javacOptionsItems = List(
       new JavacOptionsItem(
@@ -150,7 +158,7 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
-  test("Run  scalacOptions") {
+  test("Run scalacOptions") {
     val classDirectory = "file:" + testDirectory.resolve("out").toString
     val scalacOptionsItems = List(
       new ScalacOptionsItem(
@@ -179,7 +187,7 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
-  test("Run  cppOptions") {
+  test("Run cppOptions") {
     val copts = List("-Iexternal/gtest/include").asJava
     val defines = List("BOOST_FALLTHROUGH").asJava
     val linkopts = List("-pthread").asJava
@@ -189,6 +197,17 @@ class MockClientSuite extends AnyFunSuite {
     client.testCppOptions(
       new CppOptionsParams(Collections.emptyList()),
       new CppOptionsResult(cppOptionsItem)
+    )
+  }
+
+  test("Run pythonOptions") {
+    val interpreterOptions = List("-E").asJava
+    val item = new PythonOptionsItem(targetId5, interpreterOptions)
+    val pythonOptionsItem = List(item).asJava
+
+    client.testPythonOptions(
+      new PythonOptionsParams(Collections.emptyList()),
+      new PythonOptionsResult(pythonOptionsItem)
     )
   }
 
@@ -257,7 +276,7 @@ class MockClientSuite extends AnyFunSuite {
   }
 
   test("Workspace Build Targets") {
-    val targets = List(target1, target2, target3, target4).asJava
+    val targets = List(target1, target2, target3, target4, target5).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
     val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
@@ -271,6 +290,8 @@ class MockClientSuite extends AnyFunSuite {
       new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
     val cppBuildTarget =
       new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+    val pythonBuildTarget =
+      new PythonBuildTarget("3.9", "/usr/bin/python")
 
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)
@@ -288,9 +309,14 @@ class MockClientSuite extends AnyFunSuite {
     target3.setData(sbtBuildTarget)
 
     target4.setDisplayName("target 4")
-    target3.setBaseDirectory(targetId4.getUri)
+    target4.setBaseDirectory(targetId4.getUri)
     target4.setDataKind(BuildTargetDataKind.CPP)
     target4.setData(cppBuildTarget)
+
+    target5.setDisplayName("target 5")
+    target5.setBaseDirectory(targetId5.getUri)
+    target5.setDataKind(BuildTargetDataKind.PYTHON)
+    target5.setData(pythonBuildTarget)
 
     val workspaceBuildTargetsResult = new WorkspaceBuildTargetsResult(targets)
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)

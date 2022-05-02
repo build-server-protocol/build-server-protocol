@@ -6,12 +6,12 @@ import java.nio.file.Paths
 import java.util
 import java.util.UUID
 import java.util.concurrent.{CompletableFuture, Executors}
-
 import ch.epfl.scala.bsp.testkit.mock.HappyMockServer.ProtocolError
 import ch.epfl.scala.bsp4j._
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import org.eclipse.lsp4j.jsonrpc.messages.{ResponseError, ResponseErrorCode}
 
+import scala.collection.immutable.ListMap
 import scala.concurrent.duration._
 import scala.concurrent._
 import scala.jdk.CollectionConverters._
@@ -40,7 +40,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   def serverVersion = "1.0"
   def bspVersion = "2.0"
 
-  def supportedLanguages: util.List[String] = List("java", "scala").asJava
+  def supportedLanguages: util.List[String] = List("java", "scala", "cpp", "python").asJava
 
   def capabilities: BuildServerCapabilities = {
     val c = new BuildServerCapabilities()
@@ -62,11 +62,13 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   val baseUri: URI = base.getCanonicalFile.toURI
   private val languageIds = List("scala").asJava
   private val cppLanguageId = List("cpp").asJava
+  private val pythonLanguageId = List("python").asJava
 
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
+  val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
@@ -98,11 +100,20 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     new BuildTargetCapabilities(true, false, true, false)
   )
 
-  val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = Map(
+  val target5 = new BuildTarget(
+    targetId5,
+    List(BuildTargetTag.APPLICATION).asJava,
+    pythonLanguageId,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+
+  val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(
     targetId1 -> target1,
     targetId2 -> target2,
     targetId3 -> target3,
-    targetId4 -> target4
+    targetId4 -> target4,
+    targetId5 -> target5
   )
 
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
@@ -189,6 +200,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
+  override def buildTargetPythonOptions(
+      params: PythonOptionsParams
+  ): CompletableFuture[PythonOptionsResult] = {
+    handleRequest {
+      val interpreterOpts = List("-E").asJava
+      val item = new PythonOptionsItem(targetId5, interpreterOpts)
+      val result = new PythonOptionsResult(List(item).asJava)
+      Right(result)
+    }
+  }
+
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
@@ -259,6 +281,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
       val cppBuildTarget =
         new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+      val pythonBuildTarget =
+        new PythonBuildTarget("3.9", "/usr/bin/python")
 
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
@@ -279,6 +303,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target4.setBaseDirectory(targetId4.getUri)
       target4.setDataKind(BuildTargetDataKind.CPP)
       target4.setData(cppBuildTarget)
+
+      target5.setDisplayName("target 5")
+      target5.setBaseDirectory(targetId5.getUri)
+      target5.setDataKind(BuildTargetDataKind.PYTHON)
+      target5.setData(pythonBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
