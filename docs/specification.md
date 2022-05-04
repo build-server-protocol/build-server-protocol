@@ -1221,7 +1221,7 @@ export interface TestTask {
 The completion of a test task should be signalled with a `build/taskFinish`
 notification. When the testing unit is a build target, the notification's
 `dataKind` field must be `test-report` and the `data` field must include a
-`TestTask` object:
+`TestReport` object:
 
 ```ts
 export interface TestReport {
