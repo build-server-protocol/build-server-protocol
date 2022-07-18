@@ -11,6 +11,8 @@ to BSP servers. This protocol has been designed such that:
 1. Clients can connect to build tools installed at the machine and at the
    workspace level.
 1. Multiple build tools can run in the same workspace directory.
+1. Multiple connections to a single build tool can run in the same workspace directory (as long as the build scopes for
+   each of the connections do not overlap).
 
 ## The BSP Connection Details
 
@@ -37,8 +39,11 @@ connection files.
 
 BSP connection files:
 
-1. must be unique per build tool name and version to enable different versions
+1. must be unique per build tool name, version and build scope to enable different versions
    of the same build tool to select different BSP connection mechanisms.
+1. multiple connection files for a single build tool name and version may co-exist in a single workspace root as long as
+   there is no overlap in their build scopes; this enables clients to request running separate builds within a single
+   workspace.
 1. can be updated by the build tool at any point in time, including during the
    startup of the build tool in a workspace.
 1. can be added to version control if and only if they do not contain
@@ -192,10 +197,11 @@ locations. BSP clients must look up connection files first in the bsp user
 location and, only if the lookup of a connection file meeting certain criteria
 fails, continue the search in the system location.
 
-When more than a BSP connection file is found, BSP clients can use connection
+When more than a single BSP connection file is found, BSP clients can use connection
 metadata to pick only the BSP servers they are interested in. If there are still
 ambiguities, BSP clients are free to choose how to react, for example by asking
-the end user to select a build server.
+the end user to select a build server. Clients may also make it possible for the user to select
+multiple connections, effectively having multiple, separate BSP builds running at one time.
 
 When no BSP connection file is found (because, for example, the user has not run
 the build tool command to generate BSP connection details), the BSP client can:
