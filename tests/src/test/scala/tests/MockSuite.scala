@@ -223,6 +223,18 @@ class HappyMockSuite extends AnyFunSuite {
     }
   }
 
+  def assertOutputPaths(server: MockBuildServer, client: TestBuildClient): Unit = {
+    val params = new OutputPathsParams(getBuildTargetIds(server))
+    val result = server.buildTargetOutputPaths(params).get()
+    val items = result.getItems.asScala.toList
+    assert(items.nonEmpty)
+    items.foreach { item =>
+      val sources = item.getOutputPaths.asScala.toList
+      assert(sources.nonEmpty)
+      assert(item.getTarget != null)
+    }
+  }
+
   def assertDependencySources(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new DependencySourcesParams(getBuildTargetIds(server))
     val result = server.buildTargetDependencySources(params).get()
@@ -303,6 +315,7 @@ class HappyMockSuite extends AnyFunSuite {
     assertJvmRunEnvironment(server)
     assertSources(server, client)
     assertDependencySources(server, client)
+    assertOutputPaths(server, client)
     assertCompile(server, client)
     assertTest(server, client)
     assertRun(server, client)

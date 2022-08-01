@@ -392,6 +392,10 @@ export interface BuildServerCapabilities {
    * via method buildTarget/resources */
   resourcesProvider?: Boolean;
 
+  /** The server provides all output paths
+   * via method buildTarget/outputPaths */
+  outputPathsProvider?: Boolean;
+
   /** Reloading the build state through workspace/reload is supported */
   canReload?: Boolean
 
@@ -896,6 +900,63 @@ export interface ResourcesItem {
   target: BuildTargetIdentifier;
   /** List of resource files. */
   resources: Uri[];
+}
+```
+
+### Output Paths Request
+
+The build target output paths request is sent from the client to the server to
+query for the list of output paths of a given list of build targets.
+
+An output path is a file or directory that contains output files such as build
+artifacts which IDEs may decide to exclude from indexing. The server communicates
+during the initialize handshake whether this method is supported or not.
+
+- method: `buildTarget/outputPaths`
+- params: `OutputPathsParams`
+
+```ts
+export interface OutputPathsParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+Response:
+
+- result: `OutputPathsResult`, defined as follows
+
+```ts
+export interface OutputPathsResult {
+  items: OutputPathsItem[];
+}
+
+export interface OutputPathsItem {
+  /** A build target to which output paths item belongs.
+   */
+  target: BuildTargetIdentifier;
+
+  /** Output paths.
+   */
+  outputPaths: OutputPathItem[];
+}
+
+export interface OutputPathItem {
+  /** Either a file or a directory. A directory entry must end with a forward
+   * slash "/" and a directory entry implies that every nested path within the
+   * directory belongs to this output item.
+   */
+  uri: Uri;
+
+  /** Type of file of the output item, such as whether it is file or directory.
+   */
+  kind: OutputPathItemKind;
+}
+
+export namespace OutputPathItemKind {
+  /** The output path item references a normal file.  */
+  export const File: Int = 1;
+  /** The output path item references a directory. */
+  export const Directory: Int = 2;
 }
 ```
 

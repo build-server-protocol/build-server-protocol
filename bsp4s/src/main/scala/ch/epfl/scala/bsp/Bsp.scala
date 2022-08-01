@@ -217,6 +217,7 @@ final case class BuildServerCapabilities(
     dependencySourcesProvider: Option[Boolean],
     dependencyModulesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
+    outputPathsProvider: Option[Boolean],
     buildTargetChangedProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
     jvmRunEnvironmentProvider: Option[Boolean],
@@ -648,6 +649,63 @@ final case class ResourcesItem(
 object ResourcesItem {
   implicit val codec: JsonValueCodec[ResourcesItem] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class OutputPathsParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object OutputPathsParams {
+  implicit val codec: JsonValueCodec[OutputPathsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class OutputPathsResult(
+    items: List[OutputPathsItem]
+)
+
+object OutputPathsResult {
+  implicit val codec: JsonValueCodec[OutputPathsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class OutputPathsItem(
+    target: BuildTargetIdentifier,
+    outputPaths: List[OutputPathItem]
+)
+
+object OutputPathsItem {
+  implicit val codec: JsonValueCodec[OutputPathsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class OutputPathItem(
+    uri: Uri,
+    kind: OutputPathItemKind
+)
+
+object OutputPathItem {
+  implicit val codec: JsonValueCodec[OutputPathItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+sealed abstract class OutputPathItemKind(val id: Int)
+object OutputPathItemKind {
+  object File extends OutputPathItemKind(1)
+  object Directory extends OutputPathItemKind(2)
+
+  implicit val codec: JsonValueCodec[OutputPathItemKind] = new JsonValueCodec[OutputPathItemKind] {
+    def nullValue: OutputPathItemKind = null
+    def encodeValue(item: OutputPathItemKind, out: JsonWriter): Unit =
+      out.writeVal(item.id)
+    def decodeValue(in: JsonReader, default: OutputPathItemKind): OutputPathItemKind = {
+      in.readInt() match {
+        case 1 => File
+        case 2 => Directory
+        case n => in.decodeError(s"Unknown source item kind id for $n")
+      }
+    }
+  }
 }
 
 // Request: 'buildTarget/compile', C -> S
