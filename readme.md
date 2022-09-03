@@ -1,6 +1,6 @@
 # ![bsp logo](resources/buildServerProtocol64.svg) Build Server Protocol
 
-[![Join the chat at https://gitter.im/scalacenter/bsp](https://badges.gitter.im/scalacenter/bsp.svg)](https://gitter.im/scalacenter/bsp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat on Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/7tMENrnv8p)
 
 This project is a work-in-progress effort to improve the integration
 between language server/editors and build tools. This effort is led by the

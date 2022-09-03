@@ -40,8 +40,8 @@ class Footer extends React.Component {
             >
               <img src="https://img.shields.io/github/stars/scalacenter/bsp.svg?color=%23087e8b&label=stars&logo=github&style=social" />
             </a>
-            <a href="https://gitter.im/scalacenter/bsp" target="_blank">
-              <img src="https://img.shields.io/gitter/room/scalacenter/bsp.svg?logo=gitter&style=social" />
+            <a href="https://discord.gg/7tMENrnv8p" target="_blank">
+              <img src="https://badgen.net/badge/icon/discord?icon=discord&label" />
             </a>
           </div>
         </section>
