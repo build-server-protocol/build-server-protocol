@@ -1,6 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -21,6 +23,11 @@ public class Diagnostic {
   private String message;
 
   private List<DiagnosticRelatedInformation> relatedInformation;
+
+  private String dataKind;
+
+  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
+  private Object data;
 
   public Diagnostic(@NonNull final Range range, @NonNull final String message) {
     this.range = range;
@@ -83,6 +90,24 @@ public class Diagnostic {
     this.relatedInformation = relatedInformation;
   }
 
+  @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+
+  @Pure
+  public Object getData() {
+    return this.data;
+  }
+
+  public void setData(final Object data) {
+    this.data = data;
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -93,6 +118,8 @@ public class Diagnostic {
     b.add("source", this.source);
     b.add("message", this.message);
     b.add("relatedInformation", this.relatedInformation);
+    b.add("dataKind", this.dataKind);
+    b.add("data", this.data);
     return b.toString();
   }
 
@@ -136,6 +163,16 @@ public class Diagnostic {
         return false;
     } else if (!this.relatedInformation.equals(other.relatedInformation))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
+    if (this.data == null) {
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
+      return false;
     return true;
   }
 
@@ -149,6 +186,8 @@ public class Diagnostic {
     result = prime * result + ((this.code== null) ? 0 : this.code.hashCode());
     result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    return prime * result + ((this.relatedInformation== null) ? 0 : this.relatedInformation.hashCode());
+    result = prime * result + ((this.relatedInformation== null) ? 0 : this.relatedInformation.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }
