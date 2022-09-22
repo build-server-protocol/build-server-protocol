@@ -11,66 +11,66 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TaskStartParams {
   @NonNull
   private TaskId taskId;
-  
+
   private Long eventTime;
-  
+
   private String message;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public TaskStartParams(@NonNull final TaskId taskId) {
     this.taskId = taskId;
   }
-  
+
   @Pure
   @NonNull
   public TaskId getTaskId() {
     return this.taskId;
   }
-  
+
   public void setTaskId(@NonNull final TaskId taskId) {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
-  
+
   @Pure
   public Long getEventTime() {
     return this.eventTime;
   }
-  
+
   public void setEventTime(final Long eventTime) {
     this.eventTime = eventTime;
   }
-  
+
   @Pure
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(final String message) {
     this.message = message;
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -82,7 +82,7 @@ public class TaskStartParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -120,7 +120,7 @@ public class TaskStartParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

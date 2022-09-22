@@ -10,74 +10,74 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class PublishDiagnosticsParams {
   @NonNull
   private TextDocumentIdentifier textDocument;
-  
+
   @NonNull
   private BuildTargetIdentifier buildTarget;
-  
+
   @NonNull
   private List<Diagnostic> diagnostics;
-  
+
   @NonNull
   private Boolean reset;
-  
+
   private String originId;
-  
+
   public PublishDiagnosticsParams(@NonNull final TextDocumentIdentifier textDocument, @NonNull final BuildTargetIdentifier buildTarget, @NonNull final List<Diagnostic> diagnostics, @NonNull final Boolean reset) {
     this.textDocument = textDocument;
     this.buildTarget = buildTarget;
     this.diagnostics = diagnostics;
     this.reset = reset;
   }
-  
+
   @Pure
   @NonNull
   public TextDocumentIdentifier getTextDocument() {
     return this.textDocument;
   }
-  
+
   public void setTextDocument(@NonNull final TextDocumentIdentifier textDocument) {
     this.textDocument = Preconditions.checkNotNull(textDocument, "textDocument");
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getBuildTarget() {
     return this.buildTarget;
   }
-  
+
   public void setBuildTarget(@NonNull final BuildTargetIdentifier buildTarget) {
     this.buildTarget = Preconditions.checkNotNull(buildTarget, "buildTarget");
   }
-  
+
   @Pure
   @NonNull
   public List<Diagnostic> getDiagnostics() {
     return this.diagnostics;
   }
-  
+
   public void setDiagnostics(@NonNull final List<Diagnostic> diagnostics) {
     this.diagnostics = Preconditions.checkNotNull(diagnostics, "diagnostics");
   }
-  
+
   @Pure
   @NonNull
   public Boolean getReset() {
     return this.reset;
   }
-  
+
   public void setReset(@NonNull final Boolean reset) {
     this.reset = Preconditions.checkNotNull(reset, "reset");
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -89,7 +89,7 @@ public class PublishDiagnosticsParams {
     b.add("originId", this.originId);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -127,7 +127,7 @@ public class PublishDiagnosticsParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

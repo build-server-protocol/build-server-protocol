@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DependencySourcesResult {
   @NonNull
   private List<DependencySourcesItem> items;
-  
+
   public DependencySourcesResult(@NonNull final List<DependencySourcesItem> items) {
     this.items = items;
   }
-  
+
   @Pure
   @NonNull
   public List<DependencySourcesItem> getItems() {
     return this.items;
   }
-  
+
   public void setItems(@NonNull final List<DependencySourcesItem> items) {
     this.items = Preconditions.checkNotNull(items, "items");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class DependencySourcesResult {
     b.add("items", this.items);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class DependencySourcesResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

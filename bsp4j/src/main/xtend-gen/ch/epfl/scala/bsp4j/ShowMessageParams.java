@@ -9,57 +9,57 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ShowMessageParams {
   @NonNull
   private MessageType type;
-  
+
   private TaskId task;
-  
+
   private String originId;
-  
+
   @NonNull
   private String message;
-  
+
   public ShowMessageParams(@NonNull final MessageType type, @NonNull final String message) {
     this.type = type;
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public MessageType getType() {
     return this.type;
   }
-  
+
   public void setType(@NonNull final MessageType type) {
     this.type = Preconditions.checkNotNull(type, "type");
   }
-  
+
   @Pure
   public TaskId getTask() {
     return this.task;
   }
-  
+
   public void setTask(final TaskId task) {
     this.task = task;
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Pure
   @NonNull
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(@NonNull final String message) {
     this.message = Preconditions.checkNotNull(message, "message");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -70,7 +70,7 @@ public class ShowMessageParams {
     b.add("message", this.message);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -103,7 +103,7 @@ public class ShowMessageParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

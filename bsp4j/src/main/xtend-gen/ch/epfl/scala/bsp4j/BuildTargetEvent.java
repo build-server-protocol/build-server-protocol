@@ -11,44 +11,44 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BuildTargetEvent {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   private BuildTargetEventKind kind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public BuildTargetEvent(@NonNull final BuildTargetIdentifier target) {
     this.target = target;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   public BuildTargetEventKind getKind() {
     return this.kind;
   }
-  
+
   public void setKind(final BuildTargetEventKind kind) {
     this.kind = kind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -58,7 +58,7 @@ public class BuildTargetEvent {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -86,7 +86,7 @@ public class BuildTargetEvent {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -10,79 +10,79 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class Diagnostic {
   @NonNull
   private Range range;
-  
+
   private DiagnosticSeverity severity;
-  
+
   private String code;
-  
+
   private String source;
-  
+
   @NonNull
   private String message;
-  
+
   private List<DiagnosticRelatedInformation> relatedInformation;
-  
+
   public Diagnostic(@NonNull final Range range, @NonNull final String message) {
     this.range = range;
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public Range getRange() {
     return this.range;
   }
-  
+
   public void setRange(@NonNull final Range range) {
     this.range = Preconditions.checkNotNull(range, "range");
   }
-  
+
   @Pure
   public DiagnosticSeverity getSeverity() {
     return this.severity;
   }
-  
+
   public void setSeverity(final DiagnosticSeverity severity) {
     this.severity = severity;
   }
-  
+
   @Pure
   public String getCode() {
     return this.code;
   }
-  
+
   public void setCode(final String code) {
     this.code = code;
   }
-  
+
   @Pure
   public String getSource() {
     return this.source;
   }
-  
+
   public void setSource(final String source) {
     this.source = source;
   }
-  
+
   @Pure
   @NonNull
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(@NonNull final String message) {
     this.message = Preconditions.checkNotNull(message, "message");
   }
-  
+
   @Pure
   public List<DiagnosticRelatedInformation> getRelatedInformation() {
     return this.relatedInformation;
   }
-  
+
   public void setRelatedInformation(final List<DiagnosticRelatedInformation> relatedInformation) {
     this.relatedInformation = relatedInformation;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -95,7 +95,7 @@ public class Diagnostic {
     b.add("relatedInformation", this.relatedInformation);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -138,7 +138,7 @@ public class Diagnostic {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

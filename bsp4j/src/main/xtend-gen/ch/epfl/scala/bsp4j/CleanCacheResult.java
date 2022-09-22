@@ -8,34 +8,34 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class CleanCacheResult {
   private String message;
-  
+
   @NonNull
   private Boolean cleaned;
-  
+
   public CleanCacheResult(final String message, @NonNull final Boolean cleaned) {
     this.message = message;
     this.cleaned = cleaned;
   }
-  
+
   @Pure
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(final String message) {
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public Boolean getCleaned() {
     return this.cleaned;
   }
-  
+
   public void setCleaned(@NonNull final Boolean cleaned) {
     this.cleaned = Preconditions.checkNotNull(cleaned, "cleaned");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -44,7 +44,7 @@ public class CleanCacheResult {
     b.add("cleaned", this.cleaned);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -67,7 +67,7 @@ public class CleanCacheResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

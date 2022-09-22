@@ -10,63 +10,63 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class JavacOptionsItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> options;
-  
+
   @NonNull
   private List<String> classpath;
-  
+
   @NonNull
   private String classDirectory;
-  
+
   public JavacOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> options, @NonNull final List<String> classpath, @NonNull final String classDirectory) {
     this.target = target;
     this.options = options;
     this.classpath = classpath;
     this.classDirectory = classDirectory;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getOptions() {
     return this.options;
   }
-  
+
   public void setOptions(@NonNull final List<String> options) {
     this.options = Preconditions.checkNotNull(options, "options");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getClasspath() {
     return this.classpath;
   }
-  
+
   public void setClasspath(@NonNull final List<String> classpath) {
     this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
-  
+
   @Pure
   @NonNull
   public String getClassDirectory() {
     return this.classDirectory;
   }
-  
+
   public void setClassDirectory(@NonNull final String classDirectory) {
     this.classDirectory = Preconditions.checkNotNull(classDirectory, "classDirectory");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -77,7 +77,7 @@ public class JavacOptionsItem {
     b.add("classDirectory", this.classDirectory);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -110,7 +110,7 @@ public class JavacOptionsItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -9,21 +9,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BuildTargetIdentifier {
   @NonNull
   private String uri;
-  
+
   public BuildTargetIdentifier(@NonNull final String uri) {
     this.uri = uri;
   }
-  
+
   @Pure
   @NonNull
   public String getUri() {
     return this.uri;
   }
-  
+
   public void setUri(@NonNull final String uri) {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -31,7 +31,7 @@ public class BuildTargetIdentifier {
     b.add("uri", this.uri);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -49,7 +49,7 @@ public class BuildTargetIdentifier {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

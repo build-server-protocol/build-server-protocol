@@ -9,21 +9,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestTask {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   public TestTask(@NonNull final BuildTargetIdentifier target) {
     this.target = target;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -31,7 +31,7 @@ public class TestTask {
     b.add("target", this.target);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -49,7 +49,7 @@ public class TestTask {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

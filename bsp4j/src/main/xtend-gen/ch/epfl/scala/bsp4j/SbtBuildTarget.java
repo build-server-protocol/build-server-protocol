@@ -10,74 +10,74 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class SbtBuildTarget {
   @NonNull
   private String sbtVersion;
-  
+
   @NonNull
   private List<String> autoImports;
-  
+
   @NonNull
   private ScalaBuildTarget scalaBuildTarget;
-  
+
   private BuildTargetIdentifier parent;
-  
+
   @NonNull
   private List<BuildTargetIdentifier> children;
-  
+
   public SbtBuildTarget(@NonNull final String sbtVersion, @NonNull final List<String> autoImports, @NonNull final ScalaBuildTarget scalaBuildTarget, @NonNull final List<BuildTargetIdentifier> children) {
     this.sbtVersion = sbtVersion;
     this.autoImports = autoImports;
     this.scalaBuildTarget = scalaBuildTarget;
     this.children = children;
   }
-  
+
   @Pure
   @NonNull
   public String getSbtVersion() {
     return this.sbtVersion;
   }
-  
+
   public void setSbtVersion(@NonNull final String sbtVersion) {
     this.sbtVersion = Preconditions.checkNotNull(sbtVersion, "sbtVersion");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getAutoImports() {
     return this.autoImports;
   }
-  
+
   public void setAutoImports(@NonNull final List<String> autoImports) {
     this.autoImports = Preconditions.checkNotNull(autoImports, "autoImports");
   }
-  
+
   @Pure
   @NonNull
   public ScalaBuildTarget getScalaBuildTarget() {
     return this.scalaBuildTarget;
   }
-  
+
   public void setScalaBuildTarget(@NonNull final ScalaBuildTarget scalaBuildTarget) {
     this.scalaBuildTarget = Preconditions.checkNotNull(scalaBuildTarget, "scalaBuildTarget");
   }
-  
+
   @Pure
   public BuildTargetIdentifier getParent() {
     return this.parent;
   }
-  
+
   public void setParent(final BuildTargetIdentifier parent) {
     this.parent = parent;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getChildren() {
     return this.children;
   }
-  
+
   public void setChildren(@NonNull final List<BuildTargetIdentifier> children) {
     this.children = Preconditions.checkNotNull(children, "children");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -89,7 +89,7 @@ public class SbtBuildTarget {
     b.add("children", this.children);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -127,7 +127,7 @@ public class SbtBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class PythonOptionsItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> interpreterOptions;
-  
+
   public PythonOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> interpreterOptions) {
     this.target = target;
     this.interpreterOptions = interpreterOptions;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getInterpreterOptions() {
     return this.interpreterOptions;
   }
-  
+
   public void setInterpreterOptions(@NonNull final List<String> interpreterOptions) {
     this.interpreterOptions = Preconditions.checkNotNull(interpreterOptions, "interpreterOptions");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -47,7 +47,7 @@ public class PythonOptionsItem {
     b.add("interpreterOptions", this.interpreterOptions);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -70,7 +70,7 @@ public class PythonOptionsItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

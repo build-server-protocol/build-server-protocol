@@ -10,19 +10,19 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BspConnectionDetails {
   @NonNull
   private String name;
-  
+
   @NonNull
   private List<String> argv;
-  
+
   @NonNull
   private String version;
-  
+
   @NonNull
   private String bspVersion;
-  
+
   @NonNull
   private List<String> languages;
-  
+
   public BspConnectionDetails(@NonNull final String name, @NonNull final List<String> argv, final String version, final String bspVersion, final List<String> languages) {
     this.name = name;
     this.argv = argv;
@@ -30,57 +30,57 @@ public class BspConnectionDetails {
     this.bspVersion = bspVersion;
     this.languages = languages;
   }
-  
+
   @Pure
   @NonNull
   public String getName() {
     return this.name;
   }
-  
+
   public void setName(@NonNull final String name) {
     this.name = Preconditions.checkNotNull(name, "name");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getArgv() {
     return this.argv;
   }
-  
+
   public void setArgv(@NonNull final List<String> argv) {
     this.argv = Preconditions.checkNotNull(argv, "argv");
   }
-  
+
   @Pure
   @NonNull
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(@NonNull final String version) {
     this.version = Preconditions.checkNotNull(version, "version");
   }
-  
+
   @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
   }
-  
+
   public void setBspVersion(@NonNull final String bspVersion) {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getLanguages() {
     return this.languages;
   }
-  
+
   public void setLanguages(@NonNull final List<String> languages) {
     this.languages = Preconditions.checkNotNull(languages, "languages");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -92,7 +92,7 @@ public class BspConnectionDetails {
     b.add("languages", this.languages);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -130,7 +130,7 @@ public class BspConnectionDetails {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

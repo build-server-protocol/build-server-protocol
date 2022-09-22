@@ -9,35 +9,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DiagnosticRelatedInformation {
   @NonNull
   private Location location;
-  
+
   @NonNull
   private String message;
-  
+
   public DiagnosticRelatedInformation(@NonNull final Location location, @NonNull final String message) {
     this.location = location;
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public Location getLocation() {
     return this.location;
   }
-  
+
   public void setLocation(@NonNull final Location location) {
     this.location = Preconditions.checkNotNull(location, "location");
   }
-  
+
   @Pure
   @NonNull
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(@NonNull final String message) {
     this.message = Preconditions.checkNotNull(message, "message");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -46,7 +46,7 @@ public class DiagnosticRelatedInformation {
     b.add("message", this.message);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -69,7 +69,7 @@ public class DiagnosticRelatedInformation {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

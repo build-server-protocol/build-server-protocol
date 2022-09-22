@@ -11,80 +11,80 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestFinish {
   @NonNull
   private String displayName;
-  
+
   private String message;
-  
+
   @NonNull
   private TestStatus status;
-  
+
   private Location location;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public TestFinish(@NonNull final String displayName, @NonNull final TestStatus status) {
     this.displayName = displayName;
     this.status = status;
   }
-  
+
   @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
   }
-  
+
   public void setDisplayName(@NonNull final String displayName) {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
-  
+
   @Pure
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(final String message) {
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public TestStatus getStatus() {
     return this.status;
   }
-  
+
   public void setStatus(@NonNull final TestStatus status) {
     this.status = Preconditions.checkNotNull(status, "status");
   }
-  
+
   @Pure
   public Location getLocation() {
     return this.location;
   }
-  
+
   public void setLocation(final Location location) {
     this.location = location;
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -97,7 +97,7 @@ public class TestFinish {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -140,7 +140,7 @@ public class TestFinish {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

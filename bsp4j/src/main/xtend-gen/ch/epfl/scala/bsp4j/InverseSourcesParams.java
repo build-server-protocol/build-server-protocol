@@ -9,21 +9,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class InverseSourcesParams {
   @NonNull
   private TextDocumentIdentifier textDocument;
-  
+
   public InverseSourcesParams(@NonNull final TextDocumentIdentifier textDocument) {
     this.textDocument = textDocument;
   }
-  
+
   @Pure
   @NonNull
   public TextDocumentIdentifier getTextDocument() {
     return this.textDocument;
   }
-  
+
   public void setTextDocument(@NonNull final TextDocumentIdentifier textDocument) {
     this.textDocument = Preconditions.checkNotNull(textDocument, "textDocument");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -31,7 +31,7 @@ public class InverseSourcesParams {
     b.add("textDocument", this.textDocument);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -49,7 +49,7 @@ public class InverseSourcesParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

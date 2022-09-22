@@ -12,66 +12,66 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class RunParams {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   private String originId;
-  
+
   private List<String> arguments;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public RunParams(@NonNull final BuildTargetIdentifier target) {
     this.target = target;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Pure
   public List<String> getArguments() {
     return this.arguments;
   }
-  
+
   public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -83,7 +83,7 @@ public class RunParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -121,7 +121,7 @@ public class RunParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -10,56 +10,56 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class CompileResult {
   private String originId;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   @NonNull
   private StatusCode statusCode;
-  
+
   public CompileResult(@NonNull final StatusCode statusCode) {
     this.statusCode = statusCode;
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Pure
   @NonNull
   public StatusCode getStatusCode() {
     return this.statusCode;
   }
-  
+
   public void setStatusCode(@NonNull final StatusCode statusCode) {
     this.statusCode = Preconditions.checkNotNull(statusCode, "statusCode");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -70,7 +70,7 @@ public class CompileResult {
     b.add("statusCode", this.statusCode);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -103,7 +103,7 @@ public class CompileResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

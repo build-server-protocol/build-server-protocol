@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DidChangeBuildTarget {
   @NonNull
   private List<BuildTargetEvent> changes;
-  
+
   public DidChangeBuildTarget(@NonNull final List<BuildTargetEvent> changes) {
     this.changes = changes;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetEvent> getChanges() {
     return this.changes;
   }
-  
+
   public void setChanges(@NonNull final List<BuildTargetEvent> changes) {
     this.changes = Preconditions.checkNotNull(changes, "changes");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class DidChangeBuildTarget {
     b.add("changes", this.changes);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class DidChangeBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DependencySourcesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> sources;
-  
+
   public DependencySourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> sources) {
     this.target = target;
     this.sources = sources;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getSources() {
     return this.sources;
   }
-  
+
   public void setSources(@NonNull final List<String> sources) {
     this.sources = Preconditions.checkNotNull(sources, "sources");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -47,7 +47,7 @@ public class DependencySourcesItem {
     b.add("sources", this.sources);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -70,7 +70,7 @@ public class DependencySourcesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

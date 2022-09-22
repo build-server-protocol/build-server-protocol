@@ -12,28 +12,28 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BuildTarget {
   @NonNull
   private BuildTargetIdentifier id;
-  
+
   private String displayName;
-  
+
   private String baseDirectory;
-  
+
   @NonNull
   private List<String> tags;
-  
+
   @NonNull
   private List<String> languageIds;
-  
+
   @NonNull
   private List<BuildTargetIdentifier> dependencies;
-  
+
   @NonNull
   private BuildTargetCapabilities capabilities;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final List<String> languageIds, @NonNull final List<BuildTargetIdentifier> dependencies, @NonNull final BuildTargetCapabilities capabilities) {
     this.id = id;
     this.tags = tags;
@@ -41,93 +41,93 @@ public class BuildTarget {
     this.languageIds = languageIds;
     this.capabilities = capabilities;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getId() {
     return this.id;
   }
-  
+
   public void setId(@NonNull final BuildTargetIdentifier id) {
     this.id = Preconditions.checkNotNull(id, "id");
   }
-  
+
   @Pure
   public String getDisplayName() {
     return this.displayName;
   }
-  
+
   public void setDisplayName(final String displayName) {
     this.displayName = displayName;
   }
-  
+
   @Pure
   public String getBaseDirectory() {
     return this.baseDirectory;
   }
-  
+
   public void setBaseDirectory(final String baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
-  
+
   @Pure
   @NonNull
   public List<String> getTags() {
     return this.tags;
   }
-  
+
   public void setTags(@NonNull final List<String> tags) {
     this.tags = Preconditions.checkNotNull(tags, "tags");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getLanguageIds() {
     return this.languageIds;
   }
-  
+
   public void setLanguageIds(@NonNull final List<String> languageIds) {
     this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getDependencies() {
     return this.dependencies;
   }
-  
+
   public void setDependencies(@NonNull final List<BuildTargetIdentifier> dependencies) {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetCapabilities getCapabilities() {
     return this.capabilities;
   }
-  
+
   public void setCapabilities(@NonNull final BuildTargetCapabilities capabilities) {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -143,7 +143,7 @@ public class BuildTarget {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -201,7 +201,7 @@ public class BuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

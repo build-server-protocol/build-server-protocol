@@ -6,32 +6,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class PythonBuildTarget {
   private String version;
-  
+
   private String interpreter;
-  
+
   public PythonBuildTarget(final String version, final String interpreter) {
     this.version = version;
     this.interpreter = interpreter;
   }
-  
+
   @Pure
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(final String version) {
     this.version = version;
   }
-  
+
   @Pure
   public String getInterpreter() {
     return this.interpreter;
   }
-  
+
   public void setInterpreter(final String interpreter) {
     this.interpreter = interpreter;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -40,7 +40,7 @@ public class PythonBuildTarget {
     b.add("interpreter", this.interpreter);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -63,7 +63,7 @@ public class PythonBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

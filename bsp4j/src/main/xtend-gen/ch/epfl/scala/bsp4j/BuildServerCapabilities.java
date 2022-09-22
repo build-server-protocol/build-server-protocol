@@ -6,99 +6,99 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class BuildServerCapabilities {
   private CompileProvider compileProvider;
-  
+
   private TestProvider testProvider;
-  
+
   private RunProvider runProvider;
-  
+
   private DebugProvider debugProvider;
-  
+
   private Boolean inverseSourcesProvider;
-  
+
   private Boolean dependencySourcesProvider;
-  
+
   private Boolean dependencyModulesProvider;
-  
+
   private Boolean resourcesProvider;
 
   private Boolean outputPathsProvider;
 
   private Boolean buildTargetChangedProvider;
-  
+
   private Boolean jvmRunEnvironmentProvider;
-  
+
   private Boolean jvmTestEnvironmentProvider;
-  
+
   private Boolean canReload;
-  
+
   @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;
   }
-  
+
   public void setCompileProvider(final CompileProvider compileProvider) {
     this.compileProvider = compileProvider;
   }
-  
+
   @Pure
   public TestProvider getTestProvider() {
     return this.testProvider;
   }
-  
+
   public void setTestProvider(final TestProvider testProvider) {
     this.testProvider = testProvider;
   }
-  
+
   @Pure
   public RunProvider getRunProvider() {
     return this.runProvider;
   }
-  
+
   public void setRunProvider(final RunProvider runProvider) {
     this.runProvider = runProvider;
   }
-  
+
   @Pure
   public DebugProvider getDebugProvider() {
     return this.debugProvider;
   }
-  
+
   public void setDebugProvider(final DebugProvider debugProvider) {
     this.debugProvider = debugProvider;
   }
-  
+
   @Pure
   public Boolean getInverseSourcesProvider() {
     return this.inverseSourcesProvider;
   }
-  
+
   public void setInverseSourcesProvider(final Boolean inverseSourcesProvider) {
     this.inverseSourcesProvider = inverseSourcesProvider;
   }
-  
+
   @Pure
   public Boolean getDependencySourcesProvider() {
     return this.dependencySourcesProvider;
   }
-  
+
   public void setDependencySourcesProvider(final Boolean dependencySourcesProvider) {
     this.dependencySourcesProvider = dependencySourcesProvider;
   }
-  
+
   @Pure
   public Boolean getDependencyModulesProvider() {
     return this.dependencyModulesProvider;
   }
-  
+
   public void setDependencyModulesProvider(final Boolean dependencyModulesProvider) {
     this.dependencyModulesProvider = dependencyModulesProvider;
   }
-  
+
   @Pure
   public Boolean getResourcesProvider() {
     return this.resourcesProvider;
   }
-  
+
   public void setResourcesProvider(final Boolean resourcesProvider) {
     this.resourcesProvider = resourcesProvider;
   }
@@ -116,38 +116,38 @@ public class BuildServerCapabilities {
   public Boolean getBuildTargetChangedProvider() {
     return this.buildTargetChangedProvider;
   }
-  
+
   public void setBuildTargetChangedProvider(final Boolean buildTargetChangedProvider) {
     this.buildTargetChangedProvider = buildTargetChangedProvider;
   }
-  
+
   @Pure
   public Boolean getJvmRunEnvironmentProvider() {
     return this.jvmRunEnvironmentProvider;
   }
-  
+
   public void setJvmRunEnvironmentProvider(final Boolean jvmRunEnvironmentProvider) {
     this.jvmRunEnvironmentProvider = jvmRunEnvironmentProvider;
   }
-  
+
   @Pure
   public Boolean getJvmTestEnvironmentProvider() {
     return this.jvmTestEnvironmentProvider;
   }
-  
+
   public void setJvmTestEnvironmentProvider(final Boolean jvmTestEnvironmentProvider) {
     this.jvmTestEnvironmentProvider = jvmTestEnvironmentProvider;
   }
-  
+
   @Pure
   public Boolean getCanReload() {
     return this.canReload;
   }
-  
+
   public void setCanReload(final Boolean canReload) {
     this.canReload = canReload;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -167,7 +167,7 @@ public class BuildServerCapabilities {
     b.add("canReload", this.canReload);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -245,7 +245,7 @@ public class BuildServerCapabilities {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

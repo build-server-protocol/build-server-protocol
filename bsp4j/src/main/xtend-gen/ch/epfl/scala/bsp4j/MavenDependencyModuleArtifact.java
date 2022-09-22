@@ -9,32 +9,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class MavenDependencyModuleArtifact {
   @NonNull
   private String uri;
-  
+
   private String classifier;
-  
+
   public MavenDependencyModuleArtifact(@NonNull final String uri) {
     this.uri = uri;
   }
-  
+
   @Pure
   @NonNull
   public String getUri() {
     return this.uri;
   }
-  
+
   public void setUri(@NonNull final String uri) {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
-  
+
   @Pure
   public String getClassifier() {
     return this.classifier;
   }
-  
+
   public void setClassifier(final String classifier) {
     this.classifier = classifier;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -43,7 +43,7 @@ public class MavenDependencyModuleArtifact {
     b.add("classifier", this.classifier);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -66,7 +66,7 @@ public class MavenDependencyModuleArtifact {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

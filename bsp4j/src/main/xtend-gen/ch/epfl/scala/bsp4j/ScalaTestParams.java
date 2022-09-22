@@ -7,27 +7,27 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class ScalaTestParams {
   private List<ScalaTestClassesItem> testClasses;
-  
+
   private List<String> jvmOptions;
-  
+
   @Pure
   public List<ScalaTestClassesItem> getTestClasses() {
     return this.testClasses;
   }
-  
+
   public void setTestClasses(final List<ScalaTestClassesItem> testClasses) {
     this.testClasses = testClasses;
   }
-  
+
   @Pure
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
-  
+
   public void setJvmOptions(final List<String> jvmOptions) {
     this.jvmOptions = jvmOptions;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -36,7 +36,7 @@ public class ScalaTestParams {
     b.add("jvmOptions", this.jvmOptions);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -59,7 +59,7 @@ public class ScalaTestParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

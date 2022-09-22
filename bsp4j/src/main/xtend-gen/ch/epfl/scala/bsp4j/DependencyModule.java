@@ -11,58 +11,58 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DependencyModule {
   @NonNull
   private String name;
-  
+
   @NonNull
   private String version;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public DependencyModule(@NonNull final String name, @NonNull final String version) {
     this.name = name;
     this.version = version;
   }
-  
+
   @Pure
   @NonNull
   public String getName() {
     return this.name;
   }
-  
+
   public void setName(@NonNull final String name) {
     this.name = Preconditions.checkNotNull(name, "name");
   }
-  
+
   @Pure
   @NonNull
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(@NonNull final String version) {
     this.version = Preconditions.checkNotNull(version, "version");
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -73,7 +73,7 @@ public class DependencyModule {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -106,7 +106,7 @@ public class DependencyModule {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -11,80 +11,80 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TaskFinishParams {
   @NonNull
   private TaskId taskId;
-  
+
   private Long eventTime;
-  
+
   private String message;
-  
+
   @NonNull
   private StatusCode status;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public TaskFinishParams(@NonNull final TaskId taskId, @NonNull final StatusCode status) {
     this.taskId = taskId;
     this.status = status;
   }
-  
+
   @Pure
   @NonNull
   public TaskId getTaskId() {
     return this.taskId;
   }
-  
+
   public void setTaskId(@NonNull final TaskId taskId) {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
-  
+
   @Pure
   public Long getEventTime() {
     return this.eventTime;
   }
-  
+
   public void setEventTime(final Long eventTime) {
     this.eventTime = eventTime;
   }
-  
+
   @Pure
   public String getMessage() {
     return this.message;
   }
-  
+
   public void setMessage(final String message) {
     this.message = message;
   }
-  
+
   @Pure
   @NonNull
   public StatusCode getStatus() {
     return this.status;
   }
-  
+
   public void setStatus(@NonNull final StatusCode status) {
     this.status = Preconditions.checkNotNull(status, "status");
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -97,7 +97,7 @@ public class TaskFinishParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -140,7 +140,7 @@ public class TaskFinishParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

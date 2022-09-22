@@ -6,32 +6,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class JvmBuildTarget {
   private String javaHome;
-  
+
   private String javaVersion;
-  
+
   public JvmBuildTarget(final String javaHome, final String javaVersion) {
     this.javaHome = javaHome;
     this.javaVersion = javaVersion;
   }
-  
+
   @Pure
   public String getJavaHome() {
     return this.javaHome;
   }
-  
+
   public void setJavaHome(final String javaHome) {
     this.javaHome = javaHome;
   }
-  
+
   @Pure
   public String getJavaVersion() {
     return this.javaVersion;
   }
-  
+
   public void setJavaVersion(final String javaVersion) {
     this.javaVersion = javaVersion;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -40,7 +40,7 @@ public class JvmBuildTarget {
     b.add("javaVersion", this.javaVersion);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -63,7 +63,7 @@ public class JvmBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

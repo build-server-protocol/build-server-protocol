@@ -6,56 +6,56 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class CppBuildTarget {
   private String version;
-  
+
   private String compiler;
-  
+
   private String cCompiler;
-  
+
   private String cppCompiler;
-  
+
   public CppBuildTarget(final String version, final String compiler, final String cCompiler, final String cppCompiler) {
     this.version = version;
     this.compiler = compiler;
     this.cCompiler = cCompiler;
     this.cppCompiler = cppCompiler;
   }
-  
+
   @Pure
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(final String version) {
     this.version = version;
   }
-  
+
   @Pure
   public String getCompiler() {
     return this.compiler;
   }
-  
+
   public void setCompiler(final String compiler) {
     this.compiler = compiler;
   }
-  
+
   @Pure
   public String getCCompiler() {
     return this.cCompiler;
   }
-  
+
   public void setCCompiler(final String cCompiler) {
     this.cCompiler = cCompiler;
   }
-  
+
   @Pure
   public String getCppCompiler() {
     return this.cppCompiler;
   }
-  
+
   public void setCppCompiler(final String cppCompiler) {
     this.cppCompiler = cppCompiler;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -66,7 +66,7 @@ public class CppBuildTarget {
     b.add("cppCompiler", this.cppCompiler);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -99,7 +99,7 @@ public class CppBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

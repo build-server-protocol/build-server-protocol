@@ -9,35 +9,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class Range {
   @NonNull
   private Position start;
-  
+
   @NonNull
   private Position end;
-  
+
   public Range(@NonNull final Position start, @NonNull final Position end) {
     this.start = start;
     this.end = end;
   }
-  
+
   @Pure
   @NonNull
   public Position getStart() {
     return this.start;
   }
-  
+
   public void setStart(@NonNull final Position start) {
     this.start = Preconditions.checkNotNull(start, "start");
   }
-  
+
   @Pure
   @NonNull
   public Position getEnd() {
     return this.end;
   }
-  
+
   public void setEnd(@NonNull final Position end) {
     this.end = Preconditions.checkNotNull(end, "end");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -46,7 +46,7 @@ public class Range {
     b.add("end", this.end);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -69,7 +69,7 @@ public class Range {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

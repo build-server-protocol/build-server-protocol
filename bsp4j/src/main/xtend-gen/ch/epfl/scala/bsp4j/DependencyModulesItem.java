@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DependencyModulesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<DependencyModule> modules;
-  
+
   public DependencyModulesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<DependencyModule> modules) {
     this.target = target;
     this.modules = modules;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<DependencyModule> getModules() {
     return this.modules;
   }
-  
+
   public void setModules(@NonNull final List<DependencyModule> modules) {
     this.modules = Preconditions.checkNotNull(modules, "modules");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -47,7 +47,7 @@ public class DependencyModulesItem {
     b.add("modules", this.modules);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -70,7 +70,7 @@ public class DependencyModulesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

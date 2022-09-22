@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class JvmTestEnvironmentResult {
   @NonNull
   private List<JvmEnvironmentItem> items;
-  
+
   public JvmTestEnvironmentResult(@NonNull final List<JvmEnvironmentItem> items) {
     this.items = items;
   }
-  
+
   @Pure
   @NonNull
   public List<JvmEnvironmentItem> getItems() {
     return this.items;
   }
-  
+
   public void setItems(@NonNull final List<JvmEnvironmentItem> items) {
     this.items = Preconditions.checkNotNull(items, "items");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class JvmTestEnvironmentResult {
     b.add("items", this.items);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class JvmTestEnvironmentResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

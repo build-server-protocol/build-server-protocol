@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ResourcesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> resources;
-  
+
   public ResourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> resources) {
     this.target = target;
     this.resources = resources;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getResources() {
     return this.resources;
   }
-  
+
   public void setResources(@NonNull final List<String> resources) {
     this.resources = Preconditions.checkNotNull(resources, "resources");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -47,7 +47,7 @@ public class ResourcesItem {
     b.add("resources", this.resources);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -70,7 +70,7 @@ public class ResourcesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

@@ -10,46 +10,46 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class SourcesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<SourceItem> sources;
-  
+
   private List<String> roots;
-  
+
   public SourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<SourceItem> sources) {
     this.target = target;
     this.sources = sources;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<SourceItem> getSources() {
     return this.sources;
   }
-  
+
   public void setSources(@NonNull final List<SourceItem> sources) {
     this.sources = Preconditions.checkNotNull(sources, "sources");
   }
-  
+
   @Pure
   public List<String> getRoots() {
     return this.roots;
   }
-  
+
   public void setRoots(final List<String> roots) {
     this.roots = roots;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -59,7 +59,7 @@ public class SourcesItem {
     b.add("roots", this.roots);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -87,7 +87,7 @@ public class SourcesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

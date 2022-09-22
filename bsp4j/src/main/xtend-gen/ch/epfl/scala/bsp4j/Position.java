@@ -9,35 +9,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class Position {
   @NonNull
   private Integer line;
-  
+
   @NonNull
   private Integer character;
-  
+
   public Position(@NonNull final Integer line, @NonNull final Integer character) {
     this.line = line;
     this.character = character;
   }
-  
+
   @Pure
   @NonNull
   public Integer getLine() {
     return this.line;
   }
-  
+
   public void setLine(@NonNull final Integer line) {
     this.line = Preconditions.checkNotNull(line, "line");
   }
-  
+
   @Pure
   @NonNull
   public Integer getCharacter() {
     return this.character;
   }
-  
+
   public void setCharacter(@NonNull final Integer character) {
     this.character = Preconditions.checkNotNull(character, "character");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -46,7 +46,7 @@ public class Position {
     b.add("character", this.character);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -69,7 +69,7 @@ public class Position {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

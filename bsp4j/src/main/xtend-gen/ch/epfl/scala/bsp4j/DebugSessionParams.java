@@ -12,48 +12,48 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DebugSessionParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
-  
+
   @NonNull
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public DebugSessionParams(@NonNull final List<BuildTargetIdentifier> targets, @NonNull final String dataKind, final Object data) {
     this.targets = targets;
     this.dataKind = dataKind;
     this.data = data;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
   }
-  
+
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
-  
+
   @Pure
   @NonNull
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(@NonNull final String dataKind) {
     this.dataKind = Preconditions.checkNotNull(dataKind, "dataKind");
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -63,7 +63,7 @@ public class DebugSessionParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -91,7 +91,7 @@ public class DebugSessionParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {
