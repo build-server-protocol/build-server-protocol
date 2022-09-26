@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalacOptionsResult {
   @NonNull
   private List<ScalacOptionsItem> items;
-  
+
   public ScalacOptionsResult(@NonNull final List<ScalacOptionsItem> items) {
     this.items = items;
   }
-  
+
   @Pure
   @NonNull
   public List<ScalacOptionsItem> getItems() {
     return this.items;
   }
-  
+
   public void setItems(@NonNull final List<ScalacOptionsItem> items) {
     this.items = Preconditions.checkNotNull(items, "items");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class ScalacOptionsResult {
     b.add("items", this.items);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class ScalacOptionsResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

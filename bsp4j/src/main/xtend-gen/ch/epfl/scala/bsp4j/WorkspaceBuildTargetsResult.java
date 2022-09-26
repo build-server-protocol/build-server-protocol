@@ -8,20 +8,20 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class WorkspaceBuildTargetsResult {
   private List<BuildTarget> targets;
-  
+
   public WorkspaceBuildTargetsResult(@NonNull final List<BuildTarget> targets) {
     this.targets = targets;
   }
-  
+
   @Pure
   public List<BuildTarget> getTargets() {
     return this.targets;
   }
-  
+
   public void setTargets(final List<BuildTarget> targets) {
     this.targets = targets;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -29,7 +29,7 @@ public class WorkspaceBuildTargetsResult {
     b.add("targets", this.targets);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -47,7 +47,7 @@ public class WorkspaceBuildTargetsResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

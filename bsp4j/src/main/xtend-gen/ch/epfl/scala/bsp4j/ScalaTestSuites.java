@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaTestSuites {
   @NonNull
   private List<ScalaTestSuiteSelection> suites;
-  
+
   /**
    * Additional jvmOptions which will be passed to the forked JVM
    */
   @NonNull
   private List<String> jvmOptions;
-  
+
   /**
    * Enviroment variables should be an array of strings in format KEY=VALUE
    */
   @NonNull
   private List<String> environmentVariables;
-  
+
   public ScalaTestSuites(@NonNull final List<ScalaTestSuiteSelection> suites, @NonNull final List<String> jvmOptions, @NonNull final List<String> environmentVariables) {
     this.suites = suites;
     this.jvmOptions = jvmOptions;
     this.environmentVariables = environmentVariables;
   }
-  
+
   @Pure
   @NonNull
   public List<ScalaTestSuiteSelection> getSuites() {
     return this.suites;
   }
-  
+
   public void setSuites(@NonNull final List<ScalaTestSuiteSelection> suites) {
     this.suites = Preconditions.checkNotNull(suites, "suites");
   }
-  
+
   /**
    * Additional jvmOptions which will be passed to the forked JVM
    */
@@ -47,14 +47,14 @@ public class ScalaTestSuites {
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
-  
+
   /**
    * Additional jvmOptions which will be passed to the forked JVM
    */
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
-  
+
   /**
    * Enviroment variables should be an array of strings in format KEY=VALUE
    */
@@ -63,14 +63,14 @@ public class ScalaTestSuites {
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
-  
+
   /**
    * Enviroment variables should be an array of strings in format KEY=VALUE
    */
   public void setEnvironmentVariables(@NonNull final List<String> environmentVariables) {
     this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -80,7 +80,7 @@ public class ScalaTestSuites {
     b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -108,7 +108,7 @@ public class ScalaTestSuites {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

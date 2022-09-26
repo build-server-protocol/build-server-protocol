@@ -11,19 +11,19 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class JvmEnvironmentItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> classpath;
-  
+
   @NonNull
   private List<String> jvmOptions;
-  
+
   @NonNull
   private String workingDirectory;
-  
+
   @NonNull
   private Map<String, String> environmentVariables;
-  
+
   public JvmEnvironmentItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.target = target;
     this.classpath = classpath;
@@ -31,57 +31,57 @@ public class JvmEnvironmentItem {
     this.workingDirectory = workingDirectory;
     this.environmentVariables = environmentVariables;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getClasspath() {
     return this.classpath;
   }
-  
+
   public void setClasspath(@NonNull final List<String> classpath) {
     this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
-  
+
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
-  
+
   @Pure
   @NonNull
   public String getWorkingDirectory() {
     return this.workingDirectory;
   }
-  
+
   public void setWorkingDirectory(@NonNull final String workingDirectory) {
     this.workingDirectory = Preconditions.checkNotNull(workingDirectory, "workingDirectory");
   }
-  
+
   @Pure
   @NonNull
   public Map<String, String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
-  
+
   public void setEnvironmentVariables(@NonNull final Map<String, String> environmentVariables) {
     this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -93,7 +93,7 @@ public class JvmEnvironmentItem {
     b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -131,7 +131,7 @@ public class JvmEnvironmentItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

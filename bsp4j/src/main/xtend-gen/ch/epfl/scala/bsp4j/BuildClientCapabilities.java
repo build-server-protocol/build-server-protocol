@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BuildClientCapabilities {
   @NonNull
   private List<String> languageIds;
-  
+
   public BuildClientCapabilities(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
   }
-  
+
   @Pure
   @NonNull
   public List<String> getLanguageIds() {
     return this.languageIds;
   }
-  
+
   public void setLanguageIds(@NonNull final List<String> languageIds) {
     this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class BuildClientCapabilities {
     b.add("languageIds", this.languageIds);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class BuildClientCapabilities {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

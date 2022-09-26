@@ -9,21 +9,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class DebugSessionAddress {
   @NonNull
   private String uri;
-  
+
   public DebugSessionAddress(@NonNull final String uri) {
     this.uri = uri;
   }
-  
+
   @Pure
   @NonNull
   public String getUri() {
     return this.uri;
   }
-  
+
   public void setUri(@NonNull final String uri) {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -31,7 +31,7 @@ public class DebugSessionAddress {
     b.add("uri", this.uri);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -49,7 +49,7 @@ public class DebugSessionAddress {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

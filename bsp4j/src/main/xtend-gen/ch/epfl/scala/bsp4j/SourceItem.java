@@ -9,49 +9,49 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class SourceItem {
   @NonNull
   private String uri;
-  
+
   @NonNull
   private SourceItemKind kind;
-  
+
   @NonNull
   private Boolean generated;
-  
+
   public SourceItem(@NonNull final String uri, @NonNull final SourceItemKind kind, @NonNull final Boolean generated) {
     this.uri = uri;
     this.kind = kind;
     this.generated = generated;
   }
-  
+
   @Pure
   @NonNull
   public String getUri() {
     return this.uri;
   }
-  
+
   public void setUri(@NonNull final String uri) {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
-  
+
   @Pure
   @NonNull
   public SourceItemKind getKind() {
     return this.kind;
   }
-  
+
   public void setKind(@NonNull final SourceItemKind kind) {
     this.kind = Preconditions.checkNotNull(kind, "kind");
   }
-  
+
   @Pure
   @NonNull
   public Boolean getGenerated() {
     return this.generated;
   }
-  
+
   public void setGenerated(@NonNull final Boolean generated) {
     this.generated = Preconditions.checkNotNull(generated, "generated");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -61,7 +61,7 @@ public class SourceItem {
     b.add("generated", this.generated);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -89,7 +89,7 @@ public class SourceItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

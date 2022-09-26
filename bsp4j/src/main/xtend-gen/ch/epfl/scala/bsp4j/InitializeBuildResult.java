@@ -11,75 +11,75 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class InitializeBuildResult {
   @NonNull
   private String displayName;
-  
+
   @NonNull
   private String version;
-  
+
   @NonNull
   private String bspVersion;
-  
+
   @NonNull
   private BuildServerCapabilities capabilities;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public InitializeBuildResult(@NonNull final String displayName, @NonNull final String version, @NonNull final String bspVersion, @NonNull final BuildServerCapabilities capabilities) {
     this.displayName = displayName;
     this.version = version;
     this.bspVersion = bspVersion;
     this.capabilities = capabilities;
   }
-  
+
   @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
   }
-  
+
   public void setDisplayName(@NonNull final String displayName) {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
-  
+
   @Pure
   @NonNull
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(@NonNull final String version) {
     this.version = Preconditions.checkNotNull(version, "version");
   }
-  
+
   @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
   }
-  
+
   public void setBspVersion(@NonNull final String bspVersion) {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
-  
+
   @Pure
   @NonNull
   public BuildServerCapabilities getCapabilities() {
     return this.capabilities;
   }
-  
+
   public void setCapabilities(@NonNull final BuildServerCapabilities capabilities) {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -91,7 +91,7 @@ public class InitializeBuildResult {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -129,7 +129,7 @@ public class InitializeBuildResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

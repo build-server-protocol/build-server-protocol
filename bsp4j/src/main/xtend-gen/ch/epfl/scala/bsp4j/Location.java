@@ -9,35 +9,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class Location {
   @NonNull
   private String uri;
-  
+
   @NonNull
   private Range range;
-  
+
   public Location(@NonNull final String uri, @NonNull final Range range) {
     this.uri = uri;
     this.range = range;
   }
-  
+
   @Pure
   @NonNull
   public String getUri() {
     return this.uri;
   }
-  
+
   public void setUri(@NonNull final String uri) {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
-  
+
   @Pure
   @NonNull
   public Range getRange() {
     return this.range;
   }
-  
+
   public void setRange(@NonNull final Range range) {
     this.range = Preconditions.checkNotNull(range, "range");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -46,7 +46,7 @@ public class Location {
     b.add("range", this.range);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -69,7 +69,7 @@ public class Location {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

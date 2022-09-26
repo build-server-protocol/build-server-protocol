@@ -12,66 +12,66 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
-  
+
   private String originId;
-  
+
   private List<String> arguments;
-  
+
   private String dataKind;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public TestParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
   }
-  
+
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Pure
   public List<String> getArguments() {
     return this.arguments;
   }
-  
+
   public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
   }
-  
+
   @Pure
   public String getDataKind() {
     return this.dataKind;
   }
-  
+
   public void setDataKind(final String dataKind) {
     this.dataKind = dataKind;
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -83,7 +83,7 @@ public class TestParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -121,7 +121,7 @@ public class TestParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

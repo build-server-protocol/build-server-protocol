@@ -12,60 +12,60 @@ public class ScalaMainClass {
   @NonNull
   @SerializedName("class")
   private String className;
-  
+
   @NonNull
   private List<String> arguments;
-  
+
   @NonNull
   private List<String> jvmOptions;
-  
+
   private List<String> environmentVariables;
-  
+
   public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions) {
     this.className = className;
     this.arguments = arguments;
     this.jvmOptions = jvmOptions;
   }
-  
+
   @Pure
   @NonNull
   public String getClassName() {
     return this.className;
   }
-  
+
   public void setClassName(@NonNull final String className) {
     this.className = Preconditions.checkNotNull(className, "className");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getArguments() {
     return this.arguments;
   }
-  
+
   public void setArguments(@NonNull final List<String> arguments) {
     this.arguments = Preconditions.checkNotNull(arguments, "arguments");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
-  
+
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
-  
+
   @Pure
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
-  
+
   public void setEnvironmentVariables(final List<String> environmentVariables) {
     this.environmentVariables = environmentVariables;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -76,7 +76,7 @@ public class ScalaMainClass {
     b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -109,7 +109,7 @@ public class ScalaMainClass {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

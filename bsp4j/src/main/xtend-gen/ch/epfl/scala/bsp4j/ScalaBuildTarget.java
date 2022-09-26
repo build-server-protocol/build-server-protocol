@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaBuildTarget {
   @NonNull
   private String scalaOrganization;
-  
+
   @NonNull
   private String scalaVersion;
-  
+
   @NonNull
   private String scalaBinaryVersion;
-  
+
   @NonNull
   private ScalaPlatform platform;
-  
+
   @NonNull
   private List<String> jars;
-  
+
   private JvmBuildTarget jvmBuildTarget;
-  
+
   public ScalaBuildTarget(@NonNull final String scalaOrganization, @NonNull final String scalaVersion, @NonNull final String scalaBinaryVersion, @NonNull final ScalaPlatform platform, @NonNull final List<String> jars) {
     this.scalaOrganization = scalaOrganization;
     this.scalaVersion = scalaVersion;
@@ -32,66 +32,66 @@ public class ScalaBuildTarget {
     this.platform = platform;
     this.jars = jars;
   }
-  
+
   @Pure
   @NonNull
   public String getScalaOrganization() {
     return this.scalaOrganization;
   }
-  
+
   public void setScalaOrganization(@NonNull final String scalaOrganization) {
     this.scalaOrganization = Preconditions.checkNotNull(scalaOrganization, "scalaOrganization");
   }
-  
+
   @Pure
   @NonNull
   public String getScalaVersion() {
     return this.scalaVersion;
   }
-  
+
   public void setScalaVersion(@NonNull final String scalaVersion) {
     this.scalaVersion = Preconditions.checkNotNull(scalaVersion, "scalaVersion");
   }
-  
+
   @Pure
   @NonNull
   public String getScalaBinaryVersion() {
     return this.scalaBinaryVersion;
   }
-  
+
   public void setScalaBinaryVersion(@NonNull final String scalaBinaryVersion) {
     this.scalaBinaryVersion = Preconditions.checkNotNull(scalaBinaryVersion, "scalaBinaryVersion");
   }
-  
+
   @Pure
   @NonNull
   public ScalaPlatform getPlatform() {
     return this.platform;
   }
-  
+
   public void setPlatform(@NonNull final ScalaPlatform platform) {
     this.platform = Preconditions.checkNotNull(platform, "platform");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getJars() {
     return this.jars;
   }
-  
+
   public void setJars(@NonNull final List<String> jars) {
     this.jars = Preconditions.checkNotNull(jars, "jars");
   }
-  
+
   @Pure
   public JvmBuildTarget getJvmBuildTarget() {
     return this.jvmBuildTarget;
   }
-  
+
   public void setJvmBuildTarget(final JvmBuildTarget jvmBuildTarget) {
     this.jvmBuildTarget = jvmBuildTarget;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -104,7 +104,7 @@ public class ScalaBuildTarget {
     b.add("jvmBuildTarget", this.jvmBuildTarget);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -147,7 +147,7 @@ public class ScalaBuildTarget {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

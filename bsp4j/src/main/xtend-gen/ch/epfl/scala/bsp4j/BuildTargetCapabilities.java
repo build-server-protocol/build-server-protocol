@@ -9,77 +9,77 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class BuildTargetCapabilities {
   @NonNull
   private Boolean canCompile;
-  
+
   @NonNull
   private Boolean canTest;
-  
+
   @NonNull
   private Boolean canRun;
-  
+
   @NonNull
   private Boolean canDebug;
-  
+
   public BuildTargetCapabilities() {
     this.canCompile = Boolean.FALSE;
     this.canTest = Boolean.FALSE;
     this.canRun = Boolean.FALSE;
     this.canDebug = Boolean.FALSE;
   }
-  
+
   public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun) {
     this.canCompile = canCompile;
     this.canTest = canTest;
     this.canRun = canRun;
     this.canDebug = Boolean.FALSE;
   }
-  
+
   public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug) {
     this.canCompile = canCompile;
     this.canTest = canTest;
     this.canRun = canRun;
     this.canDebug = canDebug;
   }
-  
+
   @Pure
   @NonNull
   public Boolean getCanCompile() {
     return this.canCompile;
   }
-  
+
   public void setCanCompile(@NonNull final Boolean canCompile) {
     this.canCompile = Preconditions.checkNotNull(canCompile, "canCompile");
   }
-  
+
   @Pure
   @NonNull
   public Boolean getCanTest() {
     return this.canTest;
   }
-  
+
   public void setCanTest(@NonNull final Boolean canTest) {
     this.canTest = Preconditions.checkNotNull(canTest, "canTest");
   }
-  
+
   @Pure
   @NonNull
   public Boolean getCanRun() {
     return this.canRun;
   }
-  
+
   public void setCanRun(@NonNull final Boolean canRun) {
     this.canRun = Preconditions.checkNotNull(canRun, "canRun");
   }
-  
+
   @Pure
   @NonNull
   public Boolean getCanDebug() {
     return this.canDebug;
   }
-  
+
   public void setCanDebug(@NonNull final Boolean canDebug) {
     this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -90,7 +90,7 @@ public class BuildTargetCapabilities {
     b.add("canDebug", this.canDebug);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -123,7 +123,7 @@ public class BuildTargetCapabilities {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

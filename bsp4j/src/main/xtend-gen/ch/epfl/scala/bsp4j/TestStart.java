@@ -9,32 +9,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestStart {
   @NonNull
   private String displayName;
-  
+
   private Location location;
-  
+
   public TestStart(@NonNull final String displayName) {
     this.displayName = displayName;
   }
-  
+
   @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
   }
-  
+
   public void setDisplayName(@NonNull final String displayName) {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
-  
+
   @Pure
   public Location getLocation() {
     return this.location;
   }
-  
+
   public void setLocation(final Location location) {
     this.location = location;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -43,7 +43,7 @@ public class TestStart {
     b.add("location", this.location);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -66,7 +66,7 @@ public class TestStart {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

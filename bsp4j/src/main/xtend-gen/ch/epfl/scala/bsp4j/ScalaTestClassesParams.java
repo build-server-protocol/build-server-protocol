@@ -10,32 +10,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaTestClassesParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
-  
+
   private String originId;
-  
+
   public ScalaTestClassesParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
   }
-  
+
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -44,7 +44,7 @@ public class ScalaTestClassesParams {
     b.add("originId", this.originId);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -67,7 +67,7 @@ public class ScalaTestClassesParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

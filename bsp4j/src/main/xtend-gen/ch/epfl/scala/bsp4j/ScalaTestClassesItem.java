@@ -10,53 +10,53 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaTestClassesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> classes;
-  
+
   private String framework;
-  
+
   public ScalaTestClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classes) {
     this.target = target;
     this.classes = classes;
     this.framework = null;
   }
-  
+
   public ScalaTestClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classes, final String framework) {
     this.target = target;
     this.classes = classes;
     this.framework = framework;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getClasses() {
     return this.classes;
   }
-  
+
   public void setClasses(@NonNull final List<String> classes) {
     this.classes = Preconditions.checkNotNull(classes, "classes");
   }
-  
+
   @Pure
   public String getFramework() {
     return this.framework;
   }
-  
+
   public void setFramework(final String framework) {
     this.framework = framework;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -66,7 +66,7 @@ public class ScalaTestClassesItem {
     b.add("framework", this.framework);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -94,7 +94,7 @@ public class ScalaTestClassesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

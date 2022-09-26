@@ -10,32 +10,32 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TaskId {
   @NonNull
   private String id;
-  
+
   private List<String> parents;
-  
+
   public TaskId(@NonNull final String id) {
     this.id = id;
   }
-  
+
   @Pure
   @NonNull
   public String getId() {
     return this.id;
   }
-  
+
   public void setId(@NonNull final String id) {
     this.id = Preconditions.checkNotNull(id, "id");
   }
-  
+
   @Pure
   public List<String> getParents() {
     return this.parents;
   }
-  
+
   public void setParents(final List<String> parents) {
     this.parents = parents;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -44,7 +44,7 @@ public class TaskId {
     b.add("parents", this.parents);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -67,7 +67,7 @@ public class TaskId {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

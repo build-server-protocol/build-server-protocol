@@ -8,33 +8,33 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RunResult {
   private String originId;
-  
+
   @NonNull
   private StatusCode statusCode;
-  
+
   public RunResult(@NonNull final StatusCode statusCode) {
     this.statusCode = statusCode;
   }
-  
+
   @Pure
   public String getOriginId() {
     return this.originId;
   }
-  
+
   public void setOriginId(final String originId) {
     this.originId = originId;
   }
-  
+
   @Pure
   @NonNull
   public StatusCode getStatusCode() {
     return this.statusCode;
   }
-  
+
   public void setStatusCode(@NonNull final StatusCode statusCode) {
     this.statusCode = Preconditions.checkNotNull(statusCode, "statusCode");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -43,7 +43,7 @@ public class RunResult {
     b.add("statusCode", this.statusCode);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -66,7 +66,7 @@ public class RunResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

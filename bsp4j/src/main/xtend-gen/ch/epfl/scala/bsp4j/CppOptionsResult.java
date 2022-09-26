@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class CppOptionsResult {
   @NonNull
   private List<CppOptionsItem> items;
-  
+
   public CppOptionsResult(@NonNull final List<CppOptionsItem> items) {
     this.items = items;
   }
-  
+
   @Pure
   @NonNull
   public List<CppOptionsItem> getItems() {
     return this.items;
   }
-  
+
   public void setItems(@NonNull final List<CppOptionsItem> items) {
     this.items = Preconditions.checkNotNull(items, "items");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class CppOptionsResult {
     b.add("items", this.items);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class CppOptionsResult {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

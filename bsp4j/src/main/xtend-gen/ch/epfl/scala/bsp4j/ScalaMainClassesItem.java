@@ -10,35 +10,35 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaMainClassesItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<ScalaMainClass> classes;
-  
+
   public ScalaMainClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<ScalaMainClass> classes) {
     this.target = target;
     this.classes = classes;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<ScalaMainClass> getClasses() {
     return this.classes;
   }
-  
+
   public void setClasses(@NonNull final List<ScalaMainClass> classes) {
     this.classes = Preconditions.checkNotNull(classes, "classes");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -47,7 +47,7 @@ public class ScalaMainClassesItem {
     b.add("classes", this.classes);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -70,7 +70,7 @@ public class ScalaMainClassesItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

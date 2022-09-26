@@ -13,19 +13,19 @@ public class ScalaTestSuiteSelection {
    */
   @NonNull
   private String className;
-  
+
   /**
    * List of tests which should be run within this test suite.
    * Empty collection means that all of them are supposed to be executed.
    */
   @NonNull
   private List<String> tests;
-  
+
   public ScalaTestSuiteSelection(@NonNull final String className, @NonNull final List<String> tests) {
     this.className = className;
     this.tests = tests;
   }
-  
+
   /**
    * Fully qualified name of the test suite class
    */
@@ -34,14 +34,14 @@ public class ScalaTestSuiteSelection {
   public String getClassName() {
     return this.className;
   }
-  
+
   /**
    * Fully qualified name of the test suite class
    */
   public void setClassName(@NonNull final String className) {
     this.className = Preconditions.checkNotNull(className, "className");
   }
-  
+
   /**
    * List of tests which should be run within this test suite.
    * Empty collection means that all of them are supposed to be executed.
@@ -51,7 +51,7 @@ public class ScalaTestSuiteSelection {
   public List<String> getTests() {
     return this.tests;
   }
-  
+
   /**
    * List of tests which should be run within this test suite.
    * Empty collection means that all of them are supposed to be executed.
@@ -59,7 +59,7 @@ public class ScalaTestSuiteSelection {
   public void setTests(@NonNull final List<String> tests) {
     this.tests = Preconditions.checkNotNull(tests, "tests");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -68,7 +68,7 @@ public class ScalaTestSuiteSelection {
     b.add("tests", this.tests);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -91,7 +91,7 @@ public class ScalaTestSuiteSelection {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

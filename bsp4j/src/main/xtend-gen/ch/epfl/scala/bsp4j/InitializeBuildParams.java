@@ -11,22 +11,22 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class InitializeBuildParams {
   @NonNull
   private String rootUri;
-  
+
   @NonNull
   private String displayName;
-  
+
   @NonNull
   private String version;
-  
+
   @NonNull
   private String bspVersion;
-  
+
   @NonNull
   private BuildClientCapabilities capabilities;
-  
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
-  
+
   public InitializeBuildParams(@NonNull final String displayName, @NonNull final String version, @NonNull final String bspVersion, @NonNull final String rootUri, @NonNull final BuildClientCapabilities capabilities) {
     this.displayName = displayName;
     this.version = version;
@@ -34,66 +34,66 @@ public class InitializeBuildParams {
     this.rootUri = rootUri;
     this.capabilities = capabilities;
   }
-  
+
   @Pure
   @NonNull
   public String getRootUri() {
     return this.rootUri;
   }
-  
+
   public void setRootUri(@NonNull final String rootUri) {
     this.rootUri = Preconditions.checkNotNull(rootUri, "rootUri");
   }
-  
+
   @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
   }
-  
+
   public void setDisplayName(@NonNull final String displayName) {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
-  
+
   @Pure
   @NonNull
   public String getVersion() {
     return this.version;
   }
-  
+
   public void setVersion(@NonNull final String version) {
     this.version = Preconditions.checkNotNull(version, "version");
   }
-  
+
   @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
   }
-  
+
   public void setBspVersion(@NonNull final String bspVersion) {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
-  
+
   @Pure
   @NonNull
   public BuildClientCapabilities getCapabilities() {
     return this.capabilities;
   }
-  
+
   public void setCapabilities(@NonNull final BuildClientCapabilities capabilities) {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
-  
+
   @Pure
   public Object getData() {
     return this.data;
   }
-  
+
   public void setData(final Object data) {
     this.data = data;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -106,7 +106,7 @@ public class InitializeBuildParams {
     b.add("data", this.data);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -149,7 +149,7 @@ public class InitializeBuildParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

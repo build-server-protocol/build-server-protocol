@@ -10,74 +10,74 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class CppOptionsItem {
   @NonNull
   private BuildTargetIdentifier target;
-  
+
   @NonNull
   private List<String> copts;
-  
+
   @NonNull
   private List<String> defines;
-  
+
   @NonNull
   private List<String> linkopts;
-  
+
   private boolean linkshared;
-  
+
   public CppOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> copts, @NonNull final List<String> defines, @NonNull final List<String> linkopts) {
     this.target = target;
     this.copts = copts;
     this.defines = defines;
     this.linkopts = linkopts;
   }
-  
+
   @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
   }
-  
+
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getCopts() {
     return this.copts;
   }
-  
+
   public void setCopts(@NonNull final List<String> copts) {
     this.copts = Preconditions.checkNotNull(copts, "copts");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getDefines() {
     return this.defines;
   }
-  
+
   public void setDefines(@NonNull final List<String> defines) {
     this.defines = Preconditions.checkNotNull(defines, "defines");
   }
-  
+
   @Pure
   @NonNull
   public List<String> getLinkopts() {
     return this.linkopts;
   }
-  
+
   public void setLinkopts(@NonNull final List<String> linkopts) {
     this.linkopts = Preconditions.checkNotNull(linkopts, "linkopts");
   }
-  
+
   @Pure
   public boolean isLinkshared() {
     return this.linkshared;
   }
-  
+
   public void setLinkshared(final boolean linkshared) {
     this.linkshared = linkshared;
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -89,7 +89,7 @@ public class CppOptionsItem {
     b.add("linkshared", this.linkshared);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -124,7 +124,7 @@ public class CppOptionsItem {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {

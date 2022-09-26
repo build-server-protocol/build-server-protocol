@@ -10,21 +10,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ResourcesParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
-  
+
   public ResourcesParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
-  
+
   @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
   }
-  
+
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
-  
+
   @Override
   @Pure
   public String toString() {
@@ -32,7 +32,7 @@ public class ResourcesParams {
     b.add("targets", this.targets);
     return b.toString();
   }
-  
+
   @Override
   @Pure
   public boolean equals(final Object obj) {
@@ -50,7 +50,7 @@ public class ResourcesParams {
       return false;
     return true;
   }
-  
+
   @Override
   @Pure
   public int hashCode() {
