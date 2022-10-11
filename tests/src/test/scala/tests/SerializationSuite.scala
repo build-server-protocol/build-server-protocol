@@ -70,7 +70,9 @@ class SerializationSuite extends AnyFunSuite {
         None,
         None,
         "message",
-        Some(List(relatedInformation))
+        Some(List(relatedInformation)),
+        None,
+        None
       )
 
     val bsp4sValue = bsp4s.PublishDiagnosticsParams(
