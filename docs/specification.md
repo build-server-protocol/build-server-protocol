@@ -61,12 +61,13 @@ Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
 [scalameta/metals](https://github.com/scalameta/metals), are currently working
 or planning to work on a BSP integrations.
 
-On the server side, 
-* [Bloop](https://github.com/scalacenter/bloop) was the first
-server to implement BSP
-* sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
-* Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
-* Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
+On the server side,
+
+- [Bloop](https://github.com/scalacenter/bloop) was the first
+  server to implement BSP
+- sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+- Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+- Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
 
 We're looking for third parties that implement BSP natively in other build tools
 such as Gradle.
@@ -645,9 +646,9 @@ export interface WorkspaceBuildTargetsResult {
 
 ### Reload request
 
-The `reload` request is sent from the client to instruct the build server to reload 
-the build configuration. This request should be supported by build tools that keep 
-their state in memory. If the `reload` request returns with an error, it's expected 
+The `reload` request is sent from the client to instruct the build server to reload
+the build configuration. This request should be supported by build tools that keep
+their state in memory. If the `reload` request returns with an error, it's expected
 that other requests respond with the previously known "good" state.
 
 Request:
@@ -658,8 +659,8 @@ Request:
 Response:
 
 - result: `null`
-- error: code and message in case an error happens during reload. For example, 
-when the build configuration is invalid.
+- error: code and message in case an error happens during reload. For example,
+  when the build configuration is invalid.
 
 ### Build Target Changed Notification
 
@@ -706,7 +707,6 @@ export namespace BuildTargetEventKind {
 
 The `BuildTargetEventKind` information can be used by clients to trigger
 reindexing or update the user interface with the new information.
-
 
 ### Build Target Sources Request
 
@@ -1472,6 +1472,46 @@ export interface DebugSessionParams {
   data: any;
 }
 ```
+
+Currently, build server which implements `debugSession/start` endpoint, has to support following data kinds:
+
+- `scala-main-class`, for which `data` has following shape
+
+  ```ts
+  interface ScalaMainClass {
+    class: string;
+    arguments: string[];
+    jvmOptions: string[];
+    environmentVariables: string[];
+  }
+  ```
+
+- `scala-test-suites`, for which `data` is a `string[]`. Each element of that array is a fully qualified class name.
+
+- `scala-test-suites-selection`, for which `data` has following shape
+
+  ```ts
+  interface ScalaTestSuites {
+    /** The fully qualified names of the test classes in this target and the tests in this test classes */
+    suites: ScalaTestSuiteSelection[];
+    jvmOptions: string[];
+    environmentVariables: string[];
+  }
+
+  interface ScalaTestSuiteSelection {
+    /** The test class to run. */
+    className: string;
+    /** The selected tests to run. */
+    tests: string[];
+  }
+  ```
+
+  bsp4j classes:
+
+  - [ScalaTestSuites.java](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuites.java)
+  - [ScalaTestSuiteSelection.java](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuiteSelection.java)
+
+- `scala-attach-remote`, for which data is an array of [BuildTargetIdentifier](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/BuildTargetIdentifier.java).
 
 Response:
 
