@@ -384,7 +384,7 @@ export interface BuildServerCapabilities {
    * via method buildTarget/dependencySources */
   dependencySourcesProvider?: Boolean;
 
-  /** The server cam provide a list of dependency modules (libraries with meta information)
+  /** The server can provide a list of dependency modules (libraries with meta information)
    * via method buildTarget/dependencyModules */
   dependencyModulesProvider?: Boolean;
 
@@ -396,12 +396,22 @@ export interface BuildServerCapabilities {
    * via method buildTarget/outputPaths */
   outputPathsProvider?: Boolean;
 
-  /** Reloading the build state through workspace/reload is supported */
-  canReload?: Boolean
-
   /** The server sends notifications to the client on build
    * target change events via buildTarget/didChange */
   buildTargetChangedProvider?: Boolean;
+
+  /** The server can respond to `buildTarget/jvmRunEnvironment` requests with the
+   * necessary information required to launch a Java process to run a main class. */
+  jvmRunEnvironmentProvider?: Boolean;
+
+  /** The server can respond to `buildTarget/jvmTestEnvironment` requests with the
+   * necessary information required to launch a Java process for testing or
+   * debugging. */
+  jvmTestEnvironmentProvider?: Boolean;
+
+  /** Reloading the build state through workspace/reload is supported */
+  canReload?: Boolean
+
 }
 
 export interface CompileProvider {
