@@ -36,6 +36,7 @@ class MockClientSuite extends AnyFunSuite {
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
+  val targetId6 = new BuildTargetIdentifier(baseUri.resolve("target6").toString)
 
   private val languageIds = List("scala").asJava
 
@@ -75,7 +76,14 @@ class MockClientSuite extends AnyFunSuite {
     List.empty.asJava,
     new BuildTargetCapabilities(true, false, true, false)
   )
-
+  val target6 = new BuildTarget(
+    targetId6,
+    List(BuildTargetTag.APPLICATION).asJava,
+    List("rust").asJava,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+  
   private val client = TestClient(
     () => {
       val LocalMockServer(running, in, out) = MockServer.startMockServer(testDirectory.toFile)
@@ -211,6 +219,16 @@ class MockClientSuite extends AnyFunSuite {
     )
   }
 
+  test("Run rustOptions") {
+    val item = new RustOptionsItem(targetId5) //TODO Update after RustOptionsItem is updated
+    val rustOptionsItem = List(item).asJava
+
+    client.testRustOptions(
+      new RustOptionsParams(Collections.emptyList()),
+      new RustOptionsResult(rustOptionsItem)
+    )
+  }
+  
   test("Run Scala Test Classes") {
     val classes1 = List("class1").asJava
     val classes2 = List("class2").asJava
@@ -276,7 +294,7 @@ class MockClientSuite extends AnyFunSuite {
   }
 
   test("Workspace Build Targets") {
-    val targets = List(target1, target2, target3, target4, target5).asJava
+    val targets = List(target1, target2, target3, target4, target5, target6).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
     val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
@@ -292,7 +310,9 @@ class MockClientSuite extends AnyFunSuite {
       new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
     val pythonBuildTarget =
       new PythonBuildTarget("3.9", "/usr/bin/python")
-
+    val rustBuildTarget =
+      new RustBuildTarget() //TODO Update after RustBuildTarget is updated
+      
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)
     target1.setDataKind(BuildTargetDataKind.SCALA)
@@ -318,6 +338,11 @@ class MockClientSuite extends AnyFunSuite {
     target5.setDataKind(BuildTargetDataKind.PYTHON)
     target5.setData(pythonBuildTarget)
 
+    target5.setDisplayName("target 6")
+    target5.setBaseDirectory(targetId6.getUri)
+    target5.setDataKind(BuildTargetDataKind.RUST)
+    target5.setData(rustBuildTarget)
+    
     val workspaceBuildTargetsResult = new WorkspaceBuildTargetsResult(targets)
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)
   }

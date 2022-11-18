@@ -21,6 +21,7 @@ trait MockBuildServer
     with JavaBuildServer
     with CppBuildServer
     with PythonBuildServer
+    with RustBuildServer
 
 class HappyMockSuite extends AnyFunSuite {
 
@@ -63,17 +64,18 @@ class HappyMockSuite extends AnyFunSuite {
   def assertWorkspaceBuildTargets(server: MockBuildServer): Unit = {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
-    assert(buildTargets.length == 5)
+    assert(buildTargets.length == 6)
     val scalaBuildTarget = buildTargets.head.asTarget[ScalaBuildTarget]
     val jvmBuildTarget = buildTargets(1).asTarget[JvmBuildTarget]
     val sbtBuildTarget = buildTargets(2).asTarget[SbtBuildTarget]
     val cppBuildTarget = buildTargets(3).asTarget[CppBuildTarget]
     val pythonBuildTarget = buildTargets(4).asTarget[PythonBuildTarget]
+    val rustBuildTarget = buildTargets(5).asTarget[RustBuildTarget]
     compareScalaBuildTarget(scalaBuildTarget)
     compareJvmBuildTarget(jvmBuildTarget)
     compareSbtBuildTarget(sbtBuildTarget)
     compareCppBuildTargets(cppBuildTarget)
-    comparePythonBuildTarget(pythonBuildTarget)
+    compareRustBuildTarget(rustBuildTarget)
   }
 
   def compareSbtBuildTarget(sbtBuildTarget: SbtBuildTarget): Unit = {
@@ -110,6 +112,10 @@ class HappyMockSuite extends AnyFunSuite {
   private def comparePythonBuildTarget(pythonBuildTarget: PythonBuildTarget): Unit = {
     assert(pythonBuildTarget.getVersion == "3.9")
     assert(pythonBuildTarget.getInterpreter == "/usr/bin/python")
+  }
+
+  private def compareRustBuildTarget(rustBuildTarget: RustBuildTarget): Unit = {
+    //TODO Add checks after RustBuildTarget is updated
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
@@ -177,6 +183,15 @@ class HappyMockSuite extends AnyFunSuite {
     }
   }
 
+  def assertRustOptions(server: MockBuildServer): Unit = {
+    val rustOptionsParams = new RustOptionsParams(getBuildTargetIds(server))
+    val rustOptionsResult = server.buildTargetRustOptions(rustOptionsParams).get
+    val rustOptionsItems = rustOptionsResult.getItems.asScala
+    rustOptionsItems.foreach { item =>
+      //TODO add asserts after RustOptionsItems were updated
+    }
+  }
+  
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get
@@ -299,7 +314,7 @@ class HappyMockSuite extends AnyFunSuite {
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val tests = serverCapabilities.getCompileProvider.getLanguageIds.asScala
 
-    val languages = List("scala", "java", "cpp", "python").sorted
+    val languages = List("scala", "java", "cpp", "python", "rust").sorted
     assert(compiles.sorted == languages)
     assert(runs.sorted == languages)
     assert(tests.sorted == languages)
@@ -311,6 +326,7 @@ class HappyMockSuite extends AnyFunSuite {
     assertJavacOptions(server)
     assertCppOptions(server)
     assertPythonOptions(server)
+    assertRustOptions(server)
     assertJvmTestEnvironment(server)
     assertJvmRunEnvironment(server)
     assertSources(server, client)

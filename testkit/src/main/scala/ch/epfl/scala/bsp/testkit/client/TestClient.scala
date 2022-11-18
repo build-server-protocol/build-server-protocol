@@ -461,6 +461,9 @@ class TestClient(
   def extractPythonData(data: JsonElement, gson: Gson): Option[PythonBuildTarget] =
     Option(gson.fromJson[PythonBuildTarget](data, classOf[PythonBuildTarget]))
 
+  def extractRustData(data: JsonElement, gson: Gson): Option[RustBuildTarget] =
+    Option(gson.fromJson[RustBuildTarget](data, classOf[RustBuildTarget]))
+    
   def convertJsonObjectToData(
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): WorkspaceBuildTargetsResult = {
@@ -480,6 +483,8 @@ class TestClient(
               extractCppData(data, gson)
             case BuildTargetDataKind.PYTHON =>
               extractPythonData(data, gson)
+            case BuildTargetDataKind.RUST =>
+              extractRustData(data, gson)
           }
         )
         .map(target.setData(_))
@@ -864,6 +869,34 @@ class TestClient(
   ): Unit =
     wrapTest(session => testPythonOptions(params, expectedResult, session))
 
+
+  def testRustOptions(
+                         params: RustOptionsParams,
+                         expectedResult: RustOptionsResult,
+                         session: MockSession
+                       ): Future[Unit] = {
+    session.connection.server
+      .buildTargetRustOptions(params)
+      .toScala
+      .map(result => result.getItems)
+      .map(rustItems => {
+        val itemsTest = rustItems.forall { item =>
+          expectedResult.getItems.contains(item)
+        }
+        assert(
+          itemsTest,
+          s"Rust Options didn't match! Expected: $expectedResult, got $rustItems"
+        )
+      })
+  }
+
+  def testRustOptions(
+                         params: RustOptionsParams,
+                         expectedResult: RustOptionsResult
+                       ): Unit =
+    wrapTest(session => testRustOptions(params, expectedResult, session))
+
+  
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult,

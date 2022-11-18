@@ -81,6 +81,12 @@ trait BuildTarget {
       extends Endpoint[PythonOptionsParams, PythonOptionsResult](
         "buildTarget/pythonOptions"
       )
+
+  // Rust specific endpoints
+  object rustOptions
+    extends Endpoint[RustOptionsParams, RustOptionsResult](
+      "buildTarget/rustOptions"
+    )
 }
 
 object Workspace extends Workspace
