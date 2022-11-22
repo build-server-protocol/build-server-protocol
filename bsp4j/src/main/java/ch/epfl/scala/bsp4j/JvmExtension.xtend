@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j
 
 import java.util.Map
 import java.util.List
+import com.google.gson.annotations.SerializedName
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
 
@@ -32,12 +33,23 @@ class JvmTestEnvironmentParams {
 }
 
 @JsonRpcData
+class JvmMainClass {
+  @NonNull @SerializedName("class") String className
+  @NonNull List<String> arguments
+    new(@NonNull String className, @NonNull List<String> arguments) {
+    this.className = className
+    this.arguments = arguments
+  }
+}
+
+@JsonRpcData
 class JvmEnvironmentItem {
   @NonNull BuildTargetIdentifier target
   @NonNull List<String> classpath
   @NonNull List<String> jvmOptions
   @NonNull String workingDirectory
   @NonNull Map<String, String> environmentVariables
+  List<JvmMainClass> mainClasses
   new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classpath, @NonNull List<String> jvmOptions,
       @NonNull String workingDirectory, @NonNull Map<String,String> environmentVariables) {
     this.target = target
