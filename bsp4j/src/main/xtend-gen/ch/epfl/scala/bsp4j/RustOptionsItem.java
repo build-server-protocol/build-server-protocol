@@ -11,10 +11,10 @@ public class RustOptionsItem {
     @NonNull
     private BuildTargetIdentifier target;
 
-    //TODO add Rust-specific fields
-
-    public RustOptionsItem(@NonNull final BuildTargetIdentifier target) {
+    private List<String> compilerOptions;
+    public RustOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> compilerOptions) {
         this.target = target;
+        this.compilerOptions = compilerOptions;
     }
 
     @Pure
@@ -27,12 +27,23 @@ public class RustOptionsItem {
         this.target = Preconditions.checkNotNull(target, "target");
     }
 
+    @Pure
+    @NonNull
+    public List<String> getCompilerOptions() {
+        return this.compilerOptions;
+    }
 
+    public void setCompilerOptions(@NonNull final List<String> compilerOptions) {
+        this.compilerOptions = Preconditions.checkNotNull(compilerOptions, "compilerOptions");
+    }
+
+    
     @Override
     @Pure
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
         b.add("target", this.target);
+        b.add("compilerOptions", this.compilerOptions);
         return b.toString();
     }
 
@@ -51,6 +62,11 @@ public class RustOptionsItem {
                 return false;
         } else if (!this.target.equals(other.target))
             return false;
+        if (this.compilerOptions == null) {
+            if (other.compilerOptions != null)
+                return false;
+        } else if (!this.compilerOptions.equals(other.compilerOptions))
+            return false;
         return true;
     }
 
@@ -59,6 +75,7 @@ public class RustOptionsItem {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        return prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+        result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+        return prime * result + ((this.compilerOptions== null) ? 0 : this.compilerOptions.hashCode());
     }
 }

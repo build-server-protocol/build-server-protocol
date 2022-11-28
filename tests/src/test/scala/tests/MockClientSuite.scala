@@ -220,7 +220,8 @@ class MockClientSuite extends AnyFunSuite {
   }
 
   test("Run rustOptions") {
-    val item = new RustOptionsItem(targetId5) //TODO Update after RustOptionsItem is updated
+    val compilerOptions = List("-q").asJava
+    val item = new RustOptionsItem(targetId5, compilerOptions)
     val rustOptionsItem = List(item).asJava
 
     client.testRustOptions(
@@ -311,7 +312,7 @@ class MockClientSuite extends AnyFunSuite {
     val pythonBuildTarget =
       new PythonBuildTarget("3.9", "/usr/bin/python")
     val rustBuildTarget =
-      new RustBuildTarget() //TODO Update after RustBuildTarget is updated
+      new RustBuildTarget("2021", "/usr/bin/cargo")
       
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)

@@ -1370,8 +1370,8 @@ object PythonOptionsResult {
 }
 
 
-final case class RustBuildTarget(//TODO add rust-specific fields
-                                 )
+final case class RustBuildTarget(edition: Option[String],
+                                 compiler: Option[Uri])
 
 object RustBuildTarget {
   implicit val codec: JsonValueCodec[RustBuildTarget] =
@@ -1386,9 +1386,9 @@ object RustOptionsParams {
 }
 
 final case class RustOptionsItem(
-                                    target: BuildTargetIdentifier
-                                    //TODO add rust-specific fields
-                                  )
+  target: BuildTargetIdentifier,
+  compilerOptions: List[String]
+)
 
 object RustOptionsItem {
   implicit val codec: JsonValueCodec[RustOptionsItem] =

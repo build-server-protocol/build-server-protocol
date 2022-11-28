@@ -115,7 +115,8 @@ class HappyMockSuite extends AnyFunSuite {
   }
 
   private def compareRustBuildTarget(rustBuildTarget: RustBuildTarget): Unit = {
-    //TODO Add checks after RustBuildTarget is updated
+    assert(rustBuildTarget.getEdition == "2021")
+    assert(rustBuildTarget.getCompiler == "/usr/bin/cargo")
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
@@ -188,7 +189,9 @@ class HappyMockSuite extends AnyFunSuite {
     val rustOptionsResult = server.buildTargetRustOptions(rustOptionsParams).get
     val rustOptionsItems = rustOptionsResult.getItems.asScala
     rustOptionsItems.foreach { item =>
-      //TODO add asserts after RustOptionsItems were updated
+      val options = item.getCompilerOptions.asScala
+      assert(options.nonEmpty)
+      assert(options.exists(_.contains("-q")))
     }
   }
   

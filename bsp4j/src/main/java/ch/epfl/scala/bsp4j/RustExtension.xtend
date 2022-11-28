@@ -6,8 +6,12 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
 class RustBuildTarget {
-  \\TODO add Rust-specific fields
-  new() {
+  String edition
+  String compiler
+  new(String edition, 
+    String compiler) {
+     this.edition = edition
+     this.compiler = compiler
   }
 }
 
@@ -30,8 +34,10 @@ class RustOptionsResult {
 @JsonRpcData
 class RustOptionsItem {
   @NonNull BuildTargetIdentifier target
-  \\TODO add Rust-specific fields
-  new(@NonNull BuildTargetIdentifier target) {
+  @NonNull List<String> compilerOptions
+  new(@NonNull BuildTargetIdentifier target,
+      @NonNull List<String> compilerOptions) {
     this.target = target
+    this.compilerOptions = compilerOptions
    }
 }

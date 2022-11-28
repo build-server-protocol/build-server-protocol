@@ -226,7 +226,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
      params: RustOptionsParams
    ): CompletableFuture[RustOptionsResult] = {
     handleRequest {
-      val item = new RustOptionsItem(targetId5) //TODO correct after updating fields in RustOptionsItem
+      val compilerOpts = List("-q").asJava
+      val item = new RustOptionsItem(targetId5, compilerOpts)
       val result = new RustOptionsResult(List(item).asJava)
       Right(result)
     }
@@ -305,7 +306,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val pythonBuildTarget =
         new PythonBuildTarget("3.9", "/usr/bin/python")
       val rustBuildTarget =
-        new RustBuildTarget() //TODO update after updating fields in RustBuildTarget
+        new RustBuildTarget("2021", "/usr/bin/cargo")
         
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
