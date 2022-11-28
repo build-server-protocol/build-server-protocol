@@ -8,52 +8,52 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustOptionsResult {
-    @NonNull
-    private List<RustOptionsItem> items;
+  @NonNull
+  private List<RustOptionsItem> items;
 
-    public RustOptionsResult(@NonNull final List<RustOptionsItem> items) {
-        this.items = items;
-    }
+  public RustOptionsResult(@NonNull final List<RustOptionsItem> items) {
+    this.items = items;
+  }
 
-    @Pure
-    @NonNull
-    public List<RustOptionsItem> getItems() {
-        return this.items;
-    }
+  @Pure
+  @NonNull
+  public List<RustOptionsItem> getItems() {
+    return this.items;
+  }
 
-    public void setItems(@NonNull final List<RustOptionsItem> items) {
-        this.items = Preconditions.checkNotNull(items, "items");
-    }
+  public void setItems(@NonNull final List<RustOptionsItem> items) {
+    this.items = Preconditions.checkNotNull(items, "items");
+  }
 
-    @Override
-    @Pure
-    public String toString() {
-        ToStringBuilder b = new ToStringBuilder(this);
-        b.add("items", this.items);
-        return b.toString();
-    }
+  @Override
+  @Pure
+  public String toString() {
+    ToStringBuilder b = new ToStringBuilder(this);
+    b.add("items", this.items);
+    return b.toString();
+  }
 
-    @Override
-    @Pure
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        RustOptionsResult other = (RustOptionsResult) obj;
-        if (this.items == null) {
-            if (other.items != null)
-                return false;
-        } else if (!this.items.equals(other.items))
-            return false;
-        return true;
-    }
+  @Override
+  @Pure
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RustOptionsResult other = (RustOptionsResult) obj;
+    if (this.items == null) {
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
+    return true;
+  }
 
-    @Override
-    @Pure
-    public int hashCode() {
-        return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
-    }
+  @Override
+  @Pure
+  public int hashCode() {
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
+  }
 }
