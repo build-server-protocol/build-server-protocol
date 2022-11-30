@@ -1462,7 +1462,7 @@ and returns a connection URI for the client to interact with.
 ```ts
 export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
-  targets: List[BuildTargetIdentifier],
+  targets: BuildTargetIdentifier[],
 
   /** The kind of data to expect in the `data` field. */
   dataKind: String;
