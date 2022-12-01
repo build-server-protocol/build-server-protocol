@@ -1368,3 +1368,36 @@ object PythonOptionsResult {
   implicit val codec: JsonValueCodec[PythonOptionsResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
+
+
+final case class RustBuildTarget(edition: Option[String],
+                                 compiler: Option[Uri])
+
+object RustBuildTarget {
+  implicit val codec: JsonValueCodec[RustBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustOptionsParams(targets: List[BuildTargetIdentifier])
+
+object RustOptionsParams {
+  implicit val codec: JsonValueCodec[RustOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustOptionsItem(
+  target: BuildTargetIdentifier,
+  compilerOptions: List[String]
+)
+
+object RustOptionsItem {
+  implicit val codec: JsonValueCodec[RustOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustOptionsResult(items: List[RustOptionsItem])
+
+object RustOptionsResult {
+  implicit val codec: JsonValueCodec[RustOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}

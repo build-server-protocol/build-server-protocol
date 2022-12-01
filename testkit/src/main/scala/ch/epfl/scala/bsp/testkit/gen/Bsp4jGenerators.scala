@@ -728,6 +728,24 @@ trait Bsp4jGenerators {
     items <- genPythonOptionsItem.list
   } yield new PythonOptionsResult(items)
 
+  lazy val genRustBuildTarget: Gen[RustBuildTarget] = for {
+    edition <- arbitrary[String].nullable
+    compiler <- genFileUriString.nullable
+  } yield new RustBuildTarget(edition, compiler)
+
+  lazy val genRustOptionsItem: Gen[RustOptionsItem] = for {
+    target <- genBuildTargetIdentifier
+    compilerOpts <- arbitrary[String].list
+  } yield new RustOptionsItem(target, compilerOpts)
+
+  lazy val genRustOptionsParams: Gen[RustOptionsParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new RustOptionsParams(targets)
+
+  lazy val genRustOptionsResult: Gen[RustOptionsResult] = for {
+    items <- genRustOptionsItem.list
+  } yield new RustOptionsResult(items)
+  
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)
