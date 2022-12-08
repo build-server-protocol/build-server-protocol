@@ -149,7 +149,6 @@ lazy val docs = project
   .settings(
     scalaVersion := V.scala212,
     publish / skip := true,
-    mdocIn := (ThisBuild / baseDirectory).value / "website" / "docs",
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "target" / "docs",
     mdocVariables := Map(
       "VERSION" -> version.value

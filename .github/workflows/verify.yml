@@ -6,7 +6,6 @@ on:
     branches: [master]
 jobs:
   generate-and-test:
-    name: Generate and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -37,4 +36,3 @@ jobs:
         with:
             java-version: adopt@1.8
       - run: sbt checkScalaFormat
-      - run: cd website && yarn install && yarn prettier --check .
