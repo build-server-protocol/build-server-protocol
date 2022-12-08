@@ -54,16 +54,16 @@ Response:
   request.
 
 ```ts
-export interface JvmEnvironmentItem{
-    target: BuildTargetIdentifier;
-    classpath: Uri[];
-    jvmOptions: String[];
-    workingDirectory: String;
-    environmentVariables: Map<String, String>;
+export interface JvmEnvironmentItem {
+  target: BuildTargetIdentifier;
+  classpath: Uri[];
+  jvmOptions: String[];
+  workingDirectory: String;
+  environmentVariables: Map<String, String>;
 }
 
-export interface JvmTestEnvironmentResult{
-    items: JvmEnvironmentItem[];
+export interface JvmTestEnvironmentResult {
+  items: JvmEnvironmentItem[];
 }
 ```
 
@@ -89,15 +89,15 @@ Response:
   request.
 
 ```ts
-export interface JvmEnvironmentItem{
-    target: BuildTargetIdentifier;
-    classpath: Uri[];
-    jvmOptions: String[];
-    workingDirectory: String;
-    environmentVariables: Map<String, String>;
+export interface JvmEnvironmentItem {
+  target: BuildTargetIdentifier;
+  classpath: Uri[];
+  jvmOptions: String[];
+  workingDirectory: String;
+  environmentVariables: Map<String, String>;
 }
 
-export interface JvmRunEnvironmentResult{
-    items: JvmEnvironmentItem[];
+export interface JvmRunEnvironmentResult {
+  items: JvmEnvironmentItem[];
 }
 ```
