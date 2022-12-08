@@ -19,17 +19,8 @@ jobs:
         run: sbt +compile +package
       - name: test
         run: sbt +test
-  docs:
-    name: Generate docs site
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v11
-        with:
-          java-version: adopt@1.8
-      - run: sbt docs/docusaurusCreateSite
-  format-check:
-    name: Format Check
+  check:
+    name: Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -37,4 +28,7 @@ jobs:
         with:
             java-version: adopt@1.8
       - run: sbt checkScalaFormat
-      - run: cd website && yarn install --frozen-lockfile && yarn build && && yarn prettier --check .
+      - run: cd website
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn prettier --check .
