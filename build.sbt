@@ -136,7 +136,7 @@ lazy val `bsp-testkit` = project
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "de.danielbechler" % "java-object-diff" % "0.95",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
-      "org.scala-lang.modules" %% "scala-collection-compat" % "2.8.1"
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0"
     ),
     crossScalaVersions := V.supportedScalaVersions
   )
