@@ -143,20 +143,6 @@ lazy val `bsp-testkit` = project
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
 
-lazy val docs = project
-  .in(file("bsp-docs"))
-  .dependsOn(bsp4j)
-  .settings(
-    scalaVersion := V.scala212,
-    publish / skip := true,
-    mdocIn := (ThisBuild / baseDirectory).value / "website" / "docs",
-    mdocOut := (ThisBuild / baseDirectory).value / "website" / "target" / "docs",
-    mdocVariables := Map(
-      "VERSION" -> version.value
-    )
-  )
-  .enablePlugins(DocusaurusPlugin)
-
 addCommandAlias(
   "scalaFormat",
   "scalafmtAll ; scalafmtSbt"

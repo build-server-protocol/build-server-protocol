@@ -7,6 +7,7 @@ module.exports = {
   staticDirectories: ["static"],
   organizationName: "build-server-protocol",
   projectName: "build-server-protocol.github.io",
+  deploymentBranch: "gh-pages",
   favicon: "img/favicon.ico",
   customFields: {
     blogSidebarCount: "ALL",
