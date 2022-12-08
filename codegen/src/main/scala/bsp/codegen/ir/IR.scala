@@ -16,8 +16,14 @@ sealed trait Def {
 object Def {
   final case class PrimitiveAlias(shapeId: ShapeId, prim: Primitive, hints: List[Hint]) extends Def
 
-  final case class Structure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]) extends Def {
-    override def members: List[ShapeId] = super.members
+  final case class Structure(
+      shapeId: ShapeId,
+      fields: List[Field],
+      hints: List[Hint],
+      associatedDataKinds: List[PolymorphicDataKind]
+  ) extends Def {
+    override def members: List[ShapeId] =
+      fields.flatMap(_.tpe.members()) ++ associatedDataKinds.map(_.shapeId)
   }
 
   final case class OpenEnum[A](
@@ -101,20 +107,32 @@ object Primitive {
 
 sealed trait Type {
   def isPrimitive(primitive: Primitive): Boolean = false
+
+  def members(): List[ShapeId]
 }
 
 object Type {
-  case class TCollection(member: Type) extends Type
+  case class TCollection(member: Type) extends Type {
+    override def members(): List[ShapeId] = member.members()
+  }
 
-  case class TMap(key: Type, value: Type) extends Type
+  case class TMap(key: Type, value: Type) extends Type {
+    override def members(): List[ShapeId] = key.members() ++ value.members()
+  }
 
-  case class TRef(shapeId: ShapeId) extends Type
+  case class TRef(shapeId: ShapeId) extends Type {
+    override def members(): List[ShapeId] = List(shapeId)
+  }
 
   case class TPrimitive(prim: Primitive, shapeId: ShapeId) extends Type {
     override def isPrimitive(primitive: Primitive): Boolean = prim == primitive
+
+    override def members(): List[ShapeId] = List(shapeId)
   }
 
-  case class TUntaggedUnion(tpes: List[Type]) extends Type
+  case class TUntaggedUnion(tpes: List[Type]) extends Type {
+    override def members(): List[ShapeId] = tpes.flatMap(_.members())
+  }
 
   val TUnit = TPrimitive(Primitive.PUnit, ShapeId.from("smithy.api#void"))
   val TBool = TPrimitive(Primitive.PBool, ShapeId.from("smithy.api#Boolean"))
@@ -128,3 +146,5 @@ sealed trait Hint
 object Hint {
   case class Documentation(string: String) extends Hint
 }
+
+case class PolymorphicDataKind(kind: String, shapeId: ShapeId)

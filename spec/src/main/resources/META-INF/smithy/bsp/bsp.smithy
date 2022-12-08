@@ -524,10 +524,6 @@ list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
 }
 
-timestamp EventTime
-
-long DurationMillis
-
 @data
 document BuildTargetData
 
@@ -1082,7 +1078,7 @@ structure TaskStartParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1098,7 +1094,7 @@ structure TaskProgressParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1123,7 +1119,7 @@ structure TaskFinishParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1205,7 +1201,7 @@ structure CompileReport {
     warnings: Integer
 
     /// The total number of milliseconds it took to compile the target.
-    time: DurationMillis
+    time: Long
 
     /// The compilation was a noOp compilation.
     noOp: Boolean
@@ -1286,7 +1282,7 @@ structure TestReport {
     skipped: Integer
 
     /// The total number of milliseconds tests take to run (e.g. doesn't include compile times).
-    time: DurationMillis
+    time: Long
 }
 
 @dataKind(kind: "test-start", extends: TaskData)

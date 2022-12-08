@@ -10,13 +10,11 @@ import software.amazon.smithy.model.shapes._
 import software.amazon.smithy.model.traits._
 
 import java.util.Optional
-import scala.collection.mutable.{Set => MSet}
+import scala.collection.mutable.{Map => MMap}
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters._
 
 class SmithyToIR(model: Model) {
-
-  case class PolymorphicDataKind(kind: String, shape: Shape)
 
   val allDataKindAnnotated: Map[ShapeId, List[PolymorphicDataKind]] = {
     val allExtendableTypes = model.getShapesWithTrait(classOf[DataTrait]).asScala.toList
@@ -46,7 +44,7 @@ class SmithyToIR(model: Model) {
       .groupBy { case (_, tr) => tr.getPolymorphicData }
       .map { case (dataType, shapeAndTraits) =>
         dataType -> shapeAndTraits.map { case (shape, tr) =>
-          PolymorphicDataKind(tr.getKind, shape)
+          PolymorphicDataKind(tr.getKind, shape.getId)
         }
       }
 
@@ -57,35 +55,25 @@ class SmithyToIR(model: Model) {
   }
 
   def docTree(namespace: String): DocTree = {
-    val allShapes = model.shapes().iterator().asScala.toList
-    val namespaceShapes = allShapes.filter(_.getId.getNamespace == namespace)
+    val shapes =
+      model.shapes().iterator().asScala.toList.filter(_.getId.getNamespace == namespace)
     val commonTag = "basic"
     val commonShapes =
-      namespaceShapes
+      shapes
         .filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
         .sortBy(_.getTrait(classOf[DocsPriorityTrait]).toScala.map(_.getPriority).getOrElse(0))
         .reverse
 
-    val serviceShapes = namespaceShapes
-      .filter(_.isServiceShape)
+    val docNodes = {
+      val map = MMap[ShapeId, DocNode]()
+      val visitor = new DocShapeVisitor(map)
 
-    val visitor = new DocShapeVisitor(namespace)
-
-    val members = {
-      val memberVisitor = new MemberVisitor
-      commonShapes.foreach(_.accept(memberVisitor))
-      serviceShapes.foreach(_.accept(memberVisitor))
-      memberVisitor.members
+      shapes.foreach(_.accept(visitor))
+      map.toMap
     }
 
-    val docNodes = members
-      .map(model.expectShape)
-      .flatMap(_.accept(visitor))
-      .map(node => (node.shapeId, node))
-      .toMap
-
     val commonShapeIds = commonShapes.map(_.getId)
-    val services = docNodes.collect({ case (id, node: ServiceDocNode) => (id, node) })
+    val services = docNodes.collect({ case (id, node: ServiceDocNode) => (id, node) }).values.toList
     val operations = docNodes.collect({ case (id, node: OperationDocNode) => (id, node) })
     val structures = docNodes.collect({ case (id, node: StructureDocNode) => (id, node) })
 
@@ -158,27 +146,50 @@ class SmithyToIR(model: Model) {
 
       val fields = shape.members().asScala.flatMap(toField).toList
 
-      def insertDiscriminator(list: List[Field]): List[Field] = list match {
-        case field :: next if field.name == "data" && field.tpe.isPrimitive(Primitive.PDocument) =>
-          val doc =
-            "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
-          val hints = List(Hint.Documentation(doc))
-          val dataTypeShape = field.tpe match {
-            case TPrimitive(Primitive.PDocument, dataTypeShape) => dataTypeShape
-            case _ => throw new RuntimeException("Expected document type")
-          }
-          Field(
-            "dataKind",
-            TRef(dataKindShapeId(dataTypeShape)),
-            required = false,
-            None,
-            hints
-          ) :: field :: next
+      def fieldIsData(field: Field): Boolean =
+        field.name == "data" && field.tpe.isPrimitive(Primitive.PDocument)
+
+      def makeDiscriminatorField(dataField: Field): Field = {
+        val doc =
+          "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
+        val hints = List(Hint.Documentation(doc))
+        val dataTypeShape = dataField.tpe match {
+          case TPrimitive(Primitive.PDocument, dataTypeShape) => dataTypeShape
+          case _ => throw new RuntimeException("Expected document type")
+        }
+        Field(
+          "dataKind",
+          TRef(dataKindShapeId(dataTypeShape)),
+          required = false,
+          None,
+          hints
+        )
+      }
+
+      def insertDiscriminator(fields: List[Field]): List[Field] = fields match {
+        case field :: next if fieldIsData(field) =>
+          val newField = makeDiscriminatorField(field)
+          newField :: field :: next
+
         case field :: next => field :: insertDiscriminator(next)
         case Nil           => Nil
       }
 
-      List(Def.Structure(shape.getId, insertDiscriminator(fields), getHints(shape)))
+      val associatedDataKinds =
+        fields.filter(fieldIsData).flatMap(_.tpe.members()) match {
+          case Nil => List.empty
+          case dataShapeId :: Nil =>
+            if (model.expectShape(dataShapeId).hasTrait(classOf[DataTrait])) {
+              allDataKindAnnotated(dataShapeId)
+            } else {
+              throw new RuntimeException("Expected data field's shape to have data trait")
+            }
+          case _ => throw new RuntimeException("Expected exactly one data field")
+        }
+
+      val updatedFields = insertDiscriminator(fields)
+
+      List(Def.Structure(shape.getId, updatedFields, getHints(shape), associatedDataKinds))
     }
 
     override def intEnumShape(shape: IntEnumShape): List[Def] = {
@@ -217,7 +228,7 @@ class SmithyToIR(model: Model) {
         val openEnumId = dataKindShapeId(id)
         val values = allKnownInhabitants.map { case PolymorphicDataKind(disc, member) =>
           val snakeCased = disc.replace('-', '_').toUpperCase()
-          val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
+          val memberDoc = s"`data` field must contain a ${member.getName} object."
           EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
         }
 
@@ -369,87 +380,34 @@ class SmithyToIR(model: Model) {
 
   }
 
-  class MemberVisitor extends ShapeVisitor.Default[Unit] {
-    val members: MSet[ShapeId] = MSet.empty
-
-    override def getDefault(shape: Shape): Unit = {
-      members.add(shape.getId)
-
-      shape.members.asScala
-        .flatMap(m => {
-          val child = model.expectShape(m.getTarget)
-          child.accept(ShapeIdExtractorVisitor)
-        })
-        .foreach(model.expectShape(_).accept(this))
-
-      shape.getTrait(classOf[DataTrait]).toScala.foreach { _ =>
-        allDataKindAnnotated(shape.getId)
-          .map(_.shape.getId)
-          .foreach(model.expectShape(_).accept(this))
-      }
-    }
-
-    override def serviceShape(shape: ServiceShape): Unit = {
-      members.add(shape.getId)
-      for (operation <- shape.getOperations.asScala) {
-        model.expectShape(operation).accept(this)
-      }
-      for (resource <- shape.getResources.asScala) {
-        model.expectShape(resource).accept(this)
-      }
-    }
-
-    override def operationShape(shape: OperationShape): Unit = {
-      members.add(shape.getId)
-      for (input <- shape.getInput.toScala) {
-        model.expectShape(input).accept(this)
-      }
-      for (output <- shape.getOutput.toScala) {
-        model.expectShape(output).accept(this)
-      }
-    }
-  }
-
-  class DocShapeVisitor(namespace: String) extends ShapeVisitor.Default[List[DocNode]] {
-
-    override def getDefault(shape: Shape): List[DocNode] = {
-      val fieldShapeIds = shape.members.asScala
-        .flatMap(m => {
-          val child = model.expectShape(m.getTarget)
-          child.accept(ShapeIdExtractorVisitor)
-        })
-        .map(StructureDocMember.Field)
-        .toList
-
-      val associatedDataKinds = shape.getTrait(classOf[DataTrait]).toScala match {
-        case Some(_) =>
-          allDataKindAnnotated(shape.getId)
-            .filter(_.shape.getId.getNamespace == namespace)
-            .map(kind => StructureDocMember.AssociatedDataKind(kind.shape.getId, kind.kind))
-        case None => List.empty
-      }
-
-      val members = fieldShapeIds ++ associatedDataKinds
-
-      shape.accept(ToIRVisitor).map { definition =>
-        StructureDocNode(definition, members)
-      }
-    }
-
-    override def operationShape(shape: OperationShape): List[DocNode] = {
-      val input = shape.getInput.toScala
-      val output = shape.getOutput.toScala
-      ToIRVisitor
-        .buildOperation(shape)
-        .map { op: Operation =>
-          OperationDocNode(op, input, output)
+  class DocShapeVisitor(map: MMap[ShapeId, DocNode]) extends ShapeVisitor.Default[Unit] {
+    protected def getDefault(shape: Shape) = {
+      val id = shape.getId
+      if (!map.contains(id)) {
+        val docNodes = shape.accept(ToIRVisitor).map { definition =>
+          StructureDocNode(definition)
         }
-        .toList
+
+        docNodes.foreach(node => map.put(node.shapeId, node))
+      }
     }
 
-    override def serviceShape(shape: ServiceShape): List[DocNode] = {
+    override def operationShape(shape: OperationShape) = {
+      val input = shape.getInput.toScala
+      input.foreach(model.expectShape(_).accept(this))
+      val output = shape.getOutput.toScala
+      output.foreach(model.expectShape(_).accept(this))
+      val operation = ToIRVisitor.buildOperation(shape).map { op: Operation =>
+        OperationDocNode(op, input, output)
+      }
+
+      operation.foreach(map.put(shape.getId, _))
+    }
+
+    override def serviceShape(shape: ServiceShape) = {
       val ops = shape.getOperations.asScala.toList
-      List(ServiceDocNode(shape.getId, ops))
+      ops.foreach(model.expectShape(_).accept(this))
+      map.put(shape.getId, ServiceDocNode(shape.getId, ops))
     }
 
   }
