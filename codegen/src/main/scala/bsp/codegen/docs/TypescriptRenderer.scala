@@ -26,7 +26,8 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     definition match {
       case PrimitiveAlias(shapeId, primitiveType, hints) =>
         Some(renderPrimitiveAlias(shapeId, primitiveType, hints))
-      case Structure(shapeId, fields, hints) => Some(renderStructure(shapeId, fields))
+      case Structure(shapeId, fields, hints, associatedDataKinds) =>
+        Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, hints) =>
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, hints) =>

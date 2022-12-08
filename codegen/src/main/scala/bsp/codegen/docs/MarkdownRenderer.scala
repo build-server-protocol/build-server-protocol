@@ -3,7 +3,7 @@ package bsp.codegen.docs
 import bsp.codegen._
 import bsp.codegen.ir.Hint.Documentation
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
-import bsp.codegen.ir.{Def, Hint, Operation}
+import bsp.codegen.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 
@@ -41,10 +41,10 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
           newline
         )
 
-    val services = tree.services.values.toList.foldMap(renderServiceNode)
+    // Server comes first because it's bigger.
+    val services = tree.services.sortBy(-_.operations.size).foldMap(renderServiceNode)
     lines(
       commonShapes,
-      newline,
       services
     )
   }
@@ -62,7 +62,9 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
       visited.add(id)
       lines(
         renderStructureNodeDef(node.definition),
-        renderStructureNodeMembers(node.members)
+        node.definition.members
+          .filter(_.getNamespace == id.getNamespace)
+          .foldMap(renderStructureNode)
       )
     }
   }
@@ -78,17 +80,10 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
     )
   }
 
-  def renderStructureNodeMembers(members: List[StructureDocMember]): Lines = {
-    val fields = members.filter {
-      case _: StructureDocMember.Field => true
-      case _                           => false
-    }
-
-    val associatedDataKinds = members.filter {
-      case _: StructureDocMember.AssociatedDataKind => true
-      case _                                        => false
-    }
-
+  def renderStructureNodeMembers(
+      fields: List[ShapeId],
+      associatedDataKinds: List[PolymorphicDataKind]
+  ): Lines = {
     val renderedAdks = if (associatedDataKinds.nonEmpty) {
       lines(
         s"- associated data kinds:",
@@ -103,8 +98,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
 
     lines(
       renderedAdks,
-      fields.map(_.shapeId).foldMap(renderStructureNode),
-      newline
+      fields.foldMap(renderStructureNode)
     )
   }
 
@@ -119,9 +113,9 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
           s"- method: `${operation.jsonRPCMethod}`",
           input.foldMap(n => s"- params: `${n.getName()}`"),
           output.foldMap(n => s"- result: `${n.getName()}`"),
+          newline,
           input.foldMap(renderStructureNode),
-          output.foldMap(renderStructureNode),
-          newline
+          output.foldMap(renderStructureNode)
         )
     }
 
@@ -137,6 +131,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
         }
         lines(
           header,
+          newline,
           operations
             .map(tree.operations)
             .foldMap(renderOperationNode)
