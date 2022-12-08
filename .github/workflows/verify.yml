@@ -28,4 +28,4 @@ jobs:
         with:
             java-version: adopt@1.8
       - run: sbt checkScalaFormat
-      - run: cd website && yarn install --frozen-lockfile && yarn build && yarn prettier --check .
+      - run: cd website && yarn install --frozen-lockfile && yarn prettier --check . && yarn build
