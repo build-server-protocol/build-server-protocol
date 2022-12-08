@@ -10,19 +10,19 @@ protocol.
 ## Python Build Target
 
 `PythonBuildTarget` is a basic data structure that contains Python-specific
-metadata, specifically the interpreter reference and the Python version. 
+metadata, specifically the interpreter reference and the Python version.
 This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
 the `dataKind` field contains "python".
 
 ```ts
 export interface PythonBuildTarget {
-  /** The Python version this target is supposed to use. 
-    * For example: 3.9 */
+  /** The Python version this target is supposed to use.
+   * For example: 3.9 */
   version?: String;
 
-  /** URI representing the path to the Python interpreter. 
-    * For example: file:///usr/bin/python */
-  interpreter?: Uri;  
+  /** URI representing the path to the Python interpreter.
+   * For example: file:///usr/bin/python */
+  interpreter?: Uri;
 }
 ```
 
@@ -52,9 +52,9 @@ export interface PythonOptionsResult {
 
 export interface PythonOptionsItem {
   target: BuildTargetIdentifier;
-    
+
   /** Attributes added to the interpreter command
-    * For example: -E */
+   * For example: -E */
   linkopts: String[];
 }
 ```

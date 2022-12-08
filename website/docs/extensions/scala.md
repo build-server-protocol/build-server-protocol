@@ -153,8 +153,8 @@ export interface ScalaTestClassesItem {
   target: BuildTargetIdentifier;
 
   /**
-   * Name of the the framework to which classes belong. 
-   * It's optional in order to maintain compatibility, however it is expected 
+   * Name of the the framework to which classes belong.
+   * It's optional in order to maintain compatibility, however it is expected
    * from the newer implementations to not leave that field unspecified.
    */
   framework?: String;
