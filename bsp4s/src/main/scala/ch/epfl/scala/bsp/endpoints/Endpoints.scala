@@ -50,10 +50,12 @@ trait BuildTarget {
   // Scala specific endpoints
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
+  @deprecated("jvm test environment should be used instead")
   object scalaTestClasses
       extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult](
         "buildTarget/scalaTestClasses"
       )
+  @deprecated("jvm run environment should be used instead")
   object scalaMainClasses
       extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
         "buildTarget/scalaMainClasses"
