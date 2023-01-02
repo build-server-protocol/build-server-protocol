@@ -34,7 +34,7 @@ class JvmTestEnvironmentParams {
 
 @JsonRpcData
 class JvmMainClass {
-  @NonNull @SerializedName("class") String className
+  @NonNull String className
   @NonNull List<String> arguments
     new(@NonNull String className, @NonNull List<String> arguments) {
     this.className = className
@@ -57,6 +57,7 @@ class JvmEnvironmentItem {
     this.jvmOptions = jvmOptions
     this.workingDirectory = workingDirectory
     this.environmentVariables = environmentVariables
+    this.mainClasses = mainClasses
   }
 }
 

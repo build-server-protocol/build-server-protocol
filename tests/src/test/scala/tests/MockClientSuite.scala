@@ -334,6 +334,8 @@ class MockClientSuite extends AnyFunSuite {
       workdir,
       environmentVariables
     )
+    val mainClass = new JvmMainClass("MainClass.java", List.empty[String].asJava)
+    item1.setMainClasses(List(mainClass).asJava)
     List(item1).asJava
   }
 

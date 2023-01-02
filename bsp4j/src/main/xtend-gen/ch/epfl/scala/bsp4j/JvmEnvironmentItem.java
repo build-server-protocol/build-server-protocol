@@ -24,6 +24,8 @@ public class JvmEnvironmentItem {
   @NonNull
   private Map<String, String> environmentVariables;
 
+  private List<JvmMainClass> mainClasses;
+
   public JvmEnvironmentItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
     this.target = target;
     this.classpath = classpath;
@@ -82,6 +84,15 @@ public class JvmEnvironmentItem {
     this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
 
+  @Pure
+  public List<JvmMainClass> getMainClasses() {
+    return this.mainClasses;
+  }
+
+  public void setMainClasses(final List<JvmMainClass> mainClasses) {
+    this.mainClasses = mainClasses;
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -91,6 +102,7 @@ public class JvmEnvironmentItem {
     b.add("jvmOptions", this.jvmOptions);
     b.add("workingDirectory", this.workingDirectory);
     b.add("environmentVariables", this.environmentVariables);
+    b.add("mainClasses", this.mainClasses);
     return b.toString();
   }
 
@@ -129,6 +141,11 @@ public class JvmEnvironmentItem {
         return false;
     } else if (!this.environmentVariables.equals(other.environmentVariables))
       return false;
+    if (this.mainClasses == null) {
+      if (other.mainClasses != null)
+        return false;
+    } else if (!this.mainClasses.equals(other.mainClasses))
+      return false;
     return true;
   }
 
@@ -141,6 +158,7 @@ public class JvmEnvironmentItem {
     result = prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
     result = prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
     result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
-    return prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
+    result = prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
+    return prime * result + ((this.mainClasses== null) ? 0 : this.mainClasses.hashCode());
   }
 }

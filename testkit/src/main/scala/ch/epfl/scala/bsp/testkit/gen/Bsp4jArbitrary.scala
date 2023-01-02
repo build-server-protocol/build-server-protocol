@@ -144,6 +144,9 @@ trait Bsp4jArbitrary {
   implicit val arbWorkspaceBuildTargetsResult: Arbitrary[WorkspaceBuildTargetsResult] = Arbitrary(
     genWorkspaceBuildTargetsResult
   )
+  implicit val arbJvmMainClass: Arbitrary[JvmMainClass] = Arbitrary(
+    genJvmMainClass
+  )
   implicit val arbJvmEnvironmentItem: Arbitrary[JvmEnvironmentItem] = Arbitrary(
     genJvmEnvironmentItem
   )

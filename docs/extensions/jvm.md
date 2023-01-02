@@ -65,7 +65,7 @@ export interface JvmEnvironmentItem{
     jvmOptions: String[];
     workingDirectory: String;
     environmentVariables: Map<String, String>;
-    mainClasses?: JvmMainClass[];
+    mainClasses: JvmMainClass[];
 }
 
 export interface JvmTestEnvironmentResult{
@@ -106,7 +106,7 @@ export interface JvmEnvironmentItem{
     jvmOptions: String[];
     workingDirectory: String;
     environmentVariables: Map<String, String>;
-    mainClasses?: JvmMainClass[];
+    mainClasses: JvmMainClass[];
 }
 
 export interface JvmRunEnvironmentResult{
