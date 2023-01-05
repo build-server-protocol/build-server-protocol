@@ -745,6 +745,75 @@ trait Bsp4jGenerators {
   lazy val genRustOptionsResult: Gen[RustOptionsResult] = for {
     items <- genRustOptionsItem.list
   } yield new RustOptionsResult(items)
+
+  lazy val genRustDep: Gen[RustDep] = for {
+    pkg <- arbitrary[String]
+    name <- arbitrary[String]
+    dep_kinds <-genRustDepKindInfo.list
+  } yield new RustDep(pkg, name, dep_kinds)
+
+  lazy val genRustDepKindInfo: Gen[RustDepKindInfo] = for {
+    kind <- arbitrary[String]
+    target <- arbitrary[String]
+  } yield new RustDepKindInfo(kind, target)
+  
+  lazy val genRustMetadataResult: Gen[RustMetadataResult] = for {
+    packages <- genRustPackage.list
+    dependencies <- genRustResolveNode.list
+    version <- arbitrary[Int]
+    workspaceMembers <- arbitrary[String].list
+    workspaceRoot <- arbitrary[String]
+  } yield new RustMetadataResult(packages, dependencies, version, workspaceMembers, workspaceRoot)
+
+  lazy val genRustFeature: Gen[RustFeature] = for {
+    name <- arbitrary[String]
+    dep <- arbitrary[String].list
+  } yield new RustFeature(name, dep)
+  
+  lazy val genRustPackage: Gen[RustPackage] = for {
+    name <- arbitrary[String]
+    version <- arbitrary[String]
+    authors <- arbitrary[String].list
+    description <- arbitrary[String]
+    repository <- arbitrary[String]
+    license <- arbitrary[String]
+    license_file <- arbitrary[String]
+    source <- arbitrary[String]
+    id <- arbitrary[String]
+    manifest_path <- arbitrary[String]
+    targets <- genRustTarget.list
+    edition <- arbitrary[String]
+    features <- genRustFeature.list
+    dependencies <- genRustRawDependency.list 
+  } yield new RustPackage(name, version, authors, description, repository, license, license_file, source, id, manifest_path,
+                          targets, edition, features, dependencies)
+
+  lazy val genRustRawDependency: Gen[RustRawDependency] = for {
+    name <- arbitrary[String]
+    rename <- arbitrary[String]
+    kind <- arbitrary[String]
+    target <- arbitrary[String]
+    optional <- arbitrary[Boolean]
+    uses_default_features <- arbitrary[Boolean]
+    features <- arbitrary[String]
+  } yield new RustRawDependency(name, rename, kind, target, optional, uses_default_features, features)
+
+  lazy val genRustResolveNode: Gen[RustResolveNode] = for {
+    id <- arbitrary[String]
+    dependencies <- arbitrary[String].list
+    deps <- genRustDep.list
+    features <- arbitrary[String].list
+  } yield new RustResolveNode(id, dependencies, deps, features)
+
+  lazy val genRustTarget: Gen[RustTarget] = for {
+    kind <- arbitrary[String].list
+    name <- arbitrary[String]
+    src_path <- arbitrary[String]
+    crate_types <- arbitrary[String].list
+    edition <- arbitrary[String]
+    doctest <- arbitrary[Boolean]
+    required_features <- arbitrary[String].list
+  } yield new RustTarget(kind, name, src_path, crate_types, edition, doctest, required_features)
   
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)

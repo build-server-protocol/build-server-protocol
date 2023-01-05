@@ -194,6 +194,22 @@ class HappyMockSuite extends AnyFunSuite {
       assert(options.exists(_.contains("-q")))
     }
   }
+
+  
+  def assertRustMetadata(server: MockBuildServer): Unit = {
+    val rustMetadataResult = server.rustMetadata().get
+    val packages = rustMetadataResult.getPackages.asScala
+    val dependencies = rustMetadataResult.getDependencies.asScala
+    val version = rustMetadataResult.getVersion
+    val workspaceMembers = rustMetadataResult.getWorkspaceMembers.asScala
+    val workspaceRoot = rustMetadataResult.getWorkspaceRoot
+    assert(packages.isEmpty)
+    assert(dependencies.isEmpty)
+    assert(version == 1)
+    assert(workspaceMembers.isEmpty)
+    assert(workspaceRoot.equals("/"))
+  }
+  
   
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
@@ -330,6 +346,7 @@ class HappyMockSuite extends AnyFunSuite {
     assertCppOptions(server)
     assertPythonOptions(server)
     assertRustOptions(server)
+    assertRustMetadata(server)
     assertJvmTestEnvironment(server)
     assertJvmRunEnvironment(server)
     assertSources(server, client)

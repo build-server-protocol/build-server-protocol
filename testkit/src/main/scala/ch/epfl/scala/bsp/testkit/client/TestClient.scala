@@ -896,7 +896,54 @@ class TestClient(
                        ): Unit =
     wrapTest(session => testRustOptions(params, expectedResult, session))
 
-  
+  def testRustMetadata(
+                       expectedResult: RustMetadataResult,
+                       session: MockSession
+                     ): Future[Unit] = {
+    session.connection.server
+      .rustMetadata()
+      .toScala
+      .map(result => {
+
+        val packages = result.getPackages == expectedResult.getPackages
+        assert(
+          packages,
+          s"Rust packages didn't match! Expected: ${expectedResult.getPackages}, got ${result.getPackages}"
+        )
+
+
+        val dependencies = result.getDependencies == expectedResult.getDependencies
+        assert(
+          dependencies,
+          s"Rust dependencies didn't match! Expected: ${expectedResult.getDependencies}, got ${result.getDependencies}"
+        )
+        
+        val version = result.getVersion == expectedResult.getVersion
+        assert(
+          version,
+          s"Rust version didn't match! Expected: ${expectedResult.getVersion}, got ${result.getVersion}"
+        )
+
+        val members = result.getWorkspaceMembers == expectedResult.getWorkspaceMembers
+        assert(
+          version,
+          s"Rust workspace members didn't match! Expected: ${expectedResult.getWorkspaceMembers}, got ${result.getWorkspaceMembers}"
+        )
+
+        val root = result.getWorkspaceRoot == expectedResult.getWorkspaceRoot
+        assert(
+          root,
+          s"Rust workspace root didn't match! Expected: ${expectedResult.getWorkspaceRoot}, got ${result.getWorkspaceRoot}"
+        )
+      })
+  }
+
+  def testRustMetadata(
+                       expectedResult: RustMetadataResult
+                     ): Unit =
+    wrapTest(session => testRustMetadata(expectedResult, session))
+
+
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult,

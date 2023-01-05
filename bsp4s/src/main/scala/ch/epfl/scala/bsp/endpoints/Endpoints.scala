@@ -87,6 +87,12 @@ trait BuildTarget {
     extends Endpoint[RustOptionsParams, RustOptionsResult](
       "buildTarget/rustOptions"
     )
+
+  object rustProjectPackage
+    extends Endpoint[RustMetadataResult, Unit](
+      "buildTarget/rustMetadata"
+    )
+
 }
 
 object Workspace extends Workspace
