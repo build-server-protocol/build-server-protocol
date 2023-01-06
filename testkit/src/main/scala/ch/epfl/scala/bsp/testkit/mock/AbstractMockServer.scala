@@ -12,7 +12,6 @@ abstract class AbstractBuildServer
     with JavaBuildServer
     with CppBuildServer
     with PythonBuildServer
-    with RustBuildServer
 
 abstract class AbstractMockServer extends AbstractBuildServer {
   var client: BuildClient

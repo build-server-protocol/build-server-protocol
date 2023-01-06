@@ -178,14 +178,6 @@ trait Bsp4jArbitrary {
   implicit val arbPythonOptionsResult: Arbitrary[PythonOptionsResult] = Arbitrary(
     genPythonOptionsResult
   )
-  implicit val arbRustBuildTarget: Arbitrary[RustBuildTarget] = Arbitrary(genRustBuildTarget)
-  implicit val arbRustOptionsItem: Arbitrary[RustOptionsItem] = Arbitrary(genRustOptionsItem)
-  implicit val arbRustOptionsParams: Arbitrary[RustOptionsParams] = Arbitrary(
-    genRustOptionsParams
-  )
-  implicit val arbRustOptionsResult: Arbitrary[RustOptionsResult] = Arbitrary(
-    genRustOptionsResult
-  )
 }
 
 object Bsp4jArbitrary extends Bsp4jArbitrary

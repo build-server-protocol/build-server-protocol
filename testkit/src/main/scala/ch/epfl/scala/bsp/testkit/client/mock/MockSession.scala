@@ -11,8 +11,7 @@ import ch.epfl.scala.bsp4j.{
   JavaBuildServer,
   JvmBuildServer,
   PythonBuildServer,
-  ScalaBuildServer,
-  RustBuildServer
+  ScalaBuildServer
 }
 import org.eclipse.lsp4j.jsonrpc.Launcher
 
@@ -78,8 +77,7 @@ object MockSession {
       with JavaBuildServer
       with JvmBuildServer
       with CppBuildServer
-      with PythonBuildServer 
-      with RustBuildServer
+      with PythonBuildServer
 
   def apply(
       in: InputStream,
