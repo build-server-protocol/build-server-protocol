@@ -520,4 +520,78 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.PythonOptionsResult, bsp4s.PythonOptionsResult](a)
     }
   }
+  test("RustBuildTarget") {
+    forAll { a: bsp4j.RustBuildTarget =>
+      assertSerializationRoundtrip[bsp4j.RustBuildTarget, bsp4s.RustBuildTarget](a)
+    }
+  }
+  test("RustOptionsItem") {
+    forAll { a: bsp4j.RustOptionsItem =>
+      assertSerializationRoundtrip[bsp4j.RustOptionsItem, bsp4s.RustOptionsItem](a)
+    }
+  }
+  test("RustOptionsParams") {
+    forAll { a: bsp4j.RustOptionsParams =>
+      assertSerializationRoundtrip[bsp4j.RustOptionsParams, bsp4s.RustOptionsParams](a)
+    }
+  }
+  test("RustOptionsResult") {
+    forAll { a: bsp4j.RustOptionsResult =>
+      assertSerializationRoundtrip[bsp4j.RustOptionsResult, bsp4s.RustOptionsResult](a)
+    }
+  }
+  test("RustDep") {
+    forAll { a: bsp4j.RustDep =>
+      assertSerializationRoundtrip[bsp4j.RustDep, bsp4s.RustDep](a)
+    }
+  }
+
+  test("RustDepKindInfo") {
+    forAll { a: bsp4j.RustDepKindInfo =>
+      assertSerializationRoundtrip[bsp4j.RustDepKindInfo, bsp4s.RustDepKindInfo](a)
+    }
+  }
+
+  test("RustFeature") {
+    forAll { a: bsp4j.RustFeature =>
+      assertSerializationRoundtrip[bsp4j.RustFeature, bsp4s.RustFeature](a)
+    }
+  }
+  
+  test("RustMetadataResult") {
+    forAll { a: bsp4j.RustMetadataResult =>
+      assertSerializationRoundtrip[bsp4j.RustMetadataResult, bsp4s.RustMetadataResult](a)
+    }
+  }
+
+  test("RustMetadataParams") {
+    forAll { a: bsp4j.RustMetadataParams =>
+      assertSerializationRoundtrip[bsp4j.RustMetadataParams, bsp4s.RustMetadataParams](a)
+    }
+  }
+  
+  test("RustPackage") {
+    forAll { a: bsp4j.RustPackage =>
+      assertSerializationRoundtrip[bsp4j.RustPackage, bsp4s.RustPackage](a)
+    }
+  }
+
+  test("RustRawDependency") {
+    forAll { a: bsp4j.RustRawDependency =>
+      assertSerializationRoundtrip[bsp4j.RustRawDependency, bsp4s.RustRawDependency](a)
+    }
+  }
+
+  test("RustResolveNode") {
+    forAll { a: bsp4j.RustResolveNode =>
+      assertSerializationRoundtrip[bsp4j.RustResolveNode, bsp4s.RustResolveNode](a)
+    }
+  }
+
+  test("RustTarget") {
+    forAll { a: bsp4j.RustTarget =>
+      assertSerializationRoundtrip[bsp4j.RustTarget, bsp4s.RustTarget](a)
+    }
+  }
+  
 }

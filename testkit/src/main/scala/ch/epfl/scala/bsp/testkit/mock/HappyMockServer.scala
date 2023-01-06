@@ -40,7 +40,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   def serverVersion = "1.0"
   def bspVersion = "2.0"
 
-  def supportedLanguages: util.List[String] = List("java", "scala", "cpp", "python").asJava
+  def supportedLanguages: util.List[String] = List("java", "scala", "cpp", "python", "rust").asJava
 
   def capabilities: BuildServerCapabilities = {
     val c = new BuildServerCapabilities()
@@ -63,12 +63,14 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   private val languageIds = List("scala").asJava
   private val cppLanguageId = List("cpp").asJava
   private val pythonLanguageId = List("python").asJava
+  private val rustLanguageId = List("rust").asJava
 
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
+  val targetId6 = new BuildTargetIdentifier(baseUri.resolve("target6").toString)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
@@ -108,12 +110,21 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     new BuildTargetCapabilities(true, false, true, false)
   )
 
+  val target6 = new BuildTarget(
+    targetId6,
+    List(BuildTargetTag.APPLICATION).asJava,
+    rustLanguageId,
+    List.empty.asJava,
+    new BuildTargetCapabilities(true, false, true, false)
+  )
+  
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(
     targetId1 -> target1,
     targetId2 -> target2,
     targetId3 -> target3,
     targetId4 -> target4,
-    targetId5 -> target5
+    targetId5 -> target5,
+    targetId6 -> target6
   )
 
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
@@ -211,6 +222,23 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
+  override def buildTargetRustOptions(
+     params: RustOptionsParams
+   ): CompletableFuture[RustOptionsResult] = {
+    handleRequest {
+      val compilerOpts = List("-q").asJava
+      val item = new RustOptionsItem(targetId5, compilerOpts)
+      val result = new RustOptionsResult(List(item).asJava)
+      Right(result)
+    }
+  }
+
+  override def rustMetadata(params: RustMetadataParams): CompletableFuture[RustMetadataResult] = {
+    handleRequest {
+      Right(new RustMetadataResult(List.empty.asJava, List.empty.asJava, 1, List.empty.asJava, "/"))
+    }
+  }
+  
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
@@ -283,7 +311,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
       val pythonBuildTarget =
         new PythonBuildTarget("3.9", "/usr/bin/python")
-
+      val rustBuildTarget =
+        new RustBuildTarget("2021", "/usr/bin/cargo")
+        
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
       target1.setDataKind(BuildTargetDataKind.SCALA)
@@ -309,6 +339,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target5.setDataKind(BuildTargetDataKind.PYTHON)
       target5.setData(pythonBuildTarget)
 
+      target6.setDisplayName("target 6")
+      target6.setBaseDirectory(targetId6.getUri)
+      target6.setDataKind(BuildTargetDataKind.RUST)
+      target6.setData(rustBuildTarget)
+      
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
     }
