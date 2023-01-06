@@ -746,6 +746,10 @@ trait Bsp4jGenerators {
     items <- genRustOptionsItem.list
   } yield new RustOptionsResult(items)
 
+  lazy val genRustMetadataParams: Gen[RustMetadataParams] = for {
+    targets <- genBuildTargetIdentifier.list
+  } yield new RustMetadataParams(targets)
+  
   lazy val genRustDep: Gen[RustDep] = for {
     pkg <- arbitrary[String]
     name <- arbitrary[String]

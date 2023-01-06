@@ -11,5 +11,5 @@ public interface RustBuildServer {
     CompletableFuture<RustOptionsResult> buildTargetRustOptions(RustOptionsParams params);
 
     @JsonRequest("buildTarget/rustMetadata")
-    CompletableFuture<RustMetadataResult> rustMetadata();
+    CompletableFuture<RustMetadataResult> rustMetadata(RustMetadataParams params);
 }

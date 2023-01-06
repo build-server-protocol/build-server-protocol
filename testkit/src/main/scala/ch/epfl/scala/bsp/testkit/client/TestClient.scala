@@ -897,11 +897,12 @@ class TestClient(
     wrapTest(session => testRustOptions(params, expectedResult, session))
 
   def testRustMetadata(
+                       params: RustMetadataParams,
                        expectedResult: RustMetadataResult,
                        session: MockSession
                      ): Future[Unit] = {
     session.connection.server
-      .rustMetadata()
+      .rustMetadata(params)
       .toScala
       .map(result => {
 
@@ -939,9 +940,10 @@ class TestClient(
   }
 
   def testRustMetadata(
+                       params: RustMetadataParams,
                        expectedResult: RustMetadataResult
                      ): Unit =
-    wrapTest(session => testRustMetadata(expectedResult, session))
+    wrapTest(session => testRustMetadata(params, expectedResult, session))
 
 
   def testScalaMainClasses(

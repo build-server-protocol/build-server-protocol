@@ -24,6 +24,14 @@ class RustOptionsParams {
 }
 
 @JsonRpcData
+class RustMetadataParams {
+  @NonNull List<BuildTargetIdentifier> targets
+  new(@NonNull List<BuildTargetIdentifier> targets) {
+    this.targets = targets
+  }
+}
+
+@JsonRpcData
 class RustRawDependency {
     @NonNull String name
     String rename

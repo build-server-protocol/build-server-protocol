@@ -191,6 +191,9 @@ trait Bsp4jArbitrary {
   implicit val arbRustMetadataResult: Arbitrary[RustMetadataResult] = Arbitrary(
     genRustMetadataResult
   )
+  implicit val arbRustMetadataParams: Arbitrary[RustMetadataParams] = Arbitrary(
+    genRustMetadataParams
+  )
   implicit val arbRustPackage: Arbitrary[RustPackage] = Arbitrary(
     genRustPackage
   )

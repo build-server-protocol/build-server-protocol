@@ -564,6 +564,12 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
     }
   }
 
+  test("RustMetadataParams") {
+    forAll { a: bsp4j.RustMetadataParams =>
+      assertSerializationRoundtrip[bsp4j.RustMetadataParams, bsp4s.RustMetadataParams](a)
+    }
+  }
+  
   test("RustPackage") {
     forAll { a: bsp4j.RustPackage =>
       assertSerializationRoundtrip[bsp4j.RustPackage, bsp4s.RustPackage](a)

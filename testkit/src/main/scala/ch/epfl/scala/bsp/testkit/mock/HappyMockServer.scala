@@ -233,7 +233,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def rustMetadata(): CompletableFuture[RustMetadataResult] = {
+  override def rustMetadata(params: RustMetadataParams): CompletableFuture[RustMetadataResult] = {
     handleRequest {
       Right(new RustMetadataResult(List.empty.asJava, List.empty.asJava, 1, List.empty.asJava, "/"))
     }

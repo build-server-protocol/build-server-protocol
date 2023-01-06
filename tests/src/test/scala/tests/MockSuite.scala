@@ -197,7 +197,8 @@ class HappyMockSuite extends AnyFunSuite {
 
   
   def assertRustMetadata(server: MockBuildServer): Unit = {
-    val rustMetadataResult = server.rustMetadata().get
+    val rustMetadataParams = new RustMetadataParams(getBuildTargetIds(server))
+    val rustMetadataResult = server.rustMetadata(rustMetadataParams).get
     val packages = rustMetadataResult.getPackages.asScala
     val dependencies = rustMetadataResult.getDependencies.asScala
     val version = rustMetadataResult.getVersion

@@ -89,7 +89,7 @@ trait BuildTarget {
     )
 
   object rustProjectPackage
-    extends Endpoint[RustMetadataResult, Unit](
+    extends Endpoint[RustMetadataResult, RustMetadataParams](
       "buildTarget/rustMetadata"
     )
 

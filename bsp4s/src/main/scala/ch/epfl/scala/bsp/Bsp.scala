@@ -1425,6 +1425,13 @@ object RustOptionsParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class RustMetadataParams(targets: List[BuildTargetIdentifier])
+
+object RustMetadataParams {
+  implicit val codec: JsonValueCodec[RustMetadataParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class RustOptionsItem(
   target: BuildTargetIdentifier,
   compilerOptions: List[String]
