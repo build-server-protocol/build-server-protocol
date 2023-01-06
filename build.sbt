@@ -31,7 +31,7 @@ lazy val V = new {
   val scala212 = "2.12.17"
   val scala213 = "2.13.10"
   val supportedScalaVersions = List(scala212, scala213)
-  val jsoniter = "2.17.6"
+  val jsoniter = "2.20.1"
   val java8Compat = "1.0.2"
   val lsp4j = "0.12.0"
   val scalacheck = "1.17.0"
@@ -116,7 +116,7 @@ lazy val tests = project
     libraryDependencies ++= List(
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
-      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.5.0",
+      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.6.1",
       "org.scalatest" %% "scalatest" % "3.2.14",
       "org.scalatestplus" %% "scalacheck-1-15" % "3.2.11.0",
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
@@ -136,7 +136,7 @@ lazy val `bsp-testkit` = project
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "de.danielbechler" % "java-object-diff" % "0.95",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
-      "org.scala-lang.modules" %% "scala-collection-compat" % "2.8.1"
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0"
     ),
     crossScalaVersions := V.supportedScalaVersions
   )
