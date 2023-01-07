@@ -145,6 +145,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       workdir,
       environmentVariables
     )
+    val mainClass = new JvmMainClass("MainClass.java", List.empty[String].asJava)
+    item1.setMainClasses(List(mainClass).asJava)
     item1
   }
   override def jvmRunEnvironment(

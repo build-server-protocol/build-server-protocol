@@ -1053,12 +1053,23 @@ object JvmTestEnvironmentParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class JvmMainClass(
+    className: String,
+    arguments: List[String]
+)
+
+object JvmMainClass {
+  implicit val codec: JsonValueCodec[JvmMainClass] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class JvmEnvironmentItem(
     target: BuildTargetIdentifier,
     classpath: List[String],
     jvmOptions: List[String],
     workingDirectory: String,
-    environmentVariables: Map[String, String]
+    environmentVariables: Map[String, String],
+    mainClasses: Option[List[JvmMainClass]]
 )
 
 object JvmEnvironmentItem {

@@ -465,6 +465,11 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.JvmEnvironmentItem, bsp4s.JvmEnvironmentItem](a)
     }
   }
+  test("JvmMainClass") {
+    forAll { a: bsp4j.JvmMainClass =>
+      assertSerializationRoundtrip[bsp4j.JvmMainClass, bsp4s.JvmMainClass](a)
+    }
+  }
   test("JavacOptionsItem") {
     forAll { a: bsp4j.JavacOptionsItem =>
       assertSerializationRoundtrip[bsp4j.JavacOptionsItem, bsp4s.JavacOptionsItem](a)

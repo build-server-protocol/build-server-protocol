@@ -644,13 +644,29 @@ trait Bsp4jGenerators {
     varVal <- arbitrary[String]
   } yield (varName, varVal)
 
+  lazy val genJvmMainClass: Gen[JvmMainClass] = for {
+    className <- arbitrary[String]
+    arguments <- arbitrary[String].list
+  } yield new JvmMainClass(className, arguments)
+
   lazy val genJvmEnvironmentItem: Gen[JvmEnvironmentItem] = for {
     target <- genBuildTargetIdentifier
     options <- arbitrary[String].list
     envVars <- genEnvironmentVariables.list
     classpath <- genFileUriString.list
     workdir <- genFileUriString
-  } yield new JvmEnvironmentItem(target, options, classpath, workdir, envVars.asScala.toMap.asJava)
+    mainClass <- genJvmMainClass.list.nullable
+  } yield {
+    val item = new JvmEnvironmentItem(
+      target,
+      options,
+      classpath,
+      workdir,
+      envVars.asScala.toMap.asJava
+    )
+    item.setMainClasses(mainClass)
+    item
+  }
 
   lazy val genJvmTestEnvironmentParams: Gen[JvmTestEnvironmentParams] = for {
     targets <- genBuildTargetIdentifier.list
