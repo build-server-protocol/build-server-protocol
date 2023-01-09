@@ -117,7 +117,7 @@ lazy val tests = project
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
       "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.6.1",
-      "org.scalatest" %% "scalatest" % "3.2.14",
+      "org.scalatest" %% "scalatest" % "3.2.15",
       "org.scalatestplus" %% "scalacheck-1-15" % "3.2.11.0",
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % V.jsoniter
