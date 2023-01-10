@@ -20,7 +20,7 @@ module.exports = {
           "path": "../website/target/docs",
           "showLastUpdateAuthor": true,
           "showLastUpdateTime": true,
-          "editUrl": ({ docPath }) => `"https://github.com/build-server-protocol/build-server-protocol/edit/master/docs/${docPath}`,
+          "editUrl": ({ docPath }) => `https://github.com/build-server-protocol/build-server-protocol/edit/master/docs/${docPath}`,
           "sidebarPath": "../website/sidebars.json"
         },
         "blog": {},
