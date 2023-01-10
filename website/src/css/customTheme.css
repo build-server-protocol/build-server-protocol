@@ -1,11 +1,11 @@
 :root{
-  --ifm-color-primary-lightest: #585858;
-  --ifm-color-primary-lighter: #4E4E4E;
-  --ifm-color-primary-light: #4B4B4B;
-  --ifm-color-primary: #444444;
-  --ifm-color-primary-dark: #3D3D3D;
-  --ifm-color-primary-darker: #3A3A3A;
-  --ifm-color-primary-darkest: #303030;
+  --ifm-color-primary-lightest: #ffffff;
+  --ifm-color-primary-lighter: #d6f1ff;
+  --ifm-color-primary-light: #ade4ff;
+  --ifm-color-primary: #7ad3ff;
+  --ifm-color-primary-dark: #5cc9ff;
+  --ifm-color-primary-darker: #33bbff;
+  --ifm-color-primary-darkest: #0aadff;
 }
 
 .flex-row {
