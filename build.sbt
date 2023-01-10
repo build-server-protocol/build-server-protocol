@@ -131,6 +131,15 @@ lazy val `bsp-testkit` = project
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
 
+lazy val spec = project
+  .in(file("spec"))
+  .settings(
+    autoScalaLibrary := false,
+    libraryDependencies ++= Seq(
+      "software.amazon.smithy" % "smithy-model" % "1.27.0"
+    )
+  )
+
 lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j)
