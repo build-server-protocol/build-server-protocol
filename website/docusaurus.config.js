@@ -5,6 +5,7 @@ module.exports = {
   "baseUrl": "/",
   "organizationName": "build-server-protocol",
   "projectName": "build-server-protocol.github.io",
+  "deploymentBranch": "master",
   "favicon": "img/favicon.ico",
   "customFields": {
     "blogSidebarCount": "ALL",
