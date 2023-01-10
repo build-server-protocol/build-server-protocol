@@ -34,3 +34,5 @@ out/
 .metals/
 .vscode
 .bsp
+
+website/.docusaurus
