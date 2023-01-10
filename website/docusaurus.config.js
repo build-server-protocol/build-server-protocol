@@ -37,6 +37,12 @@ module.exports = {
       {
         "fromExtensions": [
           "html"
+        ],
+        "redirects": [
+          {
+            "from": "/build-server-protocol/",
+            "to": "/"
+          }
         ]
       }
     ]
