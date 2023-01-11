@@ -195,7 +195,6 @@ class HappyMockSuite extends AnyFunSuite {
     }
   }
 
-  
   def assertRustMetadata(server: MockBuildServer): Unit = {
     val rustMetadataParams = new RustMetadataParams(getBuildTargetIds(server))
     val rustMetadataResult = server.rustMetadata(rustMetadataParams).get
@@ -210,8 +209,7 @@ class HappyMockSuite extends AnyFunSuite {
     assert(workspaceMembers.isEmpty)
     assert(workspaceRoot.equals("/"))
   }
-  
-  
+
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get

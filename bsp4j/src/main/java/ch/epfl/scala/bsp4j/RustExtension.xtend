@@ -86,12 +86,12 @@ class RustTarget {
 @JsonRpcData
 class RustFeature {
         @NonNull String name
-        @NonNull List<String> dep
+        @NonNull List<String> deps
         
         new(@NonNull String name,
-                @NonNull List<String> dep) {
+                @NonNull List<String> deps) {
                     this.name = name
-                    this.dep = dep
+                    this.deps = deps
               }
 }
 

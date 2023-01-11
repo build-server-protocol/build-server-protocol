@@ -78,7 +78,7 @@ object MockSession {
       with JavaBuildServer
       with JvmBuildServer
       with CppBuildServer
-      with PythonBuildServer 
+      with PythonBuildServer
       with RustBuildServer
 
   def apply(

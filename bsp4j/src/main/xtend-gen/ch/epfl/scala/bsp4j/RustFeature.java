@@ -12,11 +12,11 @@ public class RustFeature {
   private String name;
 
   @NonNull
-  private List<String> dep;
+  private List<String> deps;
 
-  public RustFeature(@NonNull final String name, @NonNull final List<String> dep) {
+  public RustFeature(@NonNull final String name, @NonNull final List<String> deps) {
     this.name = name;
-    this.dep = dep;
+    this.deps = deps;
   }
 
   @Pure
@@ -31,12 +31,12 @@ public class RustFeature {
 
   @Pure
   @NonNull
-  public List<String> getDep() {
-    return this.dep;
+  public List<String> getDeps() {
+    return this.deps;
   }
 
-  public void setDep(@NonNull final List<String> dep) {
-    this.dep = Preconditions.checkNotNull(dep, "dep");
+  public void setDeps(@NonNull final List<String> deps) {
+    this.deps = Preconditions.checkNotNull(deps, "deps");
   }
 
   @Override
@@ -44,7 +44,7 @@ public class RustFeature {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
-    b.add("dep", this.dep);
+    b.add("deps", this.deps);
     return b.toString();
   }
 
@@ -63,10 +63,10 @@ public class RustFeature {
         return false;
     } else if (!this.name.equals(other.name))
       return false;
-    if (this.dep == null) {
-      if (other.dep != null)
+    if (this.deps == null) {
+      if (other.deps != null)
         return false;
-    } else if (!this.dep.equals(other.dep))
+    } else if (!this.deps.equals(other.deps))
       return false;
     return true;
   }
@@ -77,6 +77,6 @@ public class RustFeature {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
-    return prime * result + ((this.dep== null) ? 0 : this.dep.hashCode());
+    return prime * result + ((this.deps== null) ? 0 : this.deps.hashCode());
   }
 }

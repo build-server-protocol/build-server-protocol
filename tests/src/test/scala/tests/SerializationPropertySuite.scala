@@ -562,7 +562,7 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.RustFeature, bsp4s.RustFeature](a)
     }
   }
-  
+
   test("RustMetadataResult") {
     forAll { a: bsp4j.RustMetadataResult =>
       assertSerializationRoundtrip[bsp4j.RustMetadataResult, bsp4s.RustMetadataResult](a)
@@ -574,7 +574,7 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.RustMetadataParams, bsp4s.RustMetadataParams](a)
     }
   }
-  
+
   test("RustPackage") {
     forAll { a: bsp4j.RustPackage =>
       assertSerializationRoundtrip[bsp4j.RustPackage, bsp4s.RustPackage](a)
@@ -598,5 +598,5 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.RustTarget, bsp4s.RustTarget](a)
     }
   }
-  
+
 }

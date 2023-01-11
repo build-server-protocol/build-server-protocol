@@ -463,7 +463,7 @@ class TestClient(
 
   def extractRustData(data: JsonElement, gson: Gson): Option[RustBuildTarget] =
     Option(gson.fromJson[RustBuildTarget](data, classOf[RustBuildTarget]))
-    
+
   def convertJsonObjectToData(
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): WorkspaceBuildTargetsResult = {
@@ -869,12 +869,11 @@ class TestClient(
   ): Unit =
     wrapTest(session => testPythonOptions(params, expectedResult, session))
 
-
   def testRustOptions(
-                         params: RustOptionsParams,
-                         expectedResult: RustOptionsResult,
-                         session: MockSession
-                       ): Future[Unit] = {
+      params: RustOptionsParams,
+      expectedResult: RustOptionsResult,
+      session: MockSession
+  ): Future[Unit] = {
     session.connection.server
       .buildTargetRustOptions(params)
       .toScala
@@ -891,16 +890,16 @@ class TestClient(
   }
 
   def testRustOptions(
-                         params: RustOptionsParams,
-                         expectedResult: RustOptionsResult
-                       ): Unit =
+      params: RustOptionsParams,
+      expectedResult: RustOptionsResult
+  ): Unit =
     wrapTest(session => testRustOptions(params, expectedResult, session))
 
   def testRustMetadata(
-                       params: RustMetadataParams,
-                       expectedResult: RustMetadataResult,
-                       session: MockSession
-                     ): Future[Unit] = {
+      params: RustMetadataParams,
+      expectedResult: RustMetadataResult,
+      session: MockSession
+  ): Future[Unit] = {
     session.connection.server
       .rustMetadata(params)
       .toScala
@@ -912,13 +911,12 @@ class TestClient(
           s"Rust packages didn't match! Expected: ${expectedResult.getPackages}, got ${result.getPackages}"
         )
 
-
         val dependencies = result.getDependencies == expectedResult.getDependencies
         assert(
           dependencies,
           s"Rust dependencies didn't match! Expected: ${expectedResult.getDependencies}, got ${result.getDependencies}"
         )
-        
+
         val version = result.getVersion == expectedResult.getVersion
         assert(
           version,
@@ -940,11 +938,10 @@ class TestClient(
   }
 
   def testRustMetadata(
-                       params: RustMetadataParams,
-                       expectedResult: RustMetadataResult
-                     ): Unit =
+      params: RustMetadataParams,
+      expectedResult: RustMetadataResult
+  ): Unit =
     wrapTest(session => testRustMetadata(params, expectedResult, session))
-
 
   def testScalaMainClasses(
       params: ScalaMainClassesParams,

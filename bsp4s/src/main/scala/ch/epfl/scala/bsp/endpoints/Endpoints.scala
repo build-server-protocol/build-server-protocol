@@ -86,14 +86,14 @@ trait BuildTarget {
 
   // Rust specific endpoints
   object rustOptions
-    extends Endpoint[RustOptionsParams, RustOptionsResult](
-      "buildTarget/rustOptions"
-    )
+      extends Endpoint[RustOptionsParams, RustOptionsResult](
+        "buildTarget/rustOptions"
+      )
 
   object rustProjectPackage
-    extends Endpoint[RustMetadataResult, RustMetadataParams](
-      "buildTarget/rustMetadata"
-    )
+      extends Endpoint[RustMetadataResult, RustMetadataParams](
+        "buildTarget/rustMetadata"
+      )
 
 }
 

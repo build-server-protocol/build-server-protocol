@@ -83,7 +83,7 @@ class MockClientSuite extends AnyFunSuite {
     List.empty.asJava,
     new BuildTargetCapabilities(true, false, true, false)
   )
-  
+
   private val client = TestClient(
     () => {
       val LocalMockServer(running, in, out) = MockServer.startMockServer(testDirectory.toFile)
@@ -221,7 +221,7 @@ class MockClientSuite extends AnyFunSuite {
 
   test("Run rustOptions") {
     val compilerOptions = List("-q").asJava
-    val item = new RustOptionsItem(targetId5, compilerOptions)
+    val item = new RustOptionsItem(targetId6, compilerOptions)
     val rustOptionsItem = List(item).asJava
 
     client.testRustOptions(
@@ -229,7 +229,7 @@ class MockClientSuite extends AnyFunSuite {
       new RustOptionsResult(rustOptionsItem)
     )
   }
-  
+
   test("Run Scala Test Classes") {
     val classes1 = List("class1").asJava
     val classes2 = List("class2").asJava
@@ -313,7 +313,7 @@ class MockClientSuite extends AnyFunSuite {
       new PythonBuildTarget("3.9", "/usr/bin/python")
     val rustBuildTarget =
       new RustBuildTarget("2021", "/usr/bin/cargo")
-      
+
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)
     target1.setDataKind(BuildTargetDataKind.SCALA)
@@ -339,11 +339,11 @@ class MockClientSuite extends AnyFunSuite {
     target5.setDataKind(BuildTargetDataKind.PYTHON)
     target5.setData(pythonBuildTarget)
 
-    target5.setDisplayName("target 6")
-    target5.setBaseDirectory(targetId6.getUri)
-    target5.setDataKind(BuildTargetDataKind.RUST)
-    target5.setData(rustBuildTarget)
-    
+    target6.setDisplayName("target 6")
+    target6.setBaseDirectory(targetId6.getUri)
+    target6.setDataKind(BuildTargetDataKind.RUST)
+    target6.setData(rustBuildTarget)
+
     val workspaceBuildTargetsResult = new WorkspaceBuildTargetsResult(targets)
     client.testCompareWorkspaceTargetsResults(workspaceBuildTargetsResult)
   }
