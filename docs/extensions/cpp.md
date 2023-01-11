@@ -16,22 +16,21 @@ the `dataKind` field contains "cpp".
 
 ```ts
 export interface CppBuildTarget {
-  /** The c++ version this target is supposed to use. 
-    * For example: C++11 */
+  /** The c++ version this target is supposed to use.
+   * For example: C++11 */
   version?: String;
 
-  /** The type of compiler this target is supposed to use. 
-    * For example: gcc */
+  /** The type of compiler this target is supposed to use.
+   * For example: gcc */
   compiler?: String;
 
-  /** Uri representating path to the c compiler. 
-    * For example: file:///usr/bin/gcc */
+  /** Uri representating path to the c compiler.
+   * For example: file:///usr/bin/gcc */
   cCompiler?: Uri;
 
-  /** Uri representating path to the c++ compiler. 
-    * For example: file:///usr/bin/g++ */
+  /** Uri representating path to the c++ compiler.
+   * For example: file:///usr/bin/g++ */
   cppCompiler?: Uri;
-  
 }
 ```
 
@@ -66,16 +65,16 @@ export interface CppOptionsItem {
    * before compiling the target.
    * For example: -Iexternal/gtest/include */
   copts: String[];
-    
+
   /** Attributes prepended with -D
    * and added to the compile command line
    * For example: BOOST_FALLTHROUGH */
   defines: String[];
-    
+
   /** Attributes added to the linker command
-    * For example: -pthread */
+   * For example: -pthread */
   linkopts: String[];
-    
+
   /** Create a shared library.
    * The presence of this flag means that linking occurs with the -shared flag
    * For example: gcc */

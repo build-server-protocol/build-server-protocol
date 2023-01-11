@@ -1,4 +1,4 @@
-:root{
+:root {
   --ifm-color-primary-lightest: #ffffff;
   --ifm-color-primary-lighter: #d6f1ff;
   --ifm-color-primary-light: #ade4ff;
@@ -14,7 +14,7 @@
   flex-direction: row;
 }
 
-.flex-row-reverse{
+.flex-row-reverse {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;

@@ -14,7 +14,7 @@ export interface MavenDependencyModule {
   organization: String;
   name: String;
   version: String;
-  scope?: String
+  scope?: String;
 
   /** List of module's artifacts with different classifiers.
      For example: [
@@ -29,6 +29,6 @@ export interface MavenDependencyModuleArtifact {
   uri: Uri;
 
   /** Empty or `sources`|`docs` */
-  classifier?: String
+  classifier?: String;
 }
 ```

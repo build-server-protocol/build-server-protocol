@@ -55,21 +55,21 @@ Response:
 
 ```ts
 export interface JvmMainClass {
-    class: String;
-    arguments: String[];
+  class: String;
+  arguments: String[];
 }
 
-export interface JvmEnvironmentItem{
-    target: BuildTargetIdentifier;
-    classpath: Uri[];
-    jvmOptions: String[];
-    workingDirectory: String;
-    environmentVariables: Map<String, String>;
-    mainClasses: JvmMainClass[];
+export interface JvmEnvironmentItem {
+  target: BuildTargetIdentifier;
+  classpath: Uri[];
+  jvmOptions: String[];
+  workingDirectory: String;
+  environmentVariables: Map<String, String>;
+  mainClasses: JvmMainClass[];
 }
 
-export interface JvmTestEnvironmentResult{
-    items: JvmEnvironmentItem[];
+export interface JvmTestEnvironmentResult {
+  items: JvmEnvironmentItem[];
 }
 ```
 
@@ -96,20 +96,20 @@ Response:
 
 ```ts
 export interface JvmMainClass {
-    class: String;
-    arguments: String[];
+  class: String;
+  arguments: String[];
 }
 
-export interface JvmEnvironmentItem{
-    target: BuildTargetIdentifier;
-    classpath: Uri[];
-    jvmOptions: String[];
-    workingDirectory: String;
-    environmentVariables: Map<String, String>;
-    mainClasses: JvmMainClass[];
+export interface JvmEnvironmentItem {
+  target: BuildTargetIdentifier;
+  classpath: Uri[];
+  jvmOptions: String[];
+  workingDirectory: String;
+  environmentVariables: Map<String, String>;
+  mainClasses: JvmMainClass[];
 }
 
-export interface JvmRunEnvironmentResult{
-    items: JvmEnvironmentItem[];
+export interface JvmRunEnvironmentResult {
+  items: JvmEnvironmentItem[];
 }
 ```
