@@ -36,3 +36,4 @@ out/
 .bsp
 
 website/.docusaurus
+website/build
