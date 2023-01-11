@@ -4,9 +4,16 @@ namespace jsonrpc
 
 /// the JSON-RPC protocol,
 /// see https://www.jsonrpc.org/specification
-@protocolDefinition(traits: [jsonRequest, jsonNotification, enumKind])
+@protocolDefinition(traits: [
+
+    jsonRequest
+    jsonNotification
+    enumKind
+])
 @trait(selector: "service")
-structure jsonRPC {}
+structure jsonRPC {
+
+}
 
 /// Identifies an operation that abides by request/response semantics
 /// https://www.jsonrpc.org/specification#request_object
@@ -24,11 +31,13 @@ string jsonNotification
 /// represents a suggestion.
 @trait(selector: ":is(enum, intEnum)")
 enum enumKind {
-  OPEN = "open"
-  CLOSED = "closed"
+    OPEN = "open"
+    CLOSED = "closed"
 }
 
 /// Represents the fact that a union should be serialised in an untagged
 /// fashion
 @trait(selector: "union")
-structure untaggedUnion {}
+structure untaggedUnion {
+
+}
