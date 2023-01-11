@@ -150,10 +150,18 @@ structure BuildTarget {
   /// - display icons or colors in the user interface.
   /// Pre-defined tags are listed in `BuildTargetTag` but clients and servers
   /// are free to define new tags for custom purposes.
-  tags: BuildTargetTags
+  tags: BuildTargetTags = []
+
+  /// The set of languages that this target contains.
+  /// The ID string for each language is defined in the LSP.
+  languageIds: LanguageIds = []
+
 
   /// The direct upstream build target dependencies of this build target
-  dependencies: BuildTargetIdentifiers
+  dependencies: BuildTargetIdentifiers = []
+
+  @required
+  capabilities: BuildTargetCapabilities
 
   /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
   dataKind: BuildTargetDataKind
