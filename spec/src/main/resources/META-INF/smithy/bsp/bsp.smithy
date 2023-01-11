@@ -162,6 +162,7 @@ structure BuildTarget {
   @required
   dependencies: BuildTargetIdentifiers
 
+  /// The capabilities of this build target.
   @required
   capabilities: BuildTargetCapabilities
 
