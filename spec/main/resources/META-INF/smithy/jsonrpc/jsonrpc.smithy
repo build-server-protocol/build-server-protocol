@@ -27,3 +27,8 @@ enum enumKind {
   OPEN = "open"
   CLOSED = "closed"
 }
+
+/// Represents the fact that a union should be serialised in an untagged
+/// fashion
+@trait(selector: "union")
+structure untaggedUnion {}
