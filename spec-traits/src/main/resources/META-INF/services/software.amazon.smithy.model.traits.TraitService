@@ -1,0 +1,5 @@
+ch.epfl.smithy.jsonrpc.traits.EnumKindTrait$Provider
+ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait$Provider
+ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait$Provider
+ch.epfl.smithy.jsonrpc.traits.JsonRPCTrait$Provider
+ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait$Provider
