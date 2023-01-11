@@ -143,9 +143,29 @@ lazy val `bsp-testkit` = project
   .dependsOn(bsp4j)
   .enablePlugins(JavaAppPackaging)
 
+// Defines the BSP specification in terms of a smithy files.
+// In theory, the spec files can live elsewhere and a build task
+// could ensure that this artifact packages them correctly
+// for downstream users
 lazy val spec = project
   .in(file("spec"))
   .settings(
+    crossVersion := CrossVersion.disabled,
+    autoScalaLibrary := false
+  )
+
+// Sidecar artifact for the spec artifact, defining a bunch
+// of POJOs reflecting the annotations the spec uses. This
+// allows downstream tools (code-generators instead) to query
+// shapes by classes and get the annotations automatically
+// decoded to the POJOS. This is entirely optional but helps.
+//
+// Also will contain bespoke linting rules
+lazy val `spec-traits` = project
+  .in(file("spec-traits"))
+  .dependsOn(spec)
+  .settings(
+    crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
     libraryDependencies ++= Seq(
       "software.amazon.smithy" % "smithy-model" % "1.27.0"
