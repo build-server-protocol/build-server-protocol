@@ -162,6 +162,21 @@ lazy val `spec-traits` = project
     )
   )
 
+// A codegen module that contains the logic for generating bsp4j
+// This will be invoked via shell-out using a bespoke sbt task
+lazy val codegen = project
+  .in(file("codegen"))
+  .dependsOn(`spec-traits`)
+  .settings(
+    scalaVersion := V.scala213,
+    publish := {},
+    publishLocal := {},
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %% "os-lib" % "0.9.0",
+      "com.monovore" %% "decline" % "2.4.1"
+    )
+  )
+
 lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j)
