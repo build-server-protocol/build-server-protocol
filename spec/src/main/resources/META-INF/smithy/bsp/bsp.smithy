@@ -571,8 +571,8 @@ intEnum DiagnosticSeverity {
 }
 
 union Code {
-  integer: Integer,
-  string: String
+  string: String,
+  integer: Integer
 }
 
  /// Structure to capture a description for an error code.
