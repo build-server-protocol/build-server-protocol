@@ -150,6 +150,7 @@ lazy val `bsp-testkit` = project
 lazy val spec = project
   .in(file("spec"))
   .settings(
+    moduleName := "bsp-spec",
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false
   )
@@ -165,6 +166,7 @@ lazy val `spec-traits` = project
   .in(file("spec-traits"))
   .dependsOn(spec)
   .settings(
+    moduleName := "bsp-spec-traits",
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
     libraryDependencies ++= Seq(
