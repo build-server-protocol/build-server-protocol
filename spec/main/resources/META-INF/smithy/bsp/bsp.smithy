@@ -4,9 +4,90 @@ namespace bsp
 
 use jsonrpc#jsonRPC
 use jsonrpc#enumKind
+use jsonrpc#jsonRequest
+use jsonrpc#jsonNotification
 
 @jsonRPC
 service BuildServer {
+  operations: [
+    InitializeBuild,
+    OnBuildInitialized,
+    ShutdownBuild,
+    OnBuildShutdown
+  ]
+}
+
+/// Like the language server protocol, the initialize request is sent as the first request from the client to the server.
+/// If the server receives a request or notification before the initialize request it should act as follows:
+///
+/// * For a request the response should be an error with code: -32002. The message can be picked by the server.
+/// * Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
+///
+/// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
+/// requests or notifications to the server.
+@jsonRequest("build/initialize")
+operation InitializeBuild {
+  input: InitializeBuildParams
+  output: InitializeBuildResults
+}
+
+@jsonNotification("build/initialized")
+operation OnBuildInitialized {
+  input: InitializeBuildParams
+}
+
+/// Like the language server protocol, the shutdown build request is sent from the client to the server. It asks the server to shut down,
+/// but to not exit (otherwise the response might not be delivered correctly to the client). There is a separate exit notification that
+/// asks the server to exit.
+@jsonRequest("build/shutdown")
+operation ShutdownBuild {
+}
+
+@jsonNotification("build/exit")
+/// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
+/// if the shutdown request has been received before; otherwise with error code 1.
+operation OnBuildShutdown {
+}
+
+@jsonRPC
+service BuildClient {
+  operations: [
+    ShowMessage,
+    LogMessage,
+    PublishDiagnostics
+  ]
+}
+
+/// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
+///
+/// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
+@jsonNotification("build/showMessage")
+operation ShowMessage {
+  input: ShowMessageParams
+}
+
+/// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
+///
+/// A build/logMessage notification is similar to LSP's window/logMessage, except for a few additions like id and originId.
+@jsonNotification("build/logMessage")
+operation LogMessage {
+  input: LogMessageParams
+}
+
+/// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
+///
+/// Diagnostic is defined as it is in the LSP
+///
+/// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
+/// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
+/// in the LSP. When reset is false, the diagnostics are added to the last active diagnostics, allowing build tools to
+/// stream diagnostics to the client.
+///
+/// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
+///  Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
+@jsonNotification("build/publishDiagnostics")
+operation PublishDiagnostics {
+  input: PublishDiagnosticsParams
 }
 
 
@@ -20,6 +101,9 @@ list URIs {
 
 /// Represents an arbitrary piece of data, in Json format
 document Json
+
+/// Represents the identifier of a BSP request.
+string RequestId
 
 /// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
 /// Clients should not infer metadata out of the URI structure such as the path or query parameters, use BuildTarget instead.
@@ -170,13 +254,13 @@ list Identifiers {
 }
 
 /// Included in notifications of tasks or requests to signal the completion state.
-@enumKind("closed")
+@enumKind("open")
 intEnum StatusCode {
   /// Execution was successful.
   OK = 1
   /// Execution failed.
   ERROR = 2
-  ///
+  /// Execution was cancelled.
   CANCELLED = 3
 }
 
@@ -211,4 +295,307 @@ intEnum ScalaPlatform {
   JVM = 1
   JS = 2
   NATIVE = 3
+}
+
+
+structure InitializeBuildParams {
+  /// Name of the client
+  @required
+  displayName: String
+
+  /// The version of the client
+  @required
+  version: String
+
+  /// The BSP version that the client speaks
+  @required
+  bspVersion: String
+
+  /// The rootUri of the workspace
+  @required
+  rootUri: URI
+
+  /// The capabilities of the client
+  @required
+  capabilities: BuildClientCapabilities
+
+  /// Additional metadata about the client
+  data: Json
+}
+
+structure BuildClientCapabilities {
+  /// The languages that this client supports.
+  /// The ID strings for each language is defined in the LSP.
+  /// The server must never respond with build targets for other
+  /// languages than those that appear in this list.
+  @required
+  languageIds: LanguageIds
+}
+
+@enumKind("open")
+enum LanguageId {
+  SCALA = "scala"
+  JAVA = "java"
+}
+
+list LanguageIds {
+  member: LanguageId
+}
+
+structure InitializeBuildResults {
+  /// Name of the server
+  @required
+  displayName: String
+
+  /// The version of the server
+  @required
+  version: String
+
+  /// The BSP version that the server speaks
+  @required
+  bspVersion: String
+
+  /// The capabilities of the build server
+  @required
+  capabilities: BuildServerCapabilities
+
+  /// Additional metadata about the server
+  data: Json
+}
+
+structure BuildServerCapabilities {
+  /// The languages the server supports compilation via method buildTarget/compile.
+  compileProvider: CompileProvider
+
+  /// The languages the server supports test execution via method buildTarget/test.
+  testProvider: TestProvider
+
+  /// The languages the server supports run via method buildTarget/run.
+  runProvider: RunProvider
+
+  /// The languages the server supports debugging via method debugSession/start.
+  debugProvider: DebugProvider
+
+  /// The server can provide a list of targets that contain a
+  /// * single text document via the method buildTarget/inverseSources
+  inverseSourcesProvider: Boolean = false
+
+  /// The server provides sources for library dependencies
+  ///  via method buildTarget/dependencySources
+  dependencySourcesProvider: Boolean = false
+
+  /// The server can provide a list of dependency modules (libraries with meta information)
+  /// via method buildTarget/dependencyModules
+  dependencyModulesProvider: Boolean = false
+
+  /// The server provides all the resource dependencies
+  /// via method buildTarget/resources
+  resourcesProvider: Boolean = false
+
+  /// The server provides all output paths
+  /// via method buildTarget/outputPaths
+  outputPathsProvider: Boolean = false
+
+  /// The server sends notifications to the client on build
+  /// target change events via buildTarget/didChange
+  buildTargetChangedProvider: Boolean = false
+
+  /// The server can respond to `buildTarget/jvmRunEnvironment` requests with the
+  /// necessary information required to launch a Java process to run a main class.
+  jvmRunEnvironmentProvider: Boolean = false
+
+  /// The server can respond to `buildTarget/jvmTestEnvironment` requests with the
+  /// necessary information required to launch a Java process for testing or
+  //  debugging.
+  jvmTestEnvironmentProvider: Boolean = false
+
+  /// Reloading the build state through workspace/reload is supported
+  canReload: Boolean = false
+
+}
+
+@mixin
+structure LanguageProvider {
+  @required
+  languageIds: LanguageIds
+}
+
+structure CompileProvider with [LanguageProvider] {}
+structure RunProvider with [LanguageProvider] {}
+structure DebugProvider with [LanguageProvider] {}
+structure TestProvider with [LanguageProvider] {}
+
+structure InitializedBuildParams {
+}
+
+@mixin
+structure MessageParams {
+  /// the message type.
+  @required
+  type: MessageType
+
+  /// The task id if any.
+  task: TaskId
+
+  /// The request id that originated this notification.
+  /// The originId field helps clients know which request originated a notification in case several requests are handled by the
+  /// client at the same time. It will only be populated if the client defined it in the request that triggered this notification.
+  originId: RequestId
+
+  /// The actual message.
+  @required
+  message: String
+}
+
+structure ShowMessageParams with [MessageParams] {}
+structure LogMessageParams with [MessageParams] {}
+
+@enumKind("open")
+intEnum MessageType {
+  /// An error message.
+  ERROR = 1
+  /// A warning message.
+  WARNING = 2
+  /// An information message.
+  INFO = 3
+  /// A log message.
+  LOG = 4
+}
+
+structure PublishDiagnosticsParams {
+  /// The document where the diagnostics are published.
+  @required
+  textDocument: TextDocumentIdentifier
+
+  /// The build target where the diagnostics origin.
+  /// It is valid for one text document to belong to multiple
+  /// build targets, for example sources that are compiled against multiple
+  // platforms (JVM, JavaScript).
+  @required
+  buildTarget: BuildTargetIdentifier
+
+  /// The request id that originated this notification.
+  originId: RequestId
+
+  /// The diagnostics to be published by the client.
+  @required
+  diagnostics: Diagnostics
+
+  /// Whether the client should clear the previous diagnostics
+  /// mapped to the same `textDocument` and `buildTarget`.
+  @required
+  reset: Boolean
+}
+
+structure Diagnostic {
+	/// The range at which the message applies.
+  @required
+	range: Range
+
+	/// The diagnostic's severity. Can be omitted. If omitted it is up to the
+	/// client to interpret diagnostics as error, warning, info or hint.
+	severity: DiagnosticSeverity
+
+  /// The diagnostic's code, which might appear in the user interface.
+	code: Code
+
+	/// An optional property to describe the error code.
+	codeDescription: CodeDescription
+
+	/// A human-readable string describing the source of this
+	///diagnostic, e.g. 'typescript' or 'super lint'.
+	source: String
+
+	/// The diagnostic's message.
+  @required
+	message: String
+
+	// Additional metadata about the diagnostic.
+	tags: DiagnosticTags
+
+	/// An array of related diagnostic information, e.g. when symbol-names within
+	/// a scope collide all definitions can be marked via this property.
+	relatedInformation: DiagnosticRelatedInformation
+
+	/// A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
+  // and a `textDocument/codeAction` request.
+	data: Json
+}
+
+structure Position {
+  @required
+  line: Integer
+  @required
+  character: Integer
+}
+
+structure Range {
+  @required
+  start: Position
+  @required
+  end: Position
+}
+
+structure Location {
+	uri: URI
+	range: Range
+}
+
+structure TextDocumentIdentifier {
+	///  The text document's URI.
+	uri: URI
+}
+
+list Diagnostics {
+  member: Diagnostic
+}
+
+@enumKind("open")
+intEnum DiagnosticSeverity {
+  ERROR = 1
+  WARNING = 2
+  INFORMATION = 3
+  HINT = 4
+}
+
+union Code {
+  integer: Integer,
+  string: String
+}
+
+ /// Structure to capture a description for an error code.
+structure CodeDescription {
+	/// An URI to open with more information about the diagnostic error.
+	href: URI
+}
+
+@enumKind("open")
+intEnum DiagnosticTag {
+	 /// Unused or unnecessary code.
+	 ///
+	 /// Clients are allowed to render diagnostics with this tag faded out instead of having an error squiggle.
+  UNNECESSARY = 1
+
+	/// Deprecated or obsolete code.
+	///
+	/// Clients are allowed to rendered diagnostics with this tag strike through.
+	DEPRECATED = 2
+}
+
+list DiagnosticTags {
+  member: DiagnosticTag
+}
+
+/// Represents a related message and source code location for a diagnostic.
+/// This should be used to point to code locations that cause or are related to
+/// a diagnostics, e.g when duplicating a symbol in a scope.
+structure  DiagnosticRelatedInformation {
+	 /// The location of this related diagnostic information.
+	location: Location
+	 /// The message of this related diagnostic information.
+	message: String
+}
+
+list DiagnosticRelatedInformationList {
+  member: DiagnosticRelatedInformation
 }
