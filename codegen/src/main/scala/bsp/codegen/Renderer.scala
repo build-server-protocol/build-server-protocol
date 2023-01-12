@@ -18,7 +18,7 @@ class Renderer(basepkg: String) {
     definition match {
       case Structure(shapeId, fields)            => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values) => Some(renderClosedEnum(shapeId, enumType, values))
-      case OpenEnum(shapeId, enumType, values)   => None
+      case OpenEnum(shapeId, enumType, values)   => Some(renderOpenEnum(shapeId, enumType, values))
       case Service(shapeId, operations)          => None
     }
   }
@@ -81,9 +81,31 @@ class Renderer(basepkg: String) {
     CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
+  def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
+    val evt = enumValueType(enumType)
+    val tpe = shapeId.getName()
+    val allLines = lines(
+      renderPkg(shapeId).map(_ + ";"),
+      newline,
+      block(s"public class $tpe") {
+        values.map(renderStaticValue(enumType))
+      },
+      newline
+    )
+    val fileName = shapeId.getName() + ".java"
+    CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
   def enumValueType[A](enumType: EnumType[A]): String = enumType match {
     case IntEnum    => "int"
     case StringEnum => "String"
+  }
+
+  def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
+    enumType match {
+      case IntEnum    => (ev: EnumValue[Int]) => s"public static final int ${ev.name} = ${ev.value}"
+      case StringEnum => (ev: EnumValue[String]) => s"public static final String ${ev.name} = \"${ev.value}\""
+    }
   }
 
   def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
