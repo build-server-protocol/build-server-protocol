@@ -55,14 +55,9 @@ class SmithyToIR(model: Model) {
             Some(methodName -> methodType)
           } else None
           maybeMethod.map { case (methodName, methodType) =>
-            val fields = op
-              .getInput()
-              .toScala
-              .map(model.expectShape(_, classOf[StructureShape]))
-              .toList
-              .flatMap(_.members().asScala.flatMap(toField))
+            val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
             val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
-            Operation(shape.getId().getName(), fields, methodType, methodName)
+            Operation(shape.getId().getName(), inputType, outputType, methodType, methodName)
           }
         }
       Some(Def.Service(shape.getId(), operations))
