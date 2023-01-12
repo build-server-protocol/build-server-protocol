@@ -16,12 +16,12 @@ class Renderer(basepkg: String) {
 
   val baseRelPath = os.rel / basepkg.split('.')
   // scalafmt: { maxColumn = 120}
-  def render(definition: Def): Option[CodegenFile] = {
+  def render(definition: Def): CodegenFile = {
     definition match {
-      case Structure(shapeId, fields)            => Some(renderStructure(shapeId, fields))
-      case ClosedEnum(shapeId, enumType, values) => Some(renderClosedEnum(shapeId, enumType, values))
-      case OpenEnum(shapeId, enumType, values)   => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations)          => Some(renderService(shapeId, operations))
+      case Structure(shapeId, fields)            => renderStructure(shapeId, fields)
+      case ClosedEnum(shapeId, enumType, values) => renderClosedEnum(shapeId, enumType, values)
+      case OpenEnum(shapeId, enumType, values)   => renderOpenEnum(shapeId, enumType, values)
+      case Service(shapeId, operations)          => renderService(shapeId, operations)
     }
   }
 
