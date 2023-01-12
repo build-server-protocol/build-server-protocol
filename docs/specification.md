@@ -1473,45 +1473,8 @@ export interface DebugSessionParams {
 }
 ```
 
-Currently, build server which implements `debugSession/start` endpoint, has to support following data kinds:
-
-- `scala-main-class`, for which `data` has following shape
-
-  ```ts
-  interface ScalaMainClass {
-    class: string;
-    arguments: string[];
-    jvmOptions: string[];
-    environmentVariables: string[];
-  }
-  ```
-
-- `scala-test-suites`, for which `data` is a `string[]`. Each element of that array is a fully qualified class name.
-
-- `scala-test-suites-selection`, for which `data` has following shape
-
-  ```ts
-  interface ScalaTestSuites {
-    /** The fully qualified names of the test classes in this target and the tests in this test classes */
-    suites: ScalaTestSuiteSelection[];
-    jvmOptions: string[];
-    environmentVariables: string[];
-  }
-
-  interface ScalaTestSuiteSelection {
-    /** The test class to run. */
-    className: string;
-    /** The selected tests to run. */
-    tests: string[];
-  }
-  ```
-
-  bsp4j classes:
-
-  - [ScalaTestSuites.java](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuites.java)
-  - [ScalaTestSuiteSelection.java](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuiteSelection.java)
-
-- `scala-attach-remote`, for which data is an array of [BuildTargetIdentifier](https://github.com/build-server-protocol/build-server-protocol/blob/bdc1558118841d376faba87f83075920d3630886/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/BuildTargetIdentifier.java).
+For the scala-specific `data` options please reference the [Scala Extension
+documentation](/docs/extensions/scala)
 
 Response:
 

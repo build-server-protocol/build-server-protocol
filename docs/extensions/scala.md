@@ -106,8 +106,8 @@ export interface ScalacOptionsItem {
 
 ## Scala Test Classes Request
 
-The build target scala test options request is sent from the client to the
-server to query for the list of fully qualified names of test clases in a given
+The Scala build target test classes request is sent from the client to the
+server to query for the list of fully qualified names of test classes in a given
 list of targets.
 
 This method can for example be used by a client to:
@@ -235,3 +235,49 @@ notifications during compilation before completing the response.
 
 The client will get a `originId` field in `ScalaMainClassesResult` if the
 `originId` field in the `ScalaMainClassesParams` is defined.
+
+## Scala specific data kinds for debugging
+
+
+A Scala build server which implements the `debugSession/start` endpoint, should
+support following data kinds, which are held in `data`.
+
+- `scala-main-class`, for which `data` has following shape
+
+```ts
+interface ScalaMainClass {
+    class: string;
+    arguments: string[];
+    jvmOptions: string[];
+    environmentVariables: string[];
+}
+```
+
+- `scala-test-suites`, for which `data` is a `string[]`. Each element of that
+  array is a fully qualified class name.
+
+- `scala-test-suites-selection`, for which `data` has following shape
+
+```ts
+interface ScalaTestSuites {
+    /** The fully qualified names of the test classes in this target and the tests in this test classes */
+    suites: ScalaTestSuiteSelection[];
+    jvmOptions: string[];
+    environmentVariables: string[];
+}
+
+interface ScalaTestSuiteSelection {
+    /** The test class to run. */
+    className: string;
+    /** The selected tests to run. */
+    tests: string[];
+}
+```
+
+- `scala-attach-remote`, for which data is an array of
+  [BuildTargetIdentifier](https://github.com/build-server-protocol/build-server-protocol/blob/master/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/BuildTargetIdentifier.java).
+
+You can find the bsp4j classes for this in the following places:
+
+  - [ScalaTestSuites.java](https://github.com/build-server-protocol/build-server-protocol/blob/master/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuites.java)
+  - [ScalaTestSuiteSelection.java](https://github.com/build-server-protocol/build-server-protocol/blob/master/bsp4j/src/main/xtend-gen/ch/epfl/scala/bsp4j/ScalaTestSuiteSelection.java)
