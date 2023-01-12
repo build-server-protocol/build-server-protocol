@@ -4,8 +4,16 @@ import software.amazon.smithy.model.Model
 
 object Codegen {
 
-  case class CodegenFile(path: os.RelPath, contents: String)
-
-  def run(model: Model, packagePrefix: String): List[CodegenFile] = ???
+  def run(outputDir: os.Path): List[os.Path] = {
+    val model = ModelLoader.loadModel()
+    val definitions = new SmithyToIR(model).definitions("bsp")
+    val renderer = new Renderer("ch.epfl.scala.bsp4j")
+    val codegenFiles = definitions.flatMap(renderer.render)
+    codegenFiles.map { cf =>
+      val fullPath = outputDir / cf.path
+      os.write.over(fullPath, cf.contents, createFolders = true)
+      fullPath
+    }
+  }
 
 }

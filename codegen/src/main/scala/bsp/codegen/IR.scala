@@ -41,20 +41,14 @@ final case class Alternative(name: String, typ: Type)
 
 sealed trait Primitive
 object Primitive {
+
   case object PUnit extends Primitive
-  case object PByteArray extends Primitive
   case object PBool extends Primitive
   case object PString extends Primitive
-  case object PTimestamp extends Primitive
-  case object PUuid extends Primitive
-  case object PByte extends Primitive
   case object PInt extends Primitive
-  case object PShort extends Primitive
   case object PLong extends Primitive
   case object PFloat extends Primitive
   case object PDouble extends Primitive
-  case object PBigDecimal extends Primitive
-  case object PBigInteger extends Primitive
   case object PDocument extends Primitive
 }
 
