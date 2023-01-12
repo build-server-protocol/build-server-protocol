@@ -31,9 +31,9 @@ class Renderer(basepkg: String) {
       newline,
       "@JsonRpcData",
       block(s"class ${shapeId.getName()}")(
-        lines(fields.map(renderField)),
+        lines(fields.map(renderJavaField)),
         newline, {
-          val params = fields.map(renderField).mkString(", ")
+          val params = fields.map(renderParam).mkString(", ")
           val assignments = fields.map(_.name).map(n => s"this.$n = $n")
           block(s"new($params)")(assignments)
         }
@@ -61,11 +61,27 @@ class Renderer(basepkg: String) {
     case TPrimitive(prim)     => empty
   }
 
-  def renderField(field: Field): String = {
-    val decl = s"${renderType(field.tpe)} ${field.name}"
+  def renderJavaField(field: Field): Lines = {
+    val maybeAdapter = if (field.tpe == Type.TPrimitive(Primitive.PDocument)) {
+      lines("@JsonAdapter(JsonElementTypeAdapter.Factory.class)")
+    } else empty
+    val maybeNonNull = if (field.required) lines("@NonNull") else empty
+    lines(
+      maybeAdapter,
+      maybeNonNull,
+      renderFieldRaw(field)
+    )
+  }
+
+  def renderParam(field: Field): String = {
+    val decl = renderFieldRaw(field)
     if (field.required) {
       s"@NonNull $decl"
     } else decl
+  }
+
+  def renderFieldRaw(field: Field): String = {
+    s"${renderType(field.tpe)} ${field.name}"
   }
 
   def renderType(tpe: Type): String = tpe match {
