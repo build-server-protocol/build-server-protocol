@@ -6,7 +6,14 @@ object Main
     extends CommandApp(
       name = "bsp-codegen",
       header = "codegenerator for bsp4j",
-      main = MainArgs.opts.map(println)
+      main = {
+        val out = System.out
+        System.setOut(System.err)
+        MainArgs.opts.map { args =>
+          val results = Codegen.run(args.outputDir)
+          results.foreach(path => out.println(s"Generated $path"))
+        }
+      }
     )
 
 case class MainArgs(

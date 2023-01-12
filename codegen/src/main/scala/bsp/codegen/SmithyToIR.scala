@@ -115,6 +115,13 @@ class SmithyToIR(model: Model) {
     def prim(primitive: Primitive): Option[Type] = Some(TPrimitive(primitive))
 
     def booleanShape(shape: BooleanShape): Option[Type] = prim(PBool)
+    def integerShape(shape: IntegerShape): Option[Type] = prim(PInt)
+    def longShape(shape: LongShape): Option[Type] = prim(PLong)
+    def floatShape(shape: FloatShape): Option[Type] = prim(PFloat)
+    def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument)
+    def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble)
+    def stringShape(shape: StringShape): Option[Type] = prim(PString)
+    def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId()))
 
     def listShape(shape: ListShape): Option[Type] =
       model.expectShape(shape.getMember().getTarget()).accept(this).map(TCollection(_))
@@ -123,14 +130,6 @@ class SmithyToIR(model: Model) {
       k <- shape.getKey().accept(this)
       v <- shape.getValue().accept(this)
     } yield TMap(k, v)
-
-    def integerShape(shape: IntegerShape): Option[Type] = prim(PInt)
-    def longShape(shape: LongShape): Option[Type] = prim(PLong)
-    def floatShape(shape: FloatShape): Option[Type] = prim(PFloat)
-    def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument)
-    def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble)
-    def stringShape(shape: StringShape): Option[Type] = prim(PString)
-    def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId()))
 
     def unionShape(shape: UnionShape): Option[Type] = Some {
       if (shape.hasTrait(classOf[UntaggedUnionTrait])) {
