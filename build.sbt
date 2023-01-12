@@ -335,6 +335,7 @@ def runCodegen(config: Configuration) = Def.task {
 
               val res =
                 ("java" :: "-cp" :: cp :: mc :: args).lineStream.toList
+              res.foreach(file => s.log.info(s"Generated $file"))
               res.map(new File(_))
             } else outputs.getOrElse(Seq.empty)
           }

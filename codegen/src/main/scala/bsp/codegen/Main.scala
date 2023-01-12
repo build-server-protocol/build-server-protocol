@@ -11,7 +11,7 @@ object Main
         System.setOut(System.err)
         MainArgs.opts.map { args =>
           val results = Codegen.run(args.outputDir)
-          results.foreach(path => out.println(s"Generated $path"))
+          results.foreach(path => out.println(path))
         }
       }
     )
