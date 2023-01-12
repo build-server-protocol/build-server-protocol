@@ -49,7 +49,7 @@ class SmithyToIR(model: Model) {
             val methodName = op.expectTrait(classOf[JsonRequestTrait]).getValue()
             val methodType = JsonRPCMethodType.Request
             Some(methodName -> methodType)
-          } else if (op.hasTrait(classOf[JsonRequestTrait])) {
+          } else if (op.hasTrait(classOf[JsonNotificationTrait])) {
             val methodName = op.expectTrait(classOf[JsonNotificationTrait]).getValue()
             val methodType = JsonRPCMethodType.Notification
             Some(methodName -> methodType)
@@ -57,7 +57,7 @@ class SmithyToIR(model: Model) {
           maybeMethod.map { case (methodName, methodType) =>
             val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
             val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
-            Operation(shape.getId().getName(), inputType, outputType, methodType, methodName)
+            Operation(op.getId.getName(), inputType, outputType, methodType, methodName)
           }
         }
       Some(Def.Service(shape.getId(), operations))

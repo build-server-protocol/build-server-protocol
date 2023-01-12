@@ -19,16 +19,16 @@ service BuildServer {
 
 /// Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 /// If the server receives a request or notification before the initialize request it should act as follows:
-/// 
+///
 /// * For a request the response should be an error with code: -32002. The message can be picked by the server.
 /// * Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
-/// 
+///
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
 operation InitializeBuild {
     input: InitializeBuildParams
-    output: InitializeBuildResults
+    output: InitializeBuildResult
 }
 
 @jsonNotification("build/initialized")
@@ -61,7 +61,7 @@ service BuildClient {
 }
 
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
-/// 
+///
 /// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
 @jsonNotification("build/showMessage")
 operation ShowMessage {
@@ -69,7 +69,7 @@ operation ShowMessage {
 }
 
 /// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
-/// 
+///
 /// A build/logMessage notification is similar to LSP's window/logMessage, except for a few additions like id and originId.
 @jsonNotification("build/logMessage")
 operation LogMessage {
@@ -77,14 +77,14 @@ operation LogMessage {
 }
 
 /// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
-/// 
+///
 /// Diagnostic is defined as it is in the LSP
-/// 
+///
 /// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 /// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
 /// in the LSP. When reset is false, the diagnostics are added to the last active diagnostics, allowing build tools to
 /// stream diagnostics to the client.
-/// 
+///
 /// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
 /// Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
 @jsonNotification("build/publishDiagnostics")
@@ -118,7 +118,7 @@ list BuildTargetIdentifiers {
 }
 
 /// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
-/// 
+///
 /// * sbt: a build target is a combined project + config. Example:
 /// * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
 /// * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
@@ -126,7 +126,7 @@ list BuildTargetIdentifiers {
 /// * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
 /// * Pants: a pants target corresponds one-to-one with a BuildTarget
 /// * Bazel: a bazel target corresponds one-to-one with a BuildTarget
-/// 
+///
 /// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 structure BuildTarget {
     /// The target’s unique identifier
@@ -220,11 +220,11 @@ enum BuildTargetTag {
     /// Actions on the target such as build and test should only be invoked manually
     /// and explicitly. For example, triggering a build on all targets in the workspace
     /// should by default not include this target.
-    /// 
+    ///
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
-    /// 
+    ///
     MANUAL = "manual"
 }
 
@@ -328,7 +328,7 @@ list LanguageIds {
     member: LanguageId
 }
 
-structure InitializeBuildResults {
+structure InitializeBuildResult {
     /// Name of the server
     @required
     displayName: String
@@ -543,11 +543,11 @@ structure CodeDescription {
 @enumKind("open")
 intEnum DiagnosticTag {
     /// Unused or unnecessary code.
-    /// 
+    ///
     /// Clients are allowed to render diagnostics with this tag faded out instead of having an error squiggle.
     UNNECESSARY = 1
     /// Deprecated or obsolete code.
-    /// 
+    ///
     /// Clients are allowed to rendered diagnostics with this tag strike through.
     DEPRECATED = 2
 }

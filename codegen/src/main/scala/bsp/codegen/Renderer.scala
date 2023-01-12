@@ -9,6 +9,8 @@ import software.amazon.smithy.model.shapes.ShapeId
 import dsl._
 import bsp.codegen.EnumType.IntEnum
 import bsp.codegen.EnumType.StringEnum
+import bsp.codegen.JsonRPCMethodType.Notification
+import bsp.codegen.JsonRPCMethodType.Request
 
 class Renderer(basepkg: String) {
 
@@ -19,7 +21,7 @@ class Renderer(basepkg: String) {
       case Structure(shapeId, fields)            => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values) => Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values)   => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations)          => None
+      case Service(shapeId, operations)          => Some(renderService(shapeId, operations))
     }
   }
 
@@ -94,6 +96,47 @@ class Renderer(basepkg: String) {
     )
     val fileName = shapeId.getName() + ".java"
     CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
+  def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
+    val allLines = lines(
+      renderPkg(shapeId).map(_ + ";"),
+      newline,
+      "import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;",
+      "import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;",
+      newline,
+      "import java.util.concurrent.CompletableFuture;",
+      newline,
+      block(s"public interface ${shapeId.getName()}")(
+        operations.foldMap(renderOperation),
+        newline
+      ),
+      newline
+    )
+    val fileName = shapeId.getName() + ".java"
+    CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
+  def renderOperation(operation: Operation): Lines = {
+    val output = operation.outputType match {
+      case TPrimitive(Primitive.PUnit) => "void"
+      case other                       => s"CompletableFuture<${renderType(other)}>"
+    }
+    val input = operation.inputType match {
+      case TPrimitive(Primitive.PUnit) => ""
+      case other                       => s"${renderType(other)} params"
+    }
+    val rpcMethod = operation.jsonRPCMethod
+    val annotation = operation.jsonRPCMethodType match {
+      case Notification => s"@JsonNotification(\"$rpcMethod\")"
+      case Request      => s"@JsonRequest(\"$rpcMethod\")"
+    }
+    val method = operation.name.head.toLower + operation.name.tail
+    lines(
+      newline,
+      annotation,
+      s"$output $method($input);"
+    )
   }
 
   def enumValueType[A](enumType: EnumType[A]): String = enumType match {
