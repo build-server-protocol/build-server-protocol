@@ -31,7 +31,7 @@ lazy val V = new {
   val scala212 = "2.12.17"
   val scala213 = "2.13.10"
   val supportedScalaVersions = List(scala212, scala213)
-  val jsoniter = "2.20.1"
+  val jsoniter = "2.20.2"
   val java8Compat = "1.0.2"
   val lsp4j = "0.12.0"
   val scalacheck = "1.17.0"
@@ -116,8 +116,8 @@ lazy val tests = project
     libraryDependencies ++= List(
       "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0",
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
-      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.6.1",
-      "org.scalatest" %% "scalatest" % "3.2.14",
+      "org.scala-sbt.ipcsocket" % "ipcsocket" % "1.6.2",
+      "org.scalatest" %% "scalatest" % "3.2.15",
       "org.scalatestplus" %% "scalacheck-1-15" % "3.2.11.0",
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % V.jsoniter

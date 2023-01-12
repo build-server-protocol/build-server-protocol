@@ -1,0 +1,21 @@
+:root{
+  --ifm-color-primary-lightest: #ffffff;
+  --ifm-color-primary-lighter: #d6f1ff;
+  --ifm-color-primary-light: #ade4ff;
+  --ifm-color-primary: #7ad3ff;
+  --ifm-color-primary-dark: #5cc9ff;
+  --ifm-color-primary-darker: #33bbff;
+  --ifm-color-primary-darkest: #0aadff;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.flex-row-reverse{
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}

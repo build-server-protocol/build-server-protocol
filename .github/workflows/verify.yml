@@ -5,34 +5,70 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  generate-and-test:
+  check-generation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v11
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: adopt@1.11
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'sbt'
+
       - name: generate xtend
         run: sbt bsp4j/xtend
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v13
+        id: verify-changed-files
+        with:
+          files: |
+             **/*.java
+
+      - name: Fail if we detect changed files
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "Detected changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          echo "Make sure to run 'sbt bsp4j/extend' before pushing."
+          exit 1
+
+  test:
+    needs: check-generation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'sbt'
+
       - name: compile
         run: sbt +compile +package
+
       - name: test
         run: sbt +test
+
   docs:
     name: Generate docs site
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v11
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: adopt@1.8
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'sbt'
       - run: sbt docs/docusaurusCreateSite
+
   format-check:
     name: Format Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v11
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-            java-version: adopt@1.8
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'sbt'
       - run: sbt checkScalaFormat

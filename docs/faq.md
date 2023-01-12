@@ -24,13 +24,3 @@ could instead implement a BSP client to extract build metadata from any build
 tools that implement BSP, sharing a single BSP server implementation. Likewise,
 a new build tool could implement a BSP server and support a wide range of
 language servers out-of-the-box.
-
-**Q**: Should non-Scala participants in the protocol generate data types from
-`bsp.proto` or is it preferable to use pre-generated artifacts in maven (or
-other repos)?
-
-**A**: BSP uses JSON on the wire like LSP, it is not necessary to use
-`bsp.proto`. The `bsp.proto` schema is provided as a language-agnostic reference
-schema for the shape of BSP data structures, similarly to how LSP messages are
-defined using TypeScript interfaces. Like with LSP, it is left to BSP
-participant to figure out how to produce JSON payloads with BSP data structures.
