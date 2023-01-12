@@ -22,12 +22,11 @@ object JsonRPCMethodType {
 
 final case class Operation(
     name: String,
-    inlinedInputFields: List[Field],
+    inputType: Type,
+    outputType: Type,
     jsonRPCMethodType: JsonRPCMethodType,
     jsonRPCMethod: String
-) {
-  def params: List[Field] = inlinedInputFields
-}
+)
 
 sealed trait EnumType[A]
 object EnumType {
