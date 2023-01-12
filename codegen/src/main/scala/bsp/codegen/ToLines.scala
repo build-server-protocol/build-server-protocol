@@ -12,4 +12,6 @@ object ToLines {
 
   implicit def flattenedLines[A: ToLines]: ToLines[List[A]] = (a: List[A]) => a.flatMap(ToLines(_))
 
+  implicit def linesToLInes: ToLines[Lines] = (a: Lines) => a.get
+
 }

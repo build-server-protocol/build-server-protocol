@@ -12,8 +12,14 @@ import software.amazon.smithy.utils.ToSmithyBuilder;
 
 public class EnumKindTrait extends AbstractTrait implements ToSmithyBuilder<EnumKindTrait> {
 
-	public enum EnumKind {
-		OPEN, CLOSED
+	public static enum EnumKind {
+		OPEN("open"), CLOSED("closed");
+
+		private String value;
+
+		EnumKind(String value) {
+			this.value = value;
+		}
 	}
 
 	public static final ShapeId ID = ShapeId.from("jsonrpc#enumKind");
@@ -34,10 +40,7 @@ public class EnumKindTrait extends AbstractTrait implements ToSmithyBuilder<Enum
 
 	@Override
 	protected Node createNode() {
-		ObjectNode.Builder builder = Node.objectNodeBuilder();
-		// builder.withMember("mode", getEnumKind().name());
-		// builder.withMember("reportLevel", getCompatReportLevel().name());
-		return builder.build();
+		return Node.from(getEnumKind().value);
 	}
 
 	@Override
@@ -61,7 +64,6 @@ public class EnumKindTrait extends AbstractTrait implements ToSmithyBuilder<Enum
 			return this;
 		}
 
-
 		@Override
 		public EnumKindTrait build() {
 			return new EnumKindTrait(this);
@@ -77,7 +79,7 @@ public class EnumKindTrait extends AbstractTrait implements ToSmithyBuilder<Enum
 
 		@Override
 		public EnumKindTrait createTrait(ShapeId target, Node value) {
-			EnumKind enumKind = EnumKind.valueOf(value.expectStringNode().getValue());
+			EnumKind enumKind = EnumKind.valueOf(value.expectStringNode().getValue().toUpperCase());
 			Builder builder = new Builder().enumKind(enumKind);
 			return new EnumKindTrait(builder);
 		}

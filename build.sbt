@@ -174,6 +174,55 @@ lazy val `spec-traits` = project
     )
   )
 
+// A code-generated recreation of the bsp4j module
+lazy val `bsp4j-gen` = project
+  .in(file("bsp4j-gen"))
+  .settings(
+    crossVersion := CrossVersion.disabled,
+    autoScalaLibrary := false,
+    Compile / javacOptions ++= {
+      val specifyRelease =
+        if (sys.props("java.version").startsWith("1.8"))
+          List.empty
+        else
+          List("--release", "8")
+
+      List(
+        "-Xlint:all",
+        "-Werror"
+      ) ++ specifyRelease
+    },
+    Compile / doc / javacOptions := List("-Xdoclint:none"),
+    Compile / javaHome := inferJavaHome(),
+    Compile / doc / javaHome := inferJavaHome(),
+    TaskKey[Unit]("codegen") := {
+      val _ = runCodegen(Compile).value
+    },
+    TaskKey[Unit]("xtend") := {
+      // Invoking generation from smithy
+
+      val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
+      val compiler = injector.getInstance(classOf[XtendBatchCompiler])
+      val classpath = (Compile / dependencyClasspath).value.map(_.data).mkString(File.pathSeparator)
+      compiler.setClassPath(classpath)
+      val sourceDir = (Compile / sourceDirectory).value / "java"
+      compiler.setSourcePath(sourceDir.getCanonicalPath)
+      val outDir = (Compile / sourceDirectory).value / "xtend-gen"
+      IO.delete(outDir)
+      compiler.setOutputPath(outDir.getCanonicalPath)
+      object XtendError
+          extends Exception(s"Compilation of Xtend files in $sourceDir failed.")
+          with sbt.internal.util.FeedbackProvidedException
+      if (!compiler.compile())
+        throw XtendError
+    },
+    Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
+    libraryDependencies ++= List(
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
+    )
+  )
+
 // A codegen module that contains the logic for generating bsp4j
 // This will be invoked via shell-out using a bespoke sbt task
 lazy val codegen = project
@@ -211,3 +260,89 @@ addCommandAlias(
   "checkScalaFormat",
   "scalafmtCheckAll ; scalafmtSbtCheck"
 )
+
+// Bootstrapping task that wires the build to the
+// codegen module's main method
+def runCodegen(config: Configuration) = Def.task {
+  import java.nio.file.Files
+  import java.util.stream.Collectors
+  import sys.process._
+
+  val outputDir = ((config / sourceDirectory).value / "java").getAbsolutePath
+  val codegenCp = (codegen / Compile / fullClasspath).value.map(_.data)
+
+  val mc = "bsp.codegen.Main"
+  val s = (config / streams).value
+
+  import sjsonnew._
+  import BasicJsonProtocol._
+  import sbt.FileInfo
+  import sbt.HashFileInfo
+  import sbt.io.Hash
+  import scala.jdk.CollectionConverters._
+
+  // Json codecs used by SBT's caching constructs
+  // This serialises a path by providing a hash of the content it points to.
+  // Because the hash is part of the Json, this allows SBT to detect when a file
+  // changes and invalidate its relevant caches.
+  implicit val pathFormat: JsonFormat[File] =
+    BasicJsonProtocol.projectFormat[File, HashFileInfo](
+      p => {
+        if (p.isFile()) FileInfo.hash(p)
+        else
+          // If the path is a directory, we get the hashes of all files
+          // then hash the concatenation of the hash's bytes.
+          FileInfo.hash(
+            p,
+            Hash(
+              Files
+                .walk(p.toPath(), 2)
+                .collect(Collectors.toList())
+                .asScala
+                .map(_.toFile())
+                .map(Hash(_))
+                .foldLeft(Array.emptyByteArray)(_ ++ _)
+            )
+          )
+      },
+      hash => hash.file
+    )
+
+  case class CodegenInput(files: Seq[File])
+  object CodegenInput {
+    implicit val seqFormat: JsonFormat[CodegenInput] =
+      BasicJsonProtocol.projectFormat[CodegenInput, Seq[File]](
+        input => input.files,
+        files => CodegenInput(files)
+      )(BasicJsonProtocol.seqFormat(pathFormat))
+  }
+
+  val cached =
+    Tracked.inputChanged[CodegenInput, Seq[File]](
+      s.cacheStoreFactory.make("input")
+    ) {
+      Function.untupled {
+        Tracked
+          .lastOutput[(Boolean, CodegenInput), Seq[File]](
+            s.cacheStoreFactory.make("output")
+          ) { case ((changed, files), outputs) =>
+            if (changed || outputs.isEmpty) {
+              val args = List("--output", outputDir)
+
+              val cp = codegenCp
+                .map(_.getAbsolutePath())
+                .mkString(":")
+
+              val res =
+                ("java" :: "-cp" :: cp :: mc :: args).lineStream.toList
+              res.map(new File(_))
+            } else outputs.getOrElse(Seq.empty)
+          }
+      }
+    }
+
+  // We're re-generating everything the classpath of the codegen module changes,
+  // which indicates a change in the spec or a change in the codegen logic
+  val trackedFiles = codegenCp.allPaths.get()
+  cached(CodegenInput(trackedFiles))
+}

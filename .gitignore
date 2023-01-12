@@ -36,3 +36,5 @@ out/
 .bsp
 
 website/.docusaurus
+
+bsp4j-gen
