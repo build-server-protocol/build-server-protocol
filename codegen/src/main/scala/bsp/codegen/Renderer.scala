@@ -7,15 +7,17 @@ import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 
 import dsl._
+import bsp.codegen.EnumType.IntEnum
+import bsp.codegen.EnumType.StringEnum
 
 class Renderer(basepkg: String) {
 
   val baseRelPath = os.rel / basepkg.split('.')
-
+  // scalafmt: { maxColumn = 120}
   def render(definition: Def): Option[CodegenFile] = {
     definition match {
       case Structure(shapeId, fields)            => Some(renderStructure(shapeId, fields))
-      case ClosedEnum(shapeId, enumType, values) => None
+      case ClosedEnum(shapeId, enumType, values) => Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values)   => None
       case Service(shapeId, operations)          => None
     }
@@ -42,6 +44,53 @@ class Renderer(basepkg: String) {
 
     val fileName = shapeId.getName() + ".xtends"
     CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
+  def renderClosedEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
+    val evt = enumValueType(enumType)
+    val tpe = shapeId.getName()
+    val allLines = lines(
+      renderPkg(shapeId).map(_ + ";"),
+      newline,
+      "import com.google.gson.annotations.JsonAdapter;",
+      "import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;",
+      newline,
+      "@JsonAdapter(EnumTypeAdapter.Factory.class)",
+      block(s"public enum $tpe")(
+        newline,
+        values.map(renderEnumValueDef(enumType)),
+        newline,
+        s"private final $evt value;",
+        block(s"$tpe($evt value)") {
+          "this.value = value;"
+        },
+        newline,
+        block(s"public $evt getValue())") {
+          "return value;"
+        },
+        newline,
+        block(s"public static $tpe forValue (${evt} value))")(
+          s"$tpe[] allValues = $tpe.values();",
+          "if (value < 1 || value > allValues.length)",
+          lines("""throw new IllegalArgumentException("Illegal enum value: " + value);""").indent,
+          "return allValues[value - 1],;"
+        )
+      )
+    )
+    val fileName = shapeId.getName() + ".java"
+    CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
+  def enumValueType[A](enumType: EnumType[A]): String = enumType match {
+    case IntEnum    => "int"
+    case StringEnum => "String"
+  }
+
+  def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
+    enumType match {
+      case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
+      case StringEnum => (ev: EnumValue[String]) => s"${ev.name}(\"${ev.value}\")"
+    }
   }
 
   def renderPkg(shapeId: ShapeId): Lines = lines(
