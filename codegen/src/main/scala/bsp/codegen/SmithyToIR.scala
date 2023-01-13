@@ -15,6 +15,7 @@ import ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait
 import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
 import java.util.Optional
 import software.amazon.smithy.model.traits.RequiredTrait
+import software.amazon.smithy.model.traits.DocumentationTrait
 
 class SmithyToIR(model: Model) {
 
@@ -57,16 +58,17 @@ class SmithyToIR(model: Model) {
           maybeMethod.map { case (methodName, methodType) =>
             val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
             val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
-            Operation(op.getId.getName(), inputType, outputType, methodType, methodName)
+            val hints = getHints(op)
+            Operation(op.getId.getName(), inputType, outputType, methodType, methodName, hints)
           }
         }
-      Some(Def.Service(shape.getId(), operations))
+      Some(Def.Service(shape.getId(), operations, getHints(shape)))
     }
 
     def toField(member: MemberShape): Option[Field] = {
       val required = member.hasTrait(classOf[RequiredTrait])
       val name = member.getMemberName()
-      getType(member.getTarget()).map(Field(name, _, required))
+      getType(member.getTarget()).map(Field(name, _, required, getHints(member)))
     }
     def getType(shapeId: ShapeId): Option[Type] = model.expectShape(shapeId).accept(ToTypeVisitor)
     def getType(maybeShapeId: Optional[ShapeId]): Option[Type] =
@@ -74,7 +76,7 @@ class SmithyToIR(model: Model) {
 
     override def structureShape(shape: StructureShape): Option[Def] = {
       val fields = shape.members().asScala.flatMap(toField).toList
-      Some(Def.Structure(shape.getId(), fields))
+      Some(Def.Structure(shape.getId(), fields, getHints(shape)))
     }
 
     override def intEnumShape(shape: IntEnumShape): Option[Def] = {
@@ -82,12 +84,14 @@ class SmithyToIR(model: Model) {
         .getEnumValues()
         .asScala
         .map { case (name, value) =>
-          EnumValue(name, value.toInt)
+          val valueHints = getHints(shape.getAllMembers().get(name))
+          EnumValue(name, value.toInt, valueHints)
         }
         .toList
+      val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind() match {
-        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues))
-        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues))
+        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
+        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
       }
     }
     override def enumShape(shape: EnumShape): Option[Def] = {
@@ -95,12 +99,14 @@ class SmithyToIR(model: Model) {
         .getEnumValues()
         .asScala
         .map { case (name, value) =>
-          EnumValue(name, value)
+          val valueHints = getHints(shape.getAllMembers().get(name))
+          EnumValue(name, value, valueHints)
         }
         .toList
+      val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind() match {
-        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues))
-        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues))
+        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
       }
     }
   }
@@ -161,6 +167,16 @@ class SmithyToIR(model: Model) {
     def serviceShape(shape: ServiceShape): Option[Type] = None
     def bigIntegerShape(shape: BigIntegerShape): Option[Type] = None
     def bigDecimalShape(shape: BigDecimalShape): Option[Type] = None
+  }
+
+  def getHints(shape: Shape): List[Hint] = {
+    val documentation = shape
+      .getTrait(classOf[DocumentationTrait])
+      .toScala
+      .map(_.getValue())
+      .map(Hint.Documentation(_))
+      .toList
+    documentation
   }
 
 }

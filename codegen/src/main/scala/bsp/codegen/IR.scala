@@ -6,12 +6,12 @@ import software.amazon.smithy.model.shapes.ShapeId
 // of bsp4j. It is not meant to be reused for Scala code-generation, or any other language, for that matter.
 
 sealed trait Def { def shapeId: ShapeId }
-// scalafmt: {maxColumn = 120}
+// scalafmt: {maxColumn = 180}
 object Def {
-  final case class Structure(shapeId: ShapeId, fields: List[Field]) extends Def
-  final case class OpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]) extends Def
-  final case class ClosedEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]) extends Def
-  final case class Service(shapeId: ShapeId, operations: List[Operation]) extends Def
+  final case class Structure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]) extends Def
+  final case class OpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]], hints: List[Hint]) extends Def
+  final case class ClosedEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]], hints: List[Hint]) extends Def
+  final case class Service(shapeId: ShapeId, operations: List[Operation], hints: List[Hint]) extends Def
 }
 
 sealed trait JsonRPCMethodType extends Product with Serializable
@@ -25,7 +25,8 @@ final case class Operation(
     inputType: Type,
     outputType: Type,
     jsonRPCMethodType: JsonRPCMethodType,
-    jsonRPCMethod: String
+    jsonRPCMethod: String,
+    hints: List[Hint]
 )
 
 sealed trait EnumType[A]
@@ -34,9 +35,9 @@ object EnumType {
   case object StringEnum extends EnumType[String]
 }
 
-final case class EnumValue[A](name: String, value: A)
-final case class Field(name: String, tpe: Type, required: Boolean)
-final case class Alternative(name: String, typ: Type)
+final case class EnumValue[A](name: String, value: A, hints: List[Hint])
+final case class Field(name: String, tpe: Type, required: Boolean, hints: List[Hint])
+final case class Alternative(name: String, typ: Type, hints: List[Hint])
 
 sealed trait Primitive
 object Primitive {
@@ -58,4 +59,11 @@ object Type {
   case class TRef(shapeId: ShapeId) extends Type
   case class TPrimitive(prim: Primitive) extends Type
   case class TUntaggedUnion(tpes: List[Type]) extends Type
+}
+
+sealed trait Hint
+object Hint {
+
+  case class Documentation(string: String) extends Hint
+
 }
