@@ -37,10 +37,10 @@ service BuildClient {
 
 /// Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 /// If the server receives a request or notification before the initialize request it should act as follows:
-///
+/// 
 /// * For a request the response should be an error with code: -32002. The message can be picked by the server.
 /// * Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
-///
+/// 
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
@@ -70,7 +70,7 @@ operation OnBuildShutdown {
 }
 
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
-///
+/// 
 /// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
 @jsonNotification("build/showMessage")
 operation OnBuildShowMessage {
@@ -78,7 +78,7 @@ operation OnBuildShowMessage {
 }
 
 /// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
-///
+/// 
 /// A build/logMessage notification is similar to LSP's window/logMessage, except for a few additions like id and originId.
 @jsonNotification("build/logMessage")
 operation OnBuildLogMessage {
@@ -86,14 +86,14 @@ operation OnBuildLogMessage {
 }
 
 /// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
-///
+/// 
 /// Diagnostic is defined as it is in the LSP
-///
+/// 
 /// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 /// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
 /// in the LSP. When reset is false, the diagnostics are added to the last active diagnostics, allowing build tools to
 /// stream diagnostics to the client.
-///
+/// 
 /// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
 /// Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
 @jsonNotification("build/publishDiagnostics")
@@ -115,6 +115,7 @@ operation WorkspaceBuildTargets {
 /// that other requests respond with the previously known "good" state.
 @jsonRequest("workspace/reload")
 operation WorkspaceReload {
+
 }
 
 /// The build target changed notification is sent from the server to the client to
@@ -131,8 +132,8 @@ operation OnBuildTargetDidChange {
 /// workspace, see `buildTarget/dependencySources`.
 @jsonRequest("buildTarget/sources")
 operation BuildTargetSources {
-  input: SourcesParams
-  output: SourcesResult
+    input: SourcesParams
+    output: SourcesResult
 }
 
 /// The inverse sources request is sent from the client to the server to query for
@@ -142,23 +143,23 @@ operation BuildTargetSources {
 /// works for text documents and not directories.
 @jsonRequest("buildTarget/inverseSources")
 operation BuildTargetInverseSources {
-  input: InverseSourcesParams
-  output: InverseSourcesResult
+    input: InverseSourcesParams
+    output: InverseSourcesResult
 }
 
 /// The build target dependency sources request is sent from the client to the
 /// server to query for the sources of build target dependencies that are external
 /// to the workspace. The dependency sources response must not include source files
 /// that belong to a build target within the workspace, see `buildTarget/sources`.
-///
+/// 
 /// The server communicates during the initialize handshake whether this method is
 /// supported or not. This method can for example be used by a language server on
 /// `textDocument/definition` to "Go to definition" from project sources to
 /// dependency sources.
 @jsonRequest("buildTarget/dependencySources")
 operation BuildTargetDependencySources {
-  input: DependencySourcesParams
-  output: DependencySourcesResult
+    input: DependencySourcesParams
+    output: DependencySourcesResult
 }
 
 /// The build target dependency modules request is sent from the client to the
@@ -167,38 +168,36 @@ operation BuildTargetDependencySources {
 /// It's an extended version of `buildTarget/sources`.
 @jsonRequest("buildTarget/dependencyModules")
 operation BuildTargetDependencyModules {
-  input: DependencyModulesParams
-  output: DependencyModulesResult
+    input: DependencyModulesParams
+    output: DependencyModulesResult
 }
 
 /// The build target resources request is sent from the client to the server to
 /// query for the list of resources of a given list of build targets.
-///
+/// 
 /// A resource is a data dependency required to be present in the runtime classpath
 /// when a build target is run or executed. The server communicates during the
 /// initialize handshake whether this method is supported or not.
-///
+/// 
 /// This request can be used by a client to highlight the resources in a project
 /// view, for example.
 @jsonRequest("buildTarget/resources")
 operation BuildTargetResources {
-  input: ResourcesParams,
-  output: ResourcesResult
+    input: ResourcesParams
+    output: ResourcesResult
 }
 
 /// The build target output paths request is sent from the client to the server to
 /// query for the list of output paths of a given list of build targets.
-///
+/// 
 /// An output path is a file or directory that contains output files such as build
 /// artifacts which IDEs may decide to exclude from indexing. The server communicates
 /// during the initialize handshake whether this method is supported or not.
 @jsonRequest("buildTarget/outputPaths")
 operation BuildTargetOutputPaths {
-  input: OutputPathsParams
-  output: OutputPathsResult
+    input: OutputPathsParams
+    output: OutputPathsResult
 }
-
-
 
 /// A resource identifier that is a valid URI according
 /// to rfc3986: * https://tools.ietf.org/html/rfc3986
@@ -226,7 +225,7 @@ list BuildTargetIdentifiers {
 }
 
 /// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
-///
+/// 
 /// * sbt: a build target is a combined project + config. Example:
 /// * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
 /// * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
@@ -234,7 +233,7 @@ list BuildTargetIdentifiers {
 /// * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
 /// * Pants: a pants target corresponds one-to-one with a BuildTarget
 /// * Bazel: a bazel target corresponds one-to-one with a BuildTarget
-///
+/// 
 /// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 structure BuildTarget {
     /// The target’s unique identifier
@@ -284,7 +283,6 @@ enum BuildTargetDataKind {
     SBT = "sbt"
 }
 
-
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
     @required
@@ -325,11 +323,11 @@ enum BuildTargetTag {
     /// Actions on the target such as build and test should only be invoked manually
     /// and explicitly. For example, triggering a build on all targets in the workspace
     /// should by default not include this target.
-    ///
+    /// 
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
-    ///
+    /// 
     MANUAL = "manual"
 }
 
@@ -511,6 +509,7 @@ structure TestProvider with [LanguageProvider] {
 }
 
 structure InitializedBuildParams {
+
 }
 
 @mixin
@@ -651,11 +650,11 @@ structure CodeDescription {
 @enumKind("open")
 intEnum DiagnosticTag {
     /// Unused or unnecessary code.
-    ///
+    /// 
     /// Clients are allowed to render diagnostics with this tag faded out instead of having an error squiggle.
     UNNECESSARY = 1
     /// Deprecated or obsolete code.
-    ///
+    /// 
     /// Clients are allowed to rendered diagnostics with this tag strike through.
     DEPRECATED = 2
 }
@@ -668,46 +667,46 @@ list DiagnosticTags {
 /// This should be used to point to code locations that cause or are related to
 /// a diagnostics, e.g when duplicating a symbol in a scope.
 structure DiagnosticRelatedInformation {
-  /// The location of this related diagnostic information.
-  @required
-  location: Location
-  /// The message of this related diagnostic information.
-  @required
-  message: String
+    /// The location of this related diagnostic information.
+    @required
+    location: Location
+    /// The message of this related diagnostic information.
+    @required
+    message: String
 }
 
 list DiagnosticRelatedInformationList {
     member: DiagnosticRelatedInformation
 }
 
-structure WorkspaceBuildTargetsParams {}
+structure WorkspaceBuildTargetsParams {
+
+}
 
 structure WorkspaceBuildTargetsResult {
-  /// The build targets in this workspace that
-  /// contain sources with the given language ids.
-  @required
-  targets: BuildTargets
+    /// The build targets in this workspace that
+    /// contain sources with the given language ids.
+    @required
+    targets: BuildTargets
 }
 
 list BuildTargets {
-  member: BuildTarget
+    member: BuildTarget
 }
 
 structure DidChangeBuildTarget {
-  @required
-  changes: BuildTargetEvents
+    @required
+    changes: BuildTargetEvents
 }
 
 structure BuildTargetEvent {
-  /// The identifier for the changed build target
-  @required
-  target: BuildTargetIdentifier
-
-  /// The kind of change for this build target
-  kind: BuildTargetEventKind
-
-  /// Any additional metadata about what information changed.
-  data: Json
+    /// The identifier for the changed build target
+    @required
+    target: BuildTargetIdentifier
+    /// The kind of change for this build target
+    kind: BuildTargetEventKind
+    /// Any additional metadata about what information changed.
+    data: Json
 }
 
 list BuildTargetEvents {
@@ -718,239 +717,226 @@ list BuildTargetEvents {
 /// reindexing or update the user interface with the new information.
 @enumKind("open")
 intEnum BuildTargetEventKind {
-  /// The build target is new.
-  CREATED = 1
-
-  /// The build target has changed.
-  CHANGED = 2
-
-  /// The build target has been deleted.
-  DELETED = 3
+    /// The build target is new.
+    CREATED = 1
+    /// The build target has changed.
+    CHANGED = 2
+    /// The build target has been deleted.
+    DELETED = 3
 }
 
 structure SourcesParams {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure SourcesResult {
-  @required
-  items: SourcesItems
+    @required
+    items: SourcesItems
 }
 
 structure SourcesItem {
-  @required
-  target: BuildTargetIdentifier
-  /// The text documents or and directories that belong to this build target. */
-  @required
-  sources: SourceItems
-  /// The root directories from where source files should be relativized.
-  /// Example: ["file://Users/name/dev/metals/src/main/scala"]
-  roots: URIs
+    @required
+    target: BuildTargetIdentifier
+    /// The text documents or and directories that belong to this build target. */
+    @required
+    sources: SourceItems
+    /// The root directories from where source files should be relativized.
+    /// Example: ["file://Users/name/dev/metals/src/main/scala"]
+    roots: URIs
 }
 
 list SourcesItems {
-  member: SourcesItem
+    member: SourcesItem
 }
 
 structure SourceItem {
-  /// Either a text document or a directory. A directory entry must end with a forward
-  /// slash "/" and a directory entry implies that every nested text document within the
-  /// directory belongs to this source item.
-  @required
-  uri: URI
-
-  /// Type of file of the source item, such as whether it is file or directory.
-  @required
-  kind: SourceItemKind
-
-  /// Indicates if this source is automatically generated by the build and is not
-  /// intended to be manually edited by the user.
-  @required
-  generated: Boolean
+    /// Either a text document or a directory. A directory entry must end with a forward
+    /// slash "/" and a directory entry implies that every nested text document within the
+    /// directory belongs to this source item.
+    @required
+    uri: URI
+    /// Type of file of the source item, such as whether it is file or directory.
+    @required
+    kind: SourceItemKind
+    /// Indicates if this source is automatically generated by the build and is not
+    /// intended to be manually edited by the user.
+    @required
+    generated: Boolean
 }
 
 list SourceItems {
-  member: SourceItem
+    member: SourceItem
 }
 
 @enumKind("open")
 intEnum SourceItemKind {
-  /// The source item references a normal file.
-  FILE = 1
-  /// The source item references a directory.
-  DIRECTORY = 2
+    /// The source item references a normal file.
+    FILE = 1
+    /// The source item references a directory.
+    DIRECTORY = 2
 }
 
 structure InverseSourcesParams {
-  @required
-  textDocument: TextDocumentIdentifier
+    @required
+    textDocument: TextDocumentIdentifier
 }
 
 structure InverseSourcesResult {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure DependencySourcesParams {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure DependencySourcesResult {
-  @required
-  items: DependencySourcesItems
+    @required
+    items: DependencySourcesItems
 }
 
 structure DependencySourcesItem {
-  @required
-  target: BuildTargetIdentifier
-  /// List of resources containing source files of the
-  /// target's dependencies.
-  /// Can be source files, jar files, zip files, or directories. */
-  @required
-  sources: URIs
+    @required
+    target: BuildTargetIdentifier
+    /// List of resources containing source files of the
+    /// target's dependencies.
+    /// Can be source files, jar files, zip files, or directories. */
+    @required
+    sources: URIs
 }
 
 list DependencySourcesItems {
-  member: DependencySourcesItem
+    member: DependencySourcesItem
 }
 
 structure DependencyModulesParams {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure DependencyModulesResult {
-  @required
-  items: DependencyModuleItems
+    @required
+    items: DependencyModuleItems
 }
 
 structure DependencyModuleItem {
-  @required
-  target: BuildTargetIdentifier
-  @required
-  modules: DependencyModule
+    @required
+    target: BuildTargetIdentifier
+    @required
+    modules: DependencyModule
 }
 
 list DependencyModuleItems {
-  member: DependencyModuleItem
+    member: DependencyModuleItem
 }
 
 structure DependencyModule {
-  /// Module name
-  @required
-  name: String
-  /// Module version
-  @required
-  version: String
-
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind: DependencyModuleDataKind
-
-  /// Language-specific metadata about this module.
-  /// See MavenDependencyModule as an example.
-  data: Json
+    /// Module name
+    @required
+    name: String
+    /// Module version
+    @required
+    version: String
+    /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+    dataKind: DependencyModuleDataKind
+    /// Language-specific metadata about this module.
+    /// See MavenDependencyModule as an example.
+    data: Json
 }
 
 @enumKind("open")
 enum DependencyModuleDataKind {
-  MAVEN = "maven"
+    MAVEN = "maven"
 }
 
 structure ResourcesParams {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure ResourcesResult {
-  @required
-  items: ResourceItems
+    @required
+    items: ResourceItems
 }
 
 structure ResourceItem {
-  @required
-  target: BuildTargetIdentifier
-  @required
-  ///  List of resource files.
-  resources: URIs
+    @required
+    target: BuildTargetIdentifier
+    @required
+    /// List of resource files.
+    resources: URIs
 }
 
 list ResourceItems {
-  member: ResourceItem
+    member: ResourceItem
 }
 
 structure OutputPathsParams {
-  @required
-  targets: BuildTargetIdentifiers
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure OutputPathsResult {
-  @required
-  items: OutputPathsItems
+    @required
+    items: OutputPathsItems
 }
 
 structure OutputPathsItem {
-  /// A build target to which output paths item belongs.
-  @required
-  target: BuildTargetIdentifier
-
-  /// Output paths.
-  @required
-  outputPaths: OutputPathItems
+    /// A build target to which output paths item belongs.
+    @required
+    target: BuildTargetIdentifier
+    /// Output paths.
+    @required
+    outputPaths: OutputPathItems
 }
 
 list OutputPathsItems {
-  member: OutputPathsItem
+    member: OutputPathsItem
 }
 
 structure OutputPathItem {
-  /// Either a file or a directory. A directory entry must end with a forward
-  /// slash "/" and a directory entry implies that every nested path within the
-  /// directory belongs to this output item.
-  @required
-  uri: URI
-
-  /// Type of file of the output item, such as whether it is file or directory.
-  @required
-  kind: OutputPathItemKind
+    /// Either a file or a directory. A directory entry must end with a forward
+    /// slash "/" and a directory entry implies that every nested path within the
+    /// directory belongs to this output item.
+    @required
+    uri: URI
+    /// Type of file of the output item, such as whether it is file or directory.
+    @required
+    kind: OutputPathItemKind
 }
 
 list OutputPathItems {
-  member: OutputPathItem
+    member: OutputPathItem
 }
 
 @enumKind("open")
 intEnum OutputPathItemKind {
-  /// The output path item references a normal file.
-  FILE = 1
-  /// The output path item references a directory.
-  DIRECTORY = 2
+    /// The output path item references a normal file.
+    FILE = 1
+    /// The output path item references a directory.
+    DIRECTORY = 2
 }
 
 /// Task progress notifications may contain an arbitrary interface in their `data`
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
-///
+/// 
 /// There are predefined kinds of objects for test and compile tasks, as described
 /// in the [Compile Request](#compile-request) and [Test Request]
 @enumKind("open")
 enum TaskDataKind {
-  /// `data` field must contain a CompileTask object.
-  COMPILE_TASK = "compile-task"
-
-  /// `data` field must contain a CompileReport object.
-  COMPILE_REPORT = "compile-report"
-
-  /// `data` field must contain a TestTask object.
-  TEST_TASK = "test-task"
-
-  /// `data` field must contain a TestReport object.
-  TEST_REPORT = "test-report"
-
-  /// `data` field must contain a TestStart object.
-  TEST_START = "test-start"
-
-  /// `data` field must contain a TestFinish object.
-  TEST_FINISH = "test-finish"
+    /// `data` field must contain a CompileTask object.
+    COMPILE_TASK = "compile-task"
+    /// `data` field must contain a CompileReport object.
+    COMPILE_REPORT = "compile-report"
+    /// `data` field must contain a TestTask object.
+    TEST_TASK = "test-task"
+    /// `data` field must contain a TestReport object.
+    TEST_REPORT = "test-report"
+    /// `data` field must contain a TestStart object.
+    TEST_START = "test-start"
+    /// `data` field must contain a TestFinish object.
+    TEST_FINISH = "test-finish"
 }
