@@ -7,7 +7,7 @@ object Codegen {
   def run(outputDir: os.Path): List[os.Path] = {
     val model = ModelLoader.loadModel()
     val definitions = new SmithyToIR(model).definitions("bsp")
-    val renderer = new Renderer("ch.epfl.scala.bsp4j")
+    val renderer = new JavaRenderer("ch.epfl.scala.bsp4j")
     val codegenFiles = definitions.map(renderer.render)
     codegenFiles.map { cf =>
       val fullPath = outputDir / cf.path

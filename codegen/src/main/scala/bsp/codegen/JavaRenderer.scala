@@ -12,16 +12,16 @@ import bsp.codegen.EnumType.StringEnum
 import bsp.codegen.JsonRPCMethodType.Notification
 import bsp.codegen.JsonRPCMethodType.Request
 
-class Renderer(basepkg: String) {
+class JavaRenderer(basepkg: String) {
 
   val baseRelPath = os.rel / basepkg.split('.')
   // scalafmt: { maxColumn = 120}
   def render(definition: Def): CodegenFile = {
     definition match {
-      case Structure(shapeId, fields)            => renderStructure(shapeId, fields)
-      case ClosedEnum(shapeId, enumType, values) => renderClosedEnum(shapeId, enumType, values)
-      case OpenEnum(shapeId, enumType, values)   => renderOpenEnum(shapeId, enumType, values)
-      case Service(shapeId, operations)          => renderService(shapeId, operations)
+      case Structure(shapeId, fields, _)            => renderStructure(shapeId, fields)
+      case ClosedEnum(shapeId, enumType, values, _) => renderClosedEnum(shapeId, enumType, values)
+      case OpenEnum(shapeId, enumType, values, _)   => renderOpenEnum(shapeId, enumType, values)
+      case Service(shapeId, operations, _)          => renderService(shapeId, operations)
     }
   }
 
@@ -45,7 +45,7 @@ class Renderer(basepkg: String) {
     )
 
     val fileName = shapeId.getName() + ".xtends"
-    CodegenFile(baseRelPath / fileName, allLines.render)
+    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
   def renderClosedEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
@@ -80,7 +80,7 @@ class Renderer(basepkg: String) {
       )
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(baseRelPath / fileName, allLines.render)
+    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
   def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
@@ -95,7 +95,7 @@ class Renderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(baseRelPath / fileName, allLines.render)
+    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
   def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
@@ -114,7 +114,7 @@ class Renderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(baseRelPath / fileName, allLines.render)
+    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
   def renderOperation(operation: Operation): Lines = {
