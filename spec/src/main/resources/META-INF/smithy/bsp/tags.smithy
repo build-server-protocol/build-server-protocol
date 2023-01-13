@@ -17,8 +17,6 @@ apply BuildTarget @tags(["basic"])
 
 apply BuildTargetDataKind @tags(["basic"])
 
-apply StringList @tags(["basic"])
-
 apply BuildTargetCapabilities @tags(["basic"])
 
 apply BuildTargetTag @tags(["basic"])
