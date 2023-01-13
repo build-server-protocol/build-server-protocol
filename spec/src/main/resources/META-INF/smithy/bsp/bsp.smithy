@@ -14,6 +14,24 @@ service BuildServer {
         OnBuildInitialized
         ShutdownBuild
         OnBuildShutdown
+        WorkspaceBuildTargets
+        WorkspaceReload
+        BuildTargetSources
+        BuildTargetInverseSources
+        BuildTargetDependencySources
+        BuildTargetDependencyModules
+        BuildTargetResources
+        BuildTargetOutputPaths
+    ]
+}
+
+@jsonRPC
+service BuildClient {
+    operations: [
+        OnBuildShowMessage
+        OnBuildLogMessage
+        OnBuildPublishDiagnostics
+        OnBuildTargetDidChange
     ]
 }
 
@@ -33,7 +51,7 @@ operation InitializeBuild {
 
 @jsonNotification("build/initialized")
 operation OnBuildInitialized {
-    input: InitializeBuildParams
+    input: InitializedBuildParams
 }
 
 /// Like the language server protocol, the shutdown build request is sent from the client to the server. It asks the server to shut down,
@@ -51,28 +69,19 @@ operation OnBuildShutdown {
 
 }
 
-@jsonRPC
-service BuildClient {
-    operations: [
-        ShowMessage
-        LogMessage
-        PublishDiagnostics
-    ]
-}
-
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
 ///
 /// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
 @jsonNotification("build/showMessage")
-operation ShowMessage {
-    input: ShowMessageParams
+operation OnBuildShowMessage {
+    input: OnBuildShowMessageParams
 }
 
 /// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
 ///
 /// A build/logMessage notification is similar to LSP's window/logMessage, except for a few additions like id and originId.
 @jsonNotification("build/logMessage")
-operation LogMessage {
+operation OnBuildLogMessage {
     input: LogMessageParams
 }
 
@@ -88,9 +97,108 @@ operation LogMessage {
 /// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
 /// Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
 @jsonNotification("build/publishDiagnostics")
-operation PublishDiagnostics {
+operation OnBuildPublishDiagnostics {
     input: PublishDiagnosticsParams
 }
+
+/// The workspace build targets request is sent from the client to the server to ask
+/// for the list of all available build targets in the workspace.
+@jsonRequest("workspace/buildTargets")
+operation WorkspaceBuildTargets {
+    input: WorkspaceBuildTargetsParams
+    output: WorkspaceBuildTargetsResult
+}
+
+/// The `reload` request is sent from the client to instruct the build server to reload
+/// the build configuration. This request should be supported by build tools that keep
+/// their state in memory. If the `reload` request returns with an error, it's expected
+/// that other requests respond with the previously known "good" state.
+@jsonRequest("workspace/reload")
+operation WorkspaceReload {
+}
+
+/// The build target changed notification is sent from the server to the client to
+/// signal a change in a build target. The server communicates during the initialize
+/// handshake whether this method is supported or not.
+@jsonNotification("buildTarget/didChange")
+operation OnBuildTargetDidChange {
+    input: DidChangeBuildTarget
+}
+
+/// The build target sources request is sent from the client to the server to query
+/// for the list of text documents and directories that are belong to a build
+/// target. The sources response must not include sources that are external to the
+/// workspace, see `buildTarget/dependencySources`.
+@jsonRequest("buildTarget/sources")
+operation BuildTargetSources {
+  input: SourcesParams
+  output: SourcesResult
+}
+
+/// The inverse sources request is sent from the client to the server to query for
+/// the list of build targets containing a text document. The server communicates
+/// during the initialize handshake whether this method is supported or not. This
+/// request can be viewed as the inverse of `buildTarget/sources`, except it only
+/// works for text documents and not directories.
+@jsonRequest("buildTarget/inverseSources")
+operation BuildTargetInverseSources {
+  input: InverseSourcesParams
+  output: InverseSourcesResult
+}
+
+/// The build target dependency sources request is sent from the client to the
+/// server to query for the sources of build target dependencies that are external
+/// to the workspace. The dependency sources response must not include source files
+/// that belong to a build target within the workspace, see `buildTarget/sources`.
+///
+/// The server communicates during the initialize handshake whether this method is
+/// supported or not. This method can for example be used by a language server on
+/// `textDocument/definition` to "Go to definition" from project sources to
+/// dependency sources.
+@jsonRequest("buildTarget/dependencySources")
+operation BuildTargetDependencySources {
+  input: DependencySourcesParams
+  output: DependencySourcesResult
+}
+
+/// The build target dependency modules request is sent from the client to the
+/// server to query for the libraries of build target dependencies that are external
+/// to the workspace including meta information about library and their sources.
+/// It's an extended version of `buildTarget/sources`.
+@jsonRequest("buildTarget/dependencyModules")
+operation BuildTargetDependencyModules {
+  input: DependencyModulesParams
+  output: DependencyModulesResult
+}
+
+/// The build target resources request is sent from the client to the server to
+/// query for the list of resources of a given list of build targets.
+///
+/// A resource is a data dependency required to be present in the runtime classpath
+/// when a build target is run or executed. The server communicates during the
+/// initialize handshake whether this method is supported or not.
+///
+/// This request can be used by a client to highlight the resources in a project
+/// view, for example.
+@jsonRequest("buildTarget/resources")
+operation BuildTargetResources {
+  input: ResourcesParams,
+  output: ResourcesResult
+}
+
+/// The build target output paths request is sent from the client to the server to
+/// query for the list of output paths of a given list of build targets.
+///
+/// An output path is a file or directory that contains output files such as build
+/// artifacts which IDEs may decide to exclude from indexing. The server communicates
+/// during the initialize handshake whether this method is supported or not.
+@jsonRequest("buildTarget/outputPaths")
+operation BuildTargetOutputPaths {
+  input: OutputPathsParams
+  output: OutputPathsResult
+}
+
+
 
 /// A resource identifier that is a valid URI according
 /// to rfc3986: * https://tools.ietf.org/html/rfc3986
@@ -176,9 +284,6 @@ enum BuildTargetDataKind {
     SBT = "sbt"
 }
 
-list StringList {
-    member: String
-}
 
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
@@ -406,7 +511,6 @@ structure TestProvider with [LanguageProvider] {
 }
 
 structure InitializedBuildParams {
-
 }
 
 @mixin
@@ -425,7 +529,7 @@ structure MessageParams {
     message: String
 }
 
-structure ShowMessageParams with [MessageParams] {
+structure OnBuildShowMessageParams with [MessageParams] {
 
 }
 
@@ -487,7 +591,7 @@ structure Diagnostic {
     tags: DiagnosticTags
     /// An array of related diagnostic information, e.g. when symbol-names within
     /// a scope collide all definitions can be marked via this property.
-    relatedInformation: DiagnosticRelatedInformation
+    relatedInformation: DiagnosticRelatedInformationList
     /// A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
     // and a `textDocument/codeAction` request.
     data: Json
@@ -508,12 +612,15 @@ structure Range {
 }
 
 structure Location {
+    @required
     uri: URI
+    @required
     range: Range
 }
 
 structure TextDocumentIdentifier {
     /// The text document's URI.
+    @required
     uri: URI
 }
 
@@ -536,6 +643,7 @@ union Code {
 
 /// Structure to capture a description for an error code.
 structure CodeDescription {
+    @required
     /// An URI to open with more information about the diagnostic error.
     href: URI
 }
@@ -560,12 +668,289 @@ list DiagnosticTags {
 /// This should be used to point to code locations that cause or are related to
 /// a diagnostics, e.g when duplicating a symbol in a scope.
 structure DiagnosticRelatedInformation {
-    /// The location of this related diagnostic information.
-    location: Location
-    /// The message of this related diagnostic information.
-    message: String
+  /// The location of this related diagnostic information.
+  @required
+  location: Location
+  /// The message of this related diagnostic information.
+  @required
+  message: String
 }
 
 list DiagnosticRelatedInformationList {
     member: DiagnosticRelatedInformation
+}
+
+structure WorkspaceBuildTargetsParams {}
+
+structure WorkspaceBuildTargetsResult {
+  /// The build targets in this workspace that
+  /// contain sources with the given language ids.
+  @required
+  targets: BuildTargets
+}
+
+list BuildTargets {
+  member: BuildTarget
+}
+
+structure DidChangeBuildTarget {
+  @required
+  changes: BuildTargetEvents
+}
+
+structure BuildTargetEvent {
+  /// The identifier for the changed build target
+  @required
+  target: BuildTargetIdentifier
+
+  /// The kind of change for this build target
+  kind: BuildTargetEventKind
+
+  /// Any additional metadata about what information changed.
+  data: Json
+}
+
+list BuildTargetEvents {
+    member: BuildTargetEvent
+}
+
+/// The `BuildTargetEventKind` information can be used by clients to trigger
+/// reindexing or update the user interface with the new information.
+@enumKind("open")
+intEnum BuildTargetEventKind {
+  /// The build target is new.
+  CREATED = 1
+
+  /// The build target has changed.
+  CHANGED = 2
+
+  /// The build target has been deleted.
+  DELETED = 3
+}
+
+structure SourcesParams {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure SourcesResult {
+  @required
+  items: SourcesItems
+}
+
+structure SourcesItem {
+  @required
+  target: BuildTargetIdentifier
+  /// The text documents or and directories that belong to this build target. */
+  @required
+  sources: SourceItems
+  /// The root directories from where source files should be relativized.
+  /// Example: ["file://Users/name/dev/metals/src/main/scala"]
+  roots: URIs
+}
+
+list SourcesItems {
+  member: SourcesItem
+}
+
+structure SourceItem {
+  /// Either a text document or a directory. A directory entry must end with a forward
+  /// slash "/" and a directory entry implies that every nested text document within the
+  /// directory belongs to this source item.
+  @required
+  uri: URI
+
+  /// Type of file of the source item, such as whether it is file or directory.
+  @required
+  kind: SourceItemKind
+
+  /// Indicates if this source is automatically generated by the build and is not
+  /// intended to be manually edited by the user.
+  @required
+  generated: Boolean
+}
+
+list SourceItems {
+  member: SourceItem
+}
+
+@enumKind("open")
+intEnum SourceItemKind {
+  /// The source item references a normal file.
+  FILE = 1
+  /// The source item references a directory.
+  DIRECTORY = 2
+}
+
+structure InverseSourcesParams {
+  @required
+  textDocument: TextDocumentIdentifier
+}
+
+structure InverseSourcesResult {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure DependencySourcesParams {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure DependencySourcesResult {
+  @required
+  items: DependencySourcesItems
+}
+
+structure DependencySourcesItem {
+  @required
+  target: BuildTargetIdentifier
+  /// List of resources containing source files of the
+  /// target's dependencies.
+  /// Can be source files, jar files, zip files, or directories. */
+  @required
+  sources: URIs
+}
+
+list DependencySourcesItems {
+  member: DependencySourcesItem
+}
+
+structure DependencyModulesParams {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure DependencyModulesResult {
+  @required
+  items: DependencyModuleItems
+}
+
+structure DependencyModuleItem {
+  @required
+  target: BuildTargetIdentifier
+  @required
+  modules: DependencyModule
+}
+
+list DependencyModuleItems {
+  member: DependencyModuleItem
+}
+
+structure DependencyModule {
+  /// Module name
+  @required
+  name: String
+  /// Module version
+  @required
+  version: String
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind: DependencyModuleDataKind
+
+  /// Language-specific metadata about this module.
+  /// See MavenDependencyModule as an example.
+  data: Json
+}
+
+@enumKind("open")
+enum DependencyModuleDataKind {
+  MAVEN = "maven"
+}
+
+structure ResourcesParams {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure ResourcesResult {
+  @required
+  items: ResourceItems
+}
+
+structure ResourceItem {
+  @required
+  target: BuildTargetIdentifier
+  @required
+  ///  List of resource files.
+  resources: URIs
+}
+
+list ResourceItems {
+  member: ResourceItem
+}
+
+structure OutputPathsParams {
+  @required
+  targets: BuildTargetIdentifiers
+}
+
+structure OutputPathsResult {
+  @required
+  items: OutputPathsItems
+}
+
+structure OutputPathsItem {
+  /// A build target to which output paths item belongs.
+  @required
+  target: BuildTargetIdentifier
+
+  /// Output paths.
+  @required
+  outputPaths: OutputPathItems
+}
+
+list OutputPathsItems {
+  member: OutputPathsItem
+}
+
+structure OutputPathItem {
+  /// Either a file or a directory. A directory entry must end with a forward
+  /// slash "/" and a directory entry implies that every nested path within the
+  /// directory belongs to this output item.
+  @required
+  uri: URI
+
+  /// Type of file of the output item, such as whether it is file or directory.
+  @required
+  kind: OutputPathItemKind
+}
+
+list OutputPathItems {
+  member: OutputPathItem
+}
+
+@enumKind("open")
+intEnum OutputPathItemKind {
+  /// The output path item references a normal file.
+  FILE = 1
+  /// The output path item references a directory.
+  DIRECTORY = 2
+}
+
+/// Task progress notifications may contain an arbitrary interface in their `data`
+/// field. The kind of interface that is contained in a notification must be
+/// specified in the `dataKind` field.
+///
+/// There are predefined kinds of objects for test and compile tasks, as described
+/// in the [Compile Request](#compile-request) and [Test Request]
+@enumKind("open")
+enum TaskDataKind {
+  /// `data` field must contain a CompileTask object.
+  COMPILE_TASK = "compile-task"
+
+  /// `data` field must contain a CompileReport object.
+  COMPILE_REPORT = "compile-report"
+
+  /// `data` field must contain a TestTask object.
+  TEST_TASK = "test-task"
+
+  /// `data` field must contain a TestReport object.
+  TEST_REPORT = "test-report"
+
+  /// `data` field must contain a TestStart object.
+  TEST_START = "test-start"
+
+  /// `data` field must contain a TestFinish object.
+  TEST_FINISH = "test-finish"
 }
