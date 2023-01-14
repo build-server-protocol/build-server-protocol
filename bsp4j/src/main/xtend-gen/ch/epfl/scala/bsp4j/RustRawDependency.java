@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -21,9 +22,9 @@ public class RustRawDependency {
   private boolean uses_default_features;
 
   @NonNull
-  private String features;
+  private List<String> features;
 
-  public RustRawDependency(@NonNull final String name, final String rename, final String kind, final String target, final boolean optional, final boolean uses_default_features, @NonNull final String features) {
+  public RustRawDependency(@NonNull final String name, final String rename, final String kind, final String target, final boolean optional, final boolean uses_default_features, @NonNull final List<String> features) {
     this.name = name;
     this.rename = rename;
     this.kind = kind;
@@ -90,11 +91,11 @@ public class RustRawDependency {
 
   @Pure
   @NonNull
-  public String getFeatures() {
+  public List<String> getFeatures() {
     return this.features;
   }
 
-  public void setFeatures(@NonNull final String features) {
+  public void setFeatures(@NonNull final List<String> features) {
     this.features = Preconditions.checkNotNull(features, "features");
   }
 

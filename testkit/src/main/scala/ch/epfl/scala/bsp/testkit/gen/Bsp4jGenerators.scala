@@ -829,7 +829,7 @@ trait Bsp4jGenerators {
     target <- arbitrary[String]
     optional <- arbitrary[Boolean]
     uses_default_features <- arbitrary[Boolean]
-    features <- arbitrary[String]
+    features <- arbitrary[String].list
   } yield new RustRawDependency(
     name,
     rename,

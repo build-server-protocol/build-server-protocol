@@ -39,14 +39,14 @@ class RustRawDependency {
     String target
     boolean optional
     boolean uses_default_features
-    @NonNull String features
+    @NonNull List<String> features
     new(@NonNull String name,
         String rename,
         String kind,
         String target,
         boolean optional,
         boolean uses_default_features,
-        @NonNull String features) {
+        @NonNull List<String> features) {
             this.name = name
             this.rename = rename
             this.kind = kind
