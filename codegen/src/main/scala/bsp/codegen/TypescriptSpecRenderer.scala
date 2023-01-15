@@ -96,14 +96,15 @@ class TypescriptSpecRenderer(basepkg: String) {
   }
 
   def renderPrimitive(prim: Primitive) = prim match {
-    case PFloat    => "Float"
-    case PDouble   => "Double"
-    case PUnit     => "void"
-    case PString   => "String"
-    case PInt      => "Integer"
-    case PDocument => "any"
-    case PBool     => "Boolean"
-    case PLong     => "Long"
+    case PFloat     => "Float"
+    case PDouble    => "Double"
+    case PUnit      => "void"
+    case PString    => "String"
+    case PInt       => "Integer"
+    case PDocument  => "any"
+    case PBool      => "Boolean"
+    case PLong      => "Long"
+    case PTimestamp => "Long"
   }
 
   def renderDocumentation(hints: List[Hint]): Lines = hints

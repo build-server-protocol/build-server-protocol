@@ -207,14 +207,15 @@ class JavaRenderer(basepkg: String) {
   }
 
   def renderPrimitive(prim: Primitive) = prim match {
-    case PFloat    => "Float"
-    case PDouble   => "Double"
-    case PUnit     => "void"
-    case PString   => "String"
-    case PInt      => "Integer"
-    case PDocument => "Object"
-    case PBool     => "Boolean"
-    case PLong     => "Long"
+    case PFloat     => "Float"
+    case PDouble    => "Double"
+    case PUnit      => "void"
+    case PString    => "String"
+    case PInt       => "Integer"
+    case PDocument  => "Object"
+    case PBool      => "Boolean"
+    case PLong      => "Long"
+    case PTimestamp => "Long"
   }
 
 }

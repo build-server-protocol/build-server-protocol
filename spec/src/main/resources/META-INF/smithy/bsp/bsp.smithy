@@ -22,6 +22,10 @@ service BuildServer {
         BuildTargetDependencyModules
         BuildTargetResources
         BuildTargetOutputPaths
+        BuildTargetCompile
+        BuildTargetRun
+        DebugSessionStart
+        BuildTargetCleanCache
     ]
 }
 
@@ -32,15 +36,18 @@ service BuildClient {
         OnBuildLogMessage
         OnBuildPublishDiagnostics
         OnBuildTargetDidChange
+        OnBuildTaskStart
+        OnBuildTaskProgress
+        OnBuildTaskFinish
     ]
 }
 
 /// Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 /// If the server receives a request or notification before the initialize request it should act as follows:
-/// 
+///
 /// * For a request the response should be an error with code: -32002. The message can be picked by the server.
 /// * Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
-/// 
+///
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
@@ -66,11 +73,11 @@ operation ShutdownBuild {
 /// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
 /// if the shutdown request has been received before; otherwise with error code 1.
 operation OnBuildShutdown {
-
 }
 
+
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
-/// 
+///
 /// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
 @jsonNotification("build/showMessage")
 operation OnBuildShowMessage {
@@ -78,7 +85,7 @@ operation OnBuildShowMessage {
 }
 
 /// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
-/// 
+///
 /// A build/logMessage notification is similar to LSP's window/logMessage, except for a few additions like id and originId.
 @jsonNotification("build/logMessage")
 operation OnBuildLogMessage {
@@ -86,14 +93,14 @@ operation OnBuildLogMessage {
 }
 
 /// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
-/// 
+///
 /// Diagnostic is defined as it is in the LSP
-/// 
+///
 /// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 /// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
 /// in the LSP. When reset is false, the diagnostics are added to the last active diagnostics, allowing build tools to
 /// stream diagnostics to the client.
-/// 
+///
 /// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
 /// Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
 @jsonNotification("build/publishDiagnostics")
@@ -151,7 +158,7 @@ operation BuildTargetInverseSources {
 /// server to query for the sources of build target dependencies that are external
 /// to the workspace. The dependency sources response must not include source files
 /// that belong to a build target within the workspace, see `buildTarget/sources`.
-/// 
+///
 /// The server communicates during the initialize handshake whether this method is
 /// supported or not. This method can for example be used by a language server on
 /// `textDocument/definition` to "Go to definition" from project sources to
@@ -174,11 +181,11 @@ operation BuildTargetDependencyModules {
 
 /// The build target resources request is sent from the client to the server to
 /// query for the list of resources of a given list of build targets.
-/// 
+///
 /// A resource is a data dependency required to be present in the runtime classpath
 /// when a build target is run or executed. The server communicates during the
 /// initialize handshake whether this method is supported or not.
-/// 
+///
 /// This request can be used by a client to highlight the resources in a project
 /// view, for example.
 @jsonRequest("buildTarget/resources")
@@ -189,7 +196,7 @@ operation BuildTargetResources {
 
 /// The build target output paths request is sent from the client to the server to
 /// query for the list of output paths of a given list of build targets.
-/// 
+///
 /// An output path is a file or directory that contains output files such as build
 /// artifacts which IDEs may decide to exclude from indexing. The server communicates
 /// during the initialize handshake whether this method is supported or not.
@@ -198,6 +205,98 @@ operation BuildTargetOutputPaths {
     input: OutputPathsParams
     output: OutputPathsResult
 }
+
+@jsonNotification("build/taskStart")
+operation OnBuildTaskStart {
+    input: TaskStartParams
+}
+
+/// After a `taskStart` and before `taskFinish` for a `taskId`, the server may send
+/// any number of progress notifications.
+@jsonNotification("build/taskProgress")
+operation OnBuildTaskProgress {
+    input: TaskProgressParams
+}
+
+@jsonNotification("build/taskFinish")
+operation OnBuildTaskFinish {
+    input: TaskFinishParams
+}
+
+/// The compile build target request is sent from the client to the server to
+/// compile the given list of build targets. The server communicates during the
+/// initialize handshake whether this method is supported or not. This method can
+/// for example be used by a language server before `textDocument/rename` to ensure
+/// that all workspace sources typecheck correctly and are up-to-date.
+@jsonRequest("buildTarget/compile")
+operation BuildTargetCompile {
+    input: CompileParams
+    output: CompileResult
+}
+
+@jsonRequest("buildTarget/test")
+operation BuildTargetTest {
+    input: TestParams
+    output: TestResult
+}
+
+
+/// The run request is sent from the client to the server to run a build target. The
+/// server communicates during the initialize handshake whether this method is
+/// supported or not.
+///
+/// This request may trigger a compilation on the selected build targets. The server
+/// is free to send any number of `build/task*`, `build/publishDiagnostics` and
+/// `build/logMessage` notifications during compilation before completing the
+/// response.
+///
+/// The client will get a `originId` field in `RunResult` if the `originId` field in
+/// the `RunParams` is defined.
+///
+/// Note that an empty run request is valid. Run will be executed in the target as
+/// specified in the build tool.
+@jsonRequest("buildTarget/run")
+operation BuildTargetRun {
+    input: RunParams
+    output: RunResult
+}
+
+
+/// The debug request is sent from the client to the server to debug build target(s). The
+/// server launches a [Microsoft DAP](https://microsoft.github.io/debug-adapter-protocol/) server
+/// and returns a connection URI for the client to interact with.
+@jsonRequest("debugSession/start")
+operation DebugSessionStart {
+    input: DebugSessionParams
+    output: DebugSessionAddress
+}
+
+/// The clean cache request is sent from the client to the server to reset any state
+/// associated with a given build target. The state can live either in the build
+/// tool or in the file system.
+///
+/// The build tool defines the exact semantics of the clean cache request:
+///
+/// 1. Stateless build tools are free to ignore the request and respond with a
+///    successful response.
+/// 2. Stateful build tools must ensure that invoking compilation on a target that
+///    has been cleaned results in a full compilation.
+@jsonRequest("buildTarget/cleanCache")
+operation BuildTargetCleanCache {
+    input: CleanCacheParams
+    output: CleanCacheResult
+}
+
+
+
+/// A trait indicating the value that the `dataKind` fields
+/// MUST take when the `data` field contains a value of the
+/// annotated shape.
+@trait()
+string dataKind
+
+@trait(selector: ":is(enum, intEnum, string)")
+structure dataFieldDiscriminator {}
 
 /// A resource identifier that is a valid URI according
 /// to rfc3986: * https://tools.ietf.org/html/rfc3986
@@ -224,8 +323,11 @@ list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
 }
 
+timestamp EventTime
+integer DurationMillis
+
 /// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
-/// 
+///
 /// * sbt: a build target is a combined project + config. Example:
 /// * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
 /// * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
@@ -233,7 +335,7 @@ list BuildTargetIdentifiers {
 /// * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
 /// * Pants: a pants target corresponds one-to-one with a BuildTarget
 /// * Bazel: a bazel target corresponds one-to-one with a BuildTarget
-/// 
+///
 /// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 structure BuildTarget {
     /// The target’s unique identifier
@@ -276,6 +378,7 @@ structure BuildTarget {
 }
 
 @enumKind("open")
+@dataFieldDiscriminator
 enum BuildTargetDataKind {
     /// The `data` field contains a `ScalaBuildTarget` object
     SCALA = "scala"
@@ -299,6 +402,7 @@ structure BuildTargetCapabilities {
 }
 
 @enumKind("open")
+@dataFieldDiscriminator
 enum BuildTargetTag {
     /// Target contains re-usable functionality for downstream targets. May have any
     /// combination of capabilities.
@@ -323,11 +427,11 @@ enum BuildTargetTag {
     /// Actions on the target such as build and test should only be invoked manually
     /// and explicitly. For example, triggering a build on all targets in the workspace
     /// should by default not include this target.
-    /// 
+    ///
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
-    /// 
+    ///
     MANUAL = "manual"
 }
 
@@ -650,11 +754,11 @@ structure CodeDescription {
 @enumKind("open")
 intEnum DiagnosticTag {
     /// Unused or unnecessary code.
-    /// 
+    ///
     /// Clients are allowed to render diagnostics with this tag faded out instead of having an error squiggle.
     UNNECESSARY = 1
     /// Deprecated or obsolete code.
-    /// 
+    ///
     /// Clients are allowed to rendered diagnostics with this tag strike through.
     DEPRECATED = 2
 }
@@ -716,6 +820,7 @@ list BuildTargetEvents {
 /// The `BuildTargetEventKind` information can be used by clients to trigger
 /// reindexing or update the user interface with the new information.
 @enumKind("open")
+@dataFieldDiscriminator
 intEnum BuildTargetEventKind {
     /// The build target is new.
     CREATED = 1
@@ -847,6 +952,7 @@ structure DependencyModule {
 }
 
 @enumKind("open")
+@dataFieldDiscriminator
 enum DependencyModuleDataKind {
     MAVEN = "maven"
 }
@@ -922,10 +1028,11 @@ intEnum OutputPathItemKind {
 /// Task progress notifications may contain an arbitrary interface in their `data`
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
-/// 
+///
 /// There are predefined kinds of objects for test and compile tasks, as described
 /// in the [Compile Request](#compile-request) and [Test Request]
 @enumKind("open")
+@dataFieldDiscriminator
 enum TaskDataKind {
     /// `data` field must contain a CompileTask object.
     COMPILE_TASK = "compile-task"
@@ -939,4 +1046,335 @@ enum TaskDataKind {
     TEST_START = "test-start"
     /// `data` field must contain a TestFinish object.
     TEST_FINISH = "test-finish"
+}
+
+structure TaskStartParams {
+  /// Unique id of the task with optional reference to parent task id
+  @required
+  taskId: TaskId
+
+  /// Timestamp of when the event started in milliseconds since Epoch.
+  eventTime: EventTime,
+
+  /// Message describing the task.
+  message: String
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
+  dataKind: TaskDataKind
+
+  /// Optional metadata about the task.
+  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+  data: Json
+}
+
+structure TaskProgressParams {
+  /// Unique id of the task with optional reference to parent task id
+  @required
+  taskId: TaskId
+
+  /// Timestamp of when the event started in milliseconds since Epoch.
+  eventTime: EventTime,
+
+  /// Message describing the task.
+  message: String
+
+  /// If known, total amount of work units in this task.
+  total: Long
+
+  /// If known, completed amount of work units in this task.
+  progress: Long
+
+  /// Name of a work unit. For example, "files" or "tests". May be empty.
+  unit: String
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
+  dataKind: TaskDataKind
+
+  /// Optional metadata about the task.
+  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+  data: Json
+}
+
+structure TaskFinishParams {
+  /// Unique id of the task with optional reference to parent task id
+  @required
+  taskId: TaskId
+
+  /// Timestamp of when the event started in milliseconds since Epoch.
+  eventTime: EventTime,
+
+  /// Message describing the task.
+  message: String
+
+  /// Task completion status.
+  status: StatusCode
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
+  dataKind: TaskDataKind
+
+  /// Optional metadata about the task.
+  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+  data: Json
+}
+
+
+structure CompileParams {
+  /// A sequence of build targets to compile.
+  @required
+  targets: BuildTargetIdentifiers
+
+  /// A unique identifier generated by the client to identify this request.
+  ///The server may include this id in triggered notifications or responses.
+  originId: Identifier
+
+  /// Optional arguments to the compilation process. */
+  arguments: Arguments
+}
+
+list Arguments {
+    member: String
+}
+
+structure CompileResult {
+  /// An optional request id to know the origin of this report.
+  originId: Identifier
+
+  /// A status code for the execution.
+  statusCode: StatusCode
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  dataKind: String
+
+  /// A field containing language-specific information, like products
+  /// of compilation or compiler-specific metadata the client needs to know. */
+  data: Json
+}
+
+
+/// The beginning of a compilation unit may be signalled to the client with a
+// `build/taskStart` notification. When the compilation unit is a build target, the
+/// notification's `dataKind` field must be "compile-task" and the `data` field must
+// include a `CompileTask` object:
+@dataKind("compile-task")
+structure CompileTask {
+    @required
+    target: BuildTargetIdentifier
+}
+
+
+/// The completion of a compilation task should be signalled with a
+/// `build/taskFinish` notification. When the compilation unit is a build target,
+/// the notification's `dataKind` field must be `compile-report` and the `data`
+/// field must include a `CompileReport` object:
+@dataKind("compile-report")
+structure CompileReport {
+  /// The build target that was compiled.
+  @required
+  target: BuildTargetIdentifier
+
+  /// An optional request id to know the origin of this report.
+  originId: Identifier
+
+  /// The total number of reported errors compiling this target.
+  @required
+  errors: Integer
+
+  /// The total number of reported warnings compiling the target.
+  @required
+  warnings: Integer
+
+  /// The total number of milliseconds it took to compile the target.
+  time: DurationMillis
+
+  /// The compilation was a noOp compilation.
+  noOp: Boolean
+}
+
+
+structure TestParams {
+  /// A sequence of build targets to test.
+  @required
+  targets: BuildTargetIdentifiers
+
+  /// A unique identifier generated by the client to identify this request.
+  /// The server may include this id in triggered notifications or responses.
+  originId: Identifier
+
+  /// Optional arguments to the test execution engine. */
+  arguments: Arguments
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  dataKind: String
+
+  /// Language-specific metadata about for this test execution.
+  /// See ScalaTestParams as an example.
+  data: Json
+}
+
+structure TestResult {
+  /// An optional request id to know the origin of this report.
+  originId: Identifier
+
+  /// A status code for the execution.
+  statusCode: StatusCode
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  dataKind: String
+
+  /// Language-specific metadata about the test result.
+  /// See ScalaTestParams as an example.
+  data: Json
+}
+
+
+/// The beginning of a testing unit may be signalled to the client with a
+/// `build/taskStart` notification. When the testing unit is a build target, the
+/// notification's `dataKind` field must be `test-task` and the `data` field must
+/// include a `TestTask` object.
+@dataKind("test-task")
+structure TestTask {
+  @required
+  target: BuildTargetIdentifier
+}
+
+@dataKind("test-report")
+structure TestReport {
+  /// The build target that was compiled.
+  @required
+  target: BuildTargetIdentifier
+
+  /// The total number of successful tests.
+  @required
+  passed: Integer
+
+  /// The total number of failed tests.
+  @required
+  failed: Integer
+
+  /// The total number of ignored tests.
+  @required
+  ignored: Integer
+
+  /// The total number of cancelled tests.
+  @required
+  cancelled: Integer
+
+  /// The total number of skipped tests.
+  @required
+  skipped: Integer
+
+  /// The total number of milliseconds tests take to run (e.g. doesn't include compile times).
+  time: DurationMillis
+}
+
+@dataKind("test-started")
+structure TestStart {
+    /// Name or description of the test.
+    @required
+    displayName: String
+
+    /// Source location of the test, as LSP location.
+    location: Location
+}
+
+
+@dataKind("test-finish")
+structure TestFinish {
+  /// Name or description of the test.
+  @required
+  displayName: String
+
+  /// Information about completion of the test, for example an error message.
+  message: String
+
+  /// Completion status of the test.
+  @required
+  status: TestStatus
+
+  /// Source location of the test, as LSP location.
+  location: Location
+
+  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
+  dataKind: String
+
+  /// Optionally, structured metadata about the test completion.
+  /// For example: stack traces, expected/actual values.
+  data: Json
+}
+
+@enumKind("open")
+intEnum TestStatus {
+  /// The test passed successfully.
+  PASSED = 1
+  /// The test failed.
+  FAILED = 2
+  /// The test was marked as ignored.
+  IGNORED = 3
+  /// The test execution was cancelled.
+  CANCELLED = 4
+  /// The was not included in execution.
+  SKIPPED = 5
+}
+
+structure RunParams {
+  /// The build target to run.
+  @required
+  target: BuildTargetIdentifier
+
+  /// A unique identifier generated by the client to identify this request.
+  /// The server may include this id in triggered notifications or responses. */
+  originId: Identifier
+
+  /// Optional arguments to the executed application.
+  arguments: Arguments
+
+  /// Kind of data to expect in the data field. If this field is not set, the kind of data is not specified.
+  dataKind: String
+
+  /// Language-specific metadata for this execution.
+  /// See ScalaMainClass as an example. */
+  data: Json
+}
+
+structure RunResult {
+  /// An optional request id to know the origin of this report.
+  originId: Identifier
+
+  /// A status code for the execution.
+  @required
+  statusCode: StatusCode
+}
+
+
+structure DebugSessionParams {
+  /// A sequence of build targets affected by the debugging action.
+  @required
+  targets: BuildTargetIdentifiers
+
+  /// The kind of data to expect in the `data` field.
+  dataKind: String
+
+  /// Language-specific metadata for this execution.
+  /// See ScalaMainClass as an example.
+  data: Json
+}
+
+structure DebugSessionAddress {
+  /// The Debug Adapter Protocol server's connection uri
+  uri: URI
+}
+
+structure CleanCacheParams {
+  /// The build targets to clean.
+  targets: BuildTargetIdentifiers
+}
+
+structure CleanCacheResult {
+  /// Optional message to display to the user.
+  message: String
+  /// Indicates whether the clean cache request was performed or not.
+  cleaned: Boolean
 }
