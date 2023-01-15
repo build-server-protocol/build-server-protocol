@@ -26,7 +26,8 @@ class SmithyToIR(model: Model) {
       .asScala
       .filter(_.getId().getNamespace() == namespace)
       .map { shape =>
-        shape.accept(ToIRVisitor)
+        if (shape.hasTrait("smithy.api#trait")) None
+        else shape.accept(ToIRVisitor)
       }
       .collect { case Some(definition) =>
         definition
@@ -158,10 +159,11 @@ class SmithyToIR(model: Model) {
     def memberShape(shape: MemberShape): Option[Type] =
       model.expectShape(shape.getTarget()).accept(this)
 
+    def timestampShape(shape: TimestampShape): Option[Type] = Some(TPrimitive(PTimestamp))
+
     def shortShape(shape: ShortShape): Option[Type] = None
     def blobShape(shape: BlobShape): Option[Type] = None
     def byteShape(shape: ByteShape): Option[Type] = None
-    def timestampShape(shape: TimestampShape): Option[Type] = None
     def operationShape(shape: OperationShape): Option[Type] = None
     def resourceShape(shape: ResourceShape): Option[Type] = None
     def serviceShape(shape: ServiceShape): Option[Type] = None

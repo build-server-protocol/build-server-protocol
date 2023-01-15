@@ -50,6 +50,7 @@ object Primitive {
   case object PFloat extends Primitive
   case object PDouble extends Primitive
   case object PDocument extends Primitive
+  case object PTimestamp extends Primitive
 }
 
 sealed trait Type
