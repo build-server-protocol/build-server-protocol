@@ -702,8 +702,10 @@ structure Diagnostic {
 }
 
 structure Position {
+    /// Line position within a file. First line of a file is 0.
     @required
     line: Integer
+    /// Character position within a line. First character of a line is 0.
     @required
     character: Integer
 }
