@@ -24,6 +24,7 @@ service BuildServer {
         BuildTargetOutputPaths
         BuildTargetCompile
         BuildTargetRun
+        BuildTargetTest
         DebugSessionStart
         BuildTargetCleanCache
     ]
