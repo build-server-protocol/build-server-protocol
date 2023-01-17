@@ -1,11 +1,6 @@
 {
   "docs": {
-    "Overview": [
-      "specification",
-      "implementations",
-      "server-discovery",
-      "faq"
-    ],
+    "Overview": ["specification", "implementations", "server-discovery", "faq"],
     "Extensions": [
       "extensions/jvm",
       "extensions/scala",
@@ -13,8 +8,6 @@
       "extensions/java",
       "extensions/maven"
     ],
-    "Bindings": [
-      "bindings/java"
-    ]
+    "Bindings": ["bindings/java"]
   }
 }

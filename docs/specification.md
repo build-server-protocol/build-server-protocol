@@ -411,8 +411,7 @@ export interface BuildServerCapabilities {
   jvmTestEnvironmentProvider?: Boolean;
 
   /** Reloading the build state through workspace/reload is supported */
-  canReload?: Boolean
-
+  canReload?: Boolean;
 }
 
 export interface CompileProvider {
@@ -1462,7 +1461,7 @@ and returns a connection URI for the client to interact with.
 ```ts
 export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
-  targets: BuildTargetIdentifier[],
+  targets: BuildTargetIdentifier[];
 
   /** The kind of data to expect in the `data` field. */
   dataKind: String;
