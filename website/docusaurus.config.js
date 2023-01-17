@@ -40,8 +40,24 @@ module.exports = {
         fromExtensions: ["html"],
         redirects: [
           {
-            from: "/build-server-protocol/",
+            from: "/build-server-protocol",
             to: "/",
+          },
+          {
+            from: "/docs/bsp",
+            to: "/docs/specification",
+          },
+          {
+            from: "/docs/faq",
+            to: "/docs/overview/faq",
+          },
+          {
+            from: "/docs/implementations",
+            to: "/docs/overview/implementations",
+          },
+          {
+            from: "/docs/server-discovery",
+            to: "/docs/overview/server-discovery",
           },
         ],
       },
@@ -78,7 +94,7 @@ module.exports = {
             },
             {
               label: "Implementations",
-              to: "docs/implementations",
+              to: "docs/overview/implementations",
             },
           ],
         },
