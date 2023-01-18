@@ -61,12 +61,13 @@ Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
 [scalameta/metals](https://github.com/scalameta/metals), are currently working
 or planning to work on a BSP integrations.
 
-On the server side, 
-* [Bloop](https://github.com/scalacenter/bloop) was the first
-server to implement BSP
-* sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
-* Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
-* Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
+On the server side,
+
+- [Bloop](https://github.com/scalacenter/bloop) was the first
+  server to implement BSP
+- sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+- Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+- Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
 
 We're looking for third parties that implement BSP natively in other build tools
 such as Gradle.
@@ -410,8 +411,7 @@ export interface BuildServerCapabilities {
   jvmTestEnvironmentProvider?: Boolean;
 
   /** Reloading the build state through workspace/reload is supported */
-  canReload?: Boolean
-
+  canReload?: Boolean;
 }
 
 export interface CompileProvider {
@@ -645,9 +645,9 @@ export interface WorkspaceBuildTargetsResult {
 
 ### Reload request
 
-The `reload` request is sent from the client to instruct the build server to reload 
-the build configuration. This request should be supported by build tools that keep 
-their state in memory. If the `reload` request returns with an error, it's expected 
+The `reload` request is sent from the client to instruct the build server to reload
+the build configuration. This request should be supported by build tools that keep
+their state in memory. If the `reload` request returns with an error, it's expected
 that other requests respond with the previously known "good" state.
 
 Request:
@@ -658,8 +658,8 @@ Request:
 Response:
 
 - result: `null`
-- error: code and message in case an error happens during reload. For example, 
-when the build configuration is invalid.
+- error: code and message in case an error happens during reload. For example,
+  when the build configuration is invalid.
 
 ### Build Target Changed Notification
 
@@ -706,7 +706,6 @@ export namespace BuildTargetEventKind {
 
 The `BuildTargetEventKind` information can be used by clients to trigger
 reindexing or update the user interface with the new information.
-
 
 ### Build Target Sources Request
 
@@ -1462,7 +1461,7 @@ and returns a connection URI for the client to interact with.
 ```ts
 export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
-  targets: BuildTargetIdentifier[],
+  targets: BuildTargetIdentifier[];
 
   /** The kind of data to expect in the `data` field. */
   dataKind: String;
@@ -1472,6 +1471,9 @@ export interface DebugSessionParams {
   data: any;
 }
 ```
+
+For the scala-specific `data` options please reference the [Scala Extension
+documentation](/docs/extensions/scala)
 
 Response:
 

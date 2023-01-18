@@ -6,6 +6,7 @@ on:
     branches: [master]
 jobs:
   check-generation:
+    name: Check generation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +24,7 @@ jobs:
         id: verify-changed-files
         with:
           files: |
-             **/*.java
+            **/*.java
 
       - name: Fail if we detect changed files
         if: steps.verify-changed-files.outputs.files_changed == 'true'
@@ -33,6 +34,7 @@ jobs:
           exit 1
 
   test:
+    name: Run tests
     needs: check-generation
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +64,7 @@ jobs:
       - run: sbt docs/docusaurusCreateSite
 
   format-check:
-    name: Format Check
+    name: Check Scala formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -72,3 +74,19 @@ jobs:
           java-version: '11'
           cache: 'sbt'
       - run: sbt checkScalaFormat
+
+  website-prettier:
+    name: Check website formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: creyD/prettier_action@v4.2
+        name: Check website
+        with:
+          dry: True
+          prettier_options: --check --ignore-path website/.prettierignore website
+      - uses: creyD/prettier_action@v4.2
+        name: Check docs
+        with:
+          dry: True
+          prettier_options: --check docs
