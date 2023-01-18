@@ -632,7 +632,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     } catch {
       case x: TimeoutException =>
         val err = new ResponseError(
-          ResponseErrorCode.serverNotInitialized,
+          ResponseErrorCode.ServerNotInitialized,
           "Cannot handle requests before receiving the initialize request",
           null
         )
@@ -643,7 +643,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   private def checkShutdown[T]: Either[ResponseError, Unit] =
     if (isShutdown.isCompleted) {
       val err = new ResponseError(
-        ResponseErrorCode.serverErrorEnd,
+        ResponseErrorCode.jsonrpcReservedErrorRangeEnd, // FIXME: this has never been a valid code
+        // previously it was named "serverErrorEnd", but it didn't mean "cannot handle requests after shutdown",
+        // it was a marker. From the docs: "This is the start range of JSON RPC reserved error codes.
+        // It doesn't denote a real error code."
+        // I'm not changing it now, because it's a breaking change.
         "Cannot handle requests after receiving the shutdown request",
         null
       )
