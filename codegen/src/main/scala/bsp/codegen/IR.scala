@@ -5,7 +5,7 @@ import software.amazon.smithy.model.shapes.ShapeId
 // This file contains an internal representation specifically tailored for the needs and idioms
 // of bsp4j. It is not meant to be reused for Scala code-generation, or any other language, for that matter.
 
-sealed trait Def { def shapeId: ShapeId }
+sealed trait Def { def shapeId: ShapeId; def hints: List[Hint] }
 // scalafmt: {maxColumn = 180}
 object Def {
   final case class Structure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]) extends Def
@@ -21,13 +21,15 @@ object JsonRPCMethodType {
 }
 
 final case class Operation(
-    name: String,
+    shapeId: ShapeId,
     inputType: Type,
     outputType: Type,
     jsonRPCMethodType: JsonRPCMethodType,
     jsonRPCMethod: String,
     hints: List[Hint]
-)
+) {
+  def name: String = shapeId.getName()
+}
 
 sealed trait EnumType[A]
 object EnumType {

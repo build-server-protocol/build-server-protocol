@@ -16,4 +16,12 @@ object Codegen {
     }
   }
 
+  def docs(): String = {
+    val model = ModelLoader.loadModel()
+    val docTree = new SmithyToIR(model).docTree
+    MarkdownRenderer.render(docTree)
+  }
+
+  def printDocs(): Unit = println(docs)
+
 }

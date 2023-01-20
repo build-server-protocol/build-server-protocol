@@ -13,11 +13,19 @@ import bsp.codegen.JsonRPCMethodType.Notification
 import bsp.codegen.JsonRPCMethodType.Request
 import bsp.codegen.Hint.Documentation
 
-class TypescriptSpecRenderer(basepkg: String) {
+class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
-  val baseRelPath = os.rel / basepkg.split('.')
   // scalafmt: { maxColumn = 120}
-  def render(definition: Def): Option[CodegenFile] = {
+  def renderFile(definition: Def): Option[CodegenFile] = {
+    val fileName = definition.shapeId.getName() + ".ts"
+    baseRelPath.flatMap { base =>
+      render(definition).map { lines =>
+        CodegenFile(definition.shapeId, base / fileName, lines.render)
+      }
+    }
+  }
+
+  def render(definition: Def): Option[Lines] = {
     definition match {
       case Structure(shapeId, fields, hints)            => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, hints) => None // no exemple of this in the spc
@@ -26,27 +34,24 @@ class TypescriptSpecRenderer(basepkg: String) {
     }
   }
 
-  def renderStructure(shapeId: ShapeId, fields: List[Field]): CodegenFile = {
-    val allLines = lines(
+  def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {
+    lines(
       block(s"export interface ${shapeId.getName()}")(
-        lines(fields.map(renderTSField))
+        newline,
+        lines(fields.map(f => renderTSField(f)).intercalate(newline))
       )
     )
-
-    val fileName = shapeId.getName() + ".ts"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
-  def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
+  def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
     val tpe = shapeId.getName()
-    val allLines = lines(
+    lines(
       block(s"export namespace $tpe") {
-        values.map(renderStaticValue(enumType))
+        newline
+        values.map(renderStaticValue(enumType)).intercalate(newline)
       },
       newline
     )
-    val fileName = shapeId.getName() + ".ts"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => Lines = {
@@ -55,14 +60,14 @@ class TypescriptSpecRenderer(basepkg: String) {
         (ev: EnumValue[Int]) =>
           lines(
             renderDocumentation(ev.hints),
-            s"export const ${camelCase(ev.name)} = ${ev.value};"
+            s"export const ${camelCase(ev.name).capitalize} = ${ev.value};"
           )
 
       case StringEnum =>
         (ev: EnumValue[String]) =>
           lines(
             renderDocumentation(ev.hints),
-            s"public static final String ${camelCase(ev.name)} = \"${ev.value}\""
+            s"""export const ${camelCase(ev.name).capitalize} = "${ev.value}""""
           )
     }
   }
@@ -77,14 +82,17 @@ class TypescriptSpecRenderer(basepkg: String) {
   def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
-      case StringEnum => (ev: EnumValue[String]) => s"${ev.name}(\"${ev.value}\")"
+      case StringEnum => (ev: EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
     }
   }
 
   def renderTSField(field: Field): Lines = {
-    val `:` = if (field.required) ":" else "?:"
+    val `:` = if (field.required) ": " else "?: "
     val maybeNonNull = if (field.required) lines("@NonNull") else empty
-    lines(field.name + `:` + renderType(field.tpe) + ";")
+    lines(
+      renderDocumentation(field.hints),
+      field.name + `:` + renderType(field.tpe) + ";"
+    )
   }
 
   def renderType(tpe: Type): String = tpe match {
@@ -111,7 +119,7 @@ class TypescriptSpecRenderer(basepkg: String) {
     .collectFold { case Documentation(string) =>
       val lines = string.split(System.lineSeparator())
       if (lines.nonEmpty) {
-        lines(0) = "/** " + lines(0).head
+        lines(0) = "/** " + lines(0)
         val lastIndex = lines.length - 1
         lines(lastIndex) = lines(lastIndex) + " */"
       }
