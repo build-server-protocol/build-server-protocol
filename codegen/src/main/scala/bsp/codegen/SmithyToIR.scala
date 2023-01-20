@@ -16,8 +16,20 @@ import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
 import java.util.Optional
 import software.amazon.smithy.model.traits.RequiredTrait
 import software.amazon.smithy.model.traits.DocumentationTrait
+import cats.syntax.all._
+import software.amazon.smithy.model.traits.TagsTrait
 
 class SmithyToIR(model: Model) {
+
+  def docTree: DocTree = {
+    val shapes = model.shapes().iterator().asScala.toList
+    val commonTag = "basic"
+    val commonShapes =
+      shapes.filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags().contains(commonTag)))
+    val commonShapeDocs = commonShapes.flatMap(_.accept(DocShapeVisitor))
+    val serviceDocs = shapes.filter(_.isServiceShape()).flatMap(_.accept(DocShapeVisitor))
+    DocTree(commonShapeDocs, serviceDocs)
+  }
 
   def definitions(namespace: String): List[Def] =
     model
@@ -40,29 +52,31 @@ class SmithyToIR(model: Model) {
     // primitive shapes, that get handled by this default method.
     protected def getDefault(shape: Shape): Option[Def] = None
 
+    def buildOperation(op: OperationShape): Option[Operation] = {
+      val maybeMethod = if (op.hasTrait(classOf[JsonRequestTrait])) {
+        val methodName = op.expectTrait(classOf[JsonRequestTrait]).getValue()
+        val methodType = JsonRPCMethodType.Request
+        Some(methodName -> methodType)
+      } else if (op.hasTrait(classOf[JsonNotificationTrait])) {
+        val methodName = op.expectTrait(classOf[JsonNotificationTrait]).getValue()
+        val methodType = JsonRPCMethodType.Notification
+        Some(methodName -> methodType)
+      } else None
+      maybeMethod.map { case (methodName, methodType) =>
+        val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
+        val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
+        val hints = getHints(op)
+        Operation(op.getId, inputType, outputType, methodType, methodName, hints)
+      }
+    }
+
     override def serviceShape(shape: ServiceShape): Option[Def] = {
       val operations = shape
         .getOperations()
         .asScala
         .toList
         .map(model.expectShape(_, classOf[OperationShape]))
-        .flatMap { op =>
-          val maybeMethod = if (op.hasTrait(classOf[JsonRequestTrait])) {
-            val methodName = op.expectTrait(classOf[JsonRequestTrait]).getValue()
-            val methodType = JsonRPCMethodType.Request
-            Some(methodName -> methodType)
-          } else if (op.hasTrait(classOf[JsonNotificationTrait])) {
-            val methodName = op.expectTrait(classOf[JsonNotificationTrait]).getValue()
-            val methodType = JsonRPCMethodType.Notification
-            Some(methodName -> methodType)
-          } else None
-          maybeMethod.map { case (methodName, methodType) =>
-            val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
-            val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
-            val hints = getHints(op)
-            Operation(op.getId.getName(), inputType, outputType, methodType, methodName, hints)
-          }
-        }
+        .flatMap(buildOperation)
       Some(Def.Service(shape.getId(), operations, getHints(shape)))
     }
 
@@ -179,6 +193,40 @@ class SmithyToIR(model: Model) {
       .map(Hint.Documentation(_))
       .toList
     documentation
+  }
+
+  object DocShapeVisitor extends ShapeVisitor.Default[Option[DocNode]] {
+    protected def getDefault(shape: Shape): Option[DocNode] = {
+      shape.accept(ToIRVisitor).map { definition =>
+        ShapeDocNode(definition, Nil)
+      }
+    }
+
+    override def structureShape(shape: StructureShape): Option[DocNode] = {
+      val childrenNodes = shape
+        .members()
+        .asScala
+        .toList
+        .flatMap(m => model.expectShape(m.getTarget()).accept(this).toList)
+
+      shape.accept(ToIRVisitor).map { definition =>
+        ShapeDocNode(definition, childrenNodes)
+      }
+    }
+
+    override def operationShape(shape: OperationShape): Option[DocNode] = {
+      val input = shape.getInput.toScala.flatMap(input => model.expectShape(input).accept(this))
+      val output = shape.getOutput.toScala.flatMap(output => model.expectShape(output).accept(this))
+      ToIRVisitor.buildOperation(shape).map { case op: Operation =>
+        OperationDocNode(op, input, output)
+      }
+    }
+
+    override def serviceShape(shape: ServiceShape): Option[DocNode] = {
+      val ops = shape.getOperations().asScala.toList.map(model.expectShape).flatMap(_.accept(this))
+      Some(ServiceDocNode(shape.getId(), ops))
+    }
+
   }
 
 }
