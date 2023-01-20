@@ -128,8 +128,8 @@ class JavaRenderer(basepkg: String) {
     }
     val rpcMethod = operation.jsonRPCMethod
     val annotation = operation.jsonRPCMethodType match {
-      case Notification => s"@JsonNotification(\"$rpcMethod\")"
-      case Request      => s"@JsonRequest(\"$rpcMethod\")"
+      case Notification => s"""@JsonNotification("$rpcMethod")"""
+      case Request      => s"""@JsonRequest("$rpcMethod")"""
     }
     val method = operation.name.head.toLower + operation.name.tail
     lines(
@@ -146,15 +146,15 @@ class JavaRenderer(basepkg: String) {
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s"public static final int ${ev.name} = ${ev.value}"
-      case StringEnum => (ev: EnumValue[String]) => s"public static final String ${ev.name} = \"${ev.value}\""
+      case IntEnum    => (ev: EnumValue[Int]) => s""""public static final int ${ev.name} = ${ev.value}""""
+      case StringEnum => (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}""""
     }
   }
 
   def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
-      case StringEnum => (ev: EnumValue[String]) => s"${ev.name}(\"${ev.value}\")"
+      case StringEnum => (ev: EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
     }
   }
 

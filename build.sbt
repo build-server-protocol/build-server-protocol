@@ -229,10 +229,11 @@ lazy val codegen = project
   .in(file("codegen"))
   .dependsOn(`spec-traits`)
   .settings(
-    scalaVersion := V.scala213,
+    scalaVersion := V.scala212,
     publish := {},
     publishLocal := {},
     libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0",
       "com.lihaoyi" %% "os-lib" % "0.9.0",
       "com.monovore" %% "decline" % "2.4.1"
     )
@@ -240,7 +241,7 @@ lazy val codegen = project
 
 lazy val docs = project
   .in(file("bsp-docs"))
-  .dependsOn(bsp4j)
+  .dependsOn(bsp4j, codegen)
   .settings(
     scalaVersion := V.scala212,
     publish / skip := true,

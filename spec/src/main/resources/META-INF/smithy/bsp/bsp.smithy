@@ -1032,8 +1032,8 @@ intEnum OutputPathItemKind {
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
 ///
-/// There are predefined kinds of objects for test and compile tasks, as described
-/// in the [Compile Request](#compile-request) and [Test Request]
+/// There are predefined kinds of objects for compile and test tasks, as described
+/// in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 @enumKind("open")
 @dataFieldDiscriminator
 enum TaskDataKind {
