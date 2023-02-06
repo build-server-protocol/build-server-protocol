@@ -9,7 +9,7 @@
     "docusaurus": "docusaurus"
   },
   "dependencies": {
-    "@docusaurus/core": "2.3.0",
+    "@docusaurus/core": "2.3.1",
     "@docusaurus/plugin-client-redirects": "2.3.0",
     "@docusaurus/preset-classic": "2.3.0",
     "clsx": "^1.1.1",
