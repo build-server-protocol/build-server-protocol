@@ -6,6 +6,7 @@ use jsonrpc#enumKind
 use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
+use jsonrpc#data
 
 @jsonRPC
 service BuildServer {
@@ -288,17 +289,6 @@ operation BuildTargetCleanCache {
     output: CleanCacheResult
 }
 
-
-
-/// A trait indicating the value that the `dataKind` fields
-/// MUST take when the `data` field contains a value of the
-/// annotated shape.
-@trait()
-string dataKind
-
-@trait(selector: ":is(enum, intEnum, string)")
-structure dataFieldDiscriminator {}
-
 /// A resource identifier that is a valid URI according
 /// to rfc3986: * https://tools.ietf.org/html/rfc3986
 string URI
@@ -307,8 +297,6 @@ list URIs {
     member: URI
 }
 
-/// Represents an arbitrary piece of data, in Json format
-document Json
 
 /// Represents the identifier of a BSP request.
 string RequestId
@@ -326,6 +314,8 @@ list BuildTargetIdentifiers {
 
 timestamp EventTime
 integer DurationMillis
+
+document BuildTargetData
 
 /// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
 ///
@@ -370,22 +360,11 @@ structure BuildTarget {
     /// The capabilities of this build target.
     @required
     capabilities: BuildTargetCapabilities
-    /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-    @required
-    dataKind: BuildTargetDataKind
     /// Language-specific metadata about this target.
     /// See ScalaBuildTarget as an example.
-    data: Json
+    data: BuildTargetData
 }
 
-@enumKind("open")
-@dataFieldDiscriminator
-enum BuildTargetDataKind {
-    /// The `data` field contains a `ScalaBuildTarget` object
-    SCALA = "scala"
-    /// The `data` field contains a `SbtBuildTarget` object.
-    SBT = "sbt"
-}
 
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
@@ -403,7 +382,6 @@ structure BuildTargetCapabilities {
 }
 
 @enumKind("open")
-@dataFieldDiscriminator
 enum BuildTargetTag {
     /// Target contains re-usable functionality for downstream targets. May have any
     /// combination of capabilities.
@@ -476,6 +454,7 @@ structure JvmBuildTarget {
     javaVersion: String
 }
 
+@data(kind: "scala", extends: BuildTargetData)
 structure ScalaBuildTarget {
     @required
     scalaOrganization: String
@@ -497,6 +476,8 @@ intEnum ScalaPlatform {
     NATIVE = 3
 }
 
+document InitializeBuildParamsData
+
 structure InitializeBuildParams {
     /// Name of the client
     @required
@@ -514,7 +495,7 @@ structure InitializeBuildParams {
     @required
     capabilities: BuildClientCapabilities
     /// Additional metadata about the client
-    data: Json
+    data: InitializeBuildParamsData
 }
 
 structure BuildClientCapabilities {
@@ -536,6 +517,8 @@ list LanguageIds {
     member: LanguageId
 }
 
+document InitializeBuildResultData
+
 structure InitializeBuildResult {
     /// Name of the server
     @required
@@ -550,7 +533,7 @@ structure InitializeBuildResult {
     @required
     capabilities: BuildServerCapabilities
     /// Additional metadata about the server
-    data: Json
+    data: InitializeBuildResultData
 }
 
 structure BuildServerCapabilities {
@@ -674,6 +657,8 @@ structure PublishDiagnosticsParams {
     reset: Boolean
 }
 
+document DiagnosticData
+
 structure Diagnostic {
     /// The range at which the message applies.
     @required
@@ -698,7 +683,7 @@ structure Diagnostic {
     relatedInformation: DiagnosticRelatedInformationList
     /// A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
     // and a `textDocument/codeAction` request.
-    data: Json
+    data: DiagnosticData
 }
 
 structure Position {
@@ -806,6 +791,8 @@ structure DidChangeBuildTarget {
     changes: BuildTargetEvents
 }
 
+document BuildTargetEventData
+
 structure BuildTargetEvent {
     /// The identifier for the changed build target
     @required
@@ -813,7 +800,7 @@ structure BuildTargetEvent {
     /// The kind of change for this build target
     kind: BuildTargetEventKind
     /// Any additional metadata about what information changed.
-    data: Json
+    data: BuildTargetEventData
 }
 
 list BuildTargetEvents {
@@ -823,7 +810,6 @@ list BuildTargetEvents {
 /// The `BuildTargetEventKind` information can be used by clients to trigger
 /// reindexing or update the user interface with the new information.
 @enumKind("open")
-@dataFieldDiscriminator
 intEnum BuildTargetEventKind {
     /// The build target is new.
     CREATED = 1
@@ -940,6 +926,8 @@ list DependencyModuleItems {
     member: DependencyModuleItem
 }
 
+document DependencyModuleData
+
 structure DependencyModule {
     /// Module name
     @required
@@ -947,17 +935,9 @@ structure DependencyModule {
     /// Module version
     @required
     version: String
-    /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-    dataKind: DependencyModuleDataKind
     /// Language-specific metadata about this module.
     /// See MavenDependencyModule as an example.
-    data: Json
-}
-
-@enumKind("open")
-@dataFieldDiscriminator
-enum DependencyModuleDataKind {
-    MAVEN = "maven"
+    data: DependencyModuleData
 }
 
 structure ResourcesParams {
@@ -1028,28 +1008,14 @@ intEnum OutputPathItemKind {
     DIRECTORY = 2
 }
 
+
 /// Task progress notifications may contain an arbitrary interface in their `data`
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
 ///
 /// There are predefined kinds of objects for compile and test tasks, as described
 /// in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
-@enumKind("open")
-@dataFieldDiscriminator
-enum TaskDataKind {
-    /// `data` field must contain a CompileTask object.
-    COMPILE_TASK = "compile-task"
-    /// `data` field must contain a CompileReport object.
-    COMPILE_REPORT = "compile-report"
-    /// `data` field must contain a TestTask object.
-    TEST_TASK = "test-task"
-    /// `data` field must contain a TestReport object.
-    TEST_REPORT = "test-report"
-    /// `data` field must contain a TestStart object.
-    TEST_START = "test-start"
-    /// `data` field must contain a TestFinish object.
-    TEST_FINISH = "test-finish"
-}
+document TaskData
 
 structure TaskStartParams {
   /// Unique id of the task with optional reference to parent task id
@@ -1062,14 +1028,12 @@ structure TaskStartParams {
   /// Message describing the task.
   message: String
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
-  dataKind: TaskDataKind
-
   /// Optional metadata about the task.
   /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: Json
+  data: TaskData
 }
+
+document TaskData
 
 structure TaskProgressParams {
   /// Unique id of the task with optional reference to parent task id
@@ -1091,13 +1055,9 @@ structure TaskProgressParams {
   /// Name of a work unit. For example, "files" or "tests". May be empty.
   unit: String
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
-  dataKind: TaskDataKind
-
   /// Optional metadata about the task.
   /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: Json
+  data: TaskData
 }
 
 structure TaskFinishParams {
@@ -1114,13 +1074,9 @@ structure TaskFinishParams {
   /// Task completion status.
   status: StatusCode
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  /// Kind names for specific tasks like compile, test, etc are specified in the protocol.
-  dataKind: TaskDataKind
-
   /// Optional metadata about the task.
   /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: Json
+  data: TaskData
 }
 
 
@@ -1141,6 +1097,8 @@ list Arguments {
     member: String
 }
 
+document CompileResultData
+
 structure CompileResult {
   /// An optional request id to know the origin of this report.
   originId: Identifier
@@ -1148,12 +1106,9 @@ structure CompileResult {
   /// A status code for the execution.
   statusCode: StatusCode
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  dataKind: String
-
   /// A field containing language-specific information, like products
   /// of compilation or compiler-specific metadata the client needs to know. */
-  data: Json
+  data: CompileResultData
 }
 
 
@@ -1161,7 +1116,7 @@ structure CompileResult {
 // `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
 // include a `CompileTask` object:
-@dataKind("compile-task")
+@data(kind: "compile-task", extends: TaskData)
 structure CompileTask {
     @required
     target: BuildTargetIdentifier
@@ -1172,7 +1127,7 @@ structure CompileTask {
 /// `build/taskFinish` notification. When the compilation unit is a build target,
 /// the notification's `dataKind` field must be `compile-report` and the `data`
 /// field must include a `CompileReport` object:
-@dataKind("compile-report")
+@data(kind: "compile-report", extends: TaskData)
 structure CompileReport {
   /// The build target that was compiled.
   @required
@@ -1197,6 +1152,8 @@ structure CompileReport {
 }
 
 
+document TestParamsData
+
 structure TestParams {
   /// A sequence of build targets to test.
   @required
@@ -1209,13 +1166,12 @@ structure TestParams {
   /// Optional arguments to the test execution engine. */
   arguments: Arguments
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  dataKind: String
-
   /// Language-specific metadata about for this test execution.
   /// See ScalaTestParams as an example.
-  data: Json
+  data: TestParamsData
 }
+
+document TestResultData
 
 structure TestResult {
   /// An optional request id to know the origin of this report.
@@ -1224,12 +1180,9 @@ structure TestResult {
   /// A status code for the execution.
   statusCode: StatusCode
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  dataKind: String
-
   /// Language-specific metadata about the test result.
   /// See ScalaTestParams as an example.
-  data: Json
+  data: TestResultData
 }
 
 
@@ -1237,13 +1190,13 @@ structure TestResult {
 /// `build/taskStart` notification. When the testing unit is a build target, the
 /// notification's `dataKind` field must be `test-task` and the `data` field must
 /// include a `TestTask` object.
-@dataKind("test-task")
+@data(kind: "test-task", extends: TaskData)
 structure TestTask {
   @required
   target: BuildTargetIdentifier
 }
 
-@dataKind("test-report")
+@data(kind: "test-report", extends: TaskData)
 structure TestReport {
   /// The build target that was compiled.
   @required
@@ -1273,7 +1226,7 @@ structure TestReport {
   time: DurationMillis
 }
 
-@dataKind("test-started")
+@data(kind: "test-start", extends: TaskData)
 structure TestStart {
     /// Name or description of the test.
     @required
@@ -1283,8 +1236,9 @@ structure TestStart {
     location: Location
 }
 
+document TestFinishData
 
-@dataKind("test-finish")
+@data(kind: "test-finish", extends: TaskData)
 structure TestFinish {
   /// Name or description of the test.
   @required
@@ -1300,12 +1254,9 @@ structure TestFinish {
   /// Source location of the test, as LSP location.
   location: Location
 
-  /// Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified.
-  dataKind: String
-
   /// Optionally, structured metadata about the test completion.
   /// For example: stack traces, expected/actual values.
-  data: Json
+  data: TestFinishData
 }
 
 @enumKind("open")
@@ -1322,6 +1273,8 @@ intEnum TestStatus {
   SKIPPED = 5
 }
 
+document RunParamsData
+
 structure RunParams {
   /// The build target to run.
   @required
@@ -1334,12 +1287,9 @@ structure RunParams {
   /// Optional arguments to the executed application.
   arguments: Arguments
 
-  /// Kind of data to expect in the data field. If this field is not set, the kind of data is not specified.
-  dataKind: String
-
   /// Language-specific metadata for this execution.
   /// See ScalaMainClass as an example. */
-  data: Json
+  data: RunParamsData
 }
 
 structure RunResult {
@@ -1352,17 +1302,19 @@ structure RunResult {
 }
 
 
+document DebugSessionParamsData
+
 structure DebugSessionParams {
   /// A sequence of build targets affected by the debugging action.
   @required
   targets: BuildTargetIdentifiers
 
-  /// The kind of data to expect in the `data` field.
-  dataKind: String
+//   /// The kind of data to expect in the `data` field.
+//   dataKind: String
 
   /// Language-specific metadata for this execution.
   /// See ScalaMainClass as an example.
-  data: Json
+  data: DebugSessionParamsData
 }
 
 structure DebugSessionAddress {

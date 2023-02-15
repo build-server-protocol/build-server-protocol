@@ -11,6 +11,7 @@ import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait
 import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.OPEN
 import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.CLOSED
 import ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait
+import ch.epfl.smithy.jsonrpc.traits.DataTrait
 import ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait
 import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
 import java.util.Optional
@@ -18,6 +19,7 @@ import software.amazon.smithy.model.traits.RequiredTrait
 import software.amazon.smithy.model.traits.DocumentationTrait
 import cats.syntax.all._
 import software.amazon.smithy.model.traits.TagsTrait
+import scala.collection.immutable
 
 class SmithyToIR(model: Model) {
 
@@ -91,7 +93,18 @@ class SmithyToIR(model: Model) {
 
     override def structureShape(shape: StructureShape): Option[Def] = {
       val fields = shape.members().asScala.flatMap(toField).toList
-      Some(Def.Structure(shape.getId(), fields, getHints(shape)))
+      def insertDiscriminator(list: List[Field]): List[Field] = list match {
+        case field :: next
+            if (field.name == "data" && field.tpe == Type.TPrimitive(Primitive.PDocument)) =>
+          val doc =
+            "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
+          val hints = List(Hint.Documentation(doc))
+          Field("dataKind", Type.TPrimitive(Primitive.PString), true, hints) :: field :: next
+        case field :: next => field :: insertDiscriminator(next)
+        case Nil           => Nil
+      }
+
+      Some(Def.Structure(shape.getId(), insertDiscriminator(fields), getHints(shape)))
     }
 
     override def intEnumShape(shape: IntEnumShape): Option[Def] = {
@@ -122,6 +135,39 @@ class SmithyToIR(model: Model) {
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind() match {
         case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
         case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+      }
+    }
+
+    val allDataKindAnnotated = model
+      .getShapesWithTrait(classOf[DataTrait])
+      .asScala
+      .toList
+      .map { shape =>
+        val tr = shape.expectTrait(classOf[DataTrait])
+        shape -> tr
+      }
+      .groupBy { case (shape, tr) => tr.getPolymorphicData() }
+      .map { case (dataType, shapeAndTraits) =>
+        dataType -> shapeAndTraits.map { case (shape, tr) =>
+          tr.getKind() -> shape
+        }
+      }
+
+    override def documentShape(shape: DocumentShape): Option[Def] = {
+      val id = shape.getId()
+      allDataKindAnnotated.get(id).map { allKnownInhabitants =>
+        val openEnumId = ShapeId.fromParts(id.getNamespace(), id.getName() + "Kind")
+        val values = allKnownInhabitants.map { case (disc, member) =>
+          val snakeCased = disc.replace('-', '_').toUpperCase()
+          val memberDoc = s"/** `data` field must contain a ${member.getId().getName()} object. */"
+          EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
+        }.toList
+        val shapeDoc = shape
+          .getTrait(classOf[DocumentationTrait])
+          .toScala
+          .map(doc => Hint.Documentation(doc.getValue()))
+          .toList
+        Def.OpenEnum(openEnumId, EnumType.StringEnum, values, shapeDoc)
       }
     }
   }

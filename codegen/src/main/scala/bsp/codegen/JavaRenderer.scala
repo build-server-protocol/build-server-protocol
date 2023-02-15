@@ -146,7 +146,7 @@ class JavaRenderer(basepkg: String) {
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s""""public static final int ${ev.name} = ${ev.value}""""
+      case IntEnum    => (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value}"""
       case StringEnum => (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}""""
     }
   }
