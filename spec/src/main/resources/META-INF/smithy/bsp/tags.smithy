@@ -7,15 +7,12 @@ apply URI @tags(["basic"])
 
 apply URIs @tags(["basic"])
 
-apply Json @tags(["basic"])
 
 apply BuildTargetIdentifier @tags(["basic"])
 
 apply BuildTargetIdentifiers @tags(["basic"])
 
 apply BuildTarget @tags(["basic"])
-
-apply BuildTargetDataKind @tags(["basic"])
 
 apply BuildTargetCapabilities @tags(["basic"])
 

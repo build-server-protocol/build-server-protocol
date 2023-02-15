@@ -41,3 +41,28 @@ enum enumKind {
 structure untaggedUnion {
 
 }
+
+@idRef(failWhenMissing: true, selector: "document")
+string PolymorphicData
+
+/// A trait indicating that the data is meant to fulfill
+/// a polymorphic "data" field. This trait is used to extend
+/// the core BSP semantics with language/usecase specific
+/// information
+///
+/// When an instance of the annotated piece of data is fulfilling a `data`
+/// field, the serialised form of the object holding the `data` field should
+/// also present a `dataKind` field with the value indicated by the `kind`.
+@trait()
+structure data {
+    /// This indicates the value of the `dataKind` field
+    /// should take when the shape with the `@data` trait
+    /// is used to fulfill a polymorphic `data` field.
+    @required
+    kind: String
+
+    /// Indicates what polymorphic document type this piece
+    /// of data can fulfill.
+    @required
+    extends: PolymorphicData
+}
