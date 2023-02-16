@@ -1309,9 +1309,6 @@ structure DebugSessionParams {
   @required
   targets: BuildTargetIdentifiers
 
-//   /// The kind of data to expect in the `data` field.
-//   dataKind: String
-
   /// Language-specific metadata for this execution.
   /// See ScalaMainClass as an example.
   data: DebugSessionParamsData
