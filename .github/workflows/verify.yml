@@ -80,12 +80,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: creyD/prettier_action@v4.2
+      - uses: creyD/prettier_action@v4.3
         name: Check website
         with:
           dry: True
           prettier_options: --check --ignore-path website/.prettierignore website
-      - uses: creyD/prettier_action@v4.2
+      - uses: creyD/prettier_action@v4.3
         name: Check docs
         with:
           dry: True
