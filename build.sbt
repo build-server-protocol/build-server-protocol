@@ -31,9 +31,9 @@ lazy val V = new {
   val scala212 = "2.12.17"
   val scala213 = "2.13.10"
   val supportedScalaVersions = List(scala212, scala213)
-  val jsoniter = "2.20.7"
+  val jsoniter = "2.21.2"
   val java8Compat = "1.0.2"
-  val lsp4j = "0.19.0"
+  val lsp4j = "0.20.0"
   val scalacheck = "1.17.0"
 }
 
