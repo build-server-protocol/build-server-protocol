@@ -116,7 +116,7 @@ class RustProcMacroArtifact {
 
 @JsonRpcData
 class RustPackage {
-        @NonNull String id
+        @NonNull BuildTargetIdentifier id
         String version
         String origin
         String edition
@@ -127,7 +127,7 @@ class RustPackage {
         @NonNull List<RustEnvData> env
         String outDirUrl
         RustProcMacroArtifact procMacroArtifact
-        new(@NonNull String id,
+        new(@NonNull BuildTargetIdentifier id,
                 String version,
                 String origin,
                 String edition,
