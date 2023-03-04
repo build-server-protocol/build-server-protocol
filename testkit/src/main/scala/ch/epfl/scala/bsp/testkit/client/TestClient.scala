@@ -461,9 +461,6 @@ class TestClient(
   def extractPythonData(data: JsonElement, gson: Gson): Option[PythonBuildTarget] =
     Option(gson.fromJson[PythonBuildTarget](data, classOf[PythonBuildTarget]))
 
-  def extractRustData(data: JsonElement, gson: Gson): Option[RustBuildTarget] =
-    Option(gson.fromJson[RustBuildTarget](data, classOf[RustBuildTarget]))
-
   def convertJsonObjectToData(
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): WorkspaceBuildTargetsResult = {
@@ -483,8 +480,6 @@ class TestClient(
               extractCppData(data, gson)
             case BuildTargetDataKind.PYTHON =>
               extractPythonData(data, gson)
-            case BuildTargetDataKind.RUST =>
-              extractRustData(data, gson)
           }
         )
         .map(target.setData(_))
@@ -869,39 +864,12 @@ class TestClient(
   ): Unit =
     wrapTest(session => testPythonOptions(params, expectedResult, session))
 
-  def testRustOptions(
-      params: RustOptionsParams,
-      expectedResult: RustOptionsResult,
+  def testRustWorkspace(
+      expectedResult: RustWorkspaceResult,
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetRustOptions(params)
-      .toScala
-      .map(result => result.getItems)
-      .map(rustItems => {
-        val itemsTest = rustItems.forall { item =>
-          expectedResult.getItems.contains(item)
-        }
-        assert(
-          itemsTest,
-          s"Rust Options didn't match! Expected: $expectedResult, got $rustItems"
-        )
-      })
-  }
-
-  def testRustOptions(
-      params: RustOptionsParams,
-      expectedResult: RustOptionsResult
-  ): Unit =
-    wrapTest(session => testRustOptions(params, expectedResult, session))
-
-  def testRustMetadata(
-      params: RustMetadataParams,
-      expectedResult: RustMetadataResult,
-      session: MockSession
-  ): Future[Unit] = {
-    session.connection.server
-      .rustMetadata(params)
+      .rustWorkspace()
       .toScala
       .map(result => {
 
@@ -911,37 +879,30 @@ class TestClient(
           s"Rust packages didn't match! Expected: ${expectedResult.getPackages}, got ${result.getPackages}"
         )
 
-        val dependencies = result.getDependencies == expectedResult.getDependencies
+        val dependencies = result.getRawDependencies == expectedResult.getRawDependencies
         assert(
           dependencies,
-          s"Rust dependencies didn't match! Expected: ${expectedResult.getDependencies}, got ${result.getDependencies}"
+          s"Rust raw dependencies didn't match! Expected: ${expectedResult.getRawDependencies}, got ${result.getRawDependencies}"
         )
 
-        val version = result.getVersion == expectedResult.getVersion
+        val toDepMapping = result.getPackageToDepMapper == expectedResult.getPackageToDepMapper
         assert(
-          version,
-          s"Rust version didn't match! Expected: ${expectedResult.getVersion}, got ${result.getVersion}"
+          toDepMapping,
+          s"Rust dependence mapping didn't match! Expected: ${expectedResult.getPackageToDepMapper}, got ${result.getPackageToDepMapper}"
         )
 
-        val members = result.getWorkspaceMembers == expectedResult.getWorkspaceMembers
+        val toRawMapping = result.getPackageToRawMapper == expectedResult.getPackageToRawMapper
         assert(
-          version,
-          s"Rust workspace members didn't match! Expected: ${expectedResult.getWorkspaceMembers}, got ${result.getWorkspaceMembers}"
-        )
-
-        val root = result.getWorkspaceRoot == expectedResult.getWorkspaceRoot
-        assert(
-          root,
-          s"Rust workspace root didn't match! Expected: ${expectedResult.getWorkspaceRoot}, got ${result.getWorkspaceRoot}"
+          toRawMapping,
+          s"Rust raw mapping didn't match! Expected: ${expectedResult.getPackageToRawMapper}, got ${result.getPackageToRawMapper}"
         )
       })
   }
 
-  def testRustMetadata(
-      params: RustMetadataParams,
-      expectedResult: RustMetadataResult
+  def testRustWorkspace(
+      expectedResult: RustWorkspaceResult
   ): Unit =
-    wrapTest(session => testRustMetadata(params, expectedResult, session))
+    wrapTest(session => testRustWorkspace(expectedResult, session))
 
   def testScalaMainClasses(
       params: ScalaMainClassesParams,

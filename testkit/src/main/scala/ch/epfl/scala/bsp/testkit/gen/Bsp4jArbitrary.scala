@@ -181,27 +181,28 @@ trait Bsp4jArbitrary {
   implicit val arbPythonOptionsResult: Arbitrary[PythonOptionsResult] = Arbitrary(
     genPythonOptionsResult
   )
-  implicit val arbRustBuildTarget: Arbitrary[RustBuildTarget] = Arbitrary(genRustBuildTarget)
-  implicit val arbRustOptionsItem: Arbitrary[RustOptionsItem] = Arbitrary(genRustOptionsItem)
-  implicit val arbRustOptionsParams: Arbitrary[RustOptionsParams] = Arbitrary(
-    genRustOptionsParams
-  )
-  implicit val arbRustOptionsResult: Arbitrary[RustOptionsResult] = Arbitrary(
-    genRustOptionsResult
-  )
-  implicit val arbRustDep: Arbitrary[RustDep] = Arbitrary(genRustDep)
+  implicit val arbRustRawMapper: Arbitrary[RustRawMapper] = Arbitrary(genRustRawMapper)
+  implicit val arbRustDepMapper: Arbitrary[RustDepMapper] = Arbitrary(genRustDepMapper)
   implicit val arbRustDepKindInfo: Arbitrary[RustDepKindInfo] = Arbitrary(genRustDepKindInfo)
-  implicit val arbRustMetadataResult: Arbitrary[RustMetadataResult] = Arbitrary(
-    genRustMetadataResult
+  implicit val arbRustEnvData: Arbitrary[RustEnvData] = Arbitrary(
+    genRustEnvData
   )
-  implicit val arbRustMetadataParams: Arbitrary[RustMetadataParams] = Arbitrary(
-    genRustMetadataParams
+  implicit val arbRustKeyValueMapper: Arbitrary[RustKeyValueMapper] = Arbitrary(
+    genRustKeyValueMapper
+  )
+  implicit val arbRustCfgOptions: Arbitrary[RustCfgOptions] = Arbitrary(
+    genRustCfgOptions
+  )
+  implicit val arbRustProcMacroArtifact: Arbitrary[RustProcMacroArtifact] = Arbitrary(
+    genRustProcMacroArtifact
+  )
+  implicit val arbRustWorkspaceResult: Arbitrary[RustWorkspaceResult] = Arbitrary(
+    genRustWorkspaceResult
   )
   implicit val arbRustPackage: Arbitrary[RustPackage] = Arbitrary(
     genRustPackage
   )
   implicit val arbRustRawDependency: Arbitrary[RustRawDependency] = Arbitrary(genRustRawDependency)
-  implicit val arbRustResolveNode: Arbitrary[RustResolveNode] = Arbitrary(genRustResolveNode)
   implicit val arbRustTarget: Arbitrary[RustTarget] = Arbitrary(
     genRustTarget
   )

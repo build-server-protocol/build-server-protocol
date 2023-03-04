@@ -525,29 +525,29 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.PythonOptionsResult, bsp4s.PythonOptionsResult](a)
     }
   }
-  test("RustBuildTarget") {
-    forAll { a: bsp4j.RustBuildTarget =>
-      assertSerializationRoundtrip[bsp4j.RustBuildTarget, bsp4s.RustBuildTarget](a)
+  test("RustRawMapper") {
+    forAll { a: bsp4j.RustRawMapper =>
+      assertSerializationRoundtrip[bsp4j.RustRawMapper, bsp4s.RustRawMapper](a)
     }
   }
-  test("RustOptionsItem") {
-    forAll { a: bsp4j.RustOptionsItem =>
-      assertSerializationRoundtrip[bsp4j.RustOptionsItem, bsp4s.RustOptionsItem](a)
+  test("RustDepMapper") {
+    forAll { a: bsp4j.RustDepMapper =>
+      assertSerializationRoundtrip[bsp4j.RustDepMapper, bsp4s.RustDepMapper](a)
     }
   }
-  test("RustOptionsParams") {
-    forAll { a: bsp4j.RustOptionsParams =>
-      assertSerializationRoundtrip[bsp4j.RustOptionsParams, bsp4s.RustOptionsParams](a)
+  test("RustEnvData") {
+    forAll { a: bsp4j.RustEnvData =>
+      assertSerializationRoundtrip[bsp4j.RustEnvData, bsp4s.RustEnvData](a)
     }
   }
-  test("RustOptionsResult") {
-    forAll { a: bsp4j.RustOptionsResult =>
-      assertSerializationRoundtrip[bsp4j.RustOptionsResult, bsp4s.RustOptionsResult](a)
+  test("RustKeyValueMapper") {
+    forAll { a: bsp4j.RustKeyValueMapper =>
+      assertSerializationRoundtrip[bsp4j.RustKeyValueMapper, bsp4s.RustKeyValueMapper](a)
     }
   }
-  test("RustDep") {
-    forAll { a: bsp4j.RustDep =>
-      assertSerializationRoundtrip[bsp4j.RustDep, bsp4s.RustDep](a)
+  test("RustCfgOptions") {
+    forAll { a: bsp4j.RustCfgOptions =>
+      assertSerializationRoundtrip[bsp4j.RustCfgOptions, bsp4s.RustCfgOptions](a)
     }
   }
 
@@ -563,15 +563,15 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
     }
   }
 
-  test("RustMetadataResult") {
-    forAll { a: bsp4j.RustMetadataResult =>
-      assertSerializationRoundtrip[bsp4j.RustMetadataResult, bsp4s.RustMetadataResult](a)
+  test("RustProcMacroArtifact") {
+    forAll { a: bsp4j.RustProcMacroArtifact =>
+      assertSerializationRoundtrip[bsp4j.RustProcMacroArtifact, bsp4s.RustProcMacroArtifact](a)
     }
   }
 
-  test("RustMetadataParams") {
-    forAll { a: bsp4j.RustMetadataParams =>
-      assertSerializationRoundtrip[bsp4j.RustMetadataParams, bsp4s.RustMetadataParams](a)
+  test("RustWorkspaceResult") {
+    forAll { a: bsp4j.RustWorkspaceResult =>
+      assertSerializationRoundtrip[bsp4j.RustWorkspaceResult, bsp4s.RustWorkspaceResult](a)
     }
   }
 
@@ -584,12 +584,6 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
   test("RustRawDependency") {
     forAll { a: bsp4j.RustRawDependency =>
       assertSerializationRoundtrip[bsp4j.RustRawDependency, bsp4s.RustRawDependency](a)
-    }
-  }
-
-  test("RustResolveNode") {
-    forAll { a: bsp4j.RustResolveNode =>
-      assertSerializationRoundtrip[bsp4j.RustResolveNode, bsp4s.RustResolveNode](a)
     }
   }
 

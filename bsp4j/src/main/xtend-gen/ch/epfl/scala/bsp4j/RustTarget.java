@@ -21,15 +21,15 @@ public class RustTarget {
 
   private boolean doctest;
 
-  private List<String> required_features;
+  private List<String> requiredFeatures;
 
-  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String kind, final String edition, final boolean doctest, final List<String> required_features) {
+  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String kind, final String edition, final boolean doctest, final List<String> requiredFeatures) {
     this.kind = kind;
     this.name = name;
     this.crateRootUrl = crateRootUrl;
     this.edition = edition;
     this.doctest = doctest;
-    this.required_features = required_features;
+    this.requiredFeatures = requiredFeatures;
   }
 
   @Pure
@@ -81,12 +81,12 @@ public class RustTarget {
   }
 
   @Pure
-  public List<String> getRequired_features() {
-    return this.required_features;
+  public List<String> getRequiredFeatures() {
+    return this.requiredFeatures;
   }
 
-  public void setRequired_features(final List<String> required_features) {
-    this.required_features = required_features;
+  public void setRequiredFeatures(final List<String> requiredFeatures) {
+    this.requiredFeatures = requiredFeatures;
   }
 
   @Override
@@ -98,7 +98,7 @@ public class RustTarget {
     b.add("kind", this.kind);
     b.add("edition", this.edition);
     b.add("doctest", this.doctest);
-    b.add("required_features", this.required_features);
+    b.add("requiredFeatures", this.requiredFeatures);
     return b.toString();
   }
 
@@ -134,10 +134,10 @@ public class RustTarget {
       return false;
     if (other.doctest != this.doctest)
       return false;
-    if (this.required_features == null) {
-      if (other.required_features != null)
+    if (this.requiredFeatures == null) {
+      if (other.requiredFeatures != null)
         return false;
-    } else if (!this.required_features.equals(other.required_features))
+    } else if (!this.requiredFeatures.equals(other.requiredFeatures))
       return false;
     return true;
   }
@@ -152,6 +152,6 @@ public class RustTarget {
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
     result = prime * result + (this.doctest ? 1231 : 1237);
-    return prime * result + ((this.required_features== null) ? 0 : this.required_features.hashCode());
+    return prime * result + ((this.requiredFeatures== null) ? 0 : this.requiredFeatures.hashCode());
   }
 }

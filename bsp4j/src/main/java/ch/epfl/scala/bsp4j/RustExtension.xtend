@@ -38,19 +38,19 @@ class RustTarget {
         @NonNull String kind
         String edition
         boolean doctest
-        List<String> required_features
+        List<String> requiredFeatures
         new(@NonNull String name,
                 @NonNull String crateRootUrl,
                 @NonNull String kind,
                 String edition,
                 boolean doctest,
-                List<String> required_features) {
+                List<String> requiredFeatures) {
                     this.kind = kind
                     this.name = name
                     this.crateRootUrl = crateRootUrl
                     this.edition = edition
                     this.doctest = doctest
-                    this.required_features = required_features
+                    this.requiredFeatures = requiredFeatures
               }
 }
 
@@ -79,7 +79,7 @@ class RustEnvData {
 }
 
 @JsonRpcData
-class KeyValueMapper {
+class RustKeyValueMapper {
         @NonNull String key
         @NonNull List<String> value
         
@@ -92,10 +92,10 @@ class KeyValueMapper {
 
 @JsonRpcData
 class RustCfgOptions {
-        @NonNull List<KeyValueMapper> keyValueOptions
+        @NonNull List<RustKeyValueMapper> keyValueOptions
         @NonNull List<String> nameOptions
         
-        new(@NonNull List<KeyValueMapper> keyValueOptions,
+        new(@NonNull List<RustKeyValueMapper> keyValueOptions,
                 @NonNull List<String> nameOptions) {
                     this.keyValueOptions = keyValueOptions
                     this.nameOptions = nameOptions
@@ -128,16 +128,16 @@ class RustPackage {
         String outDirUrl
         RustProcMacroArtifact procMacroArtifact
         new(@NonNull String id,
-                    String version,
-                    String origin,
-                    String edition,
-                    @NonNull List<RustTarget> targets,
-                    @NonNull List<RustFeature> features,
-                    @NonNull List<String> enabledFeatures,
-                    RustCfgOptions cfgOptions,
-                    @NonNull List<RustEnvData> env,
-                    String outDirUrl,
-                    RustProcMacroArtifact procMacroArtifact) {
+                String version,
+                String origin,
+                String edition,
+                @NonNull List<RustTarget> targets,
+                @NonNull List<RustFeature> features,
+                @NonNull List<String> enabledFeatures,
+                RustCfgOptions cfgOptions,
+                @NonNull List<RustEnvData> env,
+                String outDirUrl,
+                RustProcMacroArtifact procMacroArtifact) {
                     
         this.id = id
         this.version = version
@@ -169,15 +169,15 @@ class RustDepMapper {
     @NonNull String source
     @NonNull String target
     String name
-    List<RustDepKindInfo> dep_kinds
+    List<RustDepKindInfo> depKinds
     new(@NonNull String source, 
         @NonNull String target,
         String name,
-        List<RustDepKindInfo> dep_kinds) {
+        List<RustDepKindInfo> depKinds) {
         this.source = source
         this.target = target
         this.name = name
-        this.dep_kinds = dep_kinds
+        this.depKinds = depKinds
     }
 }
 
