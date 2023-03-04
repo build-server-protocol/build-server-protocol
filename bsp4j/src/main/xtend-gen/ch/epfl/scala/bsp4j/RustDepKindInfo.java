@@ -1,26 +1,30 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustDepKindInfo {
+  @NonNull
   private String kind;
 
   private String target;
 
-  public RustDepKindInfo(final String kind, final String target) {
+  public RustDepKindInfo(@NonNull final String kind, final String target) {
     this.kind = kind;
     this.target = target;
   }
 
   @Pure
+  @NonNull
   public String getKind() {
     return this.kind;
   }
 
-  public void setKind(final String kind) {
-    this.kind = kind;
+  public void setKind(@NonNull final String kind) {
+    this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
   @Pure

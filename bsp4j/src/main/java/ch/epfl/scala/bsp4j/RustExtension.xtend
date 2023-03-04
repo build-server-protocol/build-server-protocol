@@ -39,17 +39,15 @@ class RustTarget {
         String edition
         boolean doctest
         List<String> required_features
-        new(@NonNull List<String> kind,
-                @NonNull String name,
-                @NonNull String src_path,
-                @NonNull List<String> crate_types,
+        new(@NonNull String name,
+                @NonNull String crateRootUrl,
+                @NonNull String kind,
                 String edition,
                 boolean doctest,
                 List<String> required_features) {
                     this.kind = kind
                     this.name = name
-                    this.src_path = src_path
-                    this.crate_types = crate_types
+                    this.crateRootUrl = crateRootUrl
                     this.edition = edition
                     this.doctest = doctest
                     this.required_features = required_features
@@ -77,6 +75,30 @@ class RustEnvData {
                 @NonNull String value) {
                     this.name = name
                     this.value = value
+              }
+}
+
+@JsonRpcData
+class KeyValueMapper {
+        @NonNull String key
+        @NonNull List<String> value
+        
+        new(@NonNull String key,
+                @NonNull List<String> value) {
+                    this.key = key
+                    this.value = value
+              }
+}
+
+@JsonRpcData
+class RustCfgOptions {
+        @NonNull List<KeyValueMapper> keyValueOptions
+        @NonNull List<String> nameOptions
+        
+        new(@NonNull List<KeyValueMapper> keyValueOptions,
+                @NonNull List<String> nameOptions) {
+                    this.keyValueOptions = keyValueOptions
+                    this.nameOptions = nameOptions
               }
 }
 
@@ -116,7 +138,7 @@ class RustPackage {
                     @NonNull List<RustEnvData> env,
                     String outDirUrl,
                     RustProcMacroArtifact procMacroArtifact) {
-              }
+                    
         this.id = id
         this.version = version
         this.origin = origin
@@ -128,6 +150,7 @@ class RustPackage {
         this.env = env
         this.outDirUrl = outDirUrl
         this.procMacroArtifact = procMacroArtifact
+              }
 }
 
 @JsonRpcData

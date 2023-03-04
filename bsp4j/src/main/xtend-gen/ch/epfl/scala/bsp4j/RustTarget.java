@@ -9,16 +9,13 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RustTarget {
   @NonNull
-  private List<String> kind;
-
-  @NonNull
   private String name;
 
   @NonNull
-  private String src_path;
+  private String crateRootUrl;
 
   @NonNull
-  private List<String> crate_types;
+  private String kind;
 
   private String edition;
 
@@ -26,24 +23,13 @@ public class RustTarget {
 
   private List<String> required_features;
 
-  public RustTarget(@NonNull final List<String> kind, @NonNull final String name, @NonNull final String src_path, @NonNull final List<String> crate_types, final String edition, final boolean doctest, final List<String> required_features) {
+  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String kind, final String edition, final boolean doctest, final List<String> required_features) {
     this.kind = kind;
     this.name = name;
-    this.src_path = src_path;
-    this.crate_types = crate_types;
+    this.crateRootUrl = crateRootUrl;
     this.edition = edition;
     this.doctest = doctest;
     this.required_features = required_features;
-  }
-
-  @Pure
-  @NonNull
-  public List<String> getKind() {
-    return this.kind;
-  }
-
-  public void setKind(@NonNull final List<String> kind) {
-    this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
   @Pure
@@ -58,22 +44,22 @@ public class RustTarget {
 
   @Pure
   @NonNull
-  public String getSrc_path() {
-    return this.src_path;
+  public String getCrateRootUrl() {
+    return this.crateRootUrl;
   }
 
-  public void setSrc_path(@NonNull final String src_path) {
-    this.src_path = Preconditions.checkNotNull(src_path, "src_path");
+  public void setCrateRootUrl(@NonNull final String crateRootUrl) {
+    this.crateRootUrl = Preconditions.checkNotNull(crateRootUrl, "crateRootUrl");
   }
 
   @Pure
   @NonNull
-  public List<String> getCrate_types() {
-    return this.crate_types;
+  public String getKind() {
+    return this.kind;
   }
 
-  public void setCrate_types(@NonNull final List<String> crate_types) {
-    this.crate_types = Preconditions.checkNotNull(crate_types, "crate_types");
+  public void setKind(@NonNull final String kind) {
+    this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
   @Pure
@@ -107,10 +93,9 @@ public class RustTarget {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("kind", this.kind);
     b.add("name", this.name);
-    b.add("src_path", this.src_path);
-    b.add("crate_types", this.crate_types);
+    b.add("crateRootUrl", this.crateRootUrl);
+    b.add("kind", this.kind);
     b.add("edition", this.edition);
     b.add("doctest", this.doctest);
     b.add("required_features", this.required_features);
@@ -127,25 +112,20 @@ public class RustTarget {
     if (getClass() != obj.getClass())
       return false;
     RustTarget other = (RustTarget) obj;
-    if (this.kind == null) {
-      if (other.kind != null)
-        return false;
-    } else if (!this.kind.equals(other.kind))
-      return false;
     if (this.name == null) {
       if (other.name != null)
         return false;
     } else if (!this.name.equals(other.name))
       return false;
-    if (this.src_path == null) {
-      if (other.src_path != null)
+    if (this.crateRootUrl == null) {
+      if (other.crateRootUrl != null)
         return false;
-    } else if (!this.src_path.equals(other.src_path))
+    } else if (!this.crateRootUrl.equals(other.crateRootUrl))
       return false;
-    if (this.crate_types == null) {
-      if (other.crate_types != null)
+    if (this.kind == null) {
+      if (other.kind != null)
         return false;
-    } else if (!this.crate_types.equals(other.crate_types))
+    } else if (!this.kind.equals(other.kind))
       return false;
     if (this.edition == null) {
       if (other.edition != null)
@@ -167,10 +147,9 @@ public class RustTarget {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.src_path== null) ? 0 : this.src_path.hashCode());
-    result = prime * result + ((this.crate_types== null) ? 0 : this.crate_types.hashCode());
+    result = prime * result + ((this.crateRootUrl== null) ? 0 : this.crateRootUrl.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
     result = prime * result + (this.doctest ? 1231 : 1237);
     return prime * result + ((this.required_features== null) ? 0 : this.required_features.hashCode());
