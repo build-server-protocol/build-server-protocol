@@ -5,34 +5,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
-class RustBuildTarget {
-  String edition
-  String compiler
-  new(String edition, 
-    String compiler) {
-     this.edition = edition
-     this.compiler = compiler
-  }
-}
-
-@JsonRpcData
-class RustOptionsParams {
-  @NonNull List<BuildTargetIdentifier> targets
-  new(@NonNull List<BuildTargetIdentifier> targets) {
-    this.targets = targets
-  }
-}
-
-@JsonRpcData
-class RustMetadataParams {
-  @NonNull List<BuildTargetIdentifier> targets
-  new(@NonNull List<BuildTargetIdentifier> targets) {
-    this.targets = targets
-  }
-}
-
-@JsonRpcData
 class RustRawDependency {
+    @NonNull String id
     @NonNull String name
     String rename
     String kind
@@ -96,57 +70,51 @@ class RustFeature {
 }
 
 @JsonRpcData
-class RustPackage {
+class RustEnvData {
         @NonNull String name
-        @NonNull String version
-        @NonNull List<String> authors
-        String description
-        String repository
-        String license
-        String license_file
-        String source
-        @NonNull String id
-        @NonNull String manifest_path
-        @NonNull List<RustTarget> targets
-        String edition
-        @NonNull List<RustFeature> features
-        @NonNull List<RustRawDependency> dependencies
+        @NonNull String value
+        
         new(@NonNull String name,
-                @NonNull String version,
-                @NonNull List<String> authors,
-                String description,
-                String repository,
-                String license,
-                String license_file,
-                String source,
-                @NonNull String id,
-                @NonNull String manifest_path,
-                @NonNull List<RustTarget> targets,
-                String edition,
-                @NonNull List<RustFeature> features,
-                @NonNull List<RustRawDependency> dependencies) {
+                @NonNull String value) {
                     this.name = name
-                    this.version = version
-                    this.authors = authors
-                    this.description = description
-                    this.repository = repository
-                    this.license = license
-                    this.license_file = license_file
-                    this.source = source
-                    this.id = id
-                    this.manifest_path = manifest_path
-                    this.targets = targets
-                    this.edition = edition
-                    this.features = features
-                    this.dependencies = dependencies
+                    this.value = value
+              }
+}
+
+@JsonRpcData
+class RustProcMacroArtifact {
+        @NonNull String path
+        @NonNull String hash
+        
+        new(@NonNull String path,
+                @NonNull String hash) {
+                    this.path = path
+                    this.hash = hash
+              }
+}
+
+@JsonRpcData
+class RustPackage {
+        @NonNull String id
+        String version
+        String origin
+        String edition
+        @NonNull List<RustTarget> targets
+        @NonNull List<RustFeature> features
+        @NonNull List<String> enabledFeatures
+        RustCfgOptions cfgOptions
+        @NonNull List<RustEnvData> env
+        String outDirUrl
+        RustProcMacroArtifact procMacroArtifact
+        new() {
               }
 }
 
 @JsonRpcData
 class RustDepKindInfo {
-    String kind
+    @NonNull String kind
     String target
-    new(String kind, 
+    new(@NonNull String kind, 
         String target) {
         this.kind = kind
         this.target = target
@@ -154,73 +122,45 @@ class RustDepKindInfo {
 }
 
 @JsonRpcData
-class RustDep {
-    @NonNull String pkg
+class RustDepMapper {
+    @NonNull String source
+    @NonNull String target
     String name
     List<RustDepKindInfo> dep_kinds
-    new(@NonNull String pkg, 
+    new(@NonNull String source, 
+        @NonNull String target,
         String name,
         List<RustDepKindInfo> dep_kinds) {
-        this.pkg = pkg
+        this.source = source
+        this.target = target
         this.name = name
         this.dep_kinds = dep_kinds
     }
 }
 
 @JsonRpcData
-class RustResolveNode {
-    @NonNull String id
-    @NonNull List<String> dependencies
-    List<RustDep> deps
-    List<String> features
+class RustRawMapper {
+    @NonNull String packageId
+    @NonNull String rawId
     
-    new(@NonNull String id, 
-        @NonNull List<String> dependencies,
-        List<RustDep> deps,
-        List<String> features) {
-        this.id = id
-        this.dependencies = dependencies
-        this.deps = deps
-        this.features = features
+    new(@NonNull String packageId, 
+        @NonNull String rawId) {
+        this.packageId = packageId
+        this.rawId = rawId
     }
     
 }
 
 @JsonRpcData
-class RustMetadataResult {
+class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
-  @NonNull List<RustResolveNode> dependencies
-  @NonNull Integer version
-  @NonNull List<String> workspaceMembers
-  @NonNull String workspaceRoot
-  new(@NonNull List<RustPackage> packages,
-        @NonNull List<RustResolveNode> dependencies,
-        @NonNull Integer version,
-        @NonNull List<String> workspaceMembers,
-        @NonNull String workspaceRoot) {
-    this.packages = packages
-    this.dependencies = dependencies
-    this.version = version
-    this.workspaceMembers = workspaceMembers
+  @NonNull List<RustRawDependency> rawDependencies
+  @NonNull List<RustRawMapper> packageToRawMapper
+  @NonNull List<RustDepMapper> packageToDepMapper  
+  
+  new(@NonNull List<RustRawDependency> rawDependencies) {
+    this.dependencies = rawDependencies
     this.workspaceRoot = workspaceRoot
   }
 }
 
-@JsonRpcData
-class RustOptionsResult {
-  @NonNull List<RustOptionsItem> items
-  new(@NonNull List<RustOptionsItem> items) {
-    this.items = items
-  }
-}
-
-@JsonRpcData
-class RustOptionsItem {
-  @NonNull BuildTargetIdentifier target
-  @NonNull List<String> compilerOptions
-  new(@NonNull BuildTargetIdentifier target,
-      @NonNull List<String> compilerOptions) {
-    this.target = target
-    this.compilerOptions = compilerOptions
-   }
-}
