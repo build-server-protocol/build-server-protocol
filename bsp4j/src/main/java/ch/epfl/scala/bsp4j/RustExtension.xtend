@@ -33,10 +33,9 @@ class RustRawDependency {
 
 @JsonRpcData
 class RustTarget {
-        @NonNull List<String> kind
         @NonNull String name
-        @NonNull String src_path
-        @NonNull List<String> crate_types
+        @NonNull String crateRootUrl
+        @NonNull String kind
         String edition
         boolean doctest
         List<String> required_features
@@ -106,8 +105,29 @@ class RustPackage {
         @NonNull List<RustEnvData> env
         String outDirUrl
         RustProcMacroArtifact procMacroArtifact
-        new() {
+        new(@NonNull String id,
+                    String version,
+                    String origin,
+                    String edition,
+                    @NonNull List<RustTarget> targets,
+                    @NonNull List<RustFeature> features,
+                    @NonNull List<String> enabledFeatures,
+                    RustCfgOptions cfgOptions,
+                    @NonNull List<RustEnvData> env,
+                    String outDirUrl,
+                    RustProcMacroArtifact procMacroArtifact) {
               }
+        this.id = id
+        this.version = version
+        this.origin = origin
+        this.edition = edition
+        this.targets = targets
+        this.features = features
+        this.enabledFeatures = enabledFeatures
+        this.cfgOptions = cfgOptions
+        this.env = env
+        this.outDirUrl = outDirUrl
+        this.procMacroArtifact = procMacroArtifact
 }
 
 @JsonRpcData
@@ -158,9 +178,14 @@ class RustWorkspaceResult {
   @NonNull List<RustRawMapper> packageToRawMapper
   @NonNull List<RustDepMapper> packageToDepMapper  
   
-  new(@NonNull List<RustRawDependency> rawDependencies) {
-    this.dependencies = rawDependencies
-    this.workspaceRoot = workspaceRoot
+  new(@NonNull List<RustPackage> packages,
+        @NonNull List<RustRawDependency> rawDependencies,
+        @NonNull List<RustRawMapper> packageToRawMapper,
+        @NonNull List<RustDepMapper> packageToDepMapper) {
+    this.packages = packages
+    this.rawDependencies = rawDependencies
+    this.packageToRawMapper = packageToRawMapper
+    this.packageToDepMapper = packageToDepMapper
   }
 }
 
