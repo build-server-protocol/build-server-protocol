@@ -120,6 +120,7 @@ class RustPackage {
         String version
         String origin
         String edition
+        String source
         @NonNull List<RustTarget> targets
         @NonNull List<RustFeature> features
         @NonNull List<String> enabledFeatures
@@ -131,6 +132,7 @@ class RustPackage {
                 String version,
                 String origin,
                 String edition,
+                String source,                
                 @NonNull List<RustTarget> targets,
                 @NonNull List<RustFeature> features,
                 @NonNull List<String> enabledFeatures,
@@ -143,6 +145,7 @@ class RustPackage {
         this.version = version
         this.origin = origin
         this.edition = edition
+        this.source = source
         this.targets = targets
         this.features = features
         this.enabledFeatures = enabledFeatures

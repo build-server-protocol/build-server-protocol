@@ -17,6 +17,8 @@ public class RustPackage {
 
   private String edition;
 
+  private String source;
+
   @NonNull
   private List<RustTarget> targets;
 
@@ -35,11 +37,12 @@ public class RustPackage {
 
   private RustProcMacroArtifact procMacroArtifact;
 
-  public RustPackage(@NonNull final BuildTargetIdentifier id, final String version, final String origin, final String edition, @NonNull final List<RustTarget> targets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
+  public RustPackage(@NonNull final BuildTargetIdentifier id, final String version, final String origin, final String edition, final String source, @NonNull final List<RustTarget> targets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
     this.id = id;
     this.version = version;
     this.origin = origin;
     this.edition = edition;
+    this.source = source;
     this.targets = targets;
     this.features = features;
     this.enabledFeatures = enabledFeatures;
@@ -84,6 +87,15 @@ public class RustPackage {
 
   public void setEdition(final String edition) {
     this.edition = edition;
+  }
+
+  @Pure
+  public String getSource() {
+    return this.source;
+  }
+
+  public void setSource(final String source) {
+    this.source = source;
   }
 
   @Pure
@@ -161,6 +173,7 @@ public class RustPackage {
     b.add("version", this.version);
     b.add("origin", this.origin);
     b.add("edition", this.edition);
+    b.add("source", this.source);
     b.add("targets", this.targets);
     b.add("features", this.features);
     b.add("enabledFeatures", this.enabledFeatures);
@@ -200,6 +213,11 @@ public class RustPackage {
       if (other.edition != null)
         return false;
     } else if (!this.edition.equals(other.edition))
+      return false;
+    if (this.source == null) {
+      if (other.source != null)
+        return false;
+    } else if (!this.source.equals(other.source))
       return false;
     if (this.targets == null) {
       if (other.targets != null)
@@ -248,6 +266,7 @@ public class RustPackage {
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.origin== null) ? 0 : this.origin.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
+    result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
     result = prime * result + ((this.features== null) ? 0 : this.features.hashCode());
     result = prime * result + ((this.enabledFeatures== null) ? 0 : this.enabledFeatures.hashCode());
