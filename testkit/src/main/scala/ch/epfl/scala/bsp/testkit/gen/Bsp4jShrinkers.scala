@@ -87,7 +87,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
         canTest <- shrink(capabilities.getCanTest)
         canRun <- shrink(capabilities.getCanRun)
         canDebug <- shrink(capabilities.getCanDebug)
-      } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
+        canFormat <- shrink(capabilities.getCanFormat)
+      } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug, canFormat)
   }
 
   implicit def shrinkBuildTargetEvent: Shrink[BuildTargetEvent] = Shrink { event =>

@@ -19,11 +19,15 @@ public class BuildTargetCapabilities {
   @NonNull
   private Boolean canDebug;
 
+  @NonNull
+  private Boolean canFormat;
+
   public BuildTargetCapabilities() {
     this.canCompile = Boolean.FALSE;
     this.canTest = Boolean.FALSE;
     this.canRun = Boolean.FALSE;
     this.canDebug = Boolean.FALSE;
+    this.canFormat = Boolean.FALSE;
   }
 
   public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun) {
@@ -31,13 +35,15 @@ public class BuildTargetCapabilities {
     this.canTest = canTest;
     this.canRun = canRun;
     this.canDebug = Boolean.FALSE;
+    this.canFormat = Boolean.FALSE;
   }
 
-  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug) {
+  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug, @NonNull final Boolean canFormat) {
     this.canCompile = canCompile;
     this.canTest = canTest;
     this.canRun = canRun;
     this.canDebug = canDebug;
+    this.canFormat = canFormat;
   }
 
   @Pure
@@ -80,6 +86,16 @@ public class BuildTargetCapabilities {
     this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
   }
 
+  @Pure
+  @NonNull
+  public Boolean getCanFormat() {
+    return this.canFormat;
+  }
+
+  public void setCanFormat(@NonNull final Boolean canFormat) {
+    this.canFormat = Preconditions.checkNotNull(canFormat, "canFormat");
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -88,6 +104,7 @@ public class BuildTargetCapabilities {
     b.add("canTest", this.canTest);
     b.add("canRun", this.canRun);
     b.add("canDebug", this.canDebug);
+    b.add("canFormat", this.canFormat);
     return b.toString();
   }
 
@@ -121,6 +138,11 @@ public class BuildTargetCapabilities {
         return false;
     } else if (!this.canDebug.equals(other.canDebug))
       return false;
+    if (this.canFormat == null) {
+      if (other.canFormat != null)
+        return false;
+    } else if (!this.canFormat.equals(other.canFormat))
+      return false;
     return true;
   }
 
@@ -132,6 +154,7 @@ public class BuildTargetCapabilities {
     result = prime * result + ((this.canCompile== null) ? 0 : this.canCompile.hashCode());
     result = prime * result + ((this.canTest== null) ? 0 : this.canTest.hashCode());
     result = prime * result + ((this.canRun== null) ? 0 : this.canRun.hashCode());
-    return prime * result + ((this.canDebug== null) ? 0 : this.canDebug.hashCode());
+    result = prime * result + ((this.canDebug== null) ? 0 : this.canDebug.hashCode());
+    return prime * result + ((this.canFormat== null) ? 0 : this.canFormat.hashCode());
   }
 }

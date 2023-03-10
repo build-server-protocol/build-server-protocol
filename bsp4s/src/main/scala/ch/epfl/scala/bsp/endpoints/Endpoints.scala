@@ -26,6 +26,7 @@ trait BuildTarget {
   object test extends Endpoint[TestParams, TestResult]("buildTarget/test")
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
   object cleanCache extends Endpoint[CleanCacheParams, CleanCacheResult]("buildTarget/cleanCache")
+  object format extends Endpoint[FormatParams, Unit]("buildTarget/format")
 
   object didChange extends Endpoint[DidChangeBuildTarget, Unit]("buildTarget/didChange")
 

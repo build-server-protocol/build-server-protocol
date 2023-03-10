@@ -33,12 +33,14 @@ class BuildTargetCapabilities {
   @NonNull Boolean canTest
   @NonNull Boolean canRun
   @NonNull Boolean canDebug
+  @NonNull Boolean canFormat
 
   new () {
     this.canCompile = Boolean.FALSE
     this.canTest = Boolean.FALSE
     this.canRun = Boolean.FALSE
     this.canDebug = Boolean.FALSE
+    this.canFormat = Boolean.FALSE
   }
 
   new (@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun) {
@@ -46,13 +48,15 @@ class BuildTargetCapabilities {
     this.canTest = canTest
     this.canRun = canRun
     this.canDebug = Boolean.FALSE
+    this.canFormat = Boolean.FALSE
   }
 
-  new (@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun, @NonNull Boolean canDebug) {
+  new (@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun, @NonNull Boolean canDebug, @NonNull Boolean canFormat) {
     this.canCompile = canCompile
     this.canTest = canTest
     this.canRun = canRun
     this.canDebug = canDebug
+    this.canFormat = canFormat
   }
 }
 
@@ -138,11 +142,20 @@ class DebugProvider {
 }
 
 @JsonRpcData
+class FormatProvider {
+  @NonNull List<String> languageIds
+  new(@NonNull List<String> languageIds) {
+    this.languageIds = languageIds
+  }
+}
+
+@JsonRpcData
 class BuildServerCapabilities {
   CompileProvider compileProvider
   TestProvider testProvider
   RunProvider runProvider
   DebugProvider debugProvider
+  FormatProvider formatProvider
   Boolean inverseSourcesProvider
   Boolean dependencySourcesProvider
   Boolean dependencyModulesProvider
@@ -724,3 +737,23 @@ class DependencyModule {
     this.version = version
   }
 }
+
+@JsonRpcData
+class FormatItem {
+  @NonNull BuildTargetIdentifier target
+  List<String> uris
+
+  new(@NonNull BuildTargetIdentifier target, List<String> uris) {
+    this.target = target
+    this.uris = uris
+  }
+}
+
+@JsonRpcData
+class FormatParams {
+  @NonNull List<FormatItem> formatItems
+  new(@NonNull List<FormatItem> formatItems) {
+    this.formatItems = formatItems
+  }
+}
+

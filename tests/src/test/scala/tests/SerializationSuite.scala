@@ -105,7 +105,7 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4sValueDecoded == bsp4sValue)
   }
 
-  test("BuildTargetCapabilities - backward compatible canDebug") {
+  test("BuildTargetCapabilities - backward compatibility") {
     val legacyJson =
       """
         |{
@@ -121,9 +121,11 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4jValue.getCanTest == bsp4sValue.canTest)
     assert(bsp4jValue.getCanRun == bsp4sValue.canRun)
     assert(bsp4jValue.getCanDebug == bsp4sValue.canDebug)
+    assert(bsp4jValue.getCanFormat == bsp4sValue.canFormat)
 
     assert(bsp4jValue.getCanDebug == false)
     assert(bsp4sValue.canDebug == false)
+    assert(bsp4sValue.canFormat == false)
   }
 
   test("ScalaTestClassesItem - backward compatible framework") {

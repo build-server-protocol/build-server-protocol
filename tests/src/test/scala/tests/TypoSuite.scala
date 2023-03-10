@@ -51,6 +51,8 @@ class TypoSuite extends AnyFunSuite {
   val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
     Collections.singletonList(textDocumentIdentifier)
   val outputPathUri = "file:///target/"
+  val formatItem =
+    new FormatItem(buildTargetUri, Collections.singletonList(textDocumentUri))
 
   // Java build client that ignores all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
@@ -82,6 +84,7 @@ class TypoSuite extends AnyFunSuite {
         capabilities.setTestProvider(new TestProvider(Collections.singletonList("scala")))
         capabilities.setRunProvider(new RunProvider(Collections.singletonList("scala")))
         capabilities.setDebugProvider(new DebugProvider(Collections.singletonList("scala")))
+        capabilities.setFormatProvider(new FormatProvider(Collections.singletonList("scala")))
         capabilities.setInverseSourcesProvider(true)
         capabilities.setDependencySourcesProvider(true)
         capabilities.setResourcesProvider(true)
@@ -104,7 +107,7 @@ class TypoSuite extends AnyFunSuite {
       ()
     override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = {
       CompletableFuture.completedFuture {
-        val capabilities = new BuildTargetCapabilities(true, true, true, true)
+        val capabilities = new BuildTargetCapabilities(true, true, true, true, true)
         val target = new BuildTarget(
           buildTargetUri,
           Collections.singletonList("tag"),
@@ -193,6 +196,11 @@ class TypoSuite extends AnyFunSuite {
       }
     }
 
+    override def buildTargetFormat(
+        params: FormatParams
+    ): CompletableFuture[AnyRef] =
+      CompletableFuture.completedFuture(null)
+
     override def buildTargetDependencyModules(
         params: DependencyModulesParams
     ): CompletableFuture[DependencyModulesResult] = {
@@ -265,6 +273,7 @@ class TypoSuite extends AnyFunSuite {
       .forwardRequest(s.BuildTarget.run)
       .forwardRequest(s.BuildTarget.test)
       .forwardRequest(s.BuildTarget.cleanCache)
+      .forwardRequest(s.BuildTarget.format)
       .forwardNotification(s.Build.initialized)
       .forwardNotification(s.Build.exit)
   }
@@ -437,6 +446,9 @@ class TypoSuite extends AnyFunSuite {
           .toScala
         clean <- scala1
           .buildTargetCleanCache(new CleanCacheParams(buildTargetUris))
+          .toScala
+        _ <- scala1
+          .buildTargetFormat(new FormatParams(Collections.singletonList(formatItem)))
           .toScala
         compile <- scala1.buildTargetCompile(new CompileParams(buildTargetUris)).toScala
         run <- scala1.buildTargetRun(new RunParams(buildTargetUri)).toScala

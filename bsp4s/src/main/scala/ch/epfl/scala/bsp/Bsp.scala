@@ -57,7 +57,8 @@ final case class BuildTargetCapabilities(
     canCompile: Boolean,
     canTest: Boolean,
     canRun: Boolean,
-    canDebug: Boolean = false // backward compatible default
+    canDebug: Boolean = false, // backward compatible default
+    canFormat: Boolean = false // backward compatible default
 )
 
 object BuildTargetCapabilities {
@@ -208,11 +209,21 @@ object DebugProvider {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class FormatProvider(
+    languageIds: List[String]
+)
+
+object FormatProvider {
+  implicit val codec: JsonValueCodec[FormatProvider] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class BuildServerCapabilities(
     compileProvider: Option[CompileProvider],
     testProvider: Option[TestProvider],
     runProvider: Option[RunProvider],
     debugProvider: Option[DebugProvider],
+    formatProvider: Option[FormatProvider],
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     dependencyModulesProvider: Option[Boolean],
@@ -920,6 +931,20 @@ final case class CleanCacheResult(
 
 object CleanCacheResult {
   implicit val codec: JsonValueCodec[CleanCacheResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class FormatItem(
+    target: BuildTargetIdentifier,
+    uris: Option[List[Uri]]
+)
+
+final case class FormatParams(
+    formatItems: List[FormatItem]
+)
+
+object FormatParams {
+  implicit val codec: JsonValueCodec[FormatParams] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

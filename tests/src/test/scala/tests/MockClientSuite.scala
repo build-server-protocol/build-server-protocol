@@ -44,7 +44,7 @@ class MockClientSuite extends AnyFunSuite {
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
     Collections.emptyList(),
-    new BuildTargetCapabilities(true, false, false, false)
+    new BuildTargetCapabilities(true, false, false, false, false)
   )
 
   val target2 = new BuildTarget(
@@ -52,28 +52,28 @@ class MockClientSuite extends AnyFunSuite {
     List(BuildTargetTag.TEST).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    new BuildTargetCapabilities(true, true, false, false, false)
   )
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
   val target4 = new BuildTarget(
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     List("cpp").asJava,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
   val target5 = new BuildTarget(
     targetId5,
     List(BuildTargetTag.APPLICATION).asJava,
     List("python").asJava,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
 
   private val client = TestClient(

@@ -58,6 +58,9 @@ public interface BuildServer {
     @JsonRequest("buildTarget/dependencyModules")
     CompletableFuture<DependencyModulesResult> buildTargetDependencyModules(DependencyModulesParams params);
 
+    @JsonRequest("buildTarget/format")
+    CompletableFuture<Object> buildTargetFormat(FormatParams params);
+
     default void onConnectWithClient(BuildClient server) {
 
     }

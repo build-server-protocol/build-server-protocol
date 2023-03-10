@@ -48,6 +48,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setTestProvider(new TestProvider(supportedLanguages))
     c.setRunProvider(new RunProvider(supportedLanguages))
     c.setDebugProvider(new DebugProvider(supportedLanguages))
+    c.setFormatProvider(new FormatProvider(supportedLanguages))
     c.setInverseSourcesProvider(true)
     c.setDependencySourcesProvider(true)
     c.setResourcesProvider(true)
@@ -74,14 +75,14 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, false, false)
+    new BuildTargetCapabilities(true, false, false, false, false)
   )
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    new BuildTargetCapabilities(true, true, false, false, false)
   )
 
   val target3 = new BuildTarget(
@@ -89,7 +90,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
 
   val target4 = new BuildTarget(
@@ -97,7 +98,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.APPLICATION).asJava,
     cppLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
 
   val target5 = new BuildTarget(
@@ -105,7 +106,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(BuildTargetTag.APPLICATION).asJava,
     pythonLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    new BuildTargetCapabilities(true, false, true, false, false)
   )
 
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(
@@ -564,6 +565,11 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new CleanCacheResult("cleaned cache", true)
       Right(result)
     }
+
+  override def buildTargetFormat(
+      params: FormatParams
+  ): CompletableFuture[AnyRef] =
+    CompletableFuture.completedFuture(null)
 
   override def buildTargetDependencyModules(
       params: DependencyModulesParams

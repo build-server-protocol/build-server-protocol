@@ -217,6 +217,8 @@ export interface BuildTargetCapabilities {
   canRun: Boolean;
   /** This target can be debugged by the BSP server. */
   canDebug: Boolean;
+  /** This target's sources can be formatted by the BSP server. */
+  canFormat: Boolean;
 }
 ```
 
@@ -377,6 +379,9 @@ export interface BuildServerCapabilities {
   /** The languages the server supports debugging via method debugSession/start */
   debugProvider?: DebugProvider;
 
+  /** The languages the server supports formatting via method buildTarget/format */
+  formatProvider?: FormatProvider;
+
   /** The server can provide a list of targets that contain a
    * single text document via the method buildTarget/inverseSources */
   inverseSourcesProvider?: Boolean;
@@ -427,6 +432,10 @@ export interface DebugProvider {
 }
 
 export interface TestProvider {
+  languageIds: String[];
+}
+
+export interface FormatProvider {
   languageIds: String[];
 }
 ```
@@ -1525,3 +1534,41 @@ export interface CleanCacheResult {
   cleaned: Boolean;
 }
 ```
+
+### Format Request
+
+The format request is sent from the client to the server to format sources
+of a given build target.
+
+- method: `buildTarget/format`
+- params: `FormatParams`
+
+To request formatting of sources in one or several build targets,
+a list of items that should be formatted needs to be passed.
+
+```ts
+export interface FormatParams {
+  /** Items that should be formatted. */
+  formatItems: FormatItem[];
+}
+```
+
+Each item is defined as follows:
+
+```ts
+export interface FormatItem {
+  target: BuildTargetIdentifier;
+  uris?: Uri[];
+}
+```
+
+Each item should have an identifier of its build target and an optional
+list of files that should be formatted. If the list is empty or `null`,
+then all sources inside the build target should be formatted.
+
+Response:
+
+- result: `null`
+- error: JSON-RPC code and message set in case an exception happens during the
+  request.
+
