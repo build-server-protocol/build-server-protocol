@@ -6,7 +6,7 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
 class RustRawDependency {
-    @NonNull String id
+    @NonNull String packageId
     @NonNull String name
     String rename
     String kind
@@ -14,13 +14,15 @@ class RustRawDependency {
     boolean optional
     boolean uses_default_features
     @NonNull List<String> features
-    new(@NonNull String name,
+    new(@NonNull String packageId,
+        @NonNull String name,
         String rename,
         String kind,
         String target,
         boolean optional,
         boolean uses_default_features,
         @NonNull List<String> features) {
+            this.packageId = packageId
             this.name = name
             this.rename = rename
             this.kind = kind
@@ -168,7 +170,7 @@ class RustDepKindInfo {
 }
 
 @JsonRpcData
-class RustDepMapper {
+class RustDependency {
     @NonNull String source
     @NonNull String target
     String name
@@ -185,33 +187,17 @@ class RustDepMapper {
 }
 
 @JsonRpcData
-class RustRawMapper {
-    @NonNull String packageId
-    @NonNull String rawId
-    
-    new(@NonNull String packageId, 
-        @NonNull String rawId) {
-        this.packageId = packageId
-        this.rawId = rawId
-    }
-    
-}
-
-@JsonRpcData
 class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
   @NonNull List<RustRawDependency> rawDependencies
-  @NonNull List<RustRawMapper> packageToRawMapper
-  @NonNull List<RustDepMapper> packageToDepMapper  
+  @NonNull List<RustDependency> dependencies  
   
   new(@NonNull List<RustPackage> packages,
         @NonNull List<RustRawDependency> rawDependencies,
-        @NonNull List<RustRawMapper> packageToRawMapper,
-        @NonNull List<RustDepMapper> packageToDepMapper) {
+        @NonNull List<RustDependency> dependencies) {
     this.packages = packages
     this.rawDependencies = rawDependencies
-    this.packageToRawMapper = packageToRawMapper
-    this.packageToDepMapper = packageToDepMapper
+    this.dependencies = dependencies
   }
 }
 

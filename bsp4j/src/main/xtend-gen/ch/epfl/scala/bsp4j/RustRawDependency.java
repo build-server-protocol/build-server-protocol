@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RustRawDependency {
   @NonNull
-  private String id;
+  private String packageId;
 
   @NonNull
   private String name;
@@ -27,7 +27,8 @@ public class RustRawDependency {
   @NonNull
   private List<String> features;
 
-  public RustRawDependency(@NonNull final String name, final String rename, final String kind, final String target, final boolean optional, final boolean uses_default_features, @NonNull final List<String> features) {
+  public RustRawDependency(@NonNull final String packageId, @NonNull final String name, final String rename, final String kind, final String target, final boolean optional, final boolean uses_default_features, @NonNull final List<String> features) {
+    this.packageId = packageId;
     this.name = name;
     this.rename = rename;
     this.kind = kind;
@@ -39,12 +40,12 @@ public class RustRawDependency {
 
   @Pure
   @NonNull
-  public String getId() {
-    return this.id;
+  public String getPackageId() {
+    return this.packageId;
   }
 
-  public void setId(@NonNull final String id) {
-    this.id = Preconditions.checkNotNull(id, "id");
+  public void setPackageId(@NonNull final String packageId) {
+    this.packageId = Preconditions.checkNotNull(packageId, "packageId");
   }
 
   @Pure
@@ -116,7 +117,7 @@ public class RustRawDependency {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("id", this.id);
+    b.add("packageId", this.packageId);
     b.add("name", this.name);
     b.add("rename", this.rename);
     b.add("kind", this.kind);
@@ -137,10 +138,10 @@ public class RustRawDependency {
     if (getClass() != obj.getClass())
       return false;
     RustRawDependency other = (RustRawDependency) obj;
-    if (this.id == null) {
-      if (other.id != null)
+    if (this.packageId == null) {
+      if (other.packageId != null)
         return false;
-    } else if (!this.id.equals(other.id))
+    } else if (!this.packageId.equals(other.packageId))
       return false;
     if (this.name == null) {
       if (other.name != null)
@@ -179,7 +180,7 @@ public class RustRawDependency {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
+    result = prime * result + ((this.packageId== null) ? 0 : this.packageId.hashCode());
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     result = prime * result + ((this.rename== null) ? 0 : this.rename.hashCode());
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());

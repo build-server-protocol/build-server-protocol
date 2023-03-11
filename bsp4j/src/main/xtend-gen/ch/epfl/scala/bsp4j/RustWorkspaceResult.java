@@ -15,16 +15,12 @@ public class RustWorkspaceResult {
   private List<RustRawDependency> rawDependencies;
 
   @NonNull
-  private List<RustRawMapper> packageToRawMapper;
+  private List<RustDependency> dependencies;
 
-  @NonNull
-  private List<RustDepMapper> packageToDepMapper;
-
-  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustRawMapper> packageToRawMapper, @NonNull final List<RustDepMapper> packageToDepMapper) {
+  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies) {
     this.packages = packages;
     this.rawDependencies = rawDependencies;
-    this.packageToRawMapper = packageToRawMapper;
-    this.packageToDepMapper = packageToDepMapper;
+    this.dependencies = dependencies;
   }
 
   @Pure
@@ -49,22 +45,12 @@ public class RustWorkspaceResult {
 
   @Pure
   @NonNull
-  public List<RustRawMapper> getPackageToRawMapper() {
-    return this.packageToRawMapper;
+  public List<RustDependency> getDependencies() {
+    return this.dependencies;
   }
 
-  public void setPackageToRawMapper(@NonNull final List<RustRawMapper> packageToRawMapper) {
-    this.packageToRawMapper = Preconditions.checkNotNull(packageToRawMapper, "packageToRawMapper");
-  }
-
-  @Pure
-  @NonNull
-  public List<RustDepMapper> getPackageToDepMapper() {
-    return this.packageToDepMapper;
-  }
-
-  public void setPackageToDepMapper(@NonNull final List<RustDepMapper> packageToDepMapper) {
-    this.packageToDepMapper = Preconditions.checkNotNull(packageToDepMapper, "packageToDepMapper");
+  public void setDependencies(@NonNull final List<RustDependency> dependencies) {
+    this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
   @Override
@@ -73,8 +59,7 @@ public class RustWorkspaceResult {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("packages", this.packages);
     b.add("rawDependencies", this.rawDependencies);
-    b.add("packageToRawMapper", this.packageToRawMapper);
-    b.add("packageToDepMapper", this.packageToDepMapper);
+    b.add("dependencies", this.dependencies);
     return b.toString();
   }
 
@@ -98,15 +83,10 @@ public class RustWorkspaceResult {
         return false;
     } else if (!this.rawDependencies.equals(other.rawDependencies))
       return false;
-    if (this.packageToRawMapper == null) {
-      if (other.packageToRawMapper != null)
+    if (this.dependencies == null) {
+      if (other.dependencies != null)
         return false;
-    } else if (!this.packageToRawMapper.equals(other.packageToRawMapper))
-      return false;
-    if (this.packageToDepMapper == null) {
-      if (other.packageToDepMapper != null)
-        return false;
-    } else if (!this.packageToDepMapper.equals(other.packageToDepMapper))
+    } else if (!this.dependencies.equals(other.dependencies))
       return false;
     return true;
   }
@@ -118,7 +98,6 @@ public class RustWorkspaceResult {
     int result = 1;
     result = prime * result + ((this.packages== null) ? 0 : this.packages.hashCode());
     result = prime * result + ((this.rawDependencies== null) ? 0 : this.rawDependencies.hashCode());
-    result = prime * result + ((this.packageToRawMapper== null) ? 0 : this.packageToRawMapper.hashCode());
-    return prime * result + ((this.packageToDepMapper== null) ? 0 : this.packageToDepMapper.hashCode());
+    return prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
   }
 }

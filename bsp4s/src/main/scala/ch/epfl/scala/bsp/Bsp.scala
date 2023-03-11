@@ -1450,6 +1450,7 @@ object RustPackage {
 }
 
 final case class RustRawDependency(
+    packageId: String,
     name: String,
     rename: String,
     kind: String,
@@ -1478,33 +1479,22 @@ object RustTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class RustDepMapper(
+final case class RustDependency(
     source: String,
     target: String,
     name: String,
     depKinds: List[RustDepKindInfo]
 )
 
-object RustDepMapper {
-  implicit val codec: JsonValueCodec[RustDepMapper] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-final case class RustRawMapper(
-    packageId: String,
-    rawId: String
-)
-
-object RustRawMapper {
-  implicit val codec: JsonValueCodec[RustRawMapper] =
+object RustDependency {
+  implicit val codec: JsonValueCodec[RustDependency] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
     rawDependencies: List[RustRawDependency],
-    packageToRawMapper: List[RustRawMapper],
-    packageToDepMapper: List[RustDepMapper]
+    dependencies: List[RustDependency]
 )
 
 object RustWorkspaceResult {
