@@ -1,0 +1,42 @@
+name: Feature Request
+description: Request a new feature or functionality to be added to BSP
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: Describe the use-case for this feature
+      description: This answers the "Why is this needed" question
+      placeholder: |
+        I have a use case where...
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What do you propose
+      description: Your proposal to address the "Why" from up above
+      placeholder: |
+        In order to address this an idea I have is...
+
+  - type: checkboxes
+    id: check
+    attributes:
+      label: I've checked to make sure there isn't already a way to support this in the current protocol
+      description: Please check this to let us know you've already looked through the protocol to ensure there wasn't a way that already exists to support this.
+      options:
+        - label: I've checked the existing protocol and there isn't a way to do this currently
+          required: true
+
+  - type: checkboxes
+    id: maintainers
+    attributes:
+      label: Maintainer approval (This is for the maintainers)
+      description: A checklist for the maintainers to ensure they are all on board with this feature. (Leave these blank when submitting this request)
+      options:
+        - label: Jetbrains
+          required: false
+        - label: Metals
+          required: false
+        - label: Scala Center
+          required: false
