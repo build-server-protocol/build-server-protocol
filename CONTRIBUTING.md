@@ -29,3 +29,21 @@ to tag a new release and auto-generate the Release Notes. The release notes are
 important as this is useful for downstream users to be able to click the
 "Release Notes" section of a Steward PR and be brought to this release.
 
+## Building the docs
+
+The docs for this site are build with [mdoc](https://scalameta.org/mdoc/) to
+typecheck Scala snippets and also to generate a static site via
+[Docusaurus](https://docusaurus.io/).
+
+To build the site locally you'll want to follow the below steps:
+
+1. `sbt mdoc` to typecheck and copy the `/docs` to where they need to be
+2. `cd website` to go into the website directory where the site is managed
+3. `yarn install` to ensure everything is installed
+4. `yarn start` to build and start the server
+
+**NOTE**: that if you're attempting to use the built-in local search step 4 will
+need to be replaced with the following 2 steps:
+
+1. `yarn build` to fully build the site
+1. `yarn serve` to serve the site
