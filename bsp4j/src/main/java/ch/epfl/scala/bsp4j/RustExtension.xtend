@@ -6,7 +6,6 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
 class RustRawDependency {
-    @NonNull String packageId
     @NonNull String name
     String rename
     String kind
@@ -14,15 +13,13 @@ class RustRawDependency {
     boolean optional
     boolean uses_default_features
     @NonNull List<String> features
-    new(@NonNull String packageId,
-        @NonNull String name,
+    new(@NonNull String name,
         String rename,
         String kind,
         String target,
         boolean optional,
         boolean uses_default_features,
         @NonNull List<String> features) {
-            this.packageId = packageId
             this.name = name
             this.rename = rename
             this.kind = kind
@@ -171,16 +168,13 @@ class RustDepKindInfo {
 
 @JsonRpcData
 class RustDependency {
-    @NonNull String source
-    @NonNull String target
+    @NonNull String id
     String name
     List<RustDepKindInfo> depKinds
-    new(@NonNull String source, 
-        @NonNull String target,
+    new(@NonNull String id,
         String name,
         List<RustDepKindInfo> depKinds) {
-        this.source = source
-        this.target = target
+        this.id = id
         this.name = name
         this.depKinds = depKinds
     }

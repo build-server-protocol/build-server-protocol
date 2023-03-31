@@ -9,40 +9,26 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RustDependency {
   @NonNull
-  private String source;
-
-  @NonNull
-  private String target;
+  private String id;
 
   private String name;
 
   private List<RustDepKindInfo> depKinds;
 
-  public RustDependency(@NonNull final String source, @NonNull final String target, final String name, final List<RustDepKindInfo> depKinds) {
-    this.source = source;
-    this.target = target;
+  public RustDependency(@NonNull final String id, final String name, final List<RustDepKindInfo> depKinds) {
+    this.id = id;
     this.name = name;
     this.depKinds = depKinds;
   }
 
   @Pure
   @NonNull
-  public String getSource() {
-    return this.source;
+  public String getId() {
+    return this.id;
   }
 
-  public void setSource(@NonNull final String source) {
-    this.source = Preconditions.checkNotNull(source, "source");
-  }
-
-  @Pure
-  @NonNull
-  public String getTarget() {
-    return this.target;
-  }
-
-  public void setTarget(@NonNull final String target) {
-    this.target = Preconditions.checkNotNull(target, "target");
+  public void setId(@NonNull final String id) {
+    this.id = Preconditions.checkNotNull(id, "id");
   }
 
   @Pure
@@ -67,8 +53,7 @@ public class RustDependency {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("source", this.source);
-    b.add("target", this.target);
+    b.add("id", this.id);
     b.add("name", this.name);
     b.add("depKinds", this.depKinds);
     return b.toString();
@@ -84,15 +69,10 @@ public class RustDependency {
     if (getClass() != obj.getClass())
       return false;
     RustDependency other = (RustDependency) obj;
-    if (this.source == null) {
-      if (other.source != null)
+    if (this.id == null) {
+      if (other.id != null)
         return false;
-    } else if (!this.source.equals(other.source))
-      return false;
-    if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
+    } else if (!this.id.equals(other.id))
       return false;
     if (this.name == null) {
       if (other.name != null)
@@ -112,8 +92,7 @@ public class RustDependency {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     return prime * result + ((this.depKinds== null) ? 0 : this.depKinds.hashCode());
   }
