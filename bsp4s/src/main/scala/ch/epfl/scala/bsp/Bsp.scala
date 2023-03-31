@@ -1491,6 +1491,26 @@ object RustDependency {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class RustDependencyMapper(
+    packageId: String,
+    dependencies: List[RustDependency]
+)
+
+object RustDependencyMapper {
+  implicit val codec: JsonValueCodec[RustDependencyMapper] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustRawDependencyMapper(
+    packageId: String,
+    dependencies: List[RustRawDependency]
+)
+
+object RustRawDependencyMapper {
+  implicit val codec: JsonValueCodec[RustRawDependencyMapper] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
     rawDependencies: List[RustRawDependency],

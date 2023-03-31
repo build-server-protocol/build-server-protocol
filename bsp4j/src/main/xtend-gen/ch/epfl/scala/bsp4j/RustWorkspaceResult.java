@@ -12,12 +12,12 @@ public class RustWorkspaceResult {
   private List<RustPackage> packages;
 
   @NonNull
-  private List<RustRawDependency> rawDependencies;
+  private List<RustRawDependencyMapper> rawDependencies;
 
   @NonNull
-  private List<RustDependency> dependencies;
+  private List<RustDependencyMapper> dependencies;
 
-  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies) {
+  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependencyMapper> rawDependencies, @NonNull final List<RustDependencyMapper> dependencies) {
     this.packages = packages;
     this.rawDependencies = rawDependencies;
     this.dependencies = dependencies;
@@ -35,21 +35,21 @@ public class RustWorkspaceResult {
 
   @Pure
   @NonNull
-  public List<RustRawDependency> getRawDependencies() {
+  public List<RustRawDependencyMapper> getRawDependencies() {
     return this.rawDependencies;
   }
 
-  public void setRawDependencies(@NonNull final List<RustRawDependency> rawDependencies) {
+  public void setRawDependencies(@NonNull final List<RustRawDependencyMapper> rawDependencies) {
     this.rawDependencies = Preconditions.checkNotNull(rawDependencies, "rawDependencies");
   }
 
   @Pure
   @NonNull
-  public List<RustDependency> getDependencies() {
+  public List<RustDependencyMapper> getDependencies() {
     return this.dependencies;
   }
 
-  public void setDependencies(@NonNull final List<RustDependency> dependencies) {
+  public void setDependencies(@NonNull final List<RustDependencyMapper> dependencies) {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
