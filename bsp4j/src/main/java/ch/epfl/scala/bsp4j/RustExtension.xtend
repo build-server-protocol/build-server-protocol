@@ -187,17 +187,38 @@ class RustDependency {
 }
 
 @JsonRpcData
-class RustWorkspaceResult {
-  @NonNull List<RustPackage> packages
-  @NonNull List<RustRawDependency> rawDependencies
-  @NonNull List<RustDependency> dependencies  
-  
-  new(@NonNull List<RustPackage> packages,
-        @NonNull List<RustRawDependency> rawDependencies,
+class RustDependencyMapper {
+    @NonNull String packageId
+    @NonNull List<RustDependency> dependencies
+    new(@NonNull String packageId,
         @NonNull List<RustDependency> dependencies) {
-    this.packages = packages
-    this.rawDependencies = rawDependencies
-    this.dependencies = dependencies
-  }
+        this.packageId = packageId
+        this.dependencies = dependencies
+    }
+}
+
+@JsonRpcData
+class RustRawDependencyMapper {
+    @NonNull String packageId
+    @NonNull List<RustRawDependency> dependencies
+    new(@NonNull String packageId,
+        @NonNull List<RustRawDependency> dependencies) {
+        this.packageId = packageId
+        this.dependencies = dependencies
+    }
+}
+
+@JsonRpcData
+class RustWorkspaceResult {
+    @NonNull List<RustPackage> packages
+    @NonNull List<RustRawDependencyMapper> rawDependencies
+    @NonNull List<RustDependencyMapper> dependencies
+    new(@NonNull List<RustPackage> packages,
+        @NonNull List<RustRawDependencyMapper> rawDependencies,
+        @NonNull List<RustDependencyMapper> dependencies) {
+        this.packages = packages
+        this.rawDependencies = rawDependencies
+        this.dependencies = dependencies
+    }
 }
 
