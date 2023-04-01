@@ -1450,6 +1450,7 @@ object RustPackage {
 }
 
 final case class RustRawDependency(
+    packageId: String,
     name: String,
     rename: String,
     kind: String,
@@ -1479,7 +1480,8 @@ object RustTarget {
 }
 
 final case class RustDependency(
-    id: String,
+    source: String,
+    target: String,
     name: String,
     depKinds: List[RustDepKindInfo]
 )
