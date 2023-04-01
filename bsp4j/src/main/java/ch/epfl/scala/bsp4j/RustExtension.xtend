@@ -187,6 +187,14 @@ class RustDependency {
 }
 
 @JsonRpcData
+class RustWorkspaceParams {
+    @NonNull List<BuildTargetIdentifier> targets
+    new(@NonNull List<BuildTargetIdentifier> targets) {
+        this.targets = targets
+    }
+}
+
+@JsonRpcData
 class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
   @NonNull List<RustRawDependency> rawDependencies

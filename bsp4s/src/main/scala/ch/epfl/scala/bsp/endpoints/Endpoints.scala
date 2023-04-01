@@ -87,7 +87,7 @@ trait BuildTarget {
   // Rust specific endpoints
 
   object rustProjectPackage
-      extends Endpoint[RustWorkspaceResult, Unit](
+      extends Endpoint[RustWorkspaceParams, RustWorkspaceResult](
         "buildTarget/rustWorkspace"
       )
 

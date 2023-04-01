@@ -1491,6 +1491,15 @@ object RustDependency {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class RustWorkspaceParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object RustWorkspaceParams {
+  implicit val codec: JsonValueCodec[RustWorkspaceParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
     rawDependencies: List[RustRawDependency],

@@ -8,5 +8,6 @@ import java.util.concurrent.CompletableFuture;
 public interface RustBuildServer {
 
     @JsonRequest("buildTarget/rustWorkspace")
-    CompletableFuture<RustWorkspaceResult> rustWorkspace();
+    CompletableFuture<RustWorkspaceResult> rustWorkspace(RustWorkspaceParams params);
 }
+
