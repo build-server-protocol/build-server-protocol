@@ -7,7 +7,7 @@ sidebar_label: Specification
 This document is the specification of the Build Server Protocol (BSP).
 
 Edits to this specification can be made via a pull request against this markdown
-document, see "edit" button at the top of this page on the website.
+document, see "edit" button at the bottom of this page on the website.
 
 ## Motivation
 
