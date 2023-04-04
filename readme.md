@@ -27,6 +27,7 @@ _Current Maintainers_
 * Chris Kipp - [@ckipp01](https://github.com/ckipp01)
 * Justin Kaeser - [@jastice](https://github.com/jastice)
 * Łukasz Wawrzyk - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
+* Marcin Abramowicz - [@abrams27](https://github.com/abrams27)
 * Tomasz Pasternak - [@tpasternak](https://github.com/tpasternak)
 
 _Past Maintainers_
