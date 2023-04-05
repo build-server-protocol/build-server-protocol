@@ -1,24 +1,23 @@
 package bsp.codegen
 
 import software.amazon.smithy.model.Model
+
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters._
 import software.amazon.smithy.model.shapes._
 import software.amazon.smithy.model.shapes.Shape
 import Primitive._
 import Type._
-import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait
+import ch.epfl.smithy.jsonrpc.traits.{CanBeNewtypeTrait, DataTrait, EnumKindTrait, JsonNotificationTrait, JsonRequestTrait, UntaggedUnionTrait}
 import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.OPEN
 import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.CLOSED
-import ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait
-import ch.epfl.smithy.jsonrpc.traits.DataTrait
-import ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait
-import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
+
 import java.util.Optional
 import software.amazon.smithy.model.traits.RequiredTrait
 import software.amazon.smithy.model.traits.DocumentationTrait
 import cats.syntax.all._
 import software.amazon.smithy.model.traits.TagsTrait
+
 import scala.collection.immutable
 
 class SmithyToIR(model: Model) {
@@ -65,8 +64,8 @@ class SmithyToIR(model: Model) {
         Some(methodName -> methodType)
       } else None
       maybeMethod.map { case (methodName, methodType) =>
-        val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
-        val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
+        val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit, None))
+        val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit, None))
         val hints = getHints(op)
         Operation(op.getId, inputType, outputType, methodType, methodName, hints)
       }
@@ -95,11 +94,11 @@ class SmithyToIR(model: Model) {
       val fields = shape.members().asScala.flatMap(toField).toList
       def insertDiscriminator(list: List[Field]): List[Field] = list match {
         case field :: next
-            if (field.name == "data" && field.tpe == Type.TPrimitive(Primitive.PDocument)) =>
+            if (field.name == "data" && field.tpe == Type.TPrimitive(Primitive.PDocument, None)) =>
           val doc =
             "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
           val hints = List(Hint.Documentation(doc))
-          Field("dataKind", Type.TPrimitive(Primitive.PString), true, hints) :: field :: next
+          Field("dataKind", Type.TPrimitive(Primitive.PString, None), true, hints) :: field :: next
         case field :: next => field :: insertDiscriminator(next)
         case Nil           => Nil
       }
@@ -174,15 +173,22 @@ class SmithyToIR(model: Model) {
 
   object ToTypeVisitor extends ShapeVisitor[Option[Type]] {
 
-    def prim(primitive: Primitive): Option[Type] = Some(TPrimitive(primitive))
+    def prim(primitive: Primitive, newtype: Option[String]): Option[Type] = {
+      Some(TPrimitive(primitive, newtype))
+    }
 
-    def booleanShape(shape: BooleanShape): Option[Type] = prim(PBool)
-    def integerShape(shape: IntegerShape): Option[Type] = prim(PInt)
-    def longShape(shape: LongShape): Option[Type] = prim(PLong)
-    def floatShape(shape: FloatShape): Option[Type] = prim(PFloat)
-    def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument)
-    def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble)
-    def stringShape(shape: StringShape): Option[Type] = prim(PString)
+    def newtype(shape: Shape): Option[String] = {
+      if (shape.hasTrait(classOf[CanBeNewtypeTrait])) Some(shape.getId.getName) else None
+    }
+
+    def booleanShape(shape: BooleanShape): Option[Type] = prim(PBool, newtype(shape))
+    def integerShape(shape: IntegerShape): Option[Type] = prim(PInt, newtype(shape))
+    def longShape(shape: LongShape): Option[Type] = prim(PLong, newtype(shape))
+    def floatShape(shape: FloatShape): Option[Type] = prim(PFloat, newtype(shape))
+    def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument, newtype(shape))
+    def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble, newtype(shape))
+    def stringShape(shape: StringShape): Option[Type] = prim(PString, newtype(shape))
+    def timestampShape(shape: TimestampShape): Option[Type] = prim(PTimestamp, newtype(shape))
     def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId()))
 
     def listShape(shape: ListShape): Option[Type] =
@@ -203,7 +209,7 @@ class SmithyToIR(model: Model) {
     override def enumShape(shape: EnumShape): Option[Type] = {
       val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind()
       enumKind match {
-        case OPEN   => prim(PString)
+        case OPEN   => prim(PString, None)
         case CLOSED => Some(TRef(shape.getId()))
       }
     }
@@ -211,15 +217,13 @@ class SmithyToIR(model: Model) {
     override def intEnumShape(shape: IntEnumShape): Option[Type] = {
       val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind()
       enumKind match {
-        case OPEN   => prim(PInt)
+        case OPEN   => prim(PInt, None)
         case CLOSED => Some(TRef(shape.getId()))
       }
     }
 
     def memberShape(shape: MemberShape): Option[Type] =
       model.expectShape(shape.getTarget()).accept(this)
-
-    def timestampShape(shape: TimestampShape): Option[Type] = Some(TPrimitive(PTimestamp))
 
     def shortShape(shape: ShortShape): Option[Type] = None
     def blobShape(shape: BlobShape): Option[Type] = None

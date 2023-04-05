@@ -5,11 +5,11 @@ namespace jsonrpc
 /// the JSON-RPC protocol,
 /// see https://www.jsonrpc.org/specification
 @protocolDefinition(traits: [
-
     jsonRequest
     jsonNotification
     enumKind
 ])
+
 @trait(selector: "service")
 structure jsonRPC {
 
@@ -66,3 +66,6 @@ structure data {
     @required
     extends: PolymorphicData
 }
+
+@trait(selector: ":is(simpleType)")
+structure canBeNewtype {}

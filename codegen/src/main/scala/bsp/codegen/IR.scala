@@ -60,7 +60,7 @@ object Type {
   case class TCollection(member: Type) extends Type
   case class TMap(key: Type, value: Type) extends Type
   case class TRef(shapeId: ShapeId) extends Type
-  case class TPrimitive(prim: Primitive) extends Type
+  case class TPrimitive(prim: Primitive, newtype: Option[String]) extends Type
   case class TUntaggedUnion(tpes: List[Type]) extends Type
 }
 

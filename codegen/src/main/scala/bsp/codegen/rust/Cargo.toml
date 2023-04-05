@@ -1,0 +1,17 @@
+[package]
+name = "bsp-types"
+version = "0.1.0"
+authors = ["Andrzej Głuszak <andrzej.gluszak@jetbrains.com>"]
+edition = "2021"
+description = "Types for interaction with a build server, using Build Server Protocol"
+
+keywords = ["build", "server", "bsp", "vscode"]
+
+license = "MIT"
+
+[dependencies]
+bitflags = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_repr = "0.1"
+url = {version = "2", features = ["serde"]}
