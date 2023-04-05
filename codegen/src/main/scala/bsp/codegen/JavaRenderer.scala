@@ -60,22 +60,22 @@ class JavaRenderer(basepkg: String) {
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
-        values.map(renderEnumValueDef(enumType)),
+        values.map(renderEnumValueDef(enumType)).mkString("", ",", ";"),
         newline,
         s"private final $evt value;",
         block(s"$tpe($evt value)") {
           "this.value = value;"
         },
         newline,
-        block(s"public $evt getValue())") {
+        block(s"public $evt getValue()") {
           "return value;"
         },
         newline,
-        block(s"public static $tpe forValue (${evt} value))")(
+        block(s"public static $tpe forValue (${evt} value)")(
           s"$tpe[] allValues = $tpe.values();",
           "if (value < 1 || value > allValues.length)",
           lines("""throw new IllegalArgumentException("Illegal enum value: " + value);""").indent,
-          "return allValues[value - 1],;"
+          "return allValues[value - 1];"
         )
       )
     )
@@ -146,8 +146,8 @@ class JavaRenderer(basepkg: String) {
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value}"""
-      case StringEnum => (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}""""
+      case IntEnum    => (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value};"""
+      case StringEnum => (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}";"""
     }
   }
 
