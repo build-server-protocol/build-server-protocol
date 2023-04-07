@@ -1,16 +1,14 @@
-package bsp.codegen
+package bsp.codegen.java
 
 import bsp.codegen.Def._
+import bsp.codegen.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.Primitive._
 import bsp.codegen.Type._
+import bsp.codegen.dsl.{block, empty, lines, newline}
+import bsp.codegen._
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
-
-import dsl._
-import bsp.codegen.EnumType.IntEnum
-import bsp.codegen.EnumType.StringEnum
-import bsp.codegen.JsonRPCMethodType.Notification
-import bsp.codegen.JsonRPCMethodType.Request
 
 class JavaRenderer(basepkg: String) {
 
@@ -26,25 +24,29 @@ class JavaRenderer(basepkg: String) {
   }
 
   def renderStructure(shapeId: ShapeId, fields: List[Field]): CodegenFile = {
+    val requiredFields = fields.filter(_.required)
+
     val allLines = lines(
       renderPkg(shapeId),
       newline,
+      "import com.google.gson.annotations.JsonAdapter",
+      "import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter",
       "import org.eclipse.lsp4j.jsonrpc.validation.NonNull",
       "import org.eclipse.lsp4j.generator.JsonRpcData",
       renderImports(fields),
       newline,
       "@JsonRpcData",
       block(s"class ${shapeId.getName()}")(
-        lines(fields.map(renderJavaField)),
+        lines(requiredFields.map(renderJavaField)),
         newline, {
-          val params = fields.map(renderParam).mkString(", ")
-          val assignments = fields.map(_.name).map(n => s"this.$n = $n")
+          val params = requiredFields.map(renderParam).mkString(", ")
+          val assignments = requiredFields.map(_.name).map(n => s"this.$n = $n")
           block(s"new($params)")(assignments)
         }
       )
     )
 
-    val fileName = shapeId.getName() + ".xtends"
+    val fileName = shapeId.getName() + ".xtend"
     CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
@@ -168,16 +170,16 @@ class JavaRenderer(basepkg: String) {
   def renderImport(tpe: Type): Lines = tpe match {
     case TRef(shapeId) => empty // assuming everything is generated in the same package
     case TMap(key, value) =>
-      lines(s"import java.util.collection.Map") ++ renderImport(key) ++ renderImport(value)
+      lines(s"import java.util.Map") ++ renderImport(key) ++ renderImport(value)
     case TCollection(member) =>
-      lines(s"import java.util.collection.List") ++ renderImport(member)
+      lines(s"import java.util.List") ++ renderImport(member)
     case TUntaggedUnion(tpes) => tpes.foldMap(renderImport)
     case TPrimitive(prim)     => empty
   }
 
   def renderJavaField(field: Field): Lines = {
     val maybeAdapter = if (field.tpe == Type.TPrimitive(Primitive.PDocument)) {
-      lines("@JsonAdapter(JsonElementTypeAdapter.Factory.class)")
+      lines("@JsonAdapter(JsonElementTypeAdapter.Factory)")
     } else empty
     val maybeNonNull = if (field.required) lines("@NonNull") else empty
     lines(

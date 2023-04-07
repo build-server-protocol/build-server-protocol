@@ -93,7 +93,8 @@ lazy val bsp4j = project
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j" % V.lsp4j // TODO: only for Preconditions class, remove
     )
   )
 
@@ -158,7 +159,7 @@ lazy val `spec-traits` = project
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
     libraryDependencies ++= Seq(
-      "software.amazon.smithy" % "smithy-model" % "1.27.0"
+      "software.amazon.smithy" % "smithy-model" % "1.28.1"
     )
   )
 
@@ -169,16 +170,10 @@ lazy val `bsp4j-gen` = project
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
     Compile / javacOptions ++= {
-      val specifyRelease =
-        if (sys.props("java.version").startsWith("1.8"))
-          List.empty
-        else
-          List("--release", "8")
-
       List(
         "-Xlint:all",
         "-Werror"
-      ) ++ specifyRelease
+      )
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
     Compile / javaHome := inferJavaHome(),
@@ -207,9 +202,10 @@ lazy val `bsp4j-gen` = project
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
-    )
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j" % V.lsp4j // TODO: only for Preconditions class, remove later
   )
+)
 
 // A codegen module that contains the logic for generating bsp4j
 // This will be invoked via shell-out using a bespoke sbt task
@@ -217,13 +213,12 @@ lazy val codegen = project
   .in(file("codegen"))
   .dependsOn(`spec-traits`)
   .settings(
-    scalaVersion := V.scala212,
     publish := {},
     publishLocal := {},
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0",
-      "com.lihaoyi" %% "os-lib" % "0.9.0",
-      "com.monovore" %% "decline" % "2.4.1"
+      "com.lihaoyi" %% "os-lib" % "0.9.1",
+      "com.monovore" %% "decline" % "2.4.1",
     )
   )
 
@@ -318,12 +313,28 @@ def runCodegen(config: Configuration) = Def.task {
             if (changed || outputs.isEmpty) {
               val args = List("--output", outputDir)
 
-              val cp = codegenCp
+              val outputStream = new java.io.ByteArrayOutputStream()
+
+              val classpath = codegenCp
                 .map(_.getAbsolutePath())
                 .mkString(":")
 
-              val res =
-                ("java" :: "-cp" :: cp :: mc :: args).lineStream.toList
+              println(classpath)
+
+              val options = ForkOptions()
+                .withRunJVMOptions(Vector("-cp", classpath))
+                .withOutputStrategy(
+                  CustomOutput(outputStream)
+                )
+
+              val exitCode = Fork.java(options, mc +: args)
+
+              if (exitCode != 0) {
+                s.log.error(outputStream.toString())
+                throw new RuntimeException(s"Codegen failed with exit code $exitCode")
+              }
+
+              val res = outputStream.toString().split("\n").toSeq
               res.foreach(file => s.log.info(s"Generated $file"))
               res.map(new File(_))
             } else outputs.getOrElse(Seq.empty)
