@@ -15,6 +15,9 @@ public class RustTarget {
   private String crateRootUrl;
 
   @NonNull
+  private String packageRootUrl;
+
+  @NonNull
   private String kind;
 
   private String edition;
@@ -23,10 +26,11 @@ public class RustTarget {
 
   private List<String> requiredFeatures;
 
-  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String kind, final String edition, final boolean doctest, final List<String> requiredFeatures) {
+  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String packageRootUrl, @NonNull final String kind, final String edition, final boolean doctest, final List<String> requiredFeatures) {
     this.kind = kind;
     this.name = name;
     this.crateRootUrl = crateRootUrl;
+    this.packageRootUrl = packageRootUrl;
     this.edition = edition;
     this.doctest = doctest;
     this.requiredFeatures = requiredFeatures;
@@ -50,6 +54,16 @@ public class RustTarget {
 
   public void setCrateRootUrl(@NonNull final String crateRootUrl) {
     this.crateRootUrl = Preconditions.checkNotNull(crateRootUrl, "crateRootUrl");
+  }
+
+  @Pure
+  @NonNull
+  public String getPackageRootUrl() {
+    return this.packageRootUrl;
+  }
+
+  public void setPackageRootUrl(@NonNull final String packageRootUrl) {
+    this.packageRootUrl = Preconditions.checkNotNull(packageRootUrl, "packageRootUrl");
   }
 
   @Pure
@@ -95,6 +109,7 @@ public class RustTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
     b.add("crateRootUrl", this.crateRootUrl);
+    b.add("packageRootUrl", this.packageRootUrl);
     b.add("kind", this.kind);
     b.add("edition", this.edition);
     b.add("doctest", this.doctest);
@@ -121,6 +136,11 @@ public class RustTarget {
       if (other.crateRootUrl != null)
         return false;
     } else if (!this.crateRootUrl.equals(other.crateRootUrl))
+      return false;
+    if (this.packageRootUrl == null) {
+      if (other.packageRootUrl != null)
+        return false;
+    } else if (!this.packageRootUrl.equals(other.packageRootUrl))
       return false;
     if (this.kind == null) {
       if (other.kind != null)
@@ -149,6 +169,7 @@ public class RustTarget {
     int result = 1;
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     result = prime * result + ((this.crateRootUrl== null) ? 0 : this.crateRootUrl.hashCode());
+    result = prime * result + ((this.packageRootUrl== null) ? 0 : this.packageRootUrl.hashCode());
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
     result = prime * result + (this.doctest ? 1231 : 1237);

@@ -37,12 +37,14 @@ class RustRawDependency {
 class RustTarget {
         @NonNull String name
         @NonNull String crateRootUrl
+        @NonNull String packageRootUrl
         @NonNull String kind
         String edition
         boolean doctest
         List<String> requiredFeatures
         new(@NonNull String name,
                 @NonNull String crateRootUrl,
+                @NonNull String packageRootUrl,
                 @NonNull String kind,
                 String edition,
                 boolean doctest,
@@ -50,6 +52,7 @@ class RustTarget {
                     this.kind = kind
                     this.name = name
                     this.crateRootUrl = crateRootUrl
+                    this.packageRootUrl = packageRootUrl
                     this.edition = edition
                     this.doctest = doctest
                     this.requiredFeatures = requiredFeatures

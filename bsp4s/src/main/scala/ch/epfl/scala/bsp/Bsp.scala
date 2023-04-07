@@ -1468,6 +1468,7 @@ object RustRawDependency {
 final case class RustTarget(
     name: String,
     crateRootUrl: String,
+    packageRootUrl: String,
     kind: String,
     edition: String,
     doctest: Boolean,
