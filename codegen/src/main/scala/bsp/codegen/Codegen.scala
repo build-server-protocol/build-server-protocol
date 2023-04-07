@@ -1,5 +1,6 @@
 package bsp.codegen
 
+import bsp.codegen.java.JavaRenderer
 import software.amazon.smithy.model.Model
 
 object Codegen {
@@ -9,9 +10,19 @@ object Codegen {
     val definitions = new SmithyToIR(model).definitions("bsp")
     val renderer = new JavaRenderer("ch.epfl.scala.bsp4j")
     val codegenFiles = definitions.map(renderer.render)
-    codegenFiles.map { cf =>
-      val fullPath = outputDir / cf.path
-      os.write.over(fullPath, cf.contents, createFolders = true)
+
+    val preconditionsPath = outputDir / "org" / "eclipse" / "lsp4j" / "util" / "Preconditions.java"
+    os.copy.over(
+      os.pwd / "codegen" / "src" / "main" / "resources" / "Preconditions.java",
+      preconditionsPath,
+      createFolders = true
+    )
+    // TODO: dehardcode "codegen" path
+    // Ughhh, for some reason extend expects this file to be present in this specific location
+
+    codegenFiles.map { file =>
+      val fullPath = outputDir / file.path
+      os.write.over(fullPath, file.contents, createFolders = true)
       fullPath
     }
   }

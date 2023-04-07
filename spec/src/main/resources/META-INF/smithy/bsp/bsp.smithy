@@ -667,9 +667,9 @@ structure Diagnostic {
     /// client to interpret diagnostics as error, warning, info or hint.
     severity: DiagnosticSeverity
     /// The diagnostic's code, which might appear in the user interface.
-    code: Code
-    /// An optional property to describe the error code.
-    codeDescription: CodeDescription
+    code: String
+//    /// An optional property to describe the error code.
+//    codeDescription: CodeDescription
     /// A human-readable string describing the source of this
     /// diagnostic, e.g. 'typescript' or 'super lint'.
     source: String
