@@ -6,6 +6,7 @@ use jsonrpc#enumKind
 use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
+use smithy.api#String
 use jsonrpc#data
 
 @jsonRPC
@@ -42,6 +43,37 @@ service BuildClient {
         OnBuildTaskProgress
         OnBuildTaskFinish
     ]
+}
+
+list Argv {
+    member: String
+}
+
+list Languages {
+    member: String
+}
+
+/// Structure describing how to start a BSP server and the capabilities it supports.
+structure BspConnectionDetails {
+    /// The name of the BSP server.
+    @required
+    name: String
+
+    /// Arguments to pass to the BSP server.
+    @required
+    argv: Argv
+
+    /// The version of the BSP server.
+    @required
+    version: String
+
+    /// Supported BSP version.
+    @required
+    bspVersion: String
+
+    /// The languages supported by the BSP server.
+    @required
+    languages: Languages
 }
 
 /// Like the language server protocol, the initialize request is sent as the first request from the client to the server.
@@ -305,6 +337,7 @@ string RequestId
 /// Clients should not infer metadata out of the URI structure such as the path or query parameters, use BuildTarget instead.
 structure BuildTargetIdentifier {
     /// The target’s Uri
+    @required
     uri: URI
 }
 
@@ -313,7 +346,7 @@ list BuildTargetIdentifiers {
 }
 
 timestamp EventTime
-integer DurationMillis
+long DurationMillis
 
 document BuildTargetData
 
@@ -437,7 +470,7 @@ list Identifiers {
 }
 
 /// Included in notifications of tasks or requests to signal the completion state.
-@enumKind("open")
+@enumKind("closed")
 intEnum StatusCode {
     /// Execution was successful.
     OK = 1
@@ -476,9 +509,20 @@ intEnum ScalaPlatform {
     NATIVE = 3
 }
 
+@data(kind: "cpp", extends: BuildTargetData)
+structure CppBuildTarget {
+    version: String
+    compiler: String
+    cCompiler: String
+    cppCompiler: String
+}
+
 document InitializeBuildParamsData
 
 structure InitializeBuildParams {
+    /// The rootUri of the workspace
+    @required
+    rootUri: URI
     /// Name of the client
     @required
     displayName: String
@@ -488,9 +532,6 @@ structure InitializeBuildParams {
     /// The BSP version that the client speaks
     @required
     bspVersion: String
-    /// The rootUri of the workspace
-    @required
-    rootUri: URI
     /// The capabilities of the client
     @required
     capabilities: BuildClientCapabilities
@@ -568,7 +609,7 @@ structure BuildServerCapabilities {
     jvmRunEnvironmentProvider: Boolean = false
     /// The server can respond to `buildTarget/jvmTestEnvironment` requests with the
     /// necessary information required to launch a Java process for testing or
-    // debugging.
+    /// debugging.
     jvmTestEnvironmentProvider: Boolean = false
     /// Reloading the build state through workspace/reload is supported
     canReload: Boolean = false
@@ -719,7 +760,7 @@ list Diagnostics {
     member: Diagnostic
 }
 
-@enumKind("open")
+@enumKind("closed")
 intEnum DiagnosticSeverity {
     ERROR = 1
     WARNING = 2
@@ -732,12 +773,13 @@ union Code {
     integer: Integer
 }
 
-/// Structure to capture a description for an error code.
-structure CodeDescription {
-    @required
-    /// An URI to open with more information about the diagnostic error.
-    href: URI
-}
+// TODO: this has been introduced in newer versions of the LSP spec
+///// Structure to capture a description for an error code.
+//structure CodeDescription {
+//    @required
+//    /// An URI to open with more information about the diagnostic error.
+//    href: URI
+//}
 
 @enumKind("open")
 intEnum DiagnosticTag {
@@ -809,7 +851,7 @@ list BuildTargetEvents {
 
 /// The `BuildTargetEventKind` information can be used by clients to trigger
 /// reindexing or update the user interface with the new information.
-@enumKind("open")
+@enumKind("closed")
 intEnum BuildTargetEventKind {
     /// The build target is new.
     CREATED = 1
@@ -912,18 +954,18 @@ structure DependencyModulesParams {
 
 structure DependencyModulesResult {
     @required
-    items: DependencyModuleItems
+    items: DependencyModulesItems
 }
 
-structure DependencyModuleItem {
+structure DependencyModulesItem {
     @required
     target: BuildTargetIdentifier
     @required
     modules: DependencyModule
 }
 
-list DependencyModuleItems {
-    member: DependencyModuleItem
+list DependencyModulesItems {
+    member: DependencyModulesItem
 }
 
 document DependencyModuleData
@@ -1033,8 +1075,6 @@ structure TaskStartParams {
   data: TaskData
 }
 
-document TaskData
-
 structure TaskProgressParams {
   /// Unique id of the task with optional reference to parent task id
   @required
@@ -1104,6 +1144,7 @@ structure CompileResult {
   originId: Identifier
 
   /// A status code for the execution.
+  @required
   statusCode: StatusCode
 
   /// A field containing language-specific information, like products
@@ -1316,11 +1357,13 @@ structure DebugSessionParams {
 
 structure DebugSessionAddress {
   /// The Debug Adapter Protocol server's connection uri
+  @required
   uri: URI
 }
 
 structure CleanCacheParams {
   /// The build targets to clean.
+  @required
   targets: BuildTargetIdentifiers
 }
 
@@ -1328,5 +1371,6 @@ structure CleanCacheResult {
   /// Optional message to display to the user.
   message: String
   /// Indicates whether the clean cache request was performed or not.
+  @required
   cleaned: Boolean
 }

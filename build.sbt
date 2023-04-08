@@ -319,8 +319,6 @@ def runCodegen(config: Configuration) = Def.task {
                 .map(_.getAbsolutePath())
                 .mkString(":")
 
-              println(classpath)
-
               val options = ForkOptions()
                 .withRunJVMOptions(Vector("-cp", classpath))
                 .withOutputStrategy(
