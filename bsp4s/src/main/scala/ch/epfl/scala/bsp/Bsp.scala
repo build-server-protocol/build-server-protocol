@@ -1436,6 +1436,7 @@ final case class RustPackage(
     origin: String,
     edition: String,
     targets: List[RustTarget],
+    allTargets: List[RustTarget],
     features: List[RustFeature],
     enabledFeatures: List[String],
     cfgOptions: RustCfgOptions,

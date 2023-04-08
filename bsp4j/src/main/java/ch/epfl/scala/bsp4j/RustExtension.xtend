@@ -127,6 +127,7 @@ class RustPackage {
         String edition
         String source
         @NonNull List<RustTarget> targets
+        @NonNull List<RustTarget> allTargets
         @NonNull List<RustFeature> features
         @NonNull List<String> enabledFeatures
         RustCfgOptions cfgOptions
@@ -139,6 +140,7 @@ class RustPackage {
                 String edition,
                 String source,                
                 @NonNull List<RustTarget> targets,
+                @NonNull List<RustTarget> allTargets,
                 @NonNull List<RustFeature> features,
                 @NonNull List<String> enabledFeatures,
                 RustCfgOptions cfgOptions,
@@ -152,6 +154,7 @@ class RustPackage {
         this.edition = edition
         this.source = source
         this.targets = targets
+        this.allTargets = allTargets
         this.features = features
         this.enabledFeatures = enabledFeatures
         this.cfgOptions = cfgOptions

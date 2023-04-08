@@ -23,6 +23,9 @@ public class RustPackage {
   private List<RustTarget> targets;
 
   @NonNull
+  private List<RustTarget> allTargets;
+
+  @NonNull
   private List<RustFeature> features;
 
   @NonNull
@@ -37,13 +40,14 @@ public class RustPackage {
 
   private RustProcMacroArtifact procMacroArtifact;
 
-  public RustPackage(@NonNull final BuildTargetIdentifier id, final String version, final String origin, final String edition, final String source, @NonNull final List<RustTarget> targets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
+  public RustPackage(@NonNull final BuildTargetIdentifier id, final String version, final String origin, final String edition, final String source, @NonNull final List<RustTarget> targets, @NonNull final List<RustTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
     this.id = id;
     this.version = version;
     this.origin = origin;
     this.edition = edition;
     this.source = source;
     this.targets = targets;
+    this.allTargets = allTargets;
     this.features = features;
     this.enabledFeatures = enabledFeatures;
     this.cfgOptions = cfgOptions;
@@ -106,6 +110,16 @@ public class RustPackage {
 
   public void setTargets(@NonNull final List<RustTarget> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
+  }
+
+  @Pure
+  @NonNull
+  public List<RustTarget> getAllTargets() {
+    return this.allTargets;
+  }
+
+  public void setAllTargets(@NonNull final List<RustTarget> allTargets) {
+    this.allTargets = Preconditions.checkNotNull(allTargets, "allTargets");
   }
 
   @Pure
@@ -175,6 +189,7 @@ public class RustPackage {
     b.add("edition", this.edition);
     b.add("source", this.source);
     b.add("targets", this.targets);
+    b.add("allTargets", this.allTargets);
     b.add("features", this.features);
     b.add("enabledFeatures", this.enabledFeatures);
     b.add("cfgOptions", this.cfgOptions);
@@ -224,6 +239,11 @@ public class RustPackage {
         return false;
     } else if (!this.targets.equals(other.targets))
       return false;
+    if (this.allTargets == null) {
+      if (other.allTargets != null)
+        return false;
+    } else if (!this.allTargets.equals(other.allTargets))
+      return false;
     if (this.features == null) {
       if (other.features != null)
         return false;
@@ -268,6 +288,7 @@ public class RustPackage {
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
     result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.allTargets== null) ? 0 : this.allTargets.hashCode());
     result = prime * result + ((this.features== null) ? 0 : this.features.hashCode());
     result = prime * result + ((this.enabledFeatures== null) ? 0 : this.enabledFeatures.hashCode());
     result = prime * result + ((this.cfgOptions== null) ? 0 : this.cfgOptions.hashCode());
