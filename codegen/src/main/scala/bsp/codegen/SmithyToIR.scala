@@ -17,9 +17,7 @@ import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
 import java.util.Optional
 import software.amazon.smithy.model.traits.RequiredTrait
 import software.amazon.smithy.model.traits.DocumentationTrait
-import cats.syntax.all._
 import software.amazon.smithy.model.traits.TagsTrait
-import scala.collection.immutable
 
 class SmithyToIR(model: Model) {
 
@@ -27,7 +25,7 @@ class SmithyToIR(model: Model) {
     val shapes = model.shapes().iterator().asScala.toList
     val commonTag = "basic"
     val commonShapes =
-      shapes.filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags().contains(commonTag)))
+      shapes.filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
     val commonShapeDocs = commonShapes.flatMap(_.accept(DocShapeVisitor))
     val serviceDocs = shapes.filter(_.isServiceShape()).flatMap(_.accept(DocShapeVisitor))
     DocTree(commonShapeDocs, serviceDocs)
@@ -38,7 +36,7 @@ class SmithyToIR(model: Model) {
       .shapes()
       .iterator()
       .asScala
-      .filter(_.getId().getNamespace() == namespace)
+      .filter(_.getId.getNamespace == namespace)
       .map { shape =>
         if (shape.hasTrait("smithy.api#trait")) None
         else shape.accept(ToIRVisitor)
@@ -56,17 +54,17 @@ class SmithyToIR(model: Model) {
 
     def buildOperation(op: OperationShape): Option[Operation] = {
       val maybeMethod = if (op.hasTrait(classOf[JsonRequestTrait])) {
-        val methodName = op.expectTrait(classOf[JsonRequestTrait]).getValue()
+        val methodName = op.expectTrait(classOf[JsonRequestTrait]).getValue
         val methodType = JsonRPCMethodType.Request
         Some(methodName -> methodType)
       } else if (op.hasTrait(classOf[JsonNotificationTrait])) {
-        val methodName = op.expectTrait(classOf[JsonNotificationTrait]).getValue()
+        val methodName = op.expectTrait(classOf[JsonNotificationTrait]).getValue
         val methodType = JsonRPCMethodType.Notification
         Some(methodName -> methodType)
       } else None
       maybeMethod.map { case (methodName, methodType) =>
-        val inputType = getType(op.getInput()).getOrElse(TPrimitive(PUnit))
-        val outputType = getType(op.getOutput()).getOrElse(TPrimitive(PUnit))
+        val inputType = getType(op.getInput).getOrElse(TPrimitive(PUnit))
+        val outputType = getType(op.getOutput).getOrElse(TPrimitive(PUnit))
         val hints = getHints(op)
         Operation(op.getId, inputType, outputType, methodType, methodName, hints)
       }
@@ -74,18 +72,18 @@ class SmithyToIR(model: Model) {
 
     override def serviceShape(shape: ServiceShape): Option[Def] = {
       val operations = shape
-        .getOperations()
+        .getOperations
         .asScala
         .toList
         .map(model.expectShape(_, classOf[OperationShape]))
         .flatMap(buildOperation)
-      Some(Def.Service(shape.getId(), operations, getHints(shape)))
+      Some(Def.Service(shape.getId, operations, getHints(shape)))
     }
 
     def toField(member: MemberShape): Option[Field] = {
       val required = member.hasTrait(classOf[RequiredTrait])
-      val name = member.getMemberName()
-      getType(member.getTarget()).map(Field(name, _, required, getHints(member)))
+      val name = member.getMemberName
+      getType(member.getTarget).map(Field(name, _, required, getHints(member)))
     }
     def getType(shapeId: ShapeId): Option[Type] = model.expectShape(shapeId).accept(ToTypeVisitor)
     def getType(maybeShapeId: Optional[ShapeId]): Option[Type] =
@@ -95,50 +93,50 @@ class SmithyToIR(model: Model) {
       val fields = shape.members().asScala.flatMap(toField).toList
       def insertDiscriminator(list: List[Field]): List[Field] = list match {
         case field :: next
-            if (field.name == "data" && field.tpe == Type.TPrimitive(Primitive.PDocument)) =>
+            if field.name == "data" && field.tpe == Type.TPrimitive(Primitive.PDocument) =>
           val doc =
             "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
           val hints = List(Hint.Documentation(doc))
-          Field("dataKind", Type.TPrimitive(Primitive.PString), true, hints) :: field :: next
+          Field("dataKind", Type.TPrimitive(Primitive.PString), required = false, hints) :: field :: next
         case field :: next => field :: insertDiscriminator(next)
         case Nil           => Nil
       }
 
-      Some(Def.Structure(shape.getId(), insertDiscriminator(fields), getHints(shape)))
+      Some(Def.Structure(shape.getId, insertDiscriminator(fields), getHints(shape)))
     }
 
     override def intEnumShape(shape: IntEnumShape): Option[Def] = {
       val enumValues = shape
-        .getEnumValues()
+        .getEnumValues
         .asScala
         .map { case (name, value) =>
-          val valueHints = getHints(shape.getAllMembers().get(name))
+          val valueHints = getHints(shape.getAllMembers.get(name))
           EnumValue(name, value.toInt, valueHints)
         }
         .toList
       val hints = getHints(shape)
-      shape.expectTrait(classOf[EnumKindTrait]).getEnumKind() match {
+      shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
         case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
         case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
       }
     }
     override def enumShape(shape: EnumShape): Option[Def] = {
       val enumValues = shape
-        .getEnumValues()
+        .getEnumValues
         .asScala
         .map { case (name, value) =>
-          val valueHints = getHints(shape.getAllMembers().get(name))
+          val valueHints = getHints(shape.getAllMembers.get(name))
           EnumValue(name, value, valueHints)
         }
         .toList
       val hints = getHints(shape)
-      shape.expectTrait(classOf[EnumKindTrait]).getEnumKind() match {
+      shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
         case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
         case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
       }
     }
 
-    val allDataKindAnnotated = model
+    val allDataKindAnnotated: Map[ShapeId, List[(String, Shape)]] = model
       .getShapesWithTrait(classOf[DataTrait])
       .asScala
       .toList
@@ -146,26 +144,26 @@ class SmithyToIR(model: Model) {
         val tr = shape.expectTrait(classOf[DataTrait])
         shape -> tr
       }
-      .groupBy { case (shape, tr) => tr.getPolymorphicData() }
+      .groupBy { case (_, tr) => tr.getPolymorphicData }
       .map { case (dataType, shapeAndTraits) =>
         dataType -> shapeAndTraits.map { case (shape, tr) =>
-          tr.getKind() -> shape
+          tr.getKind -> shape
         }
       }
 
     override def documentShape(shape: DocumentShape): Option[Def] = {
-      val id = shape.getId()
+      val id = shape.getId
       allDataKindAnnotated.get(id).map { allKnownInhabitants =>
-        val openEnumId = ShapeId.fromParts(id.getNamespace(), id.getName() + "Kind")
+        val openEnumId = ShapeId.fromParts(id.getNamespace, id.getName + "Kind")
         val values = allKnownInhabitants.map { case (disc, member) =>
           val snakeCased = disc.replace('-', '_').toUpperCase()
-          val memberDoc = s"/** `data` field must contain a ${member.getId().getName()} object. */"
+          val memberDoc = s"/** `data` field must contain a ${member.getId.getName} object. */"
           EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
-        }.toList
+        }
         val shapeDoc = shape
           .getTrait(classOf[DocumentationTrait])
           .toScala
-          .map(doc => Hint.Documentation(doc.getValue()))
+          .map(doc => Hint.Documentation(doc.getValue))
           .toList
         Def.OpenEnum(openEnumId, EnumType.StringEnum, values, shapeDoc)
       }
@@ -183,41 +181,41 @@ class SmithyToIR(model: Model) {
     def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument)
     def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble)
     def stringShape(shape: StringShape): Option[Type] = prim(PString)
-    def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId()))
+    def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId))
 
     def listShape(shape: ListShape): Option[Type] =
-      model.expectShape(shape.getMember().getTarget()).accept(this).map(TCollection(_))
+      model.expectShape(shape.getMember.getTarget).accept(this).map(TCollection)
 
     def mapShape(shape: MapShape): Option[Type] = for {
-      k <- shape.getKey().accept(this)
-      v <- shape.getValue().accept(this)
+      k <- shape.getKey.accept(this)
+      v <- shape.getValue.accept(this)
     } yield TMap(k, v)
 
     def unionShape(shape: UnionShape): Option[Type] = Some {
       if (shape.hasTrait(classOf[UntaggedUnionTrait])) {
-        val memberTypes = shape.getAllMembers().asScala.values.map(_.accept(this)).toList.flatten
+        val memberTypes = shape.getAllMembers.asScala.values.map(_.accept(this)).toList.flatten
         TUntaggedUnion(memberTypes)
-      } else TRef(shape.getId())
+      } else TRef(shape.getId)
     }
 
     override def enumShape(shape: EnumShape): Option[Type] = {
-      val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind()
+      val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind
       enumKind match {
         case OPEN   => prim(PString)
-        case CLOSED => Some(TRef(shape.getId()))
+        case CLOSED => Some(TRef(shape.getId))
       }
     }
 
     override def intEnumShape(shape: IntEnumShape): Option[Type] = {
-      val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind()
+      val enumKind = shape.expectTrait(classOf[EnumKindTrait]).getEnumKind
       enumKind match {
         case OPEN   => prim(PInt)
-        case CLOSED => Some(TRef(shape.getId()))
+        case CLOSED => Some(TRef(shape.getId))
       }
     }
 
     def memberShape(shape: MemberShape): Option[Type] =
-      model.expectShape(shape.getTarget()).accept(this)
+      model.expectShape(shape.getTarget).accept(this)
 
     def timestampShape(shape: TimestampShape): Option[Type] = Some(TPrimitive(PTimestamp))
 
@@ -235,8 +233,8 @@ class SmithyToIR(model: Model) {
     val documentation = shape
       .getTrait(classOf[DocumentationTrait])
       .toScala
-      .map(_.getValue())
-      .map(Hint.Documentation(_))
+      .map(_.getValue)
+      .map(Hint.Documentation)
       .toList
     documentation
   }
@@ -253,7 +251,7 @@ class SmithyToIR(model: Model) {
         .members()
         .asScala
         .toList
-        .flatMap(m => model.expectShape(m.getTarget()).accept(this).toList)
+        .flatMap(m => model.expectShape(m.getTarget).accept(this).toList)
 
       shape.accept(ToIRVisitor).map { definition =>
         ShapeDocNode(definition, childrenNodes)
@@ -263,14 +261,14 @@ class SmithyToIR(model: Model) {
     override def operationShape(shape: OperationShape): Option[DocNode] = {
       val input = shape.getInput.toScala.flatMap(input => model.expectShape(input).accept(this))
       val output = shape.getOutput.toScala.flatMap(output => model.expectShape(output).accept(this))
-      ToIRVisitor.buildOperation(shape).map { case op: Operation =>
+      ToIRVisitor.buildOperation(shape).map { op: Operation =>
         OperationDocNode(op, input, output)
       }
     }
 
     override def serviceShape(shape: ServiceShape): Option[DocNode] = {
-      val ops = shape.getOperations().asScala.toList.map(model.expectShape).flatMap(_.accept(this))
-      Some(ServiceDocNode(shape.getId(), ops))
+      val ops = shape.getOperations.asScala.toList.map(model.expectShape).flatMap(_.accept(this))
+      Some(ServiceDocNode(shape.getId, ops))
     }
 
   }

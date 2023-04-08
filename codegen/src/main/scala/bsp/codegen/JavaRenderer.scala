@@ -1,4 +1,4 @@
-package bsp.codegen.java
+package bsp.codegen
 
 import bsp.codegen.Def._
 import bsp.codegen.EnumType.{IntEnum, StringEnum}
@@ -6,13 +6,13 @@ import bsp.codegen.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.Primitive._
 import bsp.codegen.Type._
 import bsp.codegen.dsl.{block, empty, lines, newline}
-import bsp.codegen._
-import cats.syntax.all._
+import cats.implicits.toFoldableOps
+import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
 class JavaRenderer(basepkg: String) {
 
-  val baseRelPath = os.rel / basepkg.split('.')
+  val baseRelPath: RelPath = os.rel / basepkg.split('.')
   // scalafmt: { maxColumn = 120}
   def render(definition: Def): CodegenFile = {
     definition match {
@@ -37,7 +37,7 @@ class JavaRenderer(basepkg: String) {
       newline,
       "@JsonRpcData",
       block(s"class ${shapeId.getName()}")(
-        lines(requiredFields.map(renderJavaField)),
+        lines(fields.map(renderJavaField)),
         newline, {
           val params = requiredFields.map(renderParam).mkString(", ")
           val assignments = requiredFields.map(_.name).map(n => s"this.$n = $n")
@@ -73,7 +73,7 @@ class JavaRenderer(basepkg: String) {
           "return value;"
         },
         newline,
-        block(s"public static $tpe forValue (${evt} value)")(
+        block(s"public static $tpe forValue ($evt value)")(
           s"$tpe[] allValues = $tpe.values();",
           "if (value < 1 || value > allValues.length)",
           lines("""throw new IllegalArgumentException("Illegal enum value: " + value);""").indent,
@@ -86,7 +86,7 @@ class JavaRenderer(basepkg: String) {
   }
 
   def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
-    val evt = enumValueType(enumType)
+    val _evt = enumValueType(enumType)
     val tpe = shapeId.getName()
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
@@ -165,7 +165,7 @@ class JavaRenderer(basepkg: String) {
   )
 
   def renderImports(fields: List[Field]): Lines =
-    fields.map(_.tpe).foldMap(renderImport(_)).distinct.sorted
+    fields.map(_.tpe).foldMap(renderImport).distinct.sorted
 
   def renderImport(tpe: Type): Lines = tpe match {
     case TRef(shapeId) => empty // assuming everything is generated in the same package

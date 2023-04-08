@@ -1,8 +1,5 @@
 package bsp.codegen
 
-import bsp.codegen.java.JavaRenderer
-import software.amazon.smithy.model.Model
-
 object Codegen {
 
   def run(outputDir: os.Path): List[os.Path] = {
@@ -33,6 +30,6 @@ object Codegen {
     MarkdownRenderer.render(docTree)
   }
 
-  def printDocs(): Unit = println(docs)
+  def printDocs(): Unit = println(docs())
 
 }
