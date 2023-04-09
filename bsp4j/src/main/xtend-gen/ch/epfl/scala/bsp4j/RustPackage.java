@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RustPackage {
   @NonNull
-  private BuildTargetIdentifier id;
+  private String id;
 
   private String version;
 
@@ -40,7 +40,7 @@ public class RustPackage {
 
   private RustProcMacroArtifact procMacroArtifact;
 
-  public RustPackage(@NonNull final BuildTargetIdentifier id, final String version, final String origin, final String edition, final String source, @NonNull final List<RustTarget> targets, @NonNull final List<RustTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
+  public RustPackage(@NonNull final String id, final String version, final String origin, final String edition, final String source, @NonNull final List<RustTarget> targets, @NonNull final List<RustTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures, final RustCfgOptions cfgOptions, @NonNull final List<RustEnvData> env, final String outDirUrl, final RustProcMacroArtifact procMacroArtifact) {
     this.id = id;
     this.version = version;
     this.origin = origin;
@@ -58,11 +58,11 @@ public class RustPackage {
 
   @Pure
   @NonNull
-  public BuildTargetIdentifier getId() {
+  public String getId() {
     return this.id;
   }
 
-  public void setId(@NonNull final BuildTargetIdentifier id) {
+  public void setId(@NonNull final String id) {
     this.id = Preconditions.checkNotNull(id, "id");
   }
 
