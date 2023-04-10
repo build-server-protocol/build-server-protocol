@@ -14,7 +14,7 @@ object Codegen {
       preconditionsPath,
       createFolders = true
     )
-    // TODO: dehardcode "codegen" path
+    // TODO: dehardcode "codegen" path above
     // Ughhh, for some reason extend expects this file to be present in this specific location
 
     codegenFiles.map { file =>

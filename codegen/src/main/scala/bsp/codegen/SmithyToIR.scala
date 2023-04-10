@@ -1,6 +1,7 @@
 package bsp.codegen
 
 import software.amazon.smithy.model.Model
+
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters._
 import software.amazon.smithy.model.shapes._
@@ -14,10 +15,9 @@ import ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait
 import ch.epfl.smithy.jsonrpc.traits.DataTrait
 import ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait
 import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
+
 import java.util.Optional
-import software.amazon.smithy.model.traits.RequiredTrait
-import software.amazon.smithy.model.traits.DocumentationTrait
-import software.amazon.smithy.model.traits.TagsTrait
+import software.amazon.smithy.model.traits.{DocumentationTrait, JsonNameTrait, MixinTrait, RequiredTrait, TagsTrait}
 
 class SmithyToIR(model: Model) {
 
@@ -82,14 +82,19 @@ class SmithyToIR(model: Model) {
 
     def toField(member: MemberShape): Option[Field] = {
       val required = member.hasTrait(classOf[RequiredTrait])
+      val jsonRenamed = member.getTrait(classOf[JsonNameTrait]).toScala.map(_.getValue)
       val name = member.getMemberName
-      getType(member.getTarget).map(Field(name, _, required, getHints(member)))
+      getType(member.getTarget).map(Field(name, _, required, jsonRenamed, getHints(member)))
     }
     def getType(shapeId: ShapeId): Option[Type] = model.expectShape(shapeId).accept(ToTypeVisitor)
     def getType(maybeShapeId: Optional[ShapeId]): Option[Type] =
       maybeShapeId.toScala.flatMap(getType)
 
     override def structureShape(shape: StructureShape): Option[Def] = {
+      if (shape.hasTrait(classOf[MixinTrait])) {
+        return None
+      }
+
       val fields = shape.members().asScala.flatMap(toField).toList
       def insertDiscriminator(list: List[Field]): List[Field] = list match {
         case field :: next
@@ -97,7 +102,7 @@ class SmithyToIR(model: Model) {
           val doc =
             "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
           val hints = List(Hint.Documentation(doc))
-          Field("dataKind", Type.TPrimitive(Primitive.PString), required = false, hints) :: field :: next
+          Field("dataKind", Type.TPrimitive(Primitive.PString), required = false, None, hints) :: field :: next
         case field :: next => field :: insertDiscriminator(next)
         case Nil           => Nil
       }

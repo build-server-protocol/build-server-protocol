@@ -6,7 +6,6 @@ use jsonrpc#enumKind
 use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
-use smithy.api#String
 use jsonrpc#data
 
 @jsonRPC
@@ -86,13 +85,11 @@ structure BspConnectionDetails {
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
 operation InitializeBuild {
-    input: InitializeBuildParams
     output: InitializeBuildResult
 }
 
 @jsonNotification("build/initialized")
 operation OnBuildInitialized {
-    input: InitializedBuildParams
 }
 
 /// Like the language server protocol, the shutdown build request is sent from the client to the server. It asks the server to shut down,
@@ -115,7 +112,7 @@ operation OnBuildShutdown {
 /// A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
 @jsonNotification("build/showMessage")
 operation OnBuildShowMessage {
-    input: OnBuildShowMessageParams
+    input: ShowMessageParams
 }
 
 /// The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
@@ -146,7 +143,6 @@ operation OnBuildPublishDiagnostics {
 /// for the list of all available build targets in the workspace.
 @jsonRequest("workspace/buildTargets")
 operation WorkspaceBuildTargets {
-    input: WorkspaceBuildTargetsParams
     output: WorkspaceBuildTargetsResult
 }
 
@@ -346,6 +342,7 @@ list BuildTargetIdentifiers {
 }
 
 timestamp EventTime
+
 long DurationMillis
 
 document BuildTargetData
@@ -454,12 +451,13 @@ list BuildTargetTags {
 /// The Task Id allows clients to uniquely identify a BSP task and establish a client-parent relationship with another task id.
 structure TaskId {
     /// A unique identifier
+    @required
     id: Identifier
-    // The parent task ids, if any. A non-empty parents field means
-    // this task is a sub-task of every parent task id. The child-parent
-    // relationship of tasks makes it possible to render tasks in
-    // a tree-like user interface or inspect what caused a certain task
-    // execution.
+    /// The parent task ids, if any. A non-empty parents field means
+    /// this task is a sub-task of every parent task id. The child-parent
+    /// relationship of tasks makes it possible to render tasks in
+    /// a tree-like user interface or inspect what caused a certain task
+    /// execution.
     parents: Identifiers
 }
 
@@ -478,43 +476,6 @@ intEnum StatusCode {
     ERROR = 2
     /// Execution was cancelled.
     CANCELLED = 3
-}
-
-structure JvmBuildTarget {
-    @required
-    javaHome: String
-    @required
-    javaVersion: String
-}
-
-@data(kind: "scala", extends: BuildTargetData)
-structure ScalaBuildTarget {
-    @required
-    scalaOrganization: String
-    @required
-    scalaVersion: String
-    @required
-    scalaBinaryVersion: String
-    @required
-    platform: ScalaPlatform
-    @required
-    jars: URIs
-    jvmBuildTarget: JvmBuildTarget
-}
-
-@enumKind("closed")
-intEnum ScalaPlatform {
-    JVM = 1
-    JS = 2
-    NATIVE = 3
-}
-
-@data(kind: "cpp", extends: BuildTargetData)
-structure CppBuildTarget {
-    version: String
-    compiler: String
-    cCompiler: String
-    cppCompiler: String
 }
 
 document InitializeBuildParamsData
@@ -637,10 +598,6 @@ structure TestProvider with [LanguageProvider] {
 
 }
 
-structure InitializedBuildParams {
-
-}
-
 @mixin
 structure MessageParams {
     /// the message type.
@@ -657,7 +614,7 @@ structure MessageParams {
     message: String
 }
 
-structure OnBuildShowMessageParams with [MessageParams] {
+structure ShowMessageParams with [MessageParams] {
 
 }
 
@@ -665,7 +622,7 @@ structure LogMessageParams with [MessageParams] {
 
 }
 
-@enumKind("open")
+@enumKind("closed")
 intEnum MessageType {
     /// An error message.
     ERROR = 1
@@ -709,16 +666,16 @@ structure Diagnostic {
     severity: DiagnosticSeverity
     /// The diagnostic's code, which might appear in the user interface.
     code: String
-//    /// An optional property to describe the error code.
-//    codeDescription: CodeDescription
+    //    /// An optional property to describe the error code. // TODO: new LSP version
+    //    codeDescription: CodeDescription
     /// A human-readable string describing the source of this
     /// diagnostic, e.g. 'typescript' or 'super lint'.
     source: String
     /// The diagnostic's message.
     @required
     message: String
-    // Additional metadata about the diagnostic.
-    tags: DiagnosticTags
+    //     Additional metadata about the diagnostic. // TODO: new LSP version
+    //    tags: DiagnosticTags
     /// An array of related diagnostic information, e.g. when symbol-names within
     /// a scope collide all definitions can be marked via this property.
     relatedInformation: DiagnosticRelatedInformationList
@@ -813,14 +770,10 @@ list DiagnosticRelatedInformationList {
     member: DiagnosticRelatedInformation
 }
 
-structure WorkspaceBuildTargetsParams {
-
-}
-
 structure WorkspaceBuildTargetsResult {
     /// The build targets in this workspace that
     /// contain sources with the given language ids.
-    @required
+    // TODO: should be @required
     targets: BuildTargets
 }
 
@@ -905,7 +858,7 @@ list SourceItems {
     member: SourceItem
 }
 
-@enumKind("open")
+@enumKind("closed")
 intEnum SourceItemKind {
     /// The source item references a normal file.
     FILE = 1
@@ -957,11 +910,15 @@ structure DependencyModulesResult {
     items: DependencyModulesItems
 }
 
+list DependencyModules {
+    member: DependencyModule
+}
+
 structure DependencyModulesItem {
     @required
     target: BuildTargetIdentifier
     @required
-    modules: DependencyModule
+    modules: DependencyModules
 }
 
 list DependencyModulesItems {
@@ -989,10 +946,10 @@ structure ResourcesParams {
 
 structure ResourcesResult {
     @required
-    items: ResourceItems
+    items: ResourcesItems
 }
 
-structure ResourceItem {
+structure ResourcesItem {
     @required
     target: BuildTargetIdentifier
     @required
@@ -1000,8 +957,8 @@ structure ResourceItem {
     resources: URIs
 }
 
-list ResourceItems {
-    member: ResourceItem
+list ResourcesItems {
+    member: ResourcesItem
 }
 
 structure OutputPathsParams {
@@ -1042,7 +999,7 @@ list OutputPathItems {
     member: OutputPathItem
 }
 
-@enumKind("open")
+@enumKind("closed")
 intEnum OutputPathItemKind {
     /// The output path item references a normal file.
     FILE = 1
@@ -1060,77 +1017,78 @@ intEnum OutputPathItemKind {
 document TaskData
 
 structure TaskStartParams {
-  /// Unique id of the task with optional reference to parent task id
-  @required
-  taskId: TaskId
+    /// Unique id of the task with optional reference to parent task id
+    @required
+    taskId: TaskId
 
-  /// Timestamp of when the event started in milliseconds since Epoch.
-  eventTime: EventTime,
+    /// Timestamp of when the event started in milliseconds since Epoch.
+    eventTime: EventTime,
 
-  /// Message describing the task.
-  message: String
+    /// Message describing the task.
+    message: String
 
-  /// Optional metadata about the task.
-  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: TaskData
+    /// Optional metadata about the task.
+    /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+    data: TaskData
 }
 
 structure TaskProgressParams {
-  /// Unique id of the task with optional reference to parent task id
-  @required
-  taskId: TaskId
+    /// Unique id of the task with optional reference to parent task id
+    @required
+    taskId: TaskId
 
-  /// Timestamp of when the event started in milliseconds since Epoch.
-  eventTime: EventTime,
+    /// Timestamp of when the event started in milliseconds since Epoch.
+    eventTime: EventTime,
 
-  /// Message describing the task.
-  message: String
+    /// Message describing the task.
+    message: String
 
-  /// If known, total amount of work units in this task.
-  total: Long
+    /// If known, total amount of work units in this task.
+    total: Long
 
-  /// If known, completed amount of work units in this task.
-  progress: Long
+    /// If known, completed amount of work units in this task.
+    progress: Long
 
-  /// Name of a work unit. For example, "files" or "tests". May be empty.
-  unit: String
+    /// Name of a work unit. For example, "files" or "tests". May be empty.
+    unit: String
 
-  /// Optional metadata about the task.
-  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: TaskData
+    /// Optional metadata about the task.
+    /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+    data: TaskData
 }
 
 structure TaskFinishParams {
-  /// Unique id of the task with optional reference to parent task id
-  @required
-  taskId: TaskId
+    /// Unique id of the task with optional reference to parent task id
+    @required
+    taskId: TaskId
 
-  /// Timestamp of when the event started in milliseconds since Epoch.
-  eventTime: EventTime,
+    /// Timestamp of when the event started in milliseconds since Epoch.
+    eventTime: EventTime,
 
-  /// Message describing the task.
-  message: String
+    /// Message describing the task.
+    message: String
 
-  /// Task completion status.
-  status: StatusCode
+    /// Task completion status.
+    @required
+    status: StatusCode
 
-  /// Optional metadata about the task.
-  /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-  data: TaskData
+    /// Optional metadata about the task.
+    /// Objects for specific tasks like compile, test, etc are specified in the protocol.
+    data: TaskData
 }
 
 
 structure CompileParams {
-  /// A sequence of build targets to compile.
-  @required
-  targets: BuildTargetIdentifiers
+    /// A sequence of build targets to compile.
+    @required
+    targets: BuildTargetIdentifiers
 
-  /// A unique identifier generated by the client to identify this request.
-  ///The server may include this id in triggered notifications or responses.
-  originId: Identifier
+    /// A unique identifier generated by the client to identify this request.
+    ///The server may include this id in triggered notifications or responses.
+    originId: Identifier
 
-  /// Optional arguments to the compilation process. */
-  arguments: Arguments
+    /// Optional arguments to the compilation process. */
+    arguments: Arguments
 }
 
 list Arguments {
@@ -1140,23 +1098,23 @@ list Arguments {
 document CompileResultData
 
 structure CompileResult {
-  /// An optional request id to know the origin of this report.
-  originId: Identifier
+    /// An optional request id to know the origin of this report.
+    originId: Identifier
 
-  /// A status code for the execution.
-  @required
-  statusCode: StatusCode
+    /// A status code for the execution.
+    @required
+    statusCode: StatusCode
 
-  /// A field containing language-specific information, like products
-  /// of compilation or compiler-specific metadata the client needs to know. */
-  data: CompileResultData
+    /// A field containing language-specific information, like products
+    /// of compilation or compiler-specific metadata the client needs to know. */
+    data: CompileResultData
 }
 
 
 /// The beginning of a compilation unit may be signalled to the client with a
-// `build/taskStart` notification. When the compilation unit is a build target, the
+/// `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
-// include a `CompileTask` object:
+/// include a `CompileTask` object:
 @data(kind: "compile-task", extends: TaskData)
 structure CompileTask {
     @required
@@ -1170,60 +1128,61 @@ structure CompileTask {
 /// field must include a `CompileReport` object:
 @data(kind: "compile-report", extends: TaskData)
 structure CompileReport {
-  /// The build target that was compiled.
-  @required
-  target: BuildTargetIdentifier
+    /// The build target that was compiled.
+    @required
+    target: BuildTargetIdentifier
 
-  /// An optional request id to know the origin of this report.
-  originId: Identifier
+    /// An optional request id to know the origin of this report.
+    originId: Identifier
 
-  /// The total number of reported errors compiling this target.
-  @required
-  errors: Integer
+    /// The total number of reported errors compiling this target.
+    @required
+    errors: Integer
 
-  /// The total number of reported warnings compiling the target.
-  @required
-  warnings: Integer
+    /// The total number of reported warnings compiling the target.
+    @required
+    warnings: Integer
 
-  /// The total number of milliseconds it took to compile the target.
-  time: DurationMillis
+    /// The total number of milliseconds it took to compile the target.
+    time: DurationMillis
 
-  /// The compilation was a noOp compilation.
-  noOp: Boolean
+    /// The compilation was a noOp compilation.
+    noOp: Boolean
 }
 
 
 document TestParamsData
 
 structure TestParams {
-  /// A sequence of build targets to test.
-  @required
-  targets: BuildTargetIdentifiers
+    /// A sequence of build targets to test.
+    @required
+    targets: BuildTargetIdentifiers
 
-  /// A unique identifier generated by the client to identify this request.
-  /// The server may include this id in triggered notifications or responses.
-  originId: Identifier
+    /// A unique identifier generated by the client to identify this request.
+    /// The server may include this id in triggered notifications or responses.
+    originId: Identifier
 
-  /// Optional arguments to the test execution engine. */
-  arguments: Arguments
+    /// Optional arguments to the test execution engine. */
+    arguments: Arguments
 
-  /// Language-specific metadata about for this test execution.
-  /// See ScalaTestParams as an example.
-  data: TestParamsData
+    /// Language-specific metadata about for this test execution.
+    /// See ScalaTestParams as an example.
+    data: TestParamsData
 }
 
 document TestResultData
 
 structure TestResult {
-  /// An optional request id to know the origin of this report.
-  originId: Identifier
+    /// An optional request id to know the origin of this report.
+    originId: Identifier
 
-  /// A status code for the execution.
-  statusCode: StatusCode
+    /// A status code for the execution.
+    @required
+    statusCode: StatusCode
 
-  /// Language-specific metadata about the test result.
-  /// See ScalaTestParams as an example.
-  data: TestResultData
+    /// Language-specific metadata about the test result.
+    /// See ScalaTestParams as an example.
+    data: TestResultData
 }
 
 
@@ -1233,38 +1192,39 @@ structure TestResult {
 /// include a `TestTask` object.
 @data(kind: "test-task", extends: TaskData)
 structure TestTask {
-  @required
-  target: BuildTargetIdentifier
+    @required
+    target: BuildTargetIdentifier
 }
 
 @data(kind: "test-report", extends: TaskData)
 structure TestReport {
-  /// The build target that was compiled.
-  @required
-  target: BuildTargetIdentifier
+    originId: Identifier
+    /// The build target that was compiled.
+    @required
+    target: BuildTargetIdentifier
 
-  /// The total number of successful tests.
-  @required
-  passed: Integer
+    /// The total number of successful tests.
+    @required
+    passed: Integer
 
-  /// The total number of failed tests.
-  @required
-  failed: Integer
+    /// The total number of failed tests.
+    @required
+    failed: Integer
 
-  /// The total number of ignored tests.
-  @required
-  ignored: Integer
+    /// The total number of ignored tests.
+    @required
+    ignored: Integer
 
-  /// The total number of cancelled tests.
-  @required
-  cancelled: Integer
+    /// The total number of cancelled tests.
+    @required
+    cancelled: Integer
 
-  /// The total number of skipped tests.
-  @required
-  skipped: Integer
+    /// The total number of skipped tests.
+    @required
+    skipped: Integer
 
-  /// The total number of milliseconds tests take to run (e.g. doesn't include compile times).
-  time: DurationMillis
+    /// The total number of milliseconds tests take to run (e.g. doesn't include compile times).
+    time: DurationMillis
 }
 
 @data(kind: "test-start", extends: TaskData)
@@ -1281,96 +1241,96 @@ document TestFinishData
 
 @data(kind: "test-finish", extends: TaskData)
 structure TestFinish {
-  /// Name or description of the test.
-  @required
-  displayName: String
+    /// Name or description of the test.
+    @required
+    displayName: String
 
-  /// Information about completion of the test, for example an error message.
-  message: String
+    /// Information about completion of the test, for example an error message.
+    message: String
 
-  /// Completion status of the test.
-  @required
-  status: TestStatus
+    /// Completion status of the test.
+    @required
+    status: TestStatus
 
-  /// Source location of the test, as LSP location.
-  location: Location
+    /// Source location of the test, as LSP location.
+    location: Location
 
-  /// Optionally, structured metadata about the test completion.
-  /// For example: stack traces, expected/actual values.
-  data: TestFinishData
+    /// Optionally, structured metadata about the test completion.
+    /// For example: stack traces, expected/actual values.
+    data: TestFinishData
 }
 
-@enumKind("open")
+@enumKind("closed")
 intEnum TestStatus {
-  /// The test passed successfully.
-  PASSED = 1
-  /// The test failed.
-  FAILED = 2
-  /// The test was marked as ignored.
-  IGNORED = 3
-  /// The test execution was cancelled.
-  CANCELLED = 4
-  /// The was not included in execution.
-  SKIPPED = 5
+    /// The test passed successfully.
+    PASSED = 1
+    /// The test failed.
+    FAILED = 2
+    /// The test was marked as ignored.
+    IGNORED = 3
+    /// The test execution was cancelled.
+    CANCELLED = 4
+    /// The was not included in execution.
+    SKIPPED = 5
 }
 
 document RunParamsData
 
 structure RunParams {
-  /// The build target to run.
-  @required
-  target: BuildTargetIdentifier
+    /// The build target to run.
+    @required
+    target: BuildTargetIdentifier
 
-  /// A unique identifier generated by the client to identify this request.
-  /// The server may include this id in triggered notifications or responses. */
-  originId: Identifier
+    /// A unique identifier generated by the client to identify this request.
+    /// The server may include this id in triggered notifications or responses. */
+    originId: Identifier
 
-  /// Optional arguments to the executed application.
-  arguments: Arguments
+    /// Optional arguments to the executed application.
+    arguments: Arguments
 
-  /// Language-specific metadata for this execution.
-  /// See ScalaMainClass as an example. */
-  data: RunParamsData
+    /// Language-specific metadata for this execution.
+    /// See ScalaMainClass as an example. */
+    data: RunParamsData
 }
 
 structure RunResult {
-  /// An optional request id to know the origin of this report.
-  originId: Identifier
+    /// An optional request id to know the origin of this report.
+    originId: Identifier
 
-  /// A status code for the execution.
-  @required
-  statusCode: StatusCode
+    /// A status code for the execution.
+    @required
+    statusCode: StatusCode
 }
 
 
 document DebugSessionParamsData
 
 structure DebugSessionParams {
-  /// A sequence of build targets affected by the debugging action.
-  @required
-  targets: BuildTargetIdentifiers
+    /// A sequence of build targets affected by the debugging action.
+    @required
+    targets: BuildTargetIdentifiers
 
-  /// Language-specific metadata for this execution.
-  /// See ScalaMainClass as an example.
-  data: DebugSessionParamsData
+    /// Language-specific metadata for this execution.
+    /// See ScalaMainClass as an example.
+    data: DebugSessionParamsData
 }
 
 structure DebugSessionAddress {
-  /// The Debug Adapter Protocol server's connection uri
-  @required
-  uri: URI
+    /// The Debug Adapter Protocol server's connection uri
+    @required
+    uri: URI
 }
 
 structure CleanCacheParams {
-  /// The build targets to clean.
-  @required
-  targets: BuildTargetIdentifiers
+    /// The build targets to clean.
+    @required
+    targets: BuildTargetIdentifiers
 }
 
 structure CleanCacheResult {
-  /// Optional message to display to the user.
-  message: String
-  /// Indicates whether the clean cache request was performed or not.
-  @required
-  cleaned: Boolean
+    /// Optional message to display to the user.
+    message: String
+    /// Indicates whether the clean cache request was performed or not.
+    @required
+    cleaned: Boolean
 }

@@ -5,14 +5,12 @@ namespace jsonrpc
 /// the JSON-RPC protocol,
 /// see https://www.jsonrpc.org/specification
 @protocolDefinition(traits: [
-
     jsonRequest
     jsonNotification
     enumKind
 ])
 @trait(selector: "service")
 structure jsonRPC {
-
 }
 
 /// Identifies an operation that abides by request/response semantics
@@ -39,7 +37,6 @@ enum enumKind {
 /// fashion
 @trait(selector: "union")
 structure untaggedUnion {
-
 }
 
 @idRef(failWhenMissing: true, selector: "document")

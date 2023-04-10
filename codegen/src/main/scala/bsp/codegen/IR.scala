@@ -38,7 +38,7 @@ object EnumType {
 }
 
 final case class EnumValue[A](name: String, value: A, hints: List[Hint])
-final case class Field(name: String, tpe: Type, required: Boolean, hints: List[Hint])
+final case class Field(name: String, tpe: Type, required: Boolean, jsonRename: Option[String], hints: List[Hint])
 final case class Alternative(name: String, typ: Type, hints: List[Hint])
 
 sealed trait Primitive
