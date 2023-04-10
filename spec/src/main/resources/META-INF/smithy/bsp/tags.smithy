@@ -23,9 +23,3 @@ apply TaskId @tags(["basic"])
 apply Identifier @tags(["basic"])
 
 apply Identifiers @tags(["basic"])
-
-apply JvmBuildTarget @tags(["scala"])
-
-apply ScalaBuildTarget @tags(["scala"])
-
-apply ScalaPlatform @tags(["scala"])

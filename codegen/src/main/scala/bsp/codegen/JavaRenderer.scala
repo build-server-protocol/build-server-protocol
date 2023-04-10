@@ -29,9 +29,6 @@ class JavaRenderer(basepkg: String) {
     val allLines = lines(
       renderPkg(shapeId),
       newline,
-      "import com.google.gson.annotations.JsonAdapter",
-      "import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter",
-      "import org.eclipse.lsp4j.jsonrpc.validation.NonNull",
       "import org.eclipse.lsp4j.generator.JsonRpcData",
       renderImports(fields),
       newline,
@@ -165,25 +162,50 @@ class JavaRenderer(basepkg: String) {
   )
 
   def renderImports(fields: List[Field]): Lines =
-    fields.map(_.tpe).foldMap(renderImport).distinct.sorted
+    fields.foldMap(renderImport).distinct.sorted
 
-  def renderImport(tpe: Type): Lines = tpe match {
+  def renderImportFromType(tpe: Type): Lines = tpe match {
     case TRef(shapeId) => empty // assuming everything is generated in the same package
     case TMap(key, value) =>
-      lines(s"import java.util.Map") ++ renderImport(key) ++ renderImport(value)
+      lines(s"import java.util.Map") ++ renderImportFromType(key) ++ renderImportFromType(value)
     case TCollection(member) =>
-      lines(s"import java.util.List") ++ renderImport(member)
-    case TUntaggedUnion(tpes) => tpes.foldMap(renderImport)
+      lines(s"import java.util.List") ++ renderImportFromType(member)
+    case TUntaggedUnion(tpes) => tpes.foldMap(renderImportFromType)
     case TPrimitive(prim)     => empty
   }
 
+  def renderImport(field: Field): Lines = {
+    val renameAnnotation = if (field.jsonRename.isDefined) {
+      lines(s"import com.google.gson.annotations.SerializedName")
+    } else empty
+
+    val importType = renderImportFromType(field.tpe)
+
+    val jsonAdapter = if (useJsonAdapter(field)) {
+      lines(
+        s"import com.google.gson.annotations.JsonAdapter",
+        s"import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter"
+      )
+    } else empty
+
+    val nonNull = if (field.required) {
+      lines(s"import org.eclipse.lsp4j.jsonrpc.validation.NonNull")
+    } else empty
+
+    renameAnnotation ++ importType ++ jsonAdapter ++ nonNull
+  }
+
+  def useJsonAdapter(field: Field): Boolean = field.tpe == Type.TPrimitive(Primitive.PDocument)
+
   def renderJavaField(field: Field): Lines = {
-    val maybeAdapter = if (field.tpe == Type.TPrimitive(Primitive.PDocument)) {
+    val maybeAdapter = if (useJsonAdapter(field)) {
       lines("@JsonAdapter(JsonElementTypeAdapter.Factory)")
     } else empty
     val maybeNonNull = if (field.required) lines("@NonNull") else empty
+    val maybeRename = field.jsonRename.map(name => lines(s"""@SerializedName("$name")""")).getOrElse(empty)
     lines(
       maybeAdapter,
+      maybeRename,
       maybeNonNull,
       renderFieldRaw(field)
     )
@@ -208,7 +230,7 @@ class JavaRenderer(basepkg: String) {
     case TUntaggedUnion(tpes) => renderType(tpes.head) // Todo what does bsp4j do ?
   }
 
-  def renderPrimitive(prim: Primitive) = prim match {
+  def renderPrimitive(prim: Primitive): String = prim match {
     case PFloat     => "Float"
     case PDouble    => "Double"
     case PUnit      => "void"
