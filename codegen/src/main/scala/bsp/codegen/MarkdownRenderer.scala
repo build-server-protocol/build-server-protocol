@@ -1,10 +1,10 @@
 package bsp.codegen
 
-import software.amazon.smithy.model.shapes.ShapeId
-import bsp.codegen.JsonRPCMethodType.Notification
-import bsp.codegen.JsonRPCMethodType.Request
 import bsp.codegen.Hint.Documentation
+import bsp.codegen.JsonRPCMethodType.{Notification, Request}
 import cats.syntax.all._
+import software.amazon.smithy.model.shapes.ShapeId
+
 import scala.collection.mutable.{Set => MSet}
 
 object MarkdownRenderer {

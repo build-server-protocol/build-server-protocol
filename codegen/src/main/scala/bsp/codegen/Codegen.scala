@@ -32,4 +32,8 @@ object Codegen {
 
   def printDocs(): Unit = println(docs())
 
+  def main(args: Array[String]): Unit = {
+    printDocs()
+  }
+
 }

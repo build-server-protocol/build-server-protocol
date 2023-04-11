@@ -1,23 +1,16 @@
 package bsp.codegen
 
+import bsp.codegen.Primitive._
+import bsp.codegen.Type._
+import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.{CLOSED, OPEN}
+import ch.epfl.smithy.jsonrpc.traits._
 import software.amazon.smithy.model.Model
-
-import scala.jdk.CollectionConverters._
-import scala.jdk.OptionConverters._
 import software.amazon.smithy.model.shapes._
-import software.amazon.smithy.model.shapes.Shape
-import Primitive._
-import Type._
-import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait
-import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.OPEN
-import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.CLOSED
-import ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait
-import ch.epfl.smithy.jsonrpc.traits.DataTrait
-import ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait
-import ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait
+import software.amazon.smithy.model.traits._
 
 import java.util.Optional
-import software.amazon.smithy.model.traits.{DocumentationTrait, JsonNameTrait, MixinTrait, RequiredTrait, TagsTrait}
+import scala.jdk.CollectionConverters._
+import scala.jdk.OptionConverters._
 
 class SmithyToIR(model: Model) {
 
@@ -71,10 +64,7 @@ class SmithyToIR(model: Model) {
     }
 
     override def serviceShape(shape: ServiceShape): Option[Def] = {
-      val operations = shape
-        .getOperations
-        .asScala
-        .toList
+      val operations = shape.getOperations.asScala.toList
         .map(model.expectShape(_, classOf[OperationShape]))
         .flatMap(buildOperation)
       Some(Def.Service(shape.getId, operations, getHints(shape)))
@@ -102,7 +92,13 @@ class SmithyToIR(model: Model) {
           val doc =
             "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
           val hints = List(Hint.Documentation(doc))
-          Field("dataKind", Type.TPrimitive(Primitive.PString), required = false, None, hints) :: field :: next
+          Field(
+            "dataKind",
+            Type.TPrimitive(Primitive.PString),
+            required = false,
+            None,
+            hints
+          ) :: field :: next
         case field :: next => field :: insertDiscriminator(next)
         case Nil           => Nil
       }
@@ -111,14 +107,10 @@ class SmithyToIR(model: Model) {
     }
 
     override def intEnumShape(shape: IntEnumShape): Option[Def] = {
-      val enumValues = shape
-        .getEnumValues
-        .asScala
-        .map { case (name, value) =>
-          val valueHints = getHints(shape.getAllMembers.get(name))
-          EnumValue(name, value.toInt, valueHints)
-        }
-        .toList
+      val enumValues = shape.getEnumValues.asScala.map { case (name, value) =>
+        val valueHints = getHints(shape.getAllMembers.get(name))
+        EnumValue(name, value.toInt, valueHints)
+      }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
         case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
@@ -126,14 +118,10 @@ class SmithyToIR(model: Model) {
       }
     }
     override def enumShape(shape: EnumShape): Option[Def] = {
-      val enumValues = shape
-        .getEnumValues
-        .asScala
-        .map { case (name, value) =>
-          val valueHints = getHints(shape.getAllMembers.get(name))
-          EnumValue(name, value, valueHints)
-        }
-        .toList
+      val enumValues = shape.getEnumValues.asScala.map { case (name, value) =>
+        val valueHints = getHints(shape.getAllMembers.get(name))
+        EnumValue(name, value, valueHints)
+      }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
         case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))

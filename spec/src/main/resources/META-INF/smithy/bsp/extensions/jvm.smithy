@@ -7,23 +7,6 @@ structure JvmBuildTarget {
     javaVersion: String
 }
 
-//   @NonNull
-//  private BuildTargetIdentifier target;
-//
-//  @NonNull
-//  private List<String> classpath;
-//
-//  @NonNull
-//  private List<String> jvmOptions;
-//
-//  @NonNull
-//  private String workingDirectory;
-//
-//  @NonNull
-//  private Map<String, String> environmentVariables;
-//
-//  private List<JvmMainClass> mainClasses;
-
 structure JvmMainClass {
     @required
     className: String

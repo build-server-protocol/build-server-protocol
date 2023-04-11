@@ -1,17 +1,13 @@
 package bsp.codegen
 
 import bsp.codegen.Def._
+import bsp.codegen.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.Hint.Documentation
 import bsp.codegen.Primitive._
 import bsp.codegen.Type._
+import bsp.codegen.dsl._
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
-
-import dsl._
-import bsp.codegen.EnumType.IntEnum
-import bsp.codegen.EnumType.StringEnum
-import bsp.codegen.JsonRPCMethodType.Notification
-import bsp.codegen.JsonRPCMethodType.Request
-import bsp.codegen.Hint.Documentation
 
 class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
