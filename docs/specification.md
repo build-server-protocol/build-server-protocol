@@ -612,6 +612,9 @@ using the appropriate value in the `reset` field. Clients generate new
 diagnostics by calling any BSP endpoint that triggers a `buildTarget/compile`,
 such as `buildTarget/compile`, `buildTarget/test` and `buildTarget/run`.
 
+If the computed set of diagnostic is empty, the server must push an empty array
+with `reset` set to true, in order to clear previous diagnostics.
+
 The optional `originId` field in the definition of `PublishDiagnosticsParams`
 can be used by clients to know which request originated the notification. This
 field will be defined if the client defined it in the original request that
