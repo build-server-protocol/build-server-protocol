@@ -23,4 +23,3 @@ structure MavenDependencyModule {
     artifacts: MavenDependencyModuleArtifacts
     scope: String
 }
-

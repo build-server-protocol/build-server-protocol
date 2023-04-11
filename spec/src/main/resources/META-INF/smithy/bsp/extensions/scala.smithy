@@ -27,19 +27,6 @@ intEnum ScalaPlatform {
     NATIVE = 3
 }
 
-// public class ScalacOptionsItem {
-//  @NonNull
-//  private BuildTargetIdentifier target;
-//
-//  @NonNull
-//  private List<String> options;
-//
-//  @NonNull
-//  private List<String> classpath;
-//
-//  @NonNull
-//  private String classDirectory;
-
 list ScalacOptions {
     member: String
 }
@@ -55,19 +42,10 @@ structure ScalacOptionsItem {
     classDirectory: String
 }
 
-// public class ScalacOptionsParams {
-//  @NonNull
-//  private List<BuildTargetIdentifier> targets;
-
 structure ScalacOptionsParams {
     @required
     targets: BuildTargetIdentifiers
 }
-
-// @SuppressWarnings("all")
-//public class ScalacOptionsResult {
-//  @NonNull
-//  private List<ScalacOptionsItem> items;
 
 list ScalacOptionsItems {
     member: ScalacOptionsItem
@@ -77,19 +55,6 @@ structure ScalacOptionsResult {
     @required
     items: ScalacOptionsItems
 }
-
-// public class ScalaMainClass {
-//  @NonNull
-//  @SerializedName("class")
-//  private String className;
-//
-//  @NonNull
-//  private List<String> arguments;
-//
-//  @NonNull
-//  private List<String> jvmOptions;
-//
-//  private List<String> environmentVariables;
 
 structure ScalaMainClass {
     @required
@@ -154,10 +119,6 @@ list ScalaTestClassesItems {
 structure ScalaTestClassesResult {
     @required
     items: ScalaTestClassesItems
-}
-
-list ScalaTestClassesItems {
-    member: ScalaTestClassesItem
 }
 
 structure ScalaTestParams {
