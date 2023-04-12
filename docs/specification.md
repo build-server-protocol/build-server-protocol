@@ -1473,7 +1473,7 @@ export interface DebugSessionParams {
 ```
 
 For the scala-specific `data` options please reference the [Scala Extension
-documentation](/docs/extensions/scala)
+documentation](./extensions/scala.md)
 
 Response:
 

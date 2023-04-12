@@ -140,7 +140,11 @@ To close the BSP session, send the `build/shutdown` request followed by a
 `build/exit` notification.
 
 ```scala mdoc
-server.buildShutdown().thenAccept(_ => server.onBuildExit())
+server.buildShutdown().thenAccept(new java.util.function.Consumer[Object] {
+  def accept(x: Object): Unit = {
+    server.onBuildExit()
+  }
+})
 
 ```
 
