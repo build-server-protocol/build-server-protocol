@@ -6,16 +6,10 @@ inThisBuild(
     licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     developers := List(
       Developer(
-        "olafurpg",
-        "Ólafur Páll Geirsson",
-        "olafurpg@gmail.com",
-        url("https://github.com/olafurpg")
-      ),
-      Developer(
-        "jvican",
-        "Jorge Vicente Cantero",
-        "jorge@vican.me",
-        url("https://github.com/jvican")
+        "ckipp01",
+        "Chris Kipp",
+        "open-source@chris-kipp.io",
+        url("https://github.com/ckipp01")
       ),
       Developer(
         "jastice",
