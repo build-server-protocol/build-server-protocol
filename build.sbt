@@ -3,25 +3,25 @@ inThisBuild(
     scalaVersion := V.scala213,
     organization := "ch.epfl.scala",
     homepage := Some(url("https://github.com/build-server-protocol/build-server-protocol")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     developers := List(
       Developer(
-        "olafurpg",
-        "Ólafur Páll Geirsson",
-        "olafurpg@gmail.com",
-        url("https://github.com/olafurpg")
-      ),
-      Developer(
-        "jvican",
-        "Jorge Vicente Cantero",
-        "jorge@vican.me",
-        url("https://github.com/jvican")
+        "ckipp01",
+        "Chris Kipp",
+        "open-source@chris-kipp.io",
+        url("https://github.com/ckipp01")
       ),
       Developer(
         "jastice",
         "Justin Kaeser",
         "justin@justinkaeser.com",
         url("https://github.com/jastice")
+      ),
+      Developer(
+        "agluszak",
+        "Andrzej Głuszak",
+        "andrzej.gluszak@jetbrains.com",
+        url("https://github.com/agluszak")
       )
     )
   )
@@ -40,16 +40,6 @@ lazy val V = new {
 import java.io.File
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
 import org.eclipse.xtend.core.XtendStandaloneSetup
-
-// force javac to fork by setting javaHome to get error messages during compilation,
-// see https://github.com/sbt/zinc/issues/520
-def inferJavaHome() = {
-  val home = file(sys.props("java.home"))
-  val actualHome =
-    if (System.getProperty("java.version").startsWith("1.8")) home.getParentFile
-    else home
-  Some(actualHome)
-}
 
 Global / cancelable := true
 publish / skip := true
@@ -84,8 +74,6 @@ lazy val bsp4j = project
       ) ++ specifyRelease
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
-    Compile / javaHome := inferJavaHome(),
-    Compile / doc / javaHome := inferJavaHome(),
     TaskKey[Unit]("xtend") := {
       val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
       val compiler = injector.getInstance(classOf[XtendBatchCompiler])
@@ -147,7 +135,7 @@ lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j)
   .settings(
-    scalaVersion := V.scala212,
+    scalaVersion := V.scala213,
     publish / skip := true,
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "target" / "docs",
     mdocVariables := Map(
