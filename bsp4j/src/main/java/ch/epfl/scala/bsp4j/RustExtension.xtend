@@ -204,14 +204,35 @@ class RustWorkspaceParams {
 class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
   @NonNull List<RustRawDependency> rawDependencies
-  @NonNull List<RustDependency> dependencies  
+  @NonNull List<RustDependency> dependencies
+  @NonNull List<RustStdLib> stdLibs
   
   new(@NonNull List<RustPackage> packages,
         @NonNull List<RustRawDependency> rawDependencies,
-        @NonNull List<RustDependency> dependencies) {
+        @NonNull List<RustDependency> dependencies,
+        @NonNull List<RustStdLib> stdLibs) {
     this.packages = packages
     this.rawDependencies = rawDependencies
     this.dependencies = dependencies
+    this.stdLibs = stdLibs
   }
+}
+
+@JsonRpcData
+class RustStdLib {
+    @NonNull String rustcSysroot
+    @NonNull String rustcSrcSysroot
+    @NonNull String cargoBinPath
+    @NonNull String procMacroSrv
+
+    new(@NonNull String rustcSysroot,
+        @NonNull String rustcSrcSysroot,
+        @NonNull String cargoBinPath,
+        @NonNull String procMacroSrv) {
+            this.rustcSysroot = rustcSysroot
+            this.rustcSrcSysroot = rustcSrcSysroot
+            this.cargoBinPath = cargoBinPath
+            this.procMacroSrv = procMacroSrv
+      }
 }
 
