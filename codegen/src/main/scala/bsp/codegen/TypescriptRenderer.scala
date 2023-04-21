@@ -23,10 +23,10 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def render(definition: Def): Option[Lines] = {
     definition match {
-      case Structure(shapeId, fields, hints)            => Some(renderStructure(shapeId, fields))
-      case ClosedEnum(shapeId, enumType, values, hints) => None // no exemple of this in the spc
-      case OpenEnum(shapeId, enumType, values, hints)   => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations, hints)          => None
+      case Structure(shapeId, fields, hints) => Some(renderStructure(shapeId, fields))
+      case ClosedEnum(shapeId, enumType, values, hints) => Some(renderClosedEnum(shapeId, enumType, values))
+      case OpenEnum(shapeId, enumType, values, hints) => Some(renderOpenEnum(shapeId, enumType, values))
+      case Service(shapeId, operations, hints) => None
     }
   }
 
@@ -39,32 +39,39 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     )
   }
 
+  def renderClosedEnum[A](id: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
+    val tpe = id.getName()
+    lines(
+      block(s"export enum $tpe") {
+        values.map(value => lines(
+          renderDocumentation(value.hints),
+          s"${renderStaticValue(enumType)(value)},"
+        )).intercalate(newline)
+      }
+    )
+  }
+
   def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
     val tpe = shapeId.getName()
     lines(
       block(s"export namespace $tpe") {
-        newline
-        values.map(renderStaticValue(enumType)).intercalate(newline)
+        values.map(value => lines(
+          renderDocumentation(value.hints),
+          s"export const ${renderStaticValue(enumType)(value)};"
+        )).intercalate(newline)
       },
-      newline
     )
   }
 
-  def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => Lines = {
+  def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
         (ev: EnumValue[Int]) =>
-          lines(
-            renderDocumentation(ev.hints),
-            s"export const ${camelCase(ev.name).capitalize} = ${ev.value};"
-          )
+            s"${camelCase(ev.name).capitalize} = ${ev.value}"
 
       case StringEnum =>
         (ev: EnumValue[String]) =>
-          lines(
-            renderDocumentation(ev.hints),
-            s"""export const ${camelCase(ev.name).capitalize} = "${ev.value}""""
-          )
+            s"""${camelCase(ev.name).capitalize} = "${ev.value}""""
     }
   }
 
@@ -77,14 +84,13 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
+      case IntEnum => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
       case StringEnum => (ev: EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
     }
   }
 
   def renderTSField(field: Field): Lines = {
     val `:` = if (field.required) ": " else "?: "
-    val maybeNonNull = if (field.required) lines("@NonNull") else empty
     lines(
       renderDocumentation(field.hints),
       field.name + `:` + renderType(field.tpe) + ";"
@@ -92,22 +98,22 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   }
 
   def renderType(tpe: Type): String = tpe match {
-    case TRef(shapeId)        => shapeId.getName()
-    case TPrimitive(prim)     => renderPrimitive(prim)
-    case TMap(key, value)     => ??? // Are maps even used in the BSP ?
-    case TCollection(member)  => s"${renderType(member)}[]"
+    case TRef(shapeId) => shapeId.getName()
+    case TPrimitive(prim) => renderPrimitive(prim)
+    case TMap(key, value) => ??? // Are maps even used in the BSP ?
+    case TCollection(member) => s"${renderType(member)}[]"
     case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")
   }
 
   def renderPrimitive(prim: Primitive) = prim match {
-    case PFloat     => "Float"
-    case PDouble    => "Double"
-    case PUnit      => "void"
-    case PString    => "String"
-    case PInt       => "Integer"
-    case PDocument  => "any"
-    case PBool      => "Boolean"
-    case PLong      => "Long"
+    case PFloat => "Float"
+    case PDouble => "Double"
+    case PUnit => "void"
+    case PString => "String"
+    case PInt => "Integer"
+    case PDocument => "any"
+    case PBool => "Boolean"
+    case PLong => "Long"
     case PTimestamp => "Long"
   }
 
@@ -117,6 +123,9 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
       if (lines.nonEmpty) {
         lines(0) = "/** " + lines(0)
         val lastIndex = lines.length - 1
+        for (i <- 1 to lastIndex) {
+          lines(i) = " * " + lines(i)
+        }
         lines(lastIndex) = lines(lastIndex) + " */"
       }
       Lines(lines.toList)

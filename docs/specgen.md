@@ -7,7 +7,7 @@ sidebar_label: Specification
 This document is the specification of the Build Server Protocol (BSP).
 
 Edits to this specification can be made via a pull request against this markdown
-document, see "edit" button at the top of this page on the website.
+document, see "edit" button at the bottom of this page on the website.
 
 ## Motivation
 
@@ -62,11 +62,12 @@ Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
 or planning to work on a BSP integrations.
 
 On the server side,
-* [Bloop](https://github.com/scalacenter/bloop) was the first
-server to implement BSP
-* sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
-* Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
-* Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
+
+- [Bloop](https://github.com/scalacenter/bloop) was the first
+  server to implement BSP
+- sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+- Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+- Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
 
 We're looking for third parties that implement BSP natively in other build tools
 such as Gradle.
