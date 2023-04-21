@@ -88,6 +88,12 @@ operation InitializeBuild {
     output: InitializeBuildResult
 }
 
+/// Like the language server protocol, the initialized notification is sent from the
+/// client to the server after the client received the result of the initialize
+/// request but before the client is sending any other request or notification to
+/// the server. The server can use the initialized notification for example to
+/// initialize intensive computation such as dependency resolution or compilation.
+/// The initialized notification may only be sent once.
 @jsonNotification("build/initialized")
 operation OnBuildInitialized {
 }
@@ -236,6 +242,26 @@ operation BuildTargetOutputPaths {
     output: OutputPathsResult
 }
 
+/// The BSP server can inform the client on the execution state of any task in the
+/// build tool. The execution of some tasks, such as compilation or tests, must
+/// always be reported by the server.
+///
+/// The server may also send additional task notifications for actions not covered
+/// by the protocol, such as resolution or packaging. BSP clients can then display
+/// this information to their users at their discretion.
+///
+/// When beginning a task, the server may send `build/taskStart`, intermediate
+/// updates may be sent in `build/taskProgress`.
+///
+/// If a `build/taskStart` notification has been sent, the server must send
+/// `build/taskFinish` on completion of the same task.
+///
+/// `build/taskStart`, `build/taskProgress` and `build/taskFinish` notifications for
+/// the same task must use the same `taskId`.
+///
+/// Tasks that are spawned by another task should reference the originating task's
+/// `taskId` in their own `taskId`'s `parent` field. Tasks spawned directly by a
+/// request should reference the request's `originId` parent.
 @jsonNotification("build/taskStart")
 operation OnBuildTaskStart {
     input: TaskStartParams
@@ -248,6 +274,8 @@ operation OnBuildTaskProgress {
     input: TaskProgressParams
 }
 
+/// A `build/taskFinish` notification must always be sent after a `build/taskStart`
+/// with the same `taskId` was sent.
 @jsonNotification("build/taskFinish")
 operation OnBuildTaskFinish {
     input: TaskFinishParams
@@ -264,6 +292,9 @@ operation BuildTargetCompile {
     output: CompileResult
 }
 
+/// The test build target request is sent from the client to the server to test the
+/// given list of build targets. The server communicates during the initialize
+/// handshake whether this method is supported or not.
 @jsonRequest("buildTarget/test")
 operation BuildTargetTest {
     input: TestParams
@@ -330,7 +361,7 @@ list URIs {
 string RequestId
 
 /// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-/// Clients should not infer metadata out of the URI structure such as the path or query parameters, use BuildTarget instead.
+/// Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
 structure BuildTargetIdentifier {
     /// The target’s Uri
     @required
@@ -369,7 +400,7 @@ structure BuildTarget {
     displayName: String
     /// The directory where this target belongs to. Multiple build targets are allowed to map
     /// to the same base directory, and a build target is not required to have a base directory.
-    /// A base directory does not determine the sources of a target, see buildTarget/sources. */
+    /// A base directory does not determine the sources of a target, see buildTarget/sources.
     baseDirectory: URI
     /// Free-form string tags to categorize or label this build target.
     /// For example, can be used by the client to:
@@ -395,7 +426,8 @@ structure BuildTarget {
     data: BuildTargetData
 }
 
-
+/// Clients can use these capabilities to notify users what BSP endpoints can and
+/// cannot be used and why.
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
     @required
@@ -411,6 +443,7 @@ structure BuildTargetCapabilities {
     canDebug: Boolean
 }
 
+/// A list of predefined tags that can be used to categorize build targets.
 @enumKind("open")
 enum BuildTargetTag {
     /// Target contains re-usable functionality for downstream targets. May have any
@@ -448,7 +481,7 @@ list BuildTargetTags {
     member: BuildTargetTag
 }
 
-/// The Task Id allows clients to uniquely identify a BSP task and establish a client-parent relationship with another task id.
+/// The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
 structure TaskId {
     /// A unique identifier
     @required
@@ -538,6 +571,7 @@ structure InitializeBuildResult {
     data: InitializeBuildResultData
 }
 
+/// The capabilities of the build server.
 structure BuildServerCapabilities {
     /// The languages the server supports compilation via method buildTarget/compile.
     compileProvider: CompileProvider
@@ -548,7 +582,7 @@ structure BuildServerCapabilities {
     /// The languages the server supports debugging via method debugSession/start.
     debugProvider: DebugProvider
     /// The server can provide a list of targets that contain a
-    /// * single text document via the method buildTarget/inverseSources
+    /// single text document via the method buildTarget/inverseSources
     inverseSourcesProvider: Boolean = false
     /// The server provides sources for library dependencies
     /// via method buildTarget/dependencySources
@@ -827,7 +861,7 @@ structure SourcesResult {
 structure SourcesItem {
     @required
     target: BuildTargetIdentifier
-    /// The text documents or and directories that belong to this build target. */
+    /// The text documents or and directories that belong to this build target.
     @required
     sources: SourceItems
     /// The root directories from where source files should be relativized.
@@ -891,7 +925,7 @@ structure DependencySourcesItem {
     target: BuildTargetIdentifier
     /// List of resources containing source files of the
     /// target's dependencies.
-    /// Can be source files, jar files, zip files, or directories. */
+    /// Can be source files, jar files, zip files, or directories.
     @required
     sources: URIs
 }
@@ -1087,7 +1121,7 @@ structure CompileParams {
     ///The server may include this id in triggered notifications or responses.
     originId: Identifier
 
-    /// Optional arguments to the compilation process. */
+    /// Optional arguments to the compilation process.
     arguments: Arguments
 }
 
@@ -1106,7 +1140,7 @@ structure CompileResult {
     statusCode: StatusCode
 
     /// A field containing language-specific information, like products
-    /// of compilation or compiler-specific metadata the client needs to know. */
+    /// of compilation or compiler-specific metadata the client needs to know.
     data: CompileResultData
 }
 
@@ -1162,7 +1196,7 @@ structure TestParams {
     /// The server may include this id in triggered notifications or responses.
     originId: Identifier
 
-    /// Optional arguments to the test execution engine. */
+    /// Optional arguments to the test execution engine.
     arguments: Arguments
 
     /// Language-specific metadata about for this test execution.
@@ -1282,14 +1316,14 @@ structure RunParams {
     target: BuildTargetIdentifier
 
     /// A unique identifier generated by the client to identify this request.
-    /// The server may include this id in triggered notifications or responses. */
+    /// The server may include this id in triggered notifications or responses.
     originId: Identifier
 
     /// Optional arguments to the executed application.
     arguments: Arguments
 
     /// Language-specific metadata for this execution.
-    /// See ScalaMainClass as an example. */
+    /// See ScalaMainClass as an example.
     data: RunParamsData
 }
 

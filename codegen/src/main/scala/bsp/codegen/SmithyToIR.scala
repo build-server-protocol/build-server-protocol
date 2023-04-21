@@ -150,7 +150,7 @@ class SmithyToIR(model: Model) {
         val openEnumId = ShapeId.fromParts(id.getNamespace, id.getName + "Kind")
         val values = allKnownInhabitants.map { case (disc, member) =>
           val snakeCased = disc.replace('-', '_').toUpperCase()
-          val memberDoc = s"/** `data` field must contain a ${member.getId.getName} object. */"
+          val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
           EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
         }
         val shapeDoc = shape

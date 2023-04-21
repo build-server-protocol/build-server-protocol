@@ -94,7 +94,6 @@ lazy val bsp4j = project
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j" % V.lsp4j // TODO: only for Preconditions class, remove
     )
   )
 
@@ -176,8 +175,6 @@ lazy val `bsp4j-gen` = project
       )
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
-    Compile / javaHome := inferJavaHome(),
-    Compile / doc / javaHome := inferJavaHome(),
     TaskKey[Unit]("codegen") := {
       val _ = runCodegen(Compile).value
     },
@@ -203,7 +200,6 @@ lazy val `bsp4j-gen` = project
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j" % V.lsp4j // TODO: only for Preconditions class, remove later
   )
 )
 
