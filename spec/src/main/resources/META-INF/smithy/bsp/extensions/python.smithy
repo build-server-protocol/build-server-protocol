@@ -2,20 +2,34 @@ $version: "2"
 
 namespace bsp
 
+use jsonrpc#data
+use jsonrpc#jsonRPC
+use jsonrpc#jsonRequest
+
+@jsonRPC
+service PythonBuildServer {
+    operations: [
+        PythonOptions
+    ]
+}
+
+/// `PythonBuildTarget` is a basic data structure that contains Python-specific
+/// metadata, specifically the interpreter reference and the Python version.
+/// This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
+/// the `dataKind` field contains "python".
+@data(kind: "python", extends: BuildTargetData)
 structure PythonBuildTarget {
     version: String
-    interpreter: String
+    interpreter: URI
 }
 
-list PythonInterpreterOptions {
-    member: String
-}
-
-structure PythonOptionsItem {
-    @required
-    target: BuildTargetIdentifier
-    @required
-    interpreterOptions: PythonInterpreterOptions
+/// The Python Options Request is sent from the client to the server to
+/// query for the list of the interpreter flags used to run a given list of
+/// targets.
+@jsonRequest("buildTarget/pythonOptions")
+operation PythonOptions {
+    input: PythonOptionsParams
+    output: PythonOptionsResult
 }
 
 structure PythonOptionsParams {
@@ -23,11 +37,24 @@ structure PythonOptionsParams {
     targets: BuildTargetIdentifiers
 }
 
-list PythonOptionsItems {
-    member: PythonOptionsItem
-}
-
 structure PythonOptionsResult {
     @required
     items: PythonOptionsItems
+}
+
+structure PythonOptionsItem {
+    @required
+    target: BuildTargetIdentifier
+    /// Attributes added to the interpreter command
+    /// For example: -E
+    @required
+    interpreterOptions: PythonInterpreterOptions
+}
+
+list PythonInterpreterOptions {
+    member: String
+}
+
+list PythonOptionsItems {
+    member: PythonOptionsItem
 }

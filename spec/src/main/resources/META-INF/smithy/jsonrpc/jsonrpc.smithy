@@ -3,7 +3,7 @@ $version: "2"
 namespace jsonrpc
 
 /// the JSON-RPC protocol,
-/// see https://www.jsonrpc.org/specification
+/// see https:/// www.jsonrpc.org/specification
 @protocolDefinition(traits: [
     jsonRequest
     jsonNotification

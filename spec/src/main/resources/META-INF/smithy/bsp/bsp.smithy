@@ -9,12 +9,25 @@ use jsonrpc#jsonRequest
 use jsonrpc#data
 
 @jsonRPC
+service BuildClient {
+    operations: [
+        OnBuildShowMessage
+        OnBuildLogMessage
+        OnBuildPublishDiagnostics
+        OnBuildTargetDidChange
+        OnBuildTaskStart
+        OnBuildTaskProgress
+        OnBuildTaskFinish
+    ]
+}
+
+@jsonRPC
 service BuildServer {
     operations: [
         InitializeBuild
         OnBuildInitialized
         ShutdownBuild
-        OnBuildShutdown
+        OnBuildExit
         WorkspaceBuildTargets
         WorkspaceReload
         BuildTargetSources
@@ -31,17 +44,153 @@ service BuildServer {
     ]
 }
 
-@jsonRPC
-service BuildClient {
-    operations: [
-        OnBuildShowMessage
-        OnBuildLogMessage
-        OnBuildPublishDiagnostics
-        OnBuildTargetDidChange
-        OnBuildTaskStart
-        OnBuildTaskProgress
-        OnBuildTaskFinish
-    ]
+/// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
+///
+/// * sbt: a build target is a combined project + config. Example:
+/// * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
+/// * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
+/// * a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+/// * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
+/// * Pants: a pants target corresponds one-to-one with a BuildTarget
+/// * Bazel: a bazel target corresponds one-to-one with a BuildTarget
+///
+/// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
+structure BuildTarget {
+    /// The target’s unique identifier
+    @required
+    id: BuildTargetIdentifier
+    /// A human readable name for this target.
+    /// May be presented in the user interface.
+    /// Should be unique if possible.
+    /// The id.uri is used if None.
+    displayName: String
+    /// The directory where this target belongs to. Multiple build targets are allowed to map
+    /// to the same base directory, and a build target is not required to have a base directory.
+    /// A base directory does not determine the sources of a target, see buildTarget/sources.
+    baseDirectory: URI
+    /// Free-form string tags to categorize or label this build target.
+    /// For example, can be used by the client to:
+    /// - customize how the target should be translated into the client's project model.
+    /// - group together different but related targets in the user interface.
+    /// - display icons or colors in the user interface.
+    /// Pre-defined tags are listed in `BuildTargetTag` but clients and servers
+    /// are free to define new tags for custom purposes.
+    @required
+    tags: BuildTargetTags
+    /// The set of languages that this target contains.
+    /// The ID string for each language is defined in the LSP.
+    @required
+    languageIds: LanguageIds
+    /// The direct upstream build target dependencies of this build target
+    @required
+    dependencies: BuildTargetIdentifiers
+    /// The capabilities of this build target.
+    @required
+    capabilities: BuildTargetCapabilities
+    /// Language-specific metadata about this target.
+    /// See ScalaBuildTarget as an example.
+    data: BuildTargetData
+}
+
+/// A list of predefined tags that can be used to categorize build targets.
+@enumKind("open")
+enum BuildTargetTag {
+    /// Target contains re-usable functionality for downstream targets. May have any
+    /// combination of capabilities.
+    LIBRARY = "library"
+    /// Target contains source code for producing any kind of application, may have
+    /// but does not require the `canRun` capability.
+    APPLICATION = "application"
+    /// Target contains source code for testing purposes, may have but does not
+    /// require the `canTest` capability.
+    TEST = "test"
+    /// Target contains source code for integration testing purposes, may have
+    /// but does not require the `canTest` capability.
+    /// The difference between "test" and "integration-test" is that
+    /// integration tests traditionally run slower compared to normal tests
+    /// and require more computing resources to execute.
+    INTEGRATION_TEST = "integration-test"
+    /// Target contains source code to measure performance of a program, may have
+    /// but does not require the `canRun` build target capability.
+    BENCHMARK = "benchmark"
+    /// Target should be ignored by IDEs.
+    NO_IDE = "no-ide"
+    /// Actions on the target such as build and test should only be invoked manually
+    /// and explicitly. For example, triggering a build on all targets in the workspace
+    /// should by default not include this target.
+    ///
+    /// The original motivation to add the "manual" tag comes from a similar functionality
+    /// that exists in Bazel, where targets with this tag have to be specified explicitly
+    /// on the command line.
+    ///
+    MANUAL = "manual"
+}
+
+list BuildTargetTags {
+    member: BuildTargetTag
+}
+
+/// Clients can use these capabilities to notify users what BSP endpoints can and
+/// cannot be used and why.
+structure BuildTargetCapabilities {
+    /// This target can be compiled by the BSP server.
+    @required
+    canCompile: Boolean
+    /// This target can be tested by the BSP server.
+    @required
+    canTest: Boolean
+    /// This target can be run by the BSP server.
+    @required
+    canRun: Boolean
+    /// This target can be debugged by the BSP server.
+    @required
+    canDebug: Boolean
+}
+
+/// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+/// Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
+structure BuildTargetIdentifier {
+    /// The target’s Uri
+    @required
+    uri: URI
+}
+
+/// The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
+structure TaskId {
+    /// A unique identifier
+    @required
+    id: Identifier
+    /// The parent task ids, if any. A non-empty parents field means
+    /// this task is a sub-task of every parent task id. The child-parent
+    /// relationship of tasks makes it possible to render tasks in
+    /// a tree-like user interface or inspect what caused a certain task
+    /// execution.
+    parents: Identifiers
+}
+
+string Identifier
+
+list Identifiers {
+    member: Identifier
+}
+
+/// Included in notifications of tasks or requests to signal the completion state.
+@enumKind("closed")
+intEnum StatusCode {
+    /// Execution was successful.
+    OK = 1
+    /// Execution failed.
+    ERROR = 2
+    /// Execution was cancelled.
+    CANCELLED = 3
+}
+
+/// A resource identifier that is a valid URI according
+/// to rfc3986: * https://tools.ietf.org/html/rfc3986
+string URI
+
+list URIs {
+    member: URI
 }
 
 list Argv {
@@ -85,6 +234,7 @@ structure BspConnectionDetails {
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
 operation InitializeBuild {
+    input: InitializeBuildParams
     output: InitializeBuildResult
 }
 
@@ -98,18 +248,18 @@ operation InitializeBuild {
 operation OnBuildInitialized {
 }
 
-/// Like the language server protocol, the shutdown build request is sent from the client to the server. It asks the server to shut down,
-/// but to not exit (otherwise the response might not be delivered correctly to the client). There is a separate exit notification that
-/// asks the server to exit.
+/// Like the language server protocol, the shutdown build request is sent from the
+/// client to the server. It asks the server to shut down, but to not exit
+/// (otherwise the response might not be delivered correctly to the client). There
+/// is a separate exit notification that asks the server to exit.
 @jsonRequest("build/shutdown")
 operation ShutdownBuild {
-
 }
 
-@jsonNotification("build/exit")
 /// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
 /// if the shutdown request has been received before; otherwise with error code 1.
-operation OnBuildShutdown {
+@jsonNotification("build/exit")
+operation OnBuildExit {
 }
 
 
@@ -140,6 +290,11 @@ operation OnBuildLogMessage {
 ///
 /// It is the server's responsibility to manage the lifetime of the diagnostics by using the appropriate value in the reset field.
 /// Clients generate new diagnostics by calling any BSP endpoint that triggers a buildTarget/compile, such as buildTarget/compile, buildTarget/test and buildTarget/run.
+///
+/// If the computed set of diagnostic is empty, the server must push an empty array with reset set to true, in order to clear previous diagnostics.
+///
+/// The optional originId field in the definition of PublishDiagnosticsParams can be used by clients to know which request originated the notification.
+/// This field will be defined if the client defined it in the original request that triggered this notification.
 @jsonNotification("build/publishDiagnostics")
 operation OnBuildPublishDiagnostics {
     input: PublishDiagnosticsParams
@@ -348,25 +503,13 @@ operation BuildTargetCleanCache {
     output: CleanCacheResult
 }
 
-/// A resource identifier that is a valid URI according
-/// to rfc3986: * https://tools.ietf.org/html/rfc3986
-string URI
 
-list URIs {
-    member: URI
-}
 
 
 /// Represents the identifier of a BSP request.
 string RequestId
 
-/// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-/// Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
-structure BuildTargetIdentifier {
-    /// The target’s Uri
-    @required
-    uri: URI
-}
+
 
 list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
@@ -378,138 +521,6 @@ long DurationMillis
 
 document BuildTargetData
 
-/// Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
-///
-/// * sbt: a build target is a combined project + config. Example:
-/// * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
-/// * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
-/// * a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
-/// * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
-/// * Pants: a pants target corresponds one-to-one with a BuildTarget
-/// * Bazel: a bazel target corresponds one-to-one with a BuildTarget
-///
-/// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
-structure BuildTarget {
-    /// The target’s unique identifier
-    @required
-    id: BuildTargetIdentifier
-    /// A human readable name for this target.
-    /// May be presented in the user interface.
-    /// Should be unique if possible.
-    /// The id.uri is used if None.
-    displayName: String
-    /// The directory where this target belongs to. Multiple build targets are allowed to map
-    /// to the same base directory, and a build target is not required to have a base directory.
-    /// A base directory does not determine the sources of a target, see buildTarget/sources.
-    baseDirectory: URI
-    /// Free-form string tags to categorize or label this build target.
-    /// For example, can be used by the client to:
-    /// - customize how the target should be translated into the client's project model.
-    /// - group together different but related targets in the user interface.
-    /// - display icons or colors in the user interface.
-    /// Pre-defined tags are listed in `BuildTargetTag` but clients and servers
-    /// are free to define new tags for custom purposes.
-    @required
-    tags: BuildTargetTags
-    /// The set of languages that this target contains.
-    /// The ID string for each language is defined in the LSP.
-    @required
-    languageIds: LanguageIds
-    /// The direct upstream build target dependencies of this build target
-    @required
-    dependencies: BuildTargetIdentifiers
-    /// The capabilities of this build target.
-    @required
-    capabilities: BuildTargetCapabilities
-    /// Language-specific metadata about this target.
-    /// See ScalaBuildTarget as an example.
-    data: BuildTargetData
-}
-
-/// Clients can use these capabilities to notify users what BSP endpoints can and
-/// cannot be used and why.
-structure BuildTargetCapabilities {
-    /// This target can be compiled by the BSP server.
-    @required
-    canCompile: Boolean
-    /// This target can be tested by the BSP server.
-    @required
-    canTest: Boolean
-    /// This target can be run by the BSP server.
-    @required
-    canRun: Boolean
-    /// This target can be debugged by the BSP server.
-    @required
-    canDebug: Boolean
-}
-
-/// A list of predefined tags that can be used to categorize build targets.
-@enumKind("open")
-enum BuildTargetTag {
-    /// Target contains re-usable functionality for downstream targets. May have any
-    /// combination of capabilities.
-    LIBRARY = "library"
-    /// Target contains source code for producing any kind of application, may have
-    /// but does not require the `canRun` capability.
-    APPLICATION = "application"
-    /// Target contains source code for testing purposes, may have but does not
-    /// require the `canTest` capability.
-    TEST = "test"
-    /// Target contains source code for integration testing purposes, may have
-    /// but does not require the `canTest` capability.
-    /// The difference between "test" and "integration-test" is that
-    /// integration tests traditionally run slower compared to normal tests
-    /// and require more computing resources to execute.
-    INTEGRATION_TEST = "integration-test"
-    /// Target contains source code to measure performance of a program, may have
-    /// but does not require the `canRun` build target capability.
-    BENCHMARK = "benchmark"
-    /// Target should be ignored by IDEs.
-    NO_IDE = "no-ide"
-    /// Actions on the target such as build and test should only be invoked manually
-    /// and explicitly. For example, triggering a build on all targets in the workspace
-    /// should by default not include this target.
-    ///
-    /// The original motivation to add the "manual" tag comes from a similar functionality
-    /// that exists in Bazel, where targets with this tag have to be specified explicitly
-    /// on the command line.
-    ///
-    MANUAL = "manual"
-}
-
-list BuildTargetTags {
-    member: BuildTargetTag
-}
-
-/// The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
-structure TaskId {
-    /// A unique identifier
-    @required
-    id: Identifier
-    /// The parent task ids, if any. A non-empty parents field means
-    /// this task is a sub-task of every parent task id. The child-parent
-    /// relationship of tasks makes it possible to render tasks in
-    /// a tree-like user interface or inspect what caused a certain task
-    /// execution.
-    parents: Identifiers
-}
-
-string Identifier
-
-list Identifiers {
-    member: Identifier
-}
-
-/// Included in notifications of tasks or requests to signal the completion state.
-@enumKind("closed")
-intEnum StatusCode {
-    /// Execution was successful.
-    OK = 1
-    /// Execution failed.
-    ERROR = 2
-    /// Execution was cancelled.
-    CANCELLED = 3
-}
 
 document InitializeBuildParamsData
 
@@ -765,8 +776,8 @@ union Code {
 }
 
 // TODO: this has been introduced in newer versions of the LSP spec
-///// Structure to capture a description for an error code.
-//structure CodeDescription {
+// /// Structure to capture a description for an error code.
+// structure CodeDescription {
 //    @required
 //    /// An URI to open with more information about the diagnostic error.
 //    href: URI

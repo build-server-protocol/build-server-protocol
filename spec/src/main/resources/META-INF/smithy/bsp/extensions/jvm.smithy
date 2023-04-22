@@ -2,33 +2,30 @@ $version: "2"
 
 namespace bsp
 
+use jsonrpc#data
+use jsonrpc#jsonRPC
+use jsonrpc#jsonRequest
+
+@jsonRPC
+service JvmBuildServer {
+    operations: [
+        JvmTestEnvironment,
+        JvmRunEnvironment
+    ]
+}
+
+/// `JvmBuildTarget` is a basic data structure that contains jvm-specific
+/// metadata, specifically JDK reference. This metadata is embedded in
+/// the `data: Option[Json]` field of the `BuildTarget` definition, when
+/// the `dataKind` field contains "jvm".
+@data(kind: "jvm", extends: BuildTargetData)
 structure JvmBuildTarget {
-    javaHome: String
+    /// Uri representing absolute path to jdk
+    /// For example: file:///usr/lib/jvm/java-8-openjdk-amd64
+    javaHome: URI
+    /// The java version this target is supposed to use.
+    /// For example: 1.8
     javaVersion: String
-}
-
-structure JvmMainClass {
-    @required
-    className: String
-    @required
-    arguments: Arguments
-}
-
-list JvmMainClasses {
-    member: JvmMainClass
-}
-
-list JvmOptions {
-    member: String
-}
-
-map EnvironmentVariables {
-    key: String,
-    value: String
-}
-
-list JvmEnvironmentItems {
-    member: JvmEnvironmentItem
 }
 
 structure JvmEnvironmentItem {
@@ -45,15 +42,18 @@ structure JvmEnvironmentItem {
     mainClasses: JvmMainClasses
 }
 
-structure JvmRunEnvironmentParams {
-    @required
-    targets: BuildTargetIdentifiers
-    originId: Identifier
-}
-
-structure JvmRunEnvironmentResult {
-    @required
-    items: JvmEnvironmentItems
+/// The JVM test environment request is sent from the client to the server in order to
+/// gather information required to launch a Java process. This is useful when the
+/// client wants to control the Java process execution, for example to enable custom
+/// Java agents or launch a custom main class during unit testing or debugging
+///
+/// The data provided by this endpoint may change between compilations, so it should
+/// not be cached in any form. The client should ask for it right before test execution,
+/// after all the targets are compiled.
+@jsonRequest("buildTarget/jvmTestEnvironment")
+operation JvmTestEnvironment {
+    input: JvmTestEnvironmentParams
+    output: JvmTestEnvironmentResult
 }
 
 structure JvmTestEnvironmentParams {
@@ -66,3 +66,47 @@ structure JvmTestEnvironmentResult {
     @required
     items: JvmEnvironmentItems
 }
+
+list JvmEnvironmentItems {
+    member: JvmEnvironmentItem
+}
+
+/// Similar to `buildTarget/jvmTestEnvironment`, but returns environment
+/// that should be used for regular exection of main classes, not for testing
+@jsonRequest("buildTarget/jvmRunEnvironment")
+operation JvmRunEnvironment {
+    input: JvmRunEnvironmentParams
+    output: JvmRunEnvironmentResult
+}
+
+structure JvmRunEnvironmentParams {
+    @required
+    targets: BuildTargetIdentifiers
+    originId: Identifier
+}
+
+structure JvmMainClass {
+    @required
+    className: String
+    @required
+    arguments: Arguments
+}
+
+structure JvmRunEnvironmentResult {
+    @required
+    items: JvmEnvironmentItems
+}
+
+list JvmMainClasses {
+    member: JvmMainClass
+}
+
+map EnvironmentVariables {
+    key: String,
+    value: String
+}
+
+
+
+
+

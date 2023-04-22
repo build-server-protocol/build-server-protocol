@@ -90,6 +90,21 @@ Like the language server protocol, the build server protocol defines a set of
 JSON-RPC request, response and notification messages which are exchanged using
 the base protocol.
 
+### Capabilities
+
+Unlike the language server protocol, the build server protocol does not support
+dynamic registration of capabilities. The motivation for this change is
+simplicity. If a motivating example for dynamic registration comes up this
+decision can be reconsidered. The server and client capabilities must be
+communicated through the initialize request.
+
+### Server lifetime
+
+Like the language server protocol, the current protocol specification defines
+that the lifetime of a build server is managed by the client (e.g. a language
+server like Dotty IDE). It is up to the client to decide when to start
+(process-wise) and when to shutdown a server.
+
 ```scala mdoc:passthrough
 bsp.codegen.Codegen.printDocs()
 ```

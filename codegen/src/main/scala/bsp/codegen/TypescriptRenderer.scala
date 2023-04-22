@@ -33,7 +33,6 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {
     lines(
       block(s"export interface ${shapeId.getName()}")(
-        newline,
         lines(fields.map(f => renderTSField(f)).intercalate(newline))
       )
     )
