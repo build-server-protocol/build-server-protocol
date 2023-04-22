@@ -62,6 +62,7 @@ module.exports = {
         ],
       },
     ],
+    "@easyops-cn/docusaurus-search-local",
   ],
   themeConfig: {
     navbar: {
@@ -118,16 +119,6 @@ module.exports = {
       logo: {
         src: "img/bsp-logo.svg",
       },
-    },
-    algolia: {
-      // The application ID provided by Algolia
-      appId: "AL7XHCGLS5",
-
-      // Public API key: it is safe to commit it
-      apiKey: "75a446641843ac7e9203131fdba3e756",
-      indexName: "build-server-protocol",
-      contextualSearch: true,
-      searchPagePath: "search",
     },
   },
 };
