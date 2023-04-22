@@ -205,16 +205,13 @@ class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
   @NonNull List<RustRawDependency> rawDependencies
   @NonNull List<RustDependency> dependencies
-  @NonNull List<RustStdLib> stdLibs
   
   new(@NonNull List<RustPackage> packages,
         @NonNull List<RustRawDependency> rawDependencies,
-        @NonNull List<RustDependency> dependencies,
-        @NonNull List<RustStdLib> stdLibs) {
+        @NonNull List<RustDependency> dependencies) {
     this.packages = packages
     this.rawDependencies = rawDependencies
     this.dependencies = dependencies
-    this.stdLibs = stdLibs
   }
 }
 
@@ -222,17 +219,40 @@ class RustWorkspaceResult {
 class RustStdLib {
     @NonNull String rustcSysroot
     @NonNull String rustcSrcSysroot
-    @NonNull String cargoBinPath
-    @NonNull String procMacroSrv
 
     new(@NonNull String rustcSysroot,
-        @NonNull String rustcSrcSysroot,
-        @NonNull String cargoBinPath,
-        @NonNull String procMacroSrv) {
+        @NonNull String rustcSrcSysroot) {
             this.rustcSysroot = rustcSysroot
             this.rustcSrcSysroot = rustcSrcSysroot
-            this.cargoBinPath = cargoBinPath
-            this.procMacroSrv = procMacroSrv
       }
 }
 
+@JsonRpcData
+class RustToolchainParams {
+    @NonNull List<BuildTargetIdentifier> targets
+    new(@NonNull List<BuildTargetIdentifier> targets) {
+        this.targets = targets
+    }
+}
+
+@JsonRpcData
+class RustToolchainResult {
+    @NonNull List<RustToolchain> toolchains
+    new(@NonNull List<RustToolchain> toolchains) {
+        this.toolchains = toolchains
+    }
+}
+
+@JsonRpcData
+class RustToolchain {
+    RustStdLib stdLib
+    @NonNull String cargoBinPath
+    @NonNull String procMacroSrvPath
+    new(RustStdLib stdLib,
+        @NonNull String cargoBinPath,
+        @NonNull String procMacroSrvPath) {
+            this.stdLib = stdLib
+            this.cargoBinPath = cargoBinPath
+            this.procMacroSrvPath = procMacroSrvPath
+      }
+}

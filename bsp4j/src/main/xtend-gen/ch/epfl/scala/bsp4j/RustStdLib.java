@@ -13,17 +13,9 @@ public class RustStdLib {
   @NonNull
   private String rustcSrcSysroot;
 
-  @NonNull
-  private String cargoBinPath;
-
-  @NonNull
-  private String procMacroSrv;
-
-  public RustStdLib(@NonNull final String rustcSysroot, @NonNull final String rustcSrcSysroot, @NonNull final String cargoBinPath, @NonNull final String procMacroSrv) {
+  public RustStdLib(@NonNull final String rustcSysroot, @NonNull final String rustcSrcSysroot) {
     this.rustcSysroot = rustcSysroot;
     this.rustcSrcSysroot = rustcSrcSysroot;
-    this.cargoBinPath = cargoBinPath;
-    this.procMacroSrv = procMacroSrv;
   }
 
   @Pure
@@ -46,34 +38,12 @@ public class RustStdLib {
     this.rustcSrcSysroot = Preconditions.checkNotNull(rustcSrcSysroot, "rustcSrcSysroot");
   }
 
-  @Pure
-  @NonNull
-  public String getCargoBinPath() {
-    return this.cargoBinPath;
-  }
-
-  public void setCargoBinPath(@NonNull final String cargoBinPath) {
-    this.cargoBinPath = Preconditions.checkNotNull(cargoBinPath, "cargoBinPath");
-  }
-
-  @Pure
-  @NonNull
-  public String getProcMacroSrv() {
-    return this.procMacroSrv;
-  }
-
-  public void setProcMacroSrv(@NonNull final String procMacroSrv) {
-    this.procMacroSrv = Preconditions.checkNotNull(procMacroSrv, "procMacroSrv");
-  }
-
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("rustcSysroot", this.rustcSysroot);
     b.add("rustcSrcSysroot", this.rustcSrcSysroot);
-    b.add("cargoBinPath", this.cargoBinPath);
-    b.add("procMacroSrv", this.procMacroSrv);
     return b.toString();
   }
 
@@ -97,16 +67,6 @@ public class RustStdLib {
         return false;
     } else if (!this.rustcSrcSysroot.equals(other.rustcSrcSysroot))
       return false;
-    if (this.cargoBinPath == null) {
-      if (other.cargoBinPath != null)
-        return false;
-    } else if (!this.cargoBinPath.equals(other.cargoBinPath))
-      return false;
-    if (this.procMacroSrv == null) {
-      if (other.procMacroSrv != null)
-        return false;
-    } else if (!this.procMacroSrv.equals(other.procMacroSrv))
-      return false;
     return true;
   }
 
@@ -116,8 +76,6 @@ public class RustStdLib {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.rustcSysroot== null) ? 0 : this.rustcSysroot.hashCode());
-    result = prime * result + ((this.rustcSrcSysroot== null) ? 0 : this.rustcSrcSysroot.hashCode());
-    result = prime * result + ((this.cargoBinPath== null) ? 0 : this.cargoBinPath.hashCode());
-    return prime * result + ((this.procMacroSrv== null) ? 0 : this.procMacroSrv.hashCode());
+    return prime * result + ((this.rustcSrcSysroot== null) ? 0 : this.rustcSrcSysroot.hashCode());
   }
 }
