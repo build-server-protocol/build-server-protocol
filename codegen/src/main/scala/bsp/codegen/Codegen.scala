@@ -24,16 +24,15 @@ object Codegen {
     }
   }
 
-  def docs(): String = {
+  def docs(namespace: String): String = {
     val model = ModelLoader.loadModel()
-    val docTree = new SmithyToIR(model).docTree
+    val docTree = new SmithyToIR(model).docTree(namespace)
     MarkdownRenderer.render(docTree)
   }
 
-  def printDocs(): Unit = println(docs())
+  def printDocs(namespace: String): Unit = println(docs(namespace))
 
   def main(args: Array[String]): Unit = {
-    printDocs()
+    printDocs("")
   }
-
 }

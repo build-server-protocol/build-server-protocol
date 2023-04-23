@@ -1,7 +1,13 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.jvm
 
+use bsp#Arguments
+use bsp#BuildTargetData
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp#Identifier
+use bsp#URI
 use jsonrpc#data
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
@@ -106,7 +112,13 @@ map EnvironmentVariables {
     value: String
 }
 
+list Classpath {
+    member: String
+}
 
+list JvmOptions {
+    member: String
+}
 
 
 

@@ -1,5 +1,5 @@
 ---
-id: specification (generated)
+id: specgen
 title: Build Server Protocol
 sidebar_label: Specification
 ---
@@ -106,5 +106,5 @@ server like Dotty IDE). It is up to the client to decide when to start
 (process-wise) and when to shutdown a server.
 
 ```scala mdoc:passthrough
-bsp.codegen.Codegen.printDocs()
+bsp.codegen.Codegen.printDocs("")
 ```

@@ -93,7 +93,7 @@ lazy val bsp4j = project
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
     )
   )
 
@@ -199,9 +199,9 @@ lazy val `bsp4j-gen` = project
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j,
+      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
+    )
   )
-)
 
 // A codegen module that contains the logic for generating bsp4j
 // This will be invoked via shell-out using a bespoke sbt task
@@ -214,7 +214,7 @@ lazy val codegen = project
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.9.0",
       "com.lihaoyi" %% "os-lib" % "0.9.1",
-      "com.monovore" %% "decline" % "2.4.1",
+      "com.monovore" %% "decline" % "2.4.1"
     )
   )
 

@@ -1,7 +1,11 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.sbt
 
+use bsp#BuildTargetData
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp.scala#ScalaBuildTarget
 use jsonrpc#data
 
 /// `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata

@@ -1,7 +1,11 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.maven
 
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp#DependencyModuleData
+use bsp#URI
 use jsonrpc#data
 
 /// `MavenDependencyModule` is a basic data structure that contains maven-like

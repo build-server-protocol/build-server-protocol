@@ -1,7 +1,10 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.java
 
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp.jvm#Classpath
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
@@ -32,10 +35,6 @@ structure JavacOptionsResult {
 }
 
 list JavacOptionsList {
-    member: String
-}
-
-list Classpath {
     member: String
 }
 

@@ -1,7 +1,11 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.python
 
+use bsp#BuildTargetData
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp#URI
 use jsonrpc#data
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest

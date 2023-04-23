@@ -23,10 +23,10 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def render(definition: Def): Option[Lines] = {
     definition match {
-      case Structure(shapeId, fields, hints) => Some(renderStructure(shapeId, fields))
+      case Structure(shapeId, fields, hints)            => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, hints) => Some(renderClosedEnum(shapeId, enumType, values))
-      case OpenEnum(shapeId, enumType, values, hints) => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations, hints) => None
+      case OpenEnum(shapeId, enumType, values, hints)   => Some(renderOpenEnum(shapeId, enumType, values))
+      case Service(shapeId, operations, hints)          => None
     }
   }
 
@@ -42,10 +42,14 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     val tpe = id.getName()
     lines(
       block(s"export enum $tpe") {
-        values.map(value => lines(
-          renderDocumentation(value.hints),
-          s"${renderStaticValue(enumType)(value)},"
-        )).intercalate(newline)
+        values
+          .map(value =>
+            lines(
+              renderDocumentation(value.hints),
+              s"${renderStaticValue(enumType)(value)},"
+            )
+          )
+          .intercalate(newline)
       }
     )
   }
@@ -54,23 +58,25 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     val tpe = shapeId.getName()
     lines(
       block(s"export namespace $tpe") {
-        values.map(value => lines(
-          renderDocumentation(value.hints),
-          s"export const ${renderStaticValue(enumType)(value)};"
-        )).intercalate(newline)
-      },
+        values
+          .map(value =>
+            lines(
+              renderDocumentation(value.hints),
+              s"export const ${renderStaticValue(enumType)(value)};"
+            )
+          )
+          .intercalate(newline)
+      }
     )
   }
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) =>
-            s"${camelCase(ev.name).capitalize} = ${ev.value}"
+        (ev: EnumValue[Int]) => s"${camelCase(ev.name).capitalize} = ${ev.value}"
 
       case StringEnum =>
-        (ev: EnumValue[String]) =>
-            s"""${camelCase(ev.name).capitalize} = "${ev.value}""""
+        (ev: EnumValue[String]) => s"""${camelCase(ev.name).capitalize} = "${ev.value}""""
     }
   }
 
@@ -83,7 +89,7 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
+      case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
       case StringEnum => (ev: EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
     }
   }
@@ -97,22 +103,22 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   }
 
   def renderType(tpe: Type): String = tpe match {
-    case TRef(shapeId) => shapeId.getName()
-    case TPrimitive(prim) => renderPrimitive(prim)
-    case TMap(key, value) => ??? // Are maps even used in the BSP ?
-    case TCollection(member) => s"${renderType(member)}[]"
+    case TRef(shapeId)        => shapeId.getName()
+    case TPrimitive(prim)     => renderPrimitive(prim)
+    case TMap(key, value)     => ??? // Are maps even used in the BSP ?
+    case TCollection(member)  => s"${renderType(member)}[]"
     case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")
   }
 
   def renderPrimitive(prim: Primitive) = prim match {
-    case PFloat => "Float"
-    case PDouble => "Double"
-    case PUnit => "void"
-    case PString => "String"
-    case PInt => "Integer"
-    case PDocument => "any"
-    case PBool => "Boolean"
-    case PLong => "Long"
+    case PFloat     => "Float"
+    case PDouble    => "Double"
+    case PUnit      => "void"
+    case PString    => "String"
+    case PInt       => "Integer"
+    case PDocument  => "any"
+    case PBool      => "Boolean"
+    case PLong      => "Long"
     case PTimestamp => "Long"
   }
 

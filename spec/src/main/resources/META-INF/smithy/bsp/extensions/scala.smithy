@@ -1,7 +1,17 @@
 $version: "2"
 
-namespace bsp
+namespace bsp.scala
 
+use bsp#Arguments
+use bsp#BuildTargetData
+use bsp#BuildTargetIdentifier
+use bsp#BuildTargetIdentifiers
+use bsp#DebugSessionParamsData
+use bsp#TestParamsData
+use bsp#URIs
+use bsp.jvm#Classpath
+use bsp.jvm#JvmBuildTarget
+use bsp.jvm#JvmOptions
 use jsonrpc#data
 use jsonrpc#enumKind
 use jsonrpc#jsonRPC
@@ -60,10 +70,6 @@ structure ScalaTestParams {
     /// The JVM options to run tests with. They replace any options
     /// that are defined by the build server if defined.
     jvmOptions: JvmOptions
-}
-
-list JvmOptions {
-    member: String
 }
 
 /// The build target scalac options request is sent from the client to the server to

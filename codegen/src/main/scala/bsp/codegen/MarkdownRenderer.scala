@@ -9,17 +9,17 @@ import scala.collection.mutable.{Set => MSet}
 
 object MarkdownRenderer {
   def render(tree: DocTree): String = {
-    val state = MSet.empty[ShapeId]
-    val renderer = new MarkdownRenderer(state)
-    renderer.render(tree).get.mkString(System.lineSeparator())
+    val visited = MSet.empty[ShapeId]
+    val renderer = new MarkdownRenderer(tree, visited)
+    renderer.render.get.mkString(System.lineSeparator())
   }
 }
 
-class MarkdownRenderer private (state: MSet[ShapeId]) {
+class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
 
   import dsl._
 
-  def render(tree: DocTree): Lines = {
+  def render: Lines = {
     lines(
       "## Common shapes",
       newline,
@@ -29,7 +29,7 @@ class MarkdownRenderer private (state: MSet[ShapeId]) {
     )
   }
 
-  def renderNode(node: DocNode): Lines = node match {
+  def renderNode(id: ShapeId): Lines = tree.docNodes(id) match {
     case OperationDocNode(operation, inputNode, outputNode) =>
       lines(
         s"### ${operation.name}: ${methodTpe(operation)}",
@@ -37,15 +37,10 @@ class MarkdownRenderer private (state: MSet[ShapeId]) {
         documentation(operation.hints),
         newline,
         s"- method: `${operation.jsonRPCMethod}`",
-        inputNode.foldMap(n => s"- params: `${n.shapeId.getName()}`"),
-        newline,
-        inputNode.foldMap(tsBlock),
-        newline,
-        outputNode.foldMap(n => s"- result: `${n.shapeId.getName()}`"),
-        if (outputNode.isDefined) newline else empty,
-        outputNode.foldMap(tsBlock),
-        inputNode.foldMap(renderRest),
-        outputNode.foldMap(renderRest),
+        inputNode.foldMap(n => s"- params: `${n.getName()}`"),
+        outputNode.foldMap(n => s"- result: `${n.getName()}`"),
+        inputNode.foldMap(renderNode),
+        outputNode.foldMap(renderNode),
         newline
       )
     case ServiceDocNode(shapeId, operations) => {
@@ -63,19 +58,23 @@ class MarkdownRenderer private (state: MSet[ShapeId]) {
         )
       }
     }
-    case ShapeDocNode(definition, members) =>
-      if (state.contains(definition.shapeId)) empty
-      else {
-        state.add(definition.shapeId)
-        lines(
-          s"#### ${definition.shapeId.getName()}",
-          newline,
-          documentation(definition.hints),
-          newline,
-          tsBlock(definition),
-          newline
+    case ShapeDocNode(definition, members) => {
+      if (visited.contains(definition.shapeId)) empty
+      else
+        {
+          visited.add(definition.shapeId)
+          lines(
+            s"#### ${definition.shapeId.getName()}",
+            newline,
+            documentation(definition.hints),
+            newline,
+            tsBlock(definition),
+            newline
+          )
+        } ++ lines(
+          members.foldMap(renderNode)
         )
-      }
+    }
   }
 
   def renderRest(doc: DocNode): Lines = doc match {
