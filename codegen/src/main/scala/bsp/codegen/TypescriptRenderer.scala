@@ -105,7 +105,7 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   def renderType(tpe: Type): String = tpe match {
     case TRef(shapeId)        => shapeId.getName()
     case TPrimitive(prim)     => renderPrimitive(prim)
-    case TMap(key, value)     => ??? // Are maps even used in the BSP ?
+    case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"${renderType(member)}[]"
     case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")
   }

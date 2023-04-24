@@ -16,9 +16,8 @@ import scala.collection.mutable.{Map => MMap}
 class SmithyToIR(model: Model) {
 
   def docTree(namespace: String): DocTree = {
-    val realNamespace = if (namespace == "") "bsp" else "bsp." ++ namespace
     val shapes =
-      model.shapes().iterator().asScala.toList.filter(_.getId.getNamespace == realNamespace)
+      model.shapes().iterator().asScala.toList.filter(_.getId.getNamespace == namespace)
     val commonTag = "basic"
     val commonShapes =
       shapes.filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
