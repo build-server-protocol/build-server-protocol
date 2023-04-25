@@ -17,14 +17,10 @@ public class RustWorkspaceResult {
   @NonNull
   private List<RustDependency> dependencies;
 
-  @NonNull
-  private List<RustStdLib> stdLibs;
-
-  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies, @NonNull final List<RustStdLib> stdLibs) {
+  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies) {
     this.packages = packages;
     this.rawDependencies = rawDependencies;
     this.dependencies = dependencies;
-    this.stdLibs = stdLibs;
   }
 
   @Pure
@@ -57,16 +53,6 @@ public class RustWorkspaceResult {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
-  @Pure
-  @NonNull
-  public List<RustStdLib> getStdLibs() {
-    return this.stdLibs;
-  }
-
-  public void setStdLibs(@NonNull final List<RustStdLib> stdLibs) {
-    this.stdLibs = Preconditions.checkNotNull(stdLibs, "stdLibs");
-  }
-
   @Override
   @Pure
   public String toString() {
@@ -74,7 +60,6 @@ public class RustWorkspaceResult {
     b.add("packages", this.packages);
     b.add("rawDependencies", this.rawDependencies);
     b.add("dependencies", this.dependencies);
-    b.add("stdLibs", this.stdLibs);
     return b.toString();
   }
 
@@ -103,11 +88,6 @@ public class RustWorkspaceResult {
         return false;
     } else if (!this.dependencies.equals(other.dependencies))
       return false;
-    if (this.stdLibs == null) {
-      if (other.stdLibs != null)
-        return false;
-    } else if (!this.stdLibs.equals(other.stdLibs))
-      return false;
     return true;
   }
 
@@ -118,7 +98,6 @@ public class RustWorkspaceResult {
     int result = 1;
     result = prime * result + ((this.packages== null) ? 0 : this.packages.hashCode());
     result = prime * result + ((this.rawDependencies== null) ? 0 : this.rawDependencies.hashCode());
-    result = prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
-    return prime * result + ((this.stdLibs== null) ? 0 : this.stdLibs.hashCode());
+    return prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
   }
 }
