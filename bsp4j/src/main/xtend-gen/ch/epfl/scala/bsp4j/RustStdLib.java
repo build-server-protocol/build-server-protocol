@@ -13,9 +13,13 @@ public class RustStdLib {
   @NonNull
   private String rustcSrcSysroot;
 
-  public RustStdLib(@NonNull final String rustcSysroot, @NonNull final String rustcSrcSysroot) {
+  @NonNull
+  private String rustcVersion;
+
+  public RustStdLib(@NonNull final String rustcSysroot, @NonNull final String rustcSrcSysroot, @NonNull final String rustcVersion) {
     this.rustcSysroot = rustcSysroot;
     this.rustcSrcSysroot = rustcSrcSysroot;
+    this.rustcVersion = rustcVersion;
   }
 
   @Pure
@@ -38,12 +42,23 @@ public class RustStdLib {
     this.rustcSrcSysroot = Preconditions.checkNotNull(rustcSrcSysroot, "rustcSrcSysroot");
   }
 
+  @Pure
+  @NonNull
+  public String getRustcVersion() {
+    return this.rustcVersion;
+  }
+
+  public void setRustcVersion(@NonNull final String rustcVersion) {
+    this.rustcVersion = Preconditions.checkNotNull(rustcVersion, "rustcVersion");
+  }
+
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("rustcSysroot", this.rustcSysroot);
     b.add("rustcSrcSysroot", this.rustcSrcSysroot);
+    b.add("rustcVersion", this.rustcVersion);
     return b.toString();
   }
 
@@ -67,6 +82,11 @@ public class RustStdLib {
         return false;
     } else if (!this.rustcSrcSysroot.equals(other.rustcSrcSysroot))
       return false;
+    if (this.rustcVersion == null) {
+      if (other.rustcVersion != null)
+        return false;
+    } else if (!this.rustcVersion.equals(other.rustcVersion))
+      return false;
     return true;
   }
 
@@ -76,6 +96,7 @@ public class RustStdLib {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.rustcSysroot== null) ? 0 : this.rustcSysroot.hashCode());
-    return prime * result + ((this.rustcSrcSysroot== null) ? 0 : this.rustcSrcSysroot.hashCode());
+    result = prime * result + ((this.rustcSrcSysroot== null) ? 0 : this.rustcSrcSysroot.hashCode());
+    return prime * result + ((this.rustcVersion== null) ? 0 : this.rustcVersion.hashCode());
   }
 }

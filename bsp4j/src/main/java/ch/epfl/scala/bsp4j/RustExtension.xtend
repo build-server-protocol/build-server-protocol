@@ -219,11 +219,14 @@ class RustWorkspaceResult {
 class RustStdLib {
     @NonNull String rustcSysroot
     @NonNull String rustcSrcSysroot
+    @NonNull String rustcVersion
 
     new(@NonNull String rustcSysroot,
-        @NonNull String rustcSrcSysroot) {
+        @NonNull String rustcSrcSysroot,
+        @NonNull String rustcVersion) {
             this.rustcSysroot = rustcSysroot
             this.rustcSrcSysroot = rustcSrcSysroot
+            this.rustcVersion = rustcVersion
       }
 }
 

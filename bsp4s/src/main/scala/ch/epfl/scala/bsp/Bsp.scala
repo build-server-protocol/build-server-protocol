@@ -1515,7 +1515,8 @@ object RustWorkspaceResult {
 
 final case class RustStdLib(
     rustcSysroot: String,
-    rustcSrcSysroot: String
+    rustcSrcSysroot: String,
+    rustcVersion: String
 )
 
 object RustStdLib {
