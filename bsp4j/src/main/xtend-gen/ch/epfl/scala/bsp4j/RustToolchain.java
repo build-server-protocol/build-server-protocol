@@ -15,10 +15,14 @@ public class RustToolchain {
   @NonNull
   private String procMacroSrvPath;
 
-  public RustToolchain(final RustStdLib stdLib, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath) {
+  @NonNull
+  private String sysRoot;
+
+  public RustToolchain(final RustStdLib stdLib, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath, @NonNull final String sysRoot) {
     this.stdLib = stdLib;
     this.cargoBinPath = cargoBinPath;
     this.procMacroSrvPath = procMacroSrvPath;
+    this.sysRoot = sysRoot;
   }
 
   @Pure
@@ -50,6 +54,16 @@ public class RustToolchain {
     this.procMacroSrvPath = Preconditions.checkNotNull(procMacroSrvPath, "procMacroSrvPath");
   }
 
+  @Pure
+  @NonNull
+  public String getSysRoot() {
+    return this.sysRoot;
+  }
+
+  public void setSysRoot(@NonNull final String sysRoot) {
+    this.sysRoot = Preconditions.checkNotNull(sysRoot, "sysRoot");
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -57,6 +71,7 @@ public class RustToolchain {
     b.add("stdLib", this.stdLib);
     b.add("cargoBinPath", this.cargoBinPath);
     b.add("procMacroSrvPath", this.procMacroSrvPath);
+    b.add("sysRoot", this.sysRoot);
     return b.toString();
   }
 
@@ -85,6 +100,11 @@ public class RustToolchain {
         return false;
     } else if (!this.procMacroSrvPath.equals(other.procMacroSrvPath))
       return false;
+    if (this.sysRoot == null) {
+      if (other.sysRoot != null)
+        return false;
+    } else if (!this.sysRoot.equals(other.sysRoot))
+      return false;
     return true;
   }
 
@@ -95,6 +115,7 @@ public class RustToolchain {
     int result = 1;
     result = prime * result + ((this.stdLib== null) ? 0 : this.stdLib.hashCode());
     result = prime * result + ((this.cargoBinPath== null) ? 0 : this.cargoBinPath.hashCode());
-    return prime * result + ((this.procMacroSrvPath== null) ? 0 : this.procMacroSrvPath.hashCode());
+    result = prime * result + ((this.procMacroSrvPath== null) ? 0 : this.procMacroSrvPath.hashCode());
+    return prime * result + ((this.sysRoot== null) ? 0 : this.sysRoot.hashCode());
   }
 }

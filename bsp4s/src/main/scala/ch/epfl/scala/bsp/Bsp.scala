@@ -1536,7 +1536,8 @@ object RustToolchainParams {
 final case class RustToolchainResult(
     stdLib: RustStdLib,
     cargoBinPath: String,
-    procMacroSrvPath: String
+    procMacroSrvPath: String,
+    sysRoot: String
 )
 
 object RustToolchainResult {
