@@ -18,11 +18,15 @@ public class RustToolchain {
   @NonNull
   private String sysRoot;
 
-  public RustToolchain(final RustStdLib stdLib, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath, @NonNull final String sysRoot) {
+  @NonNull
+  private String rustHost;
+
+  public RustToolchain(final RustStdLib stdLib, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath, @NonNull final String sysRoot, @NonNull final String rustHost) {
     this.stdLib = stdLib;
     this.cargoBinPath = cargoBinPath;
     this.procMacroSrvPath = procMacroSrvPath;
     this.sysRoot = sysRoot;
+    this.rustHost = rustHost;
   }
 
   @Pure
@@ -64,6 +68,16 @@ public class RustToolchain {
     this.sysRoot = Preconditions.checkNotNull(sysRoot, "sysRoot");
   }
 
+  @Pure
+  @NonNull
+  public String getRustHost() {
+    return this.rustHost;
+  }
+
+  public void setRustHost(@NonNull final String rustHost) {
+    this.rustHost = Preconditions.checkNotNull(rustHost, "rustHost");
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -72,6 +86,7 @@ public class RustToolchain {
     b.add("cargoBinPath", this.cargoBinPath);
     b.add("procMacroSrvPath", this.procMacroSrvPath);
     b.add("sysRoot", this.sysRoot);
+    b.add("rustHost", this.rustHost);
     return b.toString();
   }
 
@@ -105,6 +120,11 @@ public class RustToolchain {
         return false;
     } else if (!this.sysRoot.equals(other.sysRoot))
       return false;
+    if (this.rustHost == null) {
+      if (other.rustHost != null)
+        return false;
+    } else if (!this.rustHost.equals(other.rustHost))
+      return false;
     return true;
   }
 
@@ -116,6 +136,7 @@ public class RustToolchain {
     result = prime * result + ((this.stdLib== null) ? 0 : this.stdLib.hashCode());
     result = prime * result + ((this.cargoBinPath== null) ? 0 : this.cargoBinPath.hashCode());
     result = prime * result + ((this.procMacroSrvPath== null) ? 0 : this.procMacroSrvPath.hashCode());
-    return prime * result + ((this.sysRoot== null) ? 0 : this.sysRoot.hashCode());
+    result = prime * result + ((this.sysRoot== null) ? 0 : this.sysRoot.hashCode());
+    return prime * result + ((this.rustHost== null) ? 0 : this.rustHost.hashCode());
   }
 }

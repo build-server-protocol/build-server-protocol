@@ -252,13 +252,16 @@ class RustToolchain {
     @NonNull String cargoBinPath
     @NonNull String procMacroSrvPath
     @NonNull String sysRoot
+    @NonNull String rustHost
     new(RustStdLib stdLib,
         @NonNull String cargoBinPath,
         @NonNull String procMacroSrvPath,
-        @NonNull String sysRoot) {
+        @NonNull String sysRoot,
+        @NonNull String rustHost) {
             this.stdLib = stdLib
             this.cargoBinPath = cargoBinPath
             this.procMacroSrvPath = procMacroSrvPath
             this.sysRoot = sysRoot
+            this.rustHost = rustHost
       }
 }

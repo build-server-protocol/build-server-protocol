@@ -1537,7 +1537,8 @@ final case class RustToolchainResult(
     stdLib: RustStdLib,
     cargoBinPath: String,
     procMacroSrvPath: String,
-    sysRoot: String
+    sysRoot: String,
+    rustHost: String
 )
 
 object RustToolchainResult {
