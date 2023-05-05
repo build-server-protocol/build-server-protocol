@@ -9,6 +9,7 @@ namespace jsonrpc
     jsonNotification
     enumKind
 ])
+
 @trait(selector: "service")
 structure jsonRPC {
 }
@@ -33,6 +34,11 @@ enum enumKind {
     CLOSED = "closed"
 }
 
+/// Trait used to mark the "base type" of a polymorphic data type
+@trait()
+structure data {
+}
+
 /// Represents the fact that a union should be serialised in an untagged
 /// fashion
 @trait(selector: "union")
@@ -51,7 +57,7 @@ string PolymorphicData
 /// field, the serialised form of the object holding the `data` field should
 /// also present a `dataKind` field with the value indicated by the `kind`.
 @trait()
-structure data {
+structure dataKind {
     /// This indicates the value of the `dataKind` field
     /// should take when the shape with the `@data` trait
     /// is used to fulfill a polymorphic `data` field.

@@ -13,7 +13,6 @@ import software.amazon.smithy.model.shapes.ShapeId
 class JavaRenderer(basepkg: String) {
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
-  // scalafmt: { maxColumn = 120}
   def render(definition: Def): CodegenFile = {
     definition match {
       case Structure(shapeId, fields, _)            => renderStructure(shapeId, fields)
@@ -47,7 +46,11 @@ class JavaRenderer(basepkg: String) {
     CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
-  def renderClosedEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
+  def renderClosedEnum[A](
+      shapeId: ShapeId,
+      enumType: EnumType[A],
+      values: List[EnumValue[A]]
+  ): CodegenFile = {
     val evt = enumValueType(enumType)
     val tpe = shapeId.getName()
     val allLines = lines(
@@ -82,7 +85,11 @@ class JavaRenderer(basepkg: String) {
     CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
-  def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): CodegenFile = {
+  def renderOpenEnum[A](
+      shapeId: ShapeId,
+      enumType: EnumType[A],
+      values: List[EnumValue[A]]
+  ): CodegenFile = {
     val _evt = enumValueType(enumType)
     val tpe = shapeId.getName()
     val allLines = lines(
@@ -145,8 +152,10 @@ class JavaRenderer(basepkg: String) {
 
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value};"""
-      case StringEnum => (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}";"""
+      case IntEnum =>
+        (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value};"""
+      case StringEnum =>
+        (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}";"""
     }
   }
 
@@ -202,7 +211,8 @@ class JavaRenderer(basepkg: String) {
       lines("@JsonAdapter(JsonElementTypeAdapter.Factory)")
     } else empty
     val maybeNonNull = if (field.required) lines("@NonNull") else empty
-    val maybeRename = field.jsonRename.map(name => lines(s"""@SerializedName("$name")""")).getOrElse(empty)
+    val maybeRename =
+      field.jsonRename.map(name => lines(s"""@SerializedName("$name")""")).getOrElse(empty)
     lines(
       maybeAdapter,
       maybeRename,

@@ -1,6 +1,8 @@
-ch.epfl.smithy.jsonrpc.traits.EnumKindTrait$Provider
-ch.epfl.smithy.jsonrpc.traits.JsonNotificationTrait$Provider
-ch.epfl.smithy.jsonrpc.traits.JsonRequestTrait$Provider
-ch.epfl.smithy.jsonrpc.traits.JsonRPCTrait$Provider
-ch.epfl.smithy.jsonrpc.traits.UntaggedUnionTrait$Provider
-ch.epfl.smithy.jsonrpc.traits.DataTrait$Provider
+bsp.traits.EnumKindTrait$Provider
+bsp.traits.JsonNotificationTrait$Provider
+bsp.traits.JsonRequestTrait$Provider
+bsp.traits.JsonRPCTrait$Provider
+bsp.traits.UntaggedUnionTrait$Provider
+bsp.traits.DataKindTrait$Provider
+bsp.traits.DataTrait$Provider
+bsp.traits.DocsPriorityTrait$Provider

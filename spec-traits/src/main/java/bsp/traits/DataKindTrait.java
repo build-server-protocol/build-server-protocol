@@ -1,6 +1,5 @@
-package ch.epfl.smithy.jsonrpc.traits;
+package bsp.traits;
 
-import software.amazon.smithy.model.SourceException;
 import software.amazon.smithy.model.node.Node;
 import software.amazon.smithy.model.node.ObjectNode;
 import software.amazon.smithy.model.shapes.ShapeId;
@@ -9,16 +8,15 @@ import software.amazon.smithy.model.traits.AbstractTraitBuilder;
 import software.amazon.smithy.model.traits.TraitService;
 import software.amazon.smithy.utils.SmithyBuilder;
 import software.amazon.smithy.utils.ToSmithyBuilder;
-import java.util.Optional;
 
-public final class DataTrait extends AbstractTrait implements ToSmithyBuilder<DataTrait> {
+public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilder<DataKindTrait> {
 
-	public static final ShapeId ID = ShapeId.from("jsonrpc#data");
+	public static final ShapeId ID = ShapeId.from("jsonrpc#dataKind");
 
 	private final String kind;
 	private final ShapeId polymorphicData;
 
-	private DataTrait(DataTrait.Builder builder) {
+	private DataKindTrait(DataKindTrait.Builder builder) {
 		super(ID, builder.getSourceLocation());
 		this.kind = builder.kind;
 		this.polymorphicData = builder.polymorphicData;
@@ -41,35 +39,35 @@ public final class DataTrait extends AbstractTrait implements ToSmithyBuilder<Da
 	}
 
 	@Override
-	public SmithyBuilder<DataTrait> toBuilder() {
+	public SmithyBuilder<DataKindTrait> toBuilder() {
 		return builder().polymorphicData(polymorphicData).kind(kind).sourceLocation(getSourceLocation());
 	}
 
 	/**
 	 * @return Returns a new RefinedTrait builder.
 	 */
-	public static DataTrait.Builder builder() {
+	public static DataKindTrait.Builder builder() {
 		return new Builder();
 	}
 
-	public static final class Builder extends AbstractTraitBuilder<DataTrait, DataTrait.Builder> {
+	public static final class Builder extends AbstractTraitBuilder<DataKindTrait, DataKindTrait.Builder> {
 
 		private String kind;
 		private ShapeId polymorphicData;
 
-		public DataTrait.Builder kind(String kind) {
+		public DataKindTrait.Builder kind(String kind) {
 			this.kind = kind;
 			return this;
 		}
 
-		public DataTrait.Builder polymorphicData(ShapeId polymorphicData) {
+		public DataKindTrait.Builder polymorphicData(ShapeId polymorphicData) {
 			this.polymorphicData = polymorphicData;
 			return this;
 		}
 
 		@Override
-		public DataTrait build() {
-			return new DataTrait(this);
+		public DataKindTrait build() {
+			return new DataKindTrait(this);
 		}
 	}
 
@@ -81,7 +79,7 @@ public final class DataTrait extends AbstractTrait implements ToSmithyBuilder<Da
 		}
 
 		@Override
-		public DataTrait createTrait(ShapeId target, Node value) {
+		public DataKindTrait createTrait(ShapeId target, Node value) {
 			ObjectNode objectNode = value.expectObjectNode();
 			ShapeId polymorphicData = ShapeId.fromNode(objectNode.expectMember("extends").expectStringNode());
 			String kind = objectNode.expectMember("kind").expectStringNode().getValue();

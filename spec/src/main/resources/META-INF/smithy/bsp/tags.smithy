@@ -2,25 +2,24 @@ $version: "2"
 
 namespace bsp
 
+use docs#docsPriority
+
 // Applying the tags a-posteriori to avoid hurting the readability of the spec
 
-//apply URI @tags(["basic"])
-
-//apply URIs @tags(["basic"])
-
+apply BuildTarget @tags(["basic"])
+apply BuildTarget @docsPriority(10)
 
 apply BuildTargetIdentifier @tags(["basic"])
+apply BuildTargetIdentifier @docsPriority(9)
 
-//apply BuildTargetIdentifiers @tags(["basic"])
+apply TaskId @tags(["basic"])
+apply TaskId @docsPriority(8)
 
-apply BuildTarget @tags(["basic"])
+apply StatusCode @tags(["basic"])
+apply StatusCode @docsPriority(7)
 
 apply BuildTargetCapabilities @tags(["basic"])
 
 apply BuildTargetTag @tags(["basic"])
 
-apply TaskId @tags(["basic"])
 
-//apply Identifier @tags(["basic"])
-
-//apply Identifiers @tags(["basic"])

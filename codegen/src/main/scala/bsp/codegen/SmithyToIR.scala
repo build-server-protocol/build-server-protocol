@@ -2,16 +2,16 @@ package bsp.codegen
 
 import bsp.codegen.Primitive._
 import bsp.codegen.Type._
-import ch.epfl.smithy.jsonrpc.traits.EnumKindTrait.EnumKind.{CLOSED, OPEN}
-import ch.epfl.smithy.jsonrpc.traits._
+import bsp.traits.EnumKindTrait.EnumKind.{CLOSED, OPEN}
+import bsp.traits._
 import software.amazon.smithy.model.Model
 import software.amazon.smithy.model.shapes._
 import software.amazon.smithy.model.traits._
 
 import java.util.Optional
+import scala.collection.mutable.{Map => MMap}
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters._
-import scala.collection.mutable.{Map => MMap}
 
 class SmithyToIR(model: Model) {
 
@@ -20,7 +20,10 @@ class SmithyToIR(model: Model) {
       model.shapes().iterator().asScala.toList.filter(_.getId.getNamespace == namespace)
     val commonTag = "basic"
     val commonShapes =
-      shapes.filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
+      shapes
+        .filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
+        .sortBy(_.getTrait(classOf[DocsPriorityTrait]).toScala.map(_.getPriority).getOrElse(0))
+        .reverse
 
     val serviceShapes = shapes.filter(_.isServiceShape())
 
@@ -141,20 +144,44 @@ class SmithyToIR(model: Model) {
       }
     }
 
-    val allDataKindAnnotated: Map[ShapeId, List[(String, Shape)]] = model
-      .getShapesWithTrait(classOf[DataTrait])
-      .asScala
-      .toList
-      .map { shape =>
-        val tr = shape.expectTrait(classOf[DataTrait])
-        shape -> tr
-      }
-      .groupBy { case (_, tr) => tr.getPolymorphicData }
-      .map { case (dataType, shapeAndTraits) =>
-        dataType -> shapeAndTraits.map { case (shape, tr) =>
-          tr.getKind -> shape
+    val allDataKindAnnotated: Map[ShapeId, List[(String, Shape)]] = {
+      val allExtendableTypes = model.getShapesWithTrait(classOf[DataTrait]).asScala.toList
+      val allExtendableTypeIds = allExtendableTypes.map(_.getId).toSet
+
+      val dataKindInhabitants =
+        model
+          .getShapesWithTrait(classOf[DataKindTrait])
+          .asScala
+          .toList
+          .map { shape =>
+            val tr = shape.expectTrait(classOf[DataKindTrait])
+            shape -> tr
+          }
+
+      // Validate that all data kinds extend a known extendable type.
+      // TODO: Is it a correct place to check that?
+      dataKindInhabitants.foreach(inhabitant => {
+        val correct = allExtendableTypeIds.contains(inhabitant._2.getPolymorphicData)
+        if (!correct) {
+          throw new RuntimeException(
+            s"DataKindTrait on ${inhabitant._1.getId.getName} must extend a known extendable type."
+          )
         }
-      }
+      })
+
+      val groupedInhabitants = dataKindInhabitants
+        .groupBy { case (_, tr) => tr.getPolymorphicData }
+        .map { case (dataType, shapeAndTraits) =>
+          dataType -> shapeAndTraits.map { case (shape, tr) =>
+            tr.getKind -> shape
+          }
+        }
+
+      allExtendableTypeIds.map { id =>
+        val inhabitants = groupedInhabitants.getOrElse(id, List.empty)
+        id -> inhabitants
+      }.toMap
+    }
 
     override def documentShape(shape: DocumentShape): Option[Def] = {
       val id = shape.getId
@@ -173,6 +200,35 @@ class SmithyToIR(model: Model) {
         Def.OpenEnum(openEnumId, EnumType.StringEnum, values, shapeDoc)
       }
     }
+
+    def primitiveShape(shape: Shape): Option[Def] = {
+      val hints = getHints(shape)
+      shape match {
+        case shape: BooleanShape => Some(Def.PrimitiveAlias(shape.getId, Primitive.PBool, hints))
+        case shape: IntegerShape => Some(Def.PrimitiveAlias(shape.getId, Primitive.PInt, hints))
+        case shape: LongShape    => Some(Def.PrimitiveAlias(shape.getId, Primitive.PLong, hints))
+        case shape: FloatShape   => Some(Def.PrimitiveAlias(shape.getId, Primitive.PFloat, hints))
+        case shape: DoubleShape  => Some(Def.PrimitiveAlias(shape.getId, Primitive.PDouble, hints))
+        case shape: StringShape  => Some(Def.PrimitiveAlias(shape.getId, Primitive.PString, hints))
+        case shape: TimestampShape =>
+          Some(Def.PrimitiveAlias(shape.getId, Primitive.PTimestamp, hints))
+        case _ => None
+      }
+    }
+
+    override def booleanShape(shape: BooleanShape): Option[Def] = primitiveShape(shape)
+
+    override def integerShape(shape: IntegerShape): Option[Def] = primitiveShape(shape)
+
+    override def longShape(shape: LongShape): Option[Def] = primitiveShape(shape)
+
+    override def floatShape(shape: FloatShape): Option[Def] = primitiveShape(shape)
+
+    override def doubleShape(shape: DoubleShape): Option[Def] = primitiveShape(shape)
+
+    override def stringShape(shape: StringShape): Option[Def] = primitiveShape(shape)
+
+    override def timestampShape(shape: TimestampShape): Option[Def] = primitiveShape(shape)
   }
 
   object ToTypeVisitor extends ShapeVisitor[Option[Type]] {
@@ -246,7 +302,7 @@ class SmithyToIR(model: Model) {
 
   /// Finds ids of all immediate children structures of a shape
   object ChildrenShapeVisitor extends ShapeVisitor.Default[List[ShapeId]] {
-    protected def getDefault(shape: Shape): List[ShapeId] = List.empty
+    protected def getDefault(shape: Shape): List[ShapeId] = List(shape.getId)
 
     override def listShape(shape: ListShape): List[ShapeId] = {
       model.expectShape(shape.getMember.getTarget).accept(ChildrenShapeVisitor)

@@ -16,19 +16,20 @@ package org.eclipse.lsp4j.util;
  */
 public final class Preconditions {
 
-	private Preconditions() {}
+    private Preconditions() {
+    }
 
-	private static boolean nullChecks = true;
+    private static boolean nullChecks = true;
 
-	public static void enableNullChecks(boolean enable) {
-		Preconditions.nullChecks = enable;
-	}
+    public static void enableNullChecks(boolean enable) {
+        Preconditions.nullChecks = enable;
+    }
 
-	public static <T> T checkNotNull(T object, String propertyName) {
-		if (nullChecks && object == null) {
-			throw new IllegalArgumentException("Property must not be null: " + propertyName);
-		}
-		return object;
-	}
+    public static <T> T checkNotNull(T object, String propertyName) {
+        if (nullChecks && object == null) {
+            throw new IllegalArgumentException("Property must not be null: " + propertyName);
+        }
+        return object;
+    }
 
 }

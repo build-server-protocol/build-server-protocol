@@ -1,4 +1,4 @@
-package ch.epfl.smithy.jsonrpc.traits;
+package bsp.traits;
 
 import software.amazon.smithy.model.node.Node;
 import software.amazon.smithy.model.node.ObjectNode;

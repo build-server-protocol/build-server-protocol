@@ -12,7 +12,7 @@ use bsp#URIs
 use bsp.jvm#Classpath
 use bsp.jvm#JvmBuildTarget
 use bsp.jvm#JvmOptions
-use jsonrpc#data
+use jsonrpc#dataKind
 use jsonrpc#enumKind
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
@@ -30,7 +30,8 @@ service ScalaBuildServer {
 /// metadata for compiling a target containing Scala sources. This metadata is
 /// embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "scala".
-@data(kind: "scala", extends: BuildTargetData)
+@dataKind(kind: "scala", extends: BuildTargetData)
+@tags(["basic"])
 structure ScalaBuildTarget {
     /// The Scala organization that is used for a target.
     @required
@@ -62,7 +63,7 @@ intEnum ScalaPlatform {
 /// `ScalaTestParams` contains scala-specific metadata for testing Scala targets.
 /// This metadata is embedded in the `data: Option[Json]` field of the
 /// `buildTarget/test` request when the `dataKind` field contains "scala-test".
-@data(kind: "scala-test", extends: TestParamsData)
+@dataKind(kind: "scala-test", extends: TestParamsData)
 structure ScalaTestParams {
     /// The test classes to be run in this test execution.
     /// It is the result of `buildTarget/scalaTestClasses`.
@@ -220,7 +221,7 @@ structure ScalaMainClassesItem {
     classes: ScalaMainClassesList
 }
 
-@data(kind: "scala-main-class", extends: DebugSessionParamsData)
+@dataKind(kind: "scala-main-class", extends: DebugSessionParamsData)
 structure ScalaMainClass {
     /// The main class to run.
     @required
@@ -252,13 +253,13 @@ list EnvironmentVariablesList {
     member: String
 }
 
-@data(kind: "scala-test-suites", extends: DebugSessionParamsData)
+@dataKind(kind: "scala-test-suites", extends: DebugSessionParamsData)
 ///  Each element of that array is a fully qualified class name.
 list ScalaTestSuiteClasses {
     member: String
 }
 
-@data(kind: "scala-test-suites-selection", extends: DebugSessionParamsData)
+@dataKind(kind: "scala-test-suites-selection", extends: DebugSessionParamsData)
 structure ScalaTestSuites {
     /// The fully qualified names of the test classes in this target and the tests in this test classes
     @required

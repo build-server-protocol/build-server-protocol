@@ -1,4 +1,4 @@
-package ch.epfl.smithy.jsonrpc.traits;
+package bsp.traits;
 
 import software.amazon.smithy.model.SourceLocation;
 import software.amazon.smithy.model.shapes.ShapeId;

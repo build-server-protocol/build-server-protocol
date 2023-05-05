@@ -11,7 +11,6 @@ import software.amazon.smithy.model.shapes.ShapeId
 
 class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
-  // scalafmt: { maxColumn = 120}
   def renderFile(definition: Def): Option[CodegenFile] = {
     val fileName = definition.shapeId.getName() + ".ts"
     baseRelPath.flatMap { base =>
@@ -23,11 +22,21 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def render(definition: Def): Option[Lines] = {
     definition match {
-      case Structure(shapeId, fields, hints)            => Some(renderStructure(shapeId, fields))
-      case ClosedEnum(shapeId, enumType, values, hints) => Some(renderClosedEnum(shapeId, enumType, values))
-      case OpenEnum(shapeId, enumType, values, hints)   => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations, hints)          => None
+      case PrimitiveAlias(shapeId, primitiveType, hints) =>
+        Some(renderPrimitiveAlias(shapeId, primitiveType, hints))
+      case Structure(shapeId, fields, hints) => Some(renderStructure(shapeId, fields))
+      case ClosedEnum(shapeId, enumType, values, hints) =>
+        Some(renderClosedEnum(shapeId, enumType, values))
+      case OpenEnum(shapeId, enumType, values, hints) =>
+        Some(renderOpenEnum(shapeId, enumType, values))
+      case Service(shapeId, operations, hints) => None
     }
+  }
+
+  def renderPrimitiveAlias(id: ShapeId, primitive: Primitive, value: List[Hint]): Lines = {
+    lines(
+      s"export type ${id.getName()} = ${renderPrimitive(primitive)};"
+    )
   }
 
   def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {
@@ -54,7 +63,11 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     )
   }
 
-  def renderOpenEnum[A](shapeId: ShapeId, enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
+  def renderOpenEnum[A](
+      shapeId: ShapeId,
+      enumType: EnumType[A],
+      values: List[EnumValue[A]]
+  ): Lines = {
     val tpe = shapeId.getName()
     lines(
       block(s"export namespace $tpe") {

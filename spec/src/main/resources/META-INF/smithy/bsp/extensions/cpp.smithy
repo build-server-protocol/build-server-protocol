@@ -6,7 +6,7 @@ use bsp#BuildTargetData
 use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp#URI
-use jsonrpc#data
+use jsonrpc#dataKind
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
@@ -21,7 +21,8 @@ service CppBuildServer {
 /// metadata, specifically compiler reference. This metadata is embedded in
 /// the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "cpp".
-@data(kind: "cpp", extends: BuildTargetData)
+@tags(["basic"])
+@dataKind(kind: "cpp", extends: BuildTargetData)
 structure CppBuildTarget {
     /// The c++ version this target is supposed to use.
     /// For example: C++11

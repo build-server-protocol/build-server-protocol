@@ -2,15 +2,14 @@ $version: "2"
 
 namespace bsp.maven
 
-use bsp#BuildTargetIdentifier
-use bsp#BuildTargetIdentifiers
 use bsp#DependencyModuleData
 use bsp#URI
-use jsonrpc#data
+use jsonrpc#dataKind
 
 /// `MavenDependencyModule` is a basic data structure that contains maven-like
 /// metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
-@data(kind: "maven", extends: DependencyModuleData)
+@dataKind(kind: "maven", extends: DependencyModuleData)
+@tags(["basic"])
 structure MavenDependencyModule {
     @required
     organization: String

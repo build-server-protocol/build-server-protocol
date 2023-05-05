@@ -8,7 +8,7 @@ use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp#Identifier
 use bsp#URI
-use jsonrpc#data
+use jsonrpc#dataKind
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
@@ -24,7 +24,8 @@ service JvmBuildServer {
 /// metadata, specifically JDK reference. This metadata is embedded in
 /// the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "jvm".
-@data(kind: "jvm", extends: BuildTargetData)
+@tags(["basic"])
+@dataKind(kind: "jvm", extends: BuildTargetData)
 structure JvmBuildTarget {
     /// Uri representing absolute path to jdk
     /// For example: file:///usr/lib/jvm/java-8-openjdk-amd64
