@@ -216,17 +216,20 @@ class RustWorkspaceResult {
 }
 
 @JsonRpcData
-class RustStdLib {
-    @NonNull String rustcSysroot
-    @NonNull String rustcSrcSysroot
-    @NonNull String rustcVersion
+class RustcInfo {
+    @NonNull String sysroot
+    @NonNull String srcSysroot
+    @NonNull String version
+    @NonNull String host
 
-    new(@NonNull String rustcSysroot,
-        @NonNull String rustcSrcSysroot,
-        @NonNull String rustcVersion) {
-            this.rustcSysroot = rustcSysroot
-            this.rustcSrcSysroot = rustcSrcSysroot
-            this.rustcVersion = rustcVersion
+    new(@NonNull String sysroot,
+        @NonNull String srcSysroot,
+        @NonNull String version,
+        @NonNull String host) {
+            this.sysroot = sysroot
+            this.srcSysroot = srcSysroot
+            this.version = version
+            this.host = host
       }
 }
 
@@ -248,20 +251,14 @@ class RustToolchainResult {
 
 @JsonRpcData
 class RustToolchain {
-    RustStdLib stdLib
+    RustcInfo rustc
     @NonNull String cargoBinPath
     @NonNull String procMacroSrvPath
-    @NonNull String sysRoot
-    @NonNull String rustHost
-    new(RustStdLib stdLib,
+    new(RustcInfo rustc,
         @NonNull String cargoBinPath,
-        @NonNull String procMacroSrvPath,
-        @NonNull String sysRoot,
-        @NonNull String rustHost) {
-            this.stdLib = stdLib
+        @NonNull String procMacroSrvPath) {
+            this.rustc = rustc
             this.cargoBinPath = cargoBinPath
             this.procMacroSrvPath = procMacroSrvPath
-            this.sysRoot = sysRoot
-            this.rustHost = rustHost
       }
 }

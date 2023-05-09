@@ -7,7 +7,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustToolchain {
-  private RustStdLib stdLib;
+  private RustcInfo rustc;
 
   @NonNull
   private String cargoBinPath;
@@ -15,27 +15,19 @@ public class RustToolchain {
   @NonNull
   private String procMacroSrvPath;
 
-  @NonNull
-  private String sysRoot;
-
-  @NonNull
-  private String rustHost;
-
-  public RustToolchain(final RustStdLib stdLib, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath, @NonNull final String sysRoot, @NonNull final String rustHost) {
-    this.stdLib = stdLib;
+  public RustToolchain(final RustcInfo rustc, @NonNull final String cargoBinPath, @NonNull final String procMacroSrvPath) {
+    this.rustc = rustc;
     this.cargoBinPath = cargoBinPath;
     this.procMacroSrvPath = procMacroSrvPath;
-    this.sysRoot = sysRoot;
-    this.rustHost = rustHost;
   }
 
   @Pure
-  public RustStdLib getStdLib() {
-    return this.stdLib;
+  public RustcInfo getRustc() {
+    return this.rustc;
   }
 
-  public void setStdLib(final RustStdLib stdLib) {
-    this.stdLib = stdLib;
+  public void setRustc(final RustcInfo rustc) {
+    this.rustc = rustc;
   }
 
   @Pure
@@ -58,35 +50,13 @@ public class RustToolchain {
     this.procMacroSrvPath = Preconditions.checkNotNull(procMacroSrvPath, "procMacroSrvPath");
   }
 
-  @Pure
-  @NonNull
-  public String getSysRoot() {
-    return this.sysRoot;
-  }
-
-  public void setSysRoot(@NonNull final String sysRoot) {
-    this.sysRoot = Preconditions.checkNotNull(sysRoot, "sysRoot");
-  }
-
-  @Pure
-  @NonNull
-  public String getRustHost() {
-    return this.rustHost;
-  }
-
-  public void setRustHost(@NonNull final String rustHost) {
-    this.rustHost = Preconditions.checkNotNull(rustHost, "rustHost");
-  }
-
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("stdLib", this.stdLib);
+    b.add("rustc", this.rustc);
     b.add("cargoBinPath", this.cargoBinPath);
     b.add("procMacroSrvPath", this.procMacroSrvPath);
-    b.add("sysRoot", this.sysRoot);
-    b.add("rustHost", this.rustHost);
     return b.toString();
   }
 
@@ -100,10 +70,10 @@ public class RustToolchain {
     if (getClass() != obj.getClass())
       return false;
     RustToolchain other = (RustToolchain) obj;
-    if (this.stdLib == null) {
-      if (other.stdLib != null)
+    if (this.rustc == null) {
+      if (other.rustc != null)
         return false;
-    } else if (!this.stdLib.equals(other.stdLib))
+    } else if (!this.rustc.equals(other.rustc))
       return false;
     if (this.cargoBinPath == null) {
       if (other.cargoBinPath != null)
@@ -115,16 +85,6 @@ public class RustToolchain {
         return false;
     } else if (!this.procMacroSrvPath.equals(other.procMacroSrvPath))
       return false;
-    if (this.sysRoot == null) {
-      if (other.sysRoot != null)
-        return false;
-    } else if (!this.sysRoot.equals(other.sysRoot))
-      return false;
-    if (this.rustHost == null) {
-      if (other.rustHost != null)
-        return false;
-    } else if (!this.rustHost.equals(other.rustHost))
-      return false;
     return true;
   }
 
@@ -133,10 +93,8 @@ public class RustToolchain {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.stdLib== null) ? 0 : this.stdLib.hashCode());
+    result = prime * result + ((this.rustc== null) ? 0 : this.rustc.hashCode());
     result = prime * result + ((this.cargoBinPath== null) ? 0 : this.cargoBinPath.hashCode());
-    result = prime * result + ((this.procMacroSrvPath== null) ? 0 : this.procMacroSrvPath.hashCode());
-    result = prime * result + ((this.sysRoot== null) ? 0 : this.sysRoot.hashCode());
-    return prime * result + ((this.rustHost== null) ? 0 : this.rustHost.hashCode());
+    return prime * result + ((this.procMacroSrvPath== null) ? 0 : this.procMacroSrvPath.hashCode());
   }
 }

@@ -1513,14 +1513,15 @@ object RustWorkspaceResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class RustStdLib(
-    rustcSysroot: String,
-    rustcSrcSysroot: String,
-    rustcVersion: String
+final case class RustcInfo(
+    sysroot: String,
+    srcSysroot: String,
+    version: String,
+    host: String
 )
 
-object RustStdLib {
-  implicit val codec: JsonValueCodec[RustStdLib] =
+object RustcInfo {
+  implicit val codec: JsonValueCodec[RustcInfo] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
@@ -1534,11 +1535,9 @@ object RustToolchainParams {
 }
 
 final case class RustToolchainResult(
-    stdLib: RustStdLib,
+    rustcInfo: RustcInfo,
     cargoBinPath: String,
-    procMacroSrvPath: String,
-    sysRoot: String,
-    rustHost: String
+    procMacroSrvPath: String
 )
 
 object RustToolchainResult {
