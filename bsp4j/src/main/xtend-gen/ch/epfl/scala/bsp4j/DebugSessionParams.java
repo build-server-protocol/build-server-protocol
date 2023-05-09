@@ -14,6 +14,9 @@ public class DebugSessionParams {
   private List<BuildTargetIdentifier> targets;
 
   @NonNull
+  private Boolean skipConfiguration;
+
+  @NonNull
   private String dataKind;
 
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
@@ -23,6 +26,7 @@ public class DebugSessionParams {
     this.targets = targets;
     this.dataKind = dataKind;
     this.data = data;
+    this.skipConfiguration = Boolean.FALSE;
   }
 
   @Pure
@@ -33,6 +37,16 @@ public class DebugSessionParams {
 
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
+  }
+
+  @Pure
+  @NonNull
+  public Boolean getSkipConfiguration() {
+    return this.skipConfiguration;
+  }
+
+  public void setSkipConfiguration(@NonNull final Boolean skipConfiguration) {
+    this.skipConfiguration = Preconditions.checkNotNull(skipConfiguration, "skipConfiguration");
   }
 
   @Pure
@@ -59,6 +73,7 @@ public class DebugSessionParams {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
+    b.add("skipConfiguration", this.skipConfiguration);
     b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
@@ -79,6 +94,11 @@ public class DebugSessionParams {
         return false;
     } else if (!this.targets.equals(other.targets))
       return false;
+    if (this.skipConfiguration == null) {
+      if (other.skipConfiguration != null)
+        return false;
+    } else if (!this.skipConfiguration.equals(other.skipConfiguration))
+      return false;
     if (this.dataKind == null) {
       if (other.dataKind != null)
         return false;
@@ -98,6 +118,7 @@ public class DebugSessionParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.skipConfiguration== null) ? 0 : this.skipConfiguration.hashCode());
     result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }

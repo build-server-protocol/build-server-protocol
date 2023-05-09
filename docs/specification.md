@@ -1466,6 +1466,9 @@ export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
   targets: BuildTargetIdentifier[];
 
+  /** If true, the build server should skip the configuration of the debugger. Default to false */
+  skipConfiguration: Boolean;
+
   /** The kind of data to expect in the `data` field. */
   dataKind: String;
 

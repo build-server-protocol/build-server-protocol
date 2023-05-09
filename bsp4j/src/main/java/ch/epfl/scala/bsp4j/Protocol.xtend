@@ -665,6 +665,7 @@ class TaskFinishParams {
 @JsonRpcData
 class DebugSessionParams {
     @NonNull List<BuildTargetIdentifier> targets;
+    @NonNull Boolean skipConfiguration;
     @NonNull String dataKind;
     @JsonAdapter(JsonElementTypeAdapter.Factory) Object data;
 
@@ -672,6 +673,7 @@ class DebugSessionParams {
         this.targets = targets;
         this.dataKind = dataKind;
         this.data = data;
+        this.skipConfiguration = Boolean.FALSE;
     }
 }
 
