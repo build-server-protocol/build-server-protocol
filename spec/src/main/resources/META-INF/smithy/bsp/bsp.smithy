@@ -552,11 +552,9 @@ structure BuildClientCapabilities {
     languageIds: LanguageIds
 }
 
-@enumKind("open")
-enum LanguageId {
-    SCALA = "scala"
-    JAVA = "java"
-}
+/// Language IDs are defined here
+/// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem
+string LanguageId
 
 list LanguageIds {
     member: LanguageId
