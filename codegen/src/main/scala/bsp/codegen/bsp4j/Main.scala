@@ -1,4 +1,4 @@
-package bsp.codegen;
+package bsp.codegen.bsp4j
 
 import com.monovore.decline._
 

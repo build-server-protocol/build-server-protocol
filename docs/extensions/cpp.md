@@ -8,5 +8,5 @@ The following section contains C++-specific extensions to the build server
 protocol.
 
 ```scala mdoc:passthrough
-bsp.codegen.Codegen.printDocs("bsp.cpp")
+bsp.codegen.docs.Codegen.printDocs("bsp.cpp")
 ```

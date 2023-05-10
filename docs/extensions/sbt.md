@@ -9,5 +9,5 @@ protocol. This extension allows BSP clients to provide language support for sbt
 build files.
 
 ```scala mdoc:passthrough
-bsp.codegen.Codegen.printDocs("bsp.sbt")
+bsp.codegen.docs.Codegen.printDocs("bsp.sbt")
 ```

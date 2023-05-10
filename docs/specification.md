@@ -106,5 +106,5 @@ server like Dotty IDE). It is up to the client to decide when to start
 (process-wise) and when to shutdown a server.
 
 ```scala mdoc:passthrough
-bsp.codegen.Codegen.printDocs("bsp")
+bsp.codegen.docs.Codegen.printDocs("bsp")
 ```

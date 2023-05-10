@@ -260,7 +260,7 @@ def runBsp4jCodegen(config: Configuration) = Def.task {
   val outputDir = ((config / sourceDirectory).value / "java").getAbsolutePath
   val codegenClasspath = (codegen / Compile / fullClasspath).value.map(_.data)
 
-  val mainClass = "bsp.codegen.Main"
+  val mainClass = "bsp.codegen.bsp4j.Main"
   val s = (config / streams).value
 
   import sjsonnew._
