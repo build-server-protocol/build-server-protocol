@@ -1,12 +1,16 @@
 package bsp.codegen
 
+import bsp.codegen.bsp4j.JavaRenderer
+import bsp.codegen.docs.MarkdownRenderer
+import bsp.codegen.ir.SmithyToIR
+
 object Codegen {
 
   def run(outputDir: os.Path): List[os.Path] = {
     val model = ModelLoader.loadModel()
     val definitions = new SmithyToIR(model).definitions("bsp")
     val renderer = new JavaRenderer("ch.epfl.scala.bsp4j")
-    val codegenFiles = definitions.map(renderer.render)
+    val codegenFiles = definitions.flatMap(renderer.render)
 
     val preconditionsPath = outputDir / "org" / "eclipse" / "lsp4j" / "util" / "Preconditions.java"
     os.copy.over(

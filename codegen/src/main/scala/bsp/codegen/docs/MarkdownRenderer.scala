@@ -1,7 +1,9 @@
-package bsp.codegen
+package bsp.codegen.docs
 
-import bsp.codegen.Hint.Documentation
-import bsp.codegen.JsonRPCMethodType.{Notification, Request}
+import bsp.codegen._
+import bsp.codegen.ir.Hint.Documentation
+import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
+import bsp.codegen.ir.{Def, Hint, Operation}
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 

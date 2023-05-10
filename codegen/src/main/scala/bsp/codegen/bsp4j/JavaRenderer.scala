@@ -1,11 +1,13 @@
-package bsp.codegen
+package bsp.codegen.bsp4j
 
-import bsp.codegen.Def._
-import bsp.codegen.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.JsonRPCMethodType.{Notification, Request}
-import bsp.codegen.Primitive._
-import bsp.codegen.Type._
+import bsp.codegen._
 import bsp.codegen.dsl.{block, empty, lines, newline}
+import bsp.codegen.ir.Def._
+import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
+import bsp.codegen.ir.Primitive._
+import bsp.codegen.ir.Type._
+import bsp.codegen.ir._
 import cats.implicits.toFoldableOps
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
@@ -13,12 +15,15 @@ import software.amazon.smithy.model.shapes.ShapeId
 class JavaRenderer(basepkg: String) {
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
-  def render(definition: Def): CodegenFile = {
+
+  def render(definition: Def): Option[CodegenFile] = {
     definition match {
-      case Structure(shapeId, fields, _)            => renderStructure(shapeId, fields)
-      case ClosedEnum(shapeId, enumType, values, _) => renderClosedEnum(shapeId, enumType, values)
-      case OpenEnum(shapeId, enumType, values, _)   => renderOpenEnum(shapeId, enumType, values)
-      case Service(shapeId, operations, _)          => renderService(shapeId, operations)
+      case PrimitiveAlias(shapeId, tpe, _) => None
+      case Structure(shapeId, fields, _)   => Some(renderStructure(shapeId, fields))
+      case ClosedEnum(shapeId, enumType, values, _) =>
+        Some(renderClosedEnum(shapeId, enumType, values))
+      case OpenEnum(shapeId, enumType, values, _) => Some(renderOpenEnum(shapeId, enumType, values))
+      case Service(shapeId, operations, _)        => Some(renderService(shapeId, operations))
     }
   }
 
@@ -125,12 +130,12 @@ class JavaRenderer(basepkg: String) {
 
   def renderOperation(operation: Operation): Lines = {
     val output = operation.outputType match {
-      case TPrimitive(Primitive.PUnit) => "void"
-      case other                       => s"CompletableFuture<${renderType(other)}>"
+      case TPrimitive(Primitive.PUnit, _) => "void"
+      case other                          => s"CompletableFuture<${renderType(other)}>"
     }
     val input = operation.inputType match {
-      case TPrimitive(Primitive.PUnit) => ""
-      case other                       => s"${renderType(other)} params"
+      case TPrimitive(Primitive.PUnit, _) => ""
+      case other                          => s"${renderType(other)} params"
     }
     val rpcMethod = operation.jsonRPCMethod
     val annotation = operation.jsonRPCMethodType match {
@@ -180,7 +185,7 @@ class JavaRenderer(basepkg: String) {
     case TCollection(member) =>
       lines(s"import java.util.List") ++ renderImportFromType(member)
     case TUntaggedUnion(tpes) => tpes.foldMap(renderImportFromType)
-    case TPrimitive(prim)     => empty
+    case TPrimitive(prim, _)  => empty
   }
 
   def renderImport(field: Field): Lines = {
@@ -204,7 +209,12 @@ class JavaRenderer(basepkg: String) {
     renameAnnotation ++ importType ++ jsonAdapter ++ nonNull
   }
 
-  def useJsonAdapter(field: Field): Boolean = field.tpe == Type.TPrimitive(Primitive.PDocument)
+  def useJsonAdapter(field: Field): Boolean = {
+    field.tpe match {
+      case Type.TPrimitive(Primitive.PDocument, _) => true
+      case _                                       => false
+    }
+  }
 
   def renderJavaField(field: Field): Lines = {
     val maybeAdapter = if (useJsonAdapter(field)) {
@@ -234,7 +244,7 @@ class JavaRenderer(basepkg: String) {
 
   def renderType(tpe: Type): String = tpe match {
     case TRef(shapeId)        => shapeId.getName()
-    case TPrimitive(prim)     => renderPrimitive(prim)
+    case TPrimitive(prim, _)  => renderPrimitive(prim)
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"List<${renderType(member)}>"
     case TUntaggedUnion(tpes) => renderType(tpes.head) // Todo what does bsp4j do ?

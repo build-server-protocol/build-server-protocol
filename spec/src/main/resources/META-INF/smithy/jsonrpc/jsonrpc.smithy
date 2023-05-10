@@ -8,7 +8,7 @@ namespace jsonrpc
     jsonRequest
     jsonNotification
     enumKind
-])
+                    ])
 
 @trait(selector: "service")
 structure jsonRPC {

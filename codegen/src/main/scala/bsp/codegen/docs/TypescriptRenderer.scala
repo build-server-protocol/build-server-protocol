@@ -1,11 +1,13 @@
-package bsp.codegen
+package bsp.codegen.docs
 
-import bsp.codegen.Def._
-import bsp.codegen.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.Hint.Documentation
-import bsp.codegen.Primitive._
-import bsp.codegen.Type._
+import bsp.codegen._
 import bsp.codegen.dsl._
+import bsp.codegen.ir.Def._
+import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.ir.Hint.Documentation
+import bsp.codegen.ir.Primitive._
+import bsp.codegen.ir.Type._
+import bsp.codegen.ir._
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 
@@ -116,8 +118,14 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   }
 
   def renderType(tpe: Type): String = tpe match {
-    case TRef(shapeId)        => shapeId.getName()
-    case TPrimitive(prim)     => renderPrimitive(prim)
+    case TRef(shapeId) => shapeId.getName()
+    case TPrimitive(prim, shapeId) =>
+      if (shapeId.getNamespace == "smithy.api") {
+        renderPrimitive(prim)
+      } else {
+        shapeId.getName
+      }
+
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"${renderType(member)}[]"
     case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")

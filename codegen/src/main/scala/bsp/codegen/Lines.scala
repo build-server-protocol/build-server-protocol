@@ -2,19 +2,26 @@ package bsp.codegen
 
 import cats.kernel.Monoid
 
-trait Lines { self =>
+trait Lines {
+  self =>
   def get: List[String]
+
   def render = get.mkString(System.lineSeparator())
 
   def map(f: String => String) = Lines(get.map(f))
+
   def distinct: Lines = Lines(get.distinct)
+
   def sorted: Lines = Lines(get.sorted)
+
   def ++(other: Lines): Lines = new Lines {
     def get: List[String] = self.get ++ other.get
   }
+
   def indent: Lines = map { str =>
     if (str.nonEmpty) "  " + str else str
   }
+
   def block(l: Lines*): Lines = {
     val current = self.get
     val openBlock: List[String] =
@@ -54,6 +61,8 @@ object Lines {
     def get: List[String] = all.flatMap(_.get).toList
   }
 
-  implicit def fromToLines[A: ToLines](a: A): Lines = new Lines { def get = ToLines(a) }
+  implicit def fromToLines[A: ToLines](a: A): Lines = new Lines {
+    def get = ToLines(a)
+  }
 
 }

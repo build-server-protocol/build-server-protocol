@@ -2,12 +2,12 @@ $version: "2"
 
 namespace bsp
 
+use jsonrpc#data
+use jsonrpc#dataKind
 use jsonrpc#enumKind
 use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
-use jsonrpc#data
-use jsonrpc#dataKind
 
 @jsonRPC
 service BuildClient {
@@ -505,11 +505,8 @@ operation BuildTargetCleanCache {
 }
 
 
-
-
 /// Represents the identifier of a BSP request.
 string RequestId
-
 
 
 list BuildTargetIdentifiers {

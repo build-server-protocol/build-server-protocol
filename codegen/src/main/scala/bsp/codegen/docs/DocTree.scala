@@ -1,5 +1,6 @@
-package bsp.codegen
+package bsp.codegen.docs
 
+import bsp.codegen.ir.{Def, Operation}
 import software.amazon.smithy.model.shapes.ShapeId
 
 case class DocTree(
@@ -24,6 +25,7 @@ case class OperationDocNode(
 ) extends DocNode {
   def shapeId = operation.shapeId
 }
+
 case class ShapeDocNode(definition: Def, members: List[ShapeId]) extends DocNode {
   def shapeId: ShapeId = definition.shapeId
 }
