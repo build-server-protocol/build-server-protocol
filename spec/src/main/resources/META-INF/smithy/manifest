@@ -1,0 +1,11 @@
+bsp/bsp.smithy
+bsp/tags.smithy
+bsp/extensions/cpp.smithy
+bsp/extensions/java.smithy
+bsp/extensions/jvm.smithy
+bsp/extensions/maven.smithy
+bsp/extensions/python.smithy
+bsp/extensions/sbt.smithy
+bsp/extensions/scala.smithy
+docs/docs.smithy
+jsonrpc/jsonrpc.smithy
