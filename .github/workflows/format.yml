@@ -1,6 +1,10 @@
 name: Format
 on:
-  [pull_request]
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
 
 jobs:
   website-prettier:
