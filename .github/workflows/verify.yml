@@ -76,17 +76,21 @@ jobs:
       - run: sbt checkScalaFormat
 
   website-prettier:
+  
     name: Check website formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: creyD/prettier_action@v4.3
-        name: Check website
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          dry: True
-          prettier_options: --check --ignore-path website/.prettierignore website
-      - uses: creyD/prettier_action@v4.3
-        name: Check docs
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+          # This is important to fetch the changes to the previous commit
+          fetch-depth: 0
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
         with:
-          dry: True
-          prettier_options: --check docs
+          # This part is also where you can pass other options, for example:
+          prettier_options: --ignore-path website/.prettierignore --write **/*.{js,json,css,md}
+          only_changed: True
