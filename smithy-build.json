@@ -1,5 +1,3 @@
 {
-  "imports": [
-    "./spec/src/main"
-  ]
+  "imports": ["./spec/src/main"]
 }
