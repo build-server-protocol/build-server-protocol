@@ -1,6 +1,6 @@
 name: Format
 on:
-  [push, pull_request]
+  [pull_request]
 
 jobs:
   website-prettier:
@@ -18,4 +18,4 @@ jobs:
         uses: creyD/prettier_action@v4.3
         with:
           # This part is also where you can pass other options, for example:
-          prettier_options: --ignore-path website/.prettierignore --write **/*.{js,json,css,md}
+          prettier_options: --ignore-path website/.prettierignore --write **/*.{js,json,css,md,yml}
