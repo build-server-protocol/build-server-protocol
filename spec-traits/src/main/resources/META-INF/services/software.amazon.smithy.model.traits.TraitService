@@ -1,0 +1,8 @@
+bsp.traits.EnumKindTrait$Provider
+bsp.traits.JsonNotificationTrait$Provider
+bsp.traits.JsonRequestTrait$Provider
+bsp.traits.JsonRPCTrait$Provider
+bsp.traits.UntaggedUnionTrait$Provider
+bsp.traits.DataKindTrait$Provider
+bsp.traits.DataTrait$Provider
+bsp.traits.DocsPriorityTrait$Provider
