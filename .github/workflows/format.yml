@@ -13,6 +13,7 @@ jobs:
         with:
           # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
