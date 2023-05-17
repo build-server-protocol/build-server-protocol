@@ -1,7 +1,7 @@
 # License notice for lsp4j
 
 The bsp4j project contains parts which are derived from
-[lsp4j](https://github.com/eclipse/lsp4j) source code.  We include the text of
+[lsp4j](https://github.com/eclipse/lsp4j) source code. We include the text of
 the original license below:
 
 ```
@@ -268,8 +268,8 @@ No third-party beneficiary rights are created under this Agreement.
 
 Exhibit A - Form of Secondary Licenses Notice
 
-"This Source Code may also be made available under the following 
-Secondary Licenses when the conditions for such availability set forth 
+"This Source Code may also be made available under the following
+Secondary Licenses when the conditions for such availability set forth
 in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
 version(s), and exceptions or additional permissions here}."
 
