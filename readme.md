@@ -22,15 +22,15 @@ If you'd like to contribute to the protocol, please check out our
 
 _Current Maintainers_
 
-* Adrien Piquerez - [@adpi2](https://github.com/adpi2)
-* Andrzej Głuszak - [@agluszak](https://github.com/agluszak)
-* Chris Kipp - [@ckipp01](https://github.com/ckipp01)
-* Justin Kaeser - [@jastice](https://github.com/jastice)
-* Łukasz Wawrzyk - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
-* Marcin Abramowicz - [@abrams27](https://github.com/abrams27)
-* Tomasz Pasternak - [@tpasternak](https://github.com/tpasternak)
+- Adrien Piquerez - [@adpi2](https://github.com/adpi2)
+- Andrzej Głuszak - [@agluszak](https://github.com/agluszak)
+- Chris Kipp - [@ckipp01](https://github.com/ckipp01)
+- Justin Kaeser - [@jastice](https://github.com/jastice)
+- Łukasz Wawrzyk - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
+- Marcin Abramowicz - [@abrams27](https://github.com/abrams27)
+- Tomasz Pasternak - [@tpasternak](https://github.com/tpasternak)
 
 _Past Maintainers_
 
-* Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
-* Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+- Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
+- Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)

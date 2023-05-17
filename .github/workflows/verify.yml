@@ -74,19 +74,3 @@ jobs:
           java-version: '11'
           cache: 'sbt'
       - run: sbt checkScalaFormat
-
-  website-prettier:
-    name: Check website formatting
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: creyD/prettier_action@v4.3
-        name: Check website
-        with:
-          dry: True
-          prettier_options: --check --ignore-path website/.prettierignore website
-      - uses: creyD/prettier_action@v4.3
-        name: Check docs
-        with:
-          dry: True
-          prettier_options: --check docs

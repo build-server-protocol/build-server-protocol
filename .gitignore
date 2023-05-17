@@ -37,3 +37,7 @@ out/
 
 website/.docusaurus
 website/build
+website/project
+
+bsp4j-gen
+docs-gen
