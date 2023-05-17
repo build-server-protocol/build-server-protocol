@@ -6,7 +6,7 @@ title: Implementations
 ## Build Servers
 
 | Build tool | Link                                                       | Implementation language | Notes                                                         |
-|------------|------------------------------------------------------------|-------------------------|---------------------------------------------------------------|
+| ---------- | ---------------------------------------------------------- | ----------------------- | ------------------------------------------------------------- |
 | Bazel      | [bazel-bsp](https://github.com/JetBrains/bazel-bsp)        | Kotlin                  | Supports Java, Scala, and Kotlin.                             |
 | Bloop      | [scalacenter/bloop](https://github.com/scalacenter/bloop/) | Scala                   | Supports sbt, Gradle, Maven and Mill.                         |
 | Mill       | [mill](https://github.com/lihaoyi/mill/)                   | Scala                   | Built-in since mill 0.9.3, before as contrib plugin.          |
@@ -17,7 +17,7 @@ title: Implementations
 ## Build Clients
 
 | Supporting Tool | Link                                                                    | Implementation language | Notes                                             |
-|-----------------|-------------------------------------------------------------------------|-------------------------|---------------------------------------------------|
+| --------------- | ----------------------------------------------------------------------- | ----------------------- | ------------------------------------------------- |
 | IntelliJ Scala  | [JetBrains/intellij-scala](https://github.com/JetBrains/intellij-scala) | Scala                   | Implementation focused on Scala, supports Java.   |
 | IntelliJ-BSP    | [JetBrains/intellij-bsp](https://github.com/JetBrains/intellij-bsp)     | Kotlin                  | New implementation with broader language support. |
 | Metals          | [scalameta/metals](https://github.com/scalameta/metals)                 | Scala                   | LSP language server.                              |
