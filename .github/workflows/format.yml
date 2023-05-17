@@ -1,6 +1,9 @@
 name: Format
 on:
-  [pull_request_target]
+  [pull_request]
+
+permissions:
+  contents: write
 
 jobs:
   website-prettier:
