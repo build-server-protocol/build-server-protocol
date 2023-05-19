@@ -21,20 +21,12 @@ the maintainers on the same page about what's happening.
 NOTE: If you're just making a fix or a small improvement on something, it's not
 necessary to have an issue or discussion first.
 
-## Updating protocol
+## Updating the protocol
 
-To change the protocol (e.g. by adding a new field to some request parameters) one has to:
-
-1. Update the appropriate`.xtend` file in the `bsp4j` module.
-2. Manually re-generate java sources via `sbt bsp4j/xtend`
-3. Update the corresponding classes in `bsp4s` module
-
-While working on changes in `bsp4j` you can use
-
-```
-sbt
-> ~; bsp4j/xtend ; bsp4j/compile
-```
+To change the protocol (e.g. by adding a new field to some request parameters), one has to update
+the [Smithy](https://smithy.io/2.0/index.html) model.
+The model is located in the [spec/src/main/resources/META-INF/smithy/bsp](spec/src/main/resources/META-INF/smithy/bsp) folder.
+The model is then used to generate the protocol specification, the documentation and the support libraries.
 
 ## Formatting
 
@@ -75,7 +67,7 @@ need to be replaced with the following 2 steps:
 
 ## Some notes on maintenance
 
-As BSP is becoming more popular and widely used it's important that all the main
+As BSP is becoming more popular and widely used, it's important that all the main
 parties involved come to an agreement on what is going to be added and merge
 into the protocol. In order to ensure this happen we have a [feature request
 template](./.github/ISSUE_TEMPLATE/feature_request.yml) that will have a section

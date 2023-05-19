@@ -13,6 +13,9 @@ designed to be language-agnostic.
 
 You can read the specification [here](https://build-server-protocol.github.io/docs/specification).
 
+The specification text, docs and support libraries for some of the supported languages are automatically
+generated from the [smithy model](spec/src/main/resources/META-INF/smithy/bsp/bsp.smithy).
+
 ## Contribution
 
 If you'd like to contribute to the protocol, please check out our
