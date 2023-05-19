@@ -9,6 +9,18 @@ use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
+/// An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
+integer Integer
+
+/// A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
+long Long
+
+/// A float is a single precision IEEE-754 floating point number.
+float Float
+
+/// A double is a double precision IEEE-754 floating point number.
+double Double
+
 @jsonRPC
 service BuildClient {
     operations: [

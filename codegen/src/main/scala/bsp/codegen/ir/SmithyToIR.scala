@@ -94,11 +94,11 @@ class SmithyToIR(model: Model) {
       }
       .toList
 
-  object ToIRVisitor extends ShapeVisitor.Default[Option[Def]] {
+  object ToIRVisitor extends ShapeVisitor.Default[List[Def]] {
     // A lot of smithy shapes are not transformed to bsp4j data types, but are rather used
     // as type aliases and holders in Smithy. That is the case, in particular, for all
     // primitive shapes, that get handled by this default method.
-    protected def getDefault(shape: Shape): Option[Def] = None
+    protected def getDefault(shape: Shape): List[Def] = List.empty
 
     def buildOperation(op: OperationShape): Option[Operation] = {
       val maybeMethod = if (op.hasTrait(classOf[JsonRequestTrait])) {
@@ -118,11 +118,11 @@ class SmithyToIR(model: Model) {
       }
     }
 
-    override def serviceShape(shape: ServiceShape): Option[Def] = {
+    override def serviceShape(shape: ServiceShape): List[Def] = {
       val operations = shape.getOperations.asScala.toList
         .map(model.expectShape(_, classOf[OperationShape]))
         .flatMap(buildOperation)
-      Some(Def.Service(shape.getId, operations, getHints(shape)))
+      List(Def.Service(shape.getId, operations, getHints(shape)))
     }
 
     def toField(member: MemberShape): Option[Field] = {
@@ -137,9 +137,11 @@ class SmithyToIR(model: Model) {
     def getType(maybeShapeId: Optional[ShapeId]): Option[Type] =
       maybeShapeId.toScala.flatMap(getType)
 
-    override def structureShape(shape: StructureShape): Option[Def] = {
+    def dataKindShapeId(dataTypeShapeId: ShapeId): ShapeId = ShapeId.fromParts(dataTypeShapeId.getNamespace, dataTypeShapeId.getName + "Kind")
+
+    override def structureShape(shape: StructureShape): List[Def] = {
       if (shape.hasTrait(classOf[MixinTrait])) {
-        return None
+        return List.empty
       }
 
       val fields = shape.members().asScala.flatMap(toField).toList
@@ -149,9 +151,13 @@ class SmithyToIR(model: Model) {
           val doc =
             "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
           val hints = List(Hint.Documentation(doc))
+          val dataTypeShape = field.tpe match {
+            case TPrimitive(Primitive.PDocument, dataTypeShape) => dataTypeShape
+            case _                                              => throw new RuntimeException("Expected document type")
+          }
           Field(
             "dataKind",
-            TString,
+            TRef(dataKindShapeId(dataTypeShape)),
             required = false,
             None,
             hints
@@ -160,79 +166,86 @@ class SmithyToIR(model: Model) {
         case Nil           => Nil
       }
 
-      Some(Def.Structure(shape.getId, insertDiscriminator(fields), getHints(shape)))
+      List(Def.Structure(shape.getId, insertDiscriminator(fields), getHints(shape)))
     }
 
-    override def intEnumShape(shape: IntEnumShape): Option[Def] = {
+    override def intEnumShape(shape: IntEnumShape): List[Def] = {
       val enumValues = shape.getEnumValues.asScala.map { case (name, value) =>
         val valueHints = getHints(shape.getAllMembers.get(name))
         EnumValue(name, value.toInt, valueHints)
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
-        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
+        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
+        case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
       }
     }
 
-    override def enumShape(shape: EnumShape): Option[Def] = {
+    override def enumShape(shape: EnumShape): List[Def] = {
       val enumValues = shape.getEnumValues.asScala.map { case (name, value) =>
         val valueHints = getHints(shape.getAllMembers.get(name))
         EnumValue(name, value, valueHints)
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => Some(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
-        case CLOSED => Some(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+        case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
       }
     }
 
-    override def documentShape(shape: DocumentShape): Option[Def] = {
-      val id = shape.getId
-      allDataKindAnnotated.get(id).map { allKnownInhabitants =>
-        val openEnumId = ShapeId.fromParts(id.getNamespace, id.getName + "Kind")
-        val values = allKnownInhabitants.map { case PolymorphicDataKind(disc, member) =>
-          val snakeCased = disc.replace('-', '_').toUpperCase()
-          val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
-          EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
-        }
-        val shapeDoc = shape
-          .getTrait(classOf[DocumentationTrait])
-          .toScala
-          .map(doc => Hint.Documentation(doc.getValue))
-          .toList
-        Def.OpenEnum(openEnumId, EnumType.StringEnum, values, shapeDoc)
+    override def documentShape(shape: DocumentShape): List[Def] = {
+      val hints = getHints(shape)
+
+      // A document shape with the data trait in fact defines two structures: one for the data (a type alias for any)
+      // and one for the data kind (an enum).
+      if (shape.hasTrait(classOf[DataTrait])) {
+        val id = shape.getId
+
+        allDataKindAnnotated.get(id).map { allKnownInhabitants =>
+          val openEnumId = dataKindShapeId(id)
+          val values = allKnownInhabitants.map { case PolymorphicDataKind(disc, member) =>
+            val snakeCased = disc.replace('-', '_').toUpperCase()
+            val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
+            EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
+          }
+
+          val dataKindDef = Def.OpenEnum(openEnumId, EnumType.StringEnum, values, hints)
+          val dataDef = Def.PrimitiveAlias(id, Primitive.PDocument, hints)
+          List(dataKindDef, dataDef)
+        }.flatMap(_.headOption).toList
+      } else {
+        primitiveShape(shape)
       }
     }
 
-    def primitiveShape(shape: Shape): Option[Def] = {
+    def primitiveShape(shape: Shape): List[Def] = {
       val hints = getHints(shape)
       shape match {
-        case shape: BooleanShape => Some(Def.PrimitiveAlias(shape.getId, Primitive.PBool, hints))
-        case shape: IntegerShape => Some(Def.PrimitiveAlias(shape.getId, Primitive.PInt, hints))
-        case shape: LongShape    => Some(Def.PrimitiveAlias(shape.getId, Primitive.PLong, hints))
-        case shape: FloatShape   => Some(Def.PrimitiveAlias(shape.getId, Primitive.PFloat, hints))
-        case shape: DoubleShape  => Some(Def.PrimitiveAlias(shape.getId, Primitive.PDouble, hints))
-        case shape: StringShape  => Some(Def.PrimitiveAlias(shape.getId, Primitive.PString, hints))
+        case shape: BooleanShape => List(Def.PrimitiveAlias(shape.getId, Primitive.PBool, hints))
+        case shape: IntegerShape => List(Def.PrimitiveAlias(shape.getId, Primitive.PInt, hints))
+        case shape: LongShape    => List(Def.PrimitiveAlias(shape.getId, Primitive.PLong, hints))
+        case shape: FloatShape   => List(Def.PrimitiveAlias(shape.getId, Primitive.PFloat, hints))
+        case shape: DoubleShape  => List(Def.PrimitiveAlias(shape.getId, Primitive.PDouble, hints))
+        case shape: StringShape  => List(Def.PrimitiveAlias(shape.getId, Primitive.PString, hints))
         case shape: TimestampShape =>
-          Some(Def.PrimitiveAlias(shape.getId, Primitive.PTimestamp, hints))
-        case _ => None
+          List(Def.PrimitiveAlias(shape.getId, Primitive.PTimestamp, hints))
+        case _ => List.empty
       }
     }
 
-    override def booleanShape(shape: BooleanShape): Option[Def] = primitiveShape(shape)
+    override def booleanShape(shape: BooleanShape): List[Def] = primitiveShape(shape)
 
-    override def integerShape(shape: IntegerShape): Option[Def] = primitiveShape(shape)
+    override def integerShape(shape: IntegerShape): List[Def] = primitiveShape(shape)
 
-    override def longShape(shape: LongShape): Option[Def] = primitiveShape(shape)
+    override def longShape(shape: LongShape): List[Def] = primitiveShape(shape)
 
-    override def floatShape(shape: FloatShape): Option[Def] = primitiveShape(shape)
+    override def floatShape(shape: FloatShape): List[Def] = primitiveShape(shape)
 
-    override def doubleShape(shape: DoubleShape): Option[Def] = primitiveShape(shape)
+    override def doubleShape(shape: DoubleShape): List[Def] = primitiveShape(shape)
 
-    override def stringShape(shape: StringShape): Option[Def] = primitiveShape(shape)
+    override def stringShape(shape: StringShape): List[Def] = primitiveShape(shape)
 
-    override def timestampShape(shape: TimestampShape): Option[Def] = primitiveShape(shape)
+    override def timestampShape(shape: TimestampShape): List[Def] = primitiveShape(shape)
   }
 
   object ToTypeVisitor extends ShapeVisitor[Option[Type]] {
@@ -249,7 +262,8 @@ class SmithyToIR(model: Model) {
 
     def floatShape(shape: FloatShape): Option[Type] = prim(PFloat, shape)
 
-    def documentShape(shape: DocumentShape): Option[Type] = prim(PDocument, shape)
+    def documentShape(shape: DocumentShape): Option[Type] =
+      prim(PDocument, shape)
 
     def doubleShape(shape: DoubleShape): Option[Type] = prim(PDouble, shape)
 

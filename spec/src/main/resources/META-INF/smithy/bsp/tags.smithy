@@ -6,6 +6,18 @@ use docs#docsPriority
 
 // Applying the tags a-posteriori to avoid hurting the readability of the spec
 
+apply Integer @tags(["basic"])
+apply Integer @docsPriority(11)
+
+apply Long @tags(["basic"])
+apply Long @docsPriority(11)
+
+apply Float @tags(["basic"])
+apply Float @docsPriority(11)
+
+apply Double @tags(["basic"])
+apply Double @docsPriority(11)
+
 apply BuildTarget @tags(["basic"])
 apply BuildTarget @docsPriority(10)
 
