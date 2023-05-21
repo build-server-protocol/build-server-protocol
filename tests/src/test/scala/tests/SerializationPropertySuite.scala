@@ -138,6 +138,11 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.Diagnostic, bsp4s.Diagnostic](a)
     }
   }
+  test("Diagnostic with Scala") {
+    forAll(Bsp4jGenerators.genDiagnosticWithScala) { a: bsp4j.Diagnostic =>
+      assertSerializationRoundtrip[bsp4j.Diagnostic, bsp4s.Diagnostic](a)
+    }
+  }
   test("DiagnosticRelatedInformation") {
     forAll { a: bsp4j.DiagnosticRelatedInformation =>
       assertSerializationRoundtrip[
@@ -311,6 +316,11 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
   test("ScalaTestParams") {
     forAll { a: bsp4j.ScalaTestParams =>
       assertSerializationRoundtrip[bsp4j.ScalaTestParams, bsp4s.ScalaTestParams](a)
+    }
+  }
+  test("ScalaAction") {
+    forAll { a: bsp4j.ScalaAction =>
+      assertSerializationRoundtrip[bsp4j.ScalaAction, bsp4s.ScalaAction](a)
     }
   }
   test("ShowMessageParams") {
