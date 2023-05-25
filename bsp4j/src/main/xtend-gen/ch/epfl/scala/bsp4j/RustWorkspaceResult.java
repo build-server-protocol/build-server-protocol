@@ -17,10 +17,14 @@ public class RustWorkspaceResult {
   @NonNull
   private List<RustDependency> dependencies;
 
-  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies) {
+  @NonNull
+  private List<BuildTargetIdentifier> resolvedTargets;
+
+  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final List<RustRawDependency> rawDependencies, @NonNull final List<RustDependency> dependencies, @NonNull final List<BuildTargetIdentifier> resolvedTargets) {
     this.packages = packages;
     this.rawDependencies = rawDependencies;
     this.dependencies = dependencies;
+    this.resolvedTargets = resolvedTargets;
   }
 
   @Pure
@@ -53,6 +57,16 @@ public class RustWorkspaceResult {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
+  @Pure
+  @NonNull
+  public List<BuildTargetIdentifier> getResolvedTargets() {
+    return this.resolvedTargets;
+  }
+
+  public void setResolvedTargets(@NonNull final List<BuildTargetIdentifier> resolvedTargets) {
+    this.resolvedTargets = Preconditions.checkNotNull(resolvedTargets, "resolvedTargets");
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -60,6 +74,7 @@ public class RustWorkspaceResult {
     b.add("packages", this.packages);
     b.add("rawDependencies", this.rawDependencies);
     b.add("dependencies", this.dependencies);
+    b.add("resolvedTargets", this.resolvedTargets);
     return b.toString();
   }
 
@@ -88,6 +103,11 @@ public class RustWorkspaceResult {
         return false;
     } else if (!this.dependencies.equals(other.dependencies))
       return false;
+    if (this.resolvedTargets == null) {
+      if (other.resolvedTargets != null)
+        return false;
+    } else if (!this.resolvedTargets.equals(other.resolvedTargets))
+      return false;
     return true;
   }
 
@@ -98,6 +118,7 @@ public class RustWorkspaceResult {
     int result = 1;
     result = prime * result + ((this.packages== null) ? 0 : this.packages.hashCode());
     result = prime * result + ((this.rawDependencies== null) ? 0 : this.rawDependencies.hashCode());
-    return prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
+    result = prime * result + ((this.dependencies== null) ? 0 : this.dependencies.hashCode());
+    return prime * result + ((this.resolvedTargets== null) ? 0 : this.resolvedTargets.hashCode());
   }
 }

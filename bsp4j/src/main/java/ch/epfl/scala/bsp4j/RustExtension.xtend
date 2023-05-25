@@ -205,13 +205,16 @@ class RustWorkspaceResult {
   @NonNull List<RustPackage> packages
   @NonNull List<RustRawDependency> rawDependencies
   @NonNull List<RustDependency> dependencies
+  @NonNull List<BuildTargetIdentifier> resolvedTargets
   
   new(@NonNull List<RustPackage> packages,
         @NonNull List<RustRawDependency> rawDependencies,
-        @NonNull List<RustDependency> dependencies) {
+        @NonNull List<RustDependency> dependencies,
+        @NonNull List<BuildTargetIdentifier> resolvedTargets) {
     this.packages = packages
     this.rawDependencies = rawDependencies
     this.dependencies = dependencies
+    this.resolvedTargets = resolvedTargets
   }
 }
 
