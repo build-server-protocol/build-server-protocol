@@ -1505,7 +1505,8 @@ object RustWorkspaceParams {
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
     rawDependencies: List[RustRawDependency],
-    dependencies: List[RustDependency]
+    dependencies: List[RustDependency],
+    targets: List[BuildTargetIdentifier]
 )
 
 object RustWorkspaceResult {
