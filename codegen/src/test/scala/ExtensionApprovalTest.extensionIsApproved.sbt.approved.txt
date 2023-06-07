@@ -1,0 +1,118 @@
+## Common shapes
+
+#### SbtBuildTarget
+
+`SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
+for providing editor support for sbt build files. This metadata is embedded in
+the `data: Option[Json]` field of the `BuildTarget` definition when the
+`dataKind` field contains "sbt".
+
+For example, say we have a project in `/foo/bar` defining projects `A` and `B`
+and two meta builds `M1` (defined in `/foo/bar/project`) and `M2` (defined in
+`/foo/bar/project/project`).
+
+The sbt build target for `M1` will have `A` and `B` as the defined targets and
+`M2` as the parent. Similarly, the sbt build target for `M2` will have `M1` as
+the defined target and no parent.
+
+Clients can use this information to reconstruct the tree of sbt meta builds. The
+`parent` information can be defined from `children` but it's provided by the
+server to simplify the data processing on the client side.
+
+```ts
+export interface SbtBuildTarget {
+  sbtVersion: String;
+
+  autoImports: String[];
+
+  scalaBuildTarget: ScalaBuildTarget;
+
+  parent?: BuildTargetIdentifier;
+
+  children: BuildTargetIdentifier[];
+}
+```
+
+#### ScalaBuildTarget
+
+`ScalaBuildTarget` is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources. This metadata is
+embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when
+the `dataKind` field contains "scala".
+
+```ts
+export interface ScalaBuildTarget {
+  /** The Scala organization that is used for a target. */
+  scalaOrganization: String;
+
+  /** The scala version to compile this target */
+  scalaVersion: String;
+
+  /** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: String;
+
+  /** The target platform for this target */
+  platform: ScalaPlatform;
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  jars: URI[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget?: JvmBuildTarget;
+}
+```
+
+#### ScalaPlatform
+
+
+```ts
+export enum ScalaPlatform {
+  Jvm = 1,
+
+  Js = 2,
+
+  Native = 3,
+}
+```
+
+#### URI
+
+A resource identifier that is a valid URI according to rfc3986:
+https://tools.ietf.org/html/rfc3986
+
+```ts
+export type URI = String;
+```
+
+#### JvmBuildTarget
+
+`JvmBuildTarget` is a basic data structure that contains jvm-specific
+metadata, specifically JDK reference. This metadata is embedded in
+the `data: Option[Json]` field of the `BuildTarget` definition, when
+the `dataKind` field contains "jvm".
+
+```ts
+export interface JvmBuildTarget {
+  /** Uri representing absolute path to jdk
+   * For example: file:///usr/lib/jvm/java-8-openjdk-amd64 */
+  javaHome?: URI;
+
+  /** The java version this target is supposed to use.
+   * For example: 1.8 */
+  javaVersion?: String;
+}
+```
+
+#### BuildTargetIdentifier
+
+A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
+
+```ts
+export interface BuildTargetIdentifier {
+  /** The target’s Uri */
+  uri: URI;
+}
+```
+
