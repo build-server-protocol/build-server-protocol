@@ -67,7 +67,7 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
 
   def renderEnumType[A](enumType: EnumType[A]): String = {
     enumType match {
-      case IntEnum => renderPrimitive(Primitive.PInt)
+      case IntEnum    => renderPrimitive(Primitive.PInt)
       case StringEnum => renderPrimitive(Primitive.PString)
     }
   }

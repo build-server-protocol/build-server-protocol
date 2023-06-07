@@ -4,9 +4,10 @@ import bsp.codegen.ir.{Def, Operation}
 import software.amazon.smithy.model.shapes.ShapeId
 
 case class DocTree(
-    commonShapes: List[ShapeId],
-    services: List[ShapeId],
-    docNodes: Map[ShapeId, DocNode]
+    commonShapeIds: List[ShapeId],
+    services: Map[ShapeId, ServiceDocNode],
+    operations: Map[ShapeId, OperationDocNode],
+    structures: Map[ShapeId, StructureDocNode]
 )
 
 sealed trait DocNode {
@@ -20,12 +21,21 @@ case class ServiceDocNode(
 
 case class OperationDocNode(
     operation: Operation,
-    inputNode: Option[ShapeId],
-    outputNode: Option[ShapeId]
+    input: Option[ShapeId],
+    output: Option[ShapeId]
 ) extends DocNode {
   def shapeId = operation.shapeId
 }
 
-case class ShapeDocNode(definition: Def, members: List[ShapeId]) extends DocNode {
+sealed trait StructureDocMember {
+  def shapeId: ShapeId
+}
+
+object StructureDocMember {
+  case class Field(shapeId: ShapeId) extends StructureDocMember
+  case class AssociatedDataKind(shapeId: ShapeId, dataKind: String) extends StructureDocMember
+}
+
+case class StructureDocNode(definition: Def, members: List[StructureDocMember]) extends DocNode {
   def shapeId: ShapeId = definition.shapeId
 }
