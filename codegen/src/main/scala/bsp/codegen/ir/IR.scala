@@ -6,7 +6,9 @@ import software.amazon.smithy.model.shapes.ShapeId
 // of bsp4j. It is not meant to be reused for Scala code-generation, or any other language, for that matter.
 
 sealed trait Def {
-  def shapeId: ShapeId;
+  def members: List[ShapeId] = List.empty
+
+  def shapeId: ShapeId
 
   def hints: List[Hint]
 }
@@ -14,7 +16,9 @@ sealed trait Def {
 object Def {
   final case class PrimitiveAlias(shapeId: ShapeId, prim: Primitive, hints: List[Hint]) extends Def
 
-  final case class Structure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]) extends Def
+  final case class Structure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]) extends Def {
+    override def members: List[ShapeId] = super.members
+  }
 
   final case class OpenEnum[A](
       shapeId: ShapeId,

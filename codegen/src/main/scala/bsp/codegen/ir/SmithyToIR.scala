@@ -10,7 +10,7 @@ import software.amazon.smithy.model.shapes._
 import software.amazon.smithy.model.traits._
 
 import java.util.Optional
-import scala.collection.mutable.{Map => MMap}
+import scala.collection.mutable.{Set => MSet}
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters._
 
@@ -57,26 +57,39 @@ class SmithyToIR(model: Model) {
   }
 
   def docTree(namespace: String): DocTree = {
-    val shapes =
-      model.shapes().iterator().asScala.toList.filter(_.getId.getNamespace == namespace)
+    val allShapes = model.shapes().iterator().asScala.toList
+    val namespaceShapes = allShapes.filter(_.getId.getNamespace == namespace)
     val commonTag = "basic"
     val commonShapes =
-      shapes
+      namespaceShapes
         .filter(_.getTrait(classOf[TagsTrait]).toScala.exists(_.getTags.contains(commonTag)))
         .sortBy(_.getTrait(classOf[DocsPriorityTrait]).toScala.map(_.getPriority).getOrElse(0))
         .reverse
 
-    val serviceShapes = shapes.filter(_.isServiceShape())
+    val serviceShapes = namespaceShapes
+      .filter(_.isServiceShape)
 
-    val docNodes = MMap[ShapeId, DocNode]()
-    val visitor = new DocShapeVisitor(docNodes, namespace)
+    val visitor = new DocShapeVisitor(namespace)
 
-    shapes.foreach(_.accept(visitor))
+    val members = {
+      val memberVisitor = new MemberVisitor
+      commonShapes.foreach(_.accept(memberVisitor))
+      serviceShapes.foreach(_.accept(memberVisitor))
+      memberVisitor.members
+    }
+
+    val docNodes = members
+      .map(model.expectShape)
+      .flatMap(_.accept(visitor))
+      .map(node => (node.shapeId, node))
+      .toMap
 
     val commonShapeIds = commonShapes.map(_.getId)
-    val serviceShapeIds = serviceShapes.map(_.getId)
+    val services = docNodes.collect({ case (id, node: ServiceDocNode) => (id, node) })
+    val operations = docNodes.collect({ case (id, node: OperationDocNode) => (id, node) })
+    val structures = docNodes.collect({ case (id, node: StructureDocNode) => (id, node) })
 
-    DocTree(commonShapeIds, serviceShapeIds, docNodes.toMap)
+    DocTree(commonShapeIds, services, operations, structures)
   }
 
   def definitions(namespace: String): List[Def] =
@@ -85,12 +98,9 @@ class SmithyToIR(model: Model) {
       .iterator()
       .asScala
       .filter(_.getId.getNamespace == namespace)
-      .map { shape =>
+      .flatMap { shape =>
         if (shape.hasTrait("smithy.api#trait")) None
         else shape.accept(ToIRVisitor)
-      }
-      .collect { case Some(definition) =>
-        definition
       }
       .toList
 
@@ -137,9 +147,11 @@ class SmithyToIR(model: Model) {
     def getType(maybeShapeId: Optional[ShapeId]): Option[Type] =
       maybeShapeId.toScala.flatMap(getType)
 
-    def dataKindShapeId(dataTypeShapeId: ShapeId): ShapeId = ShapeId.fromParts(dataTypeShapeId.getNamespace, dataTypeShapeId.getName + "Kind")
+    def dataKindShapeId(dataTypeShapeId: ShapeId): ShapeId =
+      ShapeId.fromParts(dataTypeShapeId.getNamespace, dataTypeShapeId.getName + "Kind")
 
     override def structureShape(shape: StructureShape): List[Def] = {
+      // Skip shapes that are used as mixins.
       if (shape.hasTrait(classOf[MixinTrait])) {
         return List.empty
       }
@@ -153,7 +165,7 @@ class SmithyToIR(model: Model) {
           val hints = List(Hint.Documentation(doc))
           val dataTypeShape = field.tpe match {
             case TPrimitive(Primitive.PDocument, dataTypeShape) => dataTypeShape
-            case _                                              => throw new RuntimeException("Expected document type")
+            case _ => throw new RuntimeException("Expected document type")
           }
           Field(
             "dataKind",
@@ -201,18 +213,17 @@ class SmithyToIR(model: Model) {
       if (shape.hasTrait(classOf[DataTrait])) {
         val id = shape.getId
 
-        allDataKindAnnotated.get(id).map { allKnownInhabitants =>
-          val openEnumId = dataKindShapeId(id)
-          val values = allKnownInhabitants.map { case PolymorphicDataKind(disc, member) =>
-            val snakeCased = disc.replace('-', '_').toUpperCase()
-            val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
-            EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
-          }
+        val allKnownInhabitants = allDataKindAnnotated(id)
+        val openEnumId = dataKindShapeId(id)
+        val values = allKnownInhabitants.map { case PolymorphicDataKind(disc, member) =>
+          val snakeCased = disc.replace('-', '_').toUpperCase()
+          val memberDoc = s"`data` field must contain a ${member.getId.getName} object."
+          EnumValue(snakeCased, disc, List(Hint.Documentation(memberDoc)))
+        }
 
-          val dataKindDef = Def.OpenEnum(openEnumId, EnumType.StringEnum, values, hints)
-          val dataDef = Def.PrimitiveAlias(id, Primitive.PDocument, hints)
-          List(dataKindDef, dataDef)
-        }.flatMap(_.headOption).toList
+        val dataKindDef = Def.OpenEnum(openEnumId, EnumType.StringEnum, values, hints)
+        val dataDef = Def.PrimitiveAlias(id, Primitive.PDocument, hints)
+        List(dataKindDef, dataDef)
       } else {
         primitiveShape(shape)
       }
@@ -337,78 +348,109 @@ class SmithyToIR(model: Model) {
   }
 
   /// Finds ids of all immediate children structures of a shape
-  object ChildrenShapeVisitor extends ShapeVisitor.Default[List[ShapeId]] {
+  object ShapeIdExtractorVisitor extends ShapeVisitor.Default[List[ShapeId]] {
     protected def getDefault(shape: Shape): List[ShapeId] = List(shape.getId)
 
     override def listShape(shape: ListShape): List[ShapeId] = {
-      model.expectShape(shape.getMember.getTarget).accept(ChildrenShapeVisitor)
+      model.expectShape(shape.getMember.getTarget).accept(ShapeIdExtractorVisitor)
     }
 
     override def mapShape(shape: MapShape): List[ShapeId] = {
-      val key = model.expectShape(shape.getKey.getTarget).accept(ChildrenShapeVisitor)
-      val value = model.expectShape(shape.getValue.getTarget).accept(ChildrenShapeVisitor)
+      val key = model.expectShape(shape.getKey.getTarget).accept(ShapeIdExtractorVisitor)
+      val value = model.expectShape(shape.getValue.getTarget).accept(ShapeIdExtractorVisitor)
       key ++ value
     }
 
     override def unionShape(shape: UnionShape): List[ShapeId] = {
       shape.members.asScala.toList.flatMap(m =>
-        model.expectShape(m.getTarget).accept(ChildrenShapeVisitor)
+        model.expectShape(m.getTarget).accept(ShapeIdExtractorVisitor)
       )
     }
 
   }
 
-  class DocShapeVisitor(map: MMap[ShapeId, DocNode], namespace: String)
-      extends ShapeVisitor.Default[Unit] {
-    protected def getDefault(shape: Shape) = {
-      val id = shape.getId
-      if (!map.contains(id)) {
-        val associatedDataKinds = if (shape.hasTrait(classOf[DataTrait])) {
+  class MemberVisitor extends ShapeVisitor.Default[Unit] {
+    val members: MSet[ShapeId] = MSet.empty
+
+    override def getDefault(shape: Shape): Unit = {
+      members.add(shape.getId)
+
+      shape.members.asScala
+        .flatMap(m => {
+          val child = model.expectShape(m.getTarget)
+          child.accept(ShapeIdExtractorVisitor)
+        })
+        .foreach(model.expectShape(_).accept(this))
+
+      shape.getTrait(classOf[DataTrait]).toScala.foreach { _ =>
+        allDataKindAnnotated(shape.getId)
+          .map(_.shape.getId)
+          .foreach(model.expectShape(_).accept(this))
+      }
+    }
+
+    override def serviceShape(shape: ServiceShape): Unit = {
+      members.add(shape.getId)
+      for (operation <- shape.getOperations.asScala) {
+        model.expectShape(operation).accept(this)
+      }
+      for (resource <- shape.getResources.asScala) {
+        model.expectShape(resource).accept(this)
+      }
+    }
+
+    override def operationShape(shape: OperationShape): Unit = {
+      members.add(shape.getId)
+      for (input <- shape.getInput.toScala) {
+        model.expectShape(input).accept(this)
+      }
+      for (output <- shape.getOutput.toScala) {
+        model.expectShape(output).accept(this)
+      }
+    }
+  }
+
+  class DocShapeVisitor(namespace: String) extends ShapeVisitor.Default[List[DocNode]] {
+
+    override def getDefault(shape: Shape): List[DocNode] = {
+      val fieldShapeIds = shape.members.asScala
+        .flatMap(m => {
+          val child = model.expectShape(m.getTarget)
+          child.accept(ShapeIdExtractorVisitor)
+        })
+        .map(StructureDocMember.Field)
+        .toList
+
+      val associatedDataKinds = shape.getTrait(classOf[DataTrait]).toScala match {
+        case Some(_) =>
           allDataKindAnnotated(shape.getId)
-            .map(_.shape.getId)
-            .filter(_.getNamespace == namespace)
-            .sorted
-        } else {
-          List.empty
-        }
+            .filter(_.shape.getId.getNamespace == namespace)
+            .map(kind => StructureDocMember.AssociatedDataKind(kind.shape.getId, kind.kind))
+        case None => List.empty
+      }
 
-        val childrenNodeIds = shape.members.asScala
-          .flatMap(m => {
-            val child = model.expectShape(m.getTarget)
-            child.accept(ChildrenShapeVisitor)
-          })
-          .toList
+      val members = fieldShapeIds ++ associatedDataKinds
 
-        childrenNodeIds.foreach(model.expectShape(_).accept(this))
-
-        val members = childrenNodeIds ++ associatedDataKinds
-
-        val doc = shape.accept(ToIRVisitor).map { definition =>
-          ShapeDocNode(definition, members)
-        }
-
-        doc.foreach(map.put(id, _))
+      shape.accept(ToIRVisitor).map { definition =>
+        StructureDocNode(definition, members)
       }
     }
 
-    override def operationShape(shape: OperationShape) = {
+    override def operationShape(shape: OperationShape): List[DocNode] = {
       val input = shape.getInput.toScala
-      input.foreach(model.expectShape(_).accept(this))
       val output = shape.getOutput.toScala
-      output.foreach(model.expectShape(_).accept(this))
-      val operation = ToIRVisitor.buildOperation(shape).map { op: Operation =>
-        OperationDocNode(op, input, output)
-      }
-
-      operation.foreach(map.put(shape.getId, _))
+      ToIRVisitor
+        .buildOperation(shape)
+        .map { op: Operation =>
+          OperationDocNode(op, input, output)
+        }
+        .toList
     }
 
-    override def serviceShape(shape: ServiceShape) = {
+    override def serviceShape(shape: ServiceShape): List[DocNode] = {
       val ops = shape.getOperations.asScala.toList
-      ops.foreach(model.expectShape(_).accept(this))
-      map.put(shape.getId, ServiceDocNode(shape.getId, ops))
+      List(ServiceDocNode(shape.getId, ops))
     }
 
   }
-
 }

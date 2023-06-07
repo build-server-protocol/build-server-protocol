@@ -13,7 +13,14 @@ object MarkdownRenderer {
   def render(tree: DocTree): String = {
     val visited = MSet.empty[ShapeId]
     val renderer = new MarkdownRenderer(tree, visited)
-    renderer.render.get.mkString(System.lineSeparator())
+    val rendered = renderer.render.get.mkString(System.lineSeparator())
+
+    val notRenderedIds = visited.diff(tree.structures.keys.toSet)
+    notRenderedIds.foreach { id =>
+      println(s"warning: ${id.getName} was not rendered")
+    }
+
+    rendered
   }
 }
 
@@ -25,69 +32,115 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
 
   def render: Lines = {
     val commonShapes =
-      if (tree.commonShapes.isEmpty) empty
+      if (tree.commonShapeIds.isEmpty) empty
       else
         lines(
           "## Common shapes",
           newline,
-          tree.commonShapes.foldMap(renderNode),
+          tree.commonShapeIds.foldMap(renderStructureNode),
           newline
         )
 
-    val services = tree.services.foldMap(renderNode)
-    commonShapes ++ services
+    val services = tree.services.values.toList.foldMap(renderServiceNode)
+    lines(
+      commonShapes,
+      newline,
+      services
+    )
   }
 
-  def renderNode(id: ShapeId): Lines = {
+  def renderStructureNode(id: ShapeId): Lines = {
     // We don't want to generate definitions for built-in primitives.
     if (id.getNamespace == "smithy.api") {
       return empty
     }
 
-    tree.docNodes(id) match {
-      case OperationDocNode(operation, inputNode, outputNode) =>
+    val node = tree.structures(id)
+
+    if (visited.contains(id)) empty
+    else {
+      visited.add(id)
+      lines(
+        renderStructureNodeDef(node.definition),
+        renderStructureNodeMembers(node.members)
+      )
+    }
+  }
+
+  def renderStructureNodeDef(definition: Def): Lines = {
+    lines(
+      s"#### ${definition.shapeId.getName()}",
+      newline,
+      documentation(definition.hints),
+      newline,
+      tsBlock(definition),
+      newline
+    )
+  }
+
+  def renderStructureNodeMembers(members: List[StructureDocMember]): Lines = {
+    val fields = members.filter {
+      case _: StructureDocMember.Field => true
+      case _                           => false
+    }
+
+    val associatedDataKinds = members.filter {
+      case _: StructureDocMember.AssociatedDataKind => true
+      case _                                        => false
+    }
+
+    val renderedAdks = if (associatedDataKinds.nonEmpty) {
+      lines(
+        s"- associated data kinds:",
+        newline,
+        associatedDataKinds.map(_.shapeId).foldMap(renderStructureNode),
+        s"- other structures:",
+        newline
+      )
+    } else {
+      empty
+    }
+
+    lines(
+      renderedAdks,
+      fields.map(_.shapeId).foldMap(renderStructureNode),
+      newline
+    )
+  }
+
+  def renderOperationNode(node: OperationDocNode): Lines = {
+    node match {
+      case OperationDocNode(operation, input, output) =>
         lines(
           s"### ${operation.name}: ${methodTpe(operation)}",
           newline,
           documentation(operation.hints),
           newline,
           s"- method: `${operation.jsonRPCMethod}`",
-          inputNode.foldMap(n => s"- params: `${n.getName()}`"),
-          outputNode.foldMap(n => s"- result: `${n.getName()}`"),
-          inputNode.foldMap(renderNode),
-          outputNode.foldMap(renderNode),
+          input.foldMap(n => s"- params: `${n.getName()}`"),
+          output.foldMap(n => s"- result: `${n.getName()}`"),
+          input.foldMap(renderStructureNode),
+          output.foldMap(renderStructureNode),
           newline
         )
+    }
+
+  }
+
+  def renderServiceNode(node: ServiceDocNode): Lines = {
+    node match {
       case ServiceDocNode(shapeId, operations) =>
-        if (shapeId.getName().toLowerCase().contains("server")) {
-          lines(
-            s"## BSP Server remote interface",
-            newline,
-            operations.foldMap(renderNode)
-          )
+        val header = if (shapeId.getName().toLowerCase().contains("server")) {
+          s"## BSP Server remote interface"
         } else {
-          lines(
-            s"## BSP Client remote interface",
-            newline,
-            operations.foldMap(renderNode)
-          )
+          s"## BSP Client remote interface"
         }
-      case ShapeDocNode(definition, members) =>
-        if (visited.contains(definition.shapeId)) empty
-        else
-          {
-            visited.add(definition.shapeId)
-            lines(
-              s"#### ${definition.shapeId.getName()}",
-              newline,
-              documentation(definition.hints),
-              newline,
-              tsBlock(definition),
-              newline
-            )
-          } ++ lines(
-            members.foldMap(renderNode)
-          )
+        lines(
+          header,
+          operations
+            .map(tree.operations)
+            .foldMap(renderOperationNode)
+        )
     }
   }
 
