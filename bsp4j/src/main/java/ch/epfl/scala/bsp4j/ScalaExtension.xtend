@@ -4,6 +4,7 @@ import java.util.List
 import com.google.gson.annotations.SerializedName
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 import org.eclipse.lsp4j.generator.JsonRpcData
+import ch.epfl.scala.bsp4j.Range
 
 @JsonRpcData
 class ScalaBuildTarget {
@@ -168,5 +169,38 @@ class ScalaTestSuiteSelection {
   new(@NonNull String className, @NonNull List<String> tests) {
     this.className = className
     this.tests = tests
+  }
+}
+
+@JsonRpcData
+class ScalaDiagnostic {
+  List<ScalaAction> actions
+}
+
+@JsonRpcData
+class ScalaAction {
+  @NonNull String title
+  String description
+  ScalaWorkspaceEdit edit
+  new(@NonNull String title) {
+    this.title = title
+  }
+}
+
+@JsonRpcData
+class ScalaWorkspaceEdit {
+  List<ScalaTextEdit> changes
+  new(List<ScalaTextEdit> changes) {
+    this.changes = changes
+  }
+}
+
+@JsonRpcData
+class ScalaTextEdit {
+  @NonNull Range range
+  @NonNull String newText
+  new(@NonNull Range range, @NonNull String newText) {
+    this.range = range
+    this.newText = newText
   }
 }
