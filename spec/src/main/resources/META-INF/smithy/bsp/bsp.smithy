@@ -119,7 +119,6 @@ enum BuildTargetTag {
     /// Actions on the target such as build and test should only be invoked manually
     /// and explicitly. For example, triggering a build on all targets in the workspace
     /// should by default not include this target.
-    ///
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.

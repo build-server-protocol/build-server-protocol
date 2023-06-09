@@ -1,0 +1,110 @@
+## Common shapes
+
+#### CppBuildTarget
+
+`CppBuildTarget` is a basic data structure that contains c++-specific
+metadata, specifically compiler reference. This metadata is embedded in
+the `data: Option[Json]` field of the `BuildTarget` definition, when
+the `dataKind` field contains "cpp".
+
+```ts
+export interface CppBuildTarget {
+  /** The c++ version this target is supposed to use.
+   * For example: C++11 */
+  version?: String;
+
+  /** The type of compiler this target is supposed to use.
+   * For example: gcc */
+  compiler?: String;
+
+  /** Uri representating path to the c compiler.
+   * For example: file:///usr/bin/gcc */
+  cCompiler?: URI;
+
+  /** Uri representating path to the c++ compiler.
+   * For example: file:///usr/bin/g++ */
+  cppCompiler?: URI;
+}
+```
+
+#### URI
+
+A resource identifier that is a valid URI according to rfc3986:
+https://tools.ietf.org/html/rfc3986
+
+```ts
+export type URI = String;
+```
+
+
+## BSP Server remote interface
+
+### CppOptions: request
+
+The build target cpp options request is sent from the client to the server to
+query for the list of compiler options necessary to compile in a given list of
+targets.
+
+- method: `buildTarget/cppOptions`
+- params: `CppOptionsParams`
+- result: `CppOptionsResult`
+#### CppOptionsParams
+
+
+```ts
+export interface CppOptionsParams {
+  /** The targets for which the options are requested. */
+  targets: BuildTargetIdentifier[];
+}
+```
+
+#### BuildTargetIdentifier
+
+A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
+
+```ts
+export interface BuildTargetIdentifier {
+  /** The target’s Uri */
+  uri: URI;
+}
+```
+
+#### CppOptionsResult
+
+
+```ts
+export interface CppOptionsResult {
+  /** The list of options for each target. */
+  items: CppOptionsItem[];
+}
+```
+
+#### CppOptionsItem
+
+
+```ts
+export interface CppOptionsItem {
+  /** The target identifier for which the options are requested. */
+  target: BuildTargetIdentifier;
+
+  /** Attributes added in the given order to COPTS
+   * before compiling the target.
+   * For example: -Iexternal/gtest/include */
+  copts: String[];
+
+  /** Attributes prepended with -D
+   * and added to the compile command line
+   * For example: BOOST_FALLTHROUGH */
+  defines: String[];
+
+  /** Attributes added to the linker command
+   * For example: -pthread */
+  linkopts: String[];
+
+  /** Create a shared library.
+   * The presence of this flag means that linking occurs with the -shared flag */
+  linkshared?: Boolean;
+}
+```
+
