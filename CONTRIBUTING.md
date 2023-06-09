@@ -77,7 +77,7 @@ need to be replaced with the following 2 steps:
 
 Because now most of the docs are generated from the smithy model, we added
 [approval tests](https://approvaltests.com/) which ensure that the generated spec
-doesn't accidentaly break. If you make a change which affects the generated spec
+doesn't accidentally break. If you make a change which affects the generated spec
 please run `sbt test`. Approval test driver should automatically display
 a diff for you, but if it does not happen, you should review the new version manually.
 In directory `codegen/src/test/scala` there will appear 
