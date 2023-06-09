@@ -40,7 +40,7 @@ object ExtensionApprovalTest {
       .map(_.getFileName.toString.split("\\.").head)
 
     if (filenames.isEmpty) {
-      throw new RuntimeException("No extensions found, make sre the path is correct.")
+      throw new RuntimeException("No extensions found, make sure the path is correct.")
     }
 
     filenames
