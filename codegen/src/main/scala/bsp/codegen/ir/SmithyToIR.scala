@@ -358,28 +358,6 @@ class SmithyToIR(model: Model) {
     documentation
   }
 
-  /// Finds ids of all immediate children structures of a shape
-  object ShapeIdExtractorVisitor extends ShapeVisitor.Default[List[ShapeId]] {
-    protected def getDefault(shape: Shape): List[ShapeId] = List(shape.getId)
-
-    override def listShape(shape: ListShape): List[ShapeId] = {
-      model.expectShape(shape.getMember.getTarget).accept(ShapeIdExtractorVisitor)
-    }
-
-    override def mapShape(shape: MapShape): List[ShapeId] = {
-      val key = model.expectShape(shape.getKey.getTarget).accept(ShapeIdExtractorVisitor)
-      val value = model.expectShape(shape.getValue.getTarget).accept(ShapeIdExtractorVisitor)
-      key ++ value
-    }
-
-    override def unionShape(shape: UnionShape): List[ShapeId] = {
-      shape.members.asScala.toList.flatMap(m =>
-        model.expectShape(m.getTarget).accept(ShapeIdExtractorVisitor)
-      )
-    }
-
-  }
-
   class DocShapeVisitor(map: MMap[ShapeId, DocNode]) extends ShapeVisitor.Default[Unit] {
     protected def getDefault(shape: Shape) = {
       val id = shape.getId
