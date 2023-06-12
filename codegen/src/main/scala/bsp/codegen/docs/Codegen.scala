@@ -11,8 +11,4 @@ object Codegen {
   }
 
   def printDocs(namespace: String): Unit = println(docs(namespace))
-
-  def main(args: Array[String]): Unit = {
-    printDocs("bsp")
-  }
 }

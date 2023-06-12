@@ -80,28 +80,6 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
     )
   }
 
-  def renderStructureNodeMembers(
-      fields: List[ShapeId],
-      associatedDataKinds: List[PolymorphicDataKind]
-  ): Lines = {
-    val renderedAdks = if (associatedDataKinds.nonEmpty) {
-      lines(
-        s"- associated data kinds:",
-        newline,
-        associatedDataKinds.map(_.shapeId).foldMap(renderStructureNode),
-        s"- other structures:",
-        newline
-      )
-    } else {
-      empty
-    }
-
-    lines(
-      renderedAdks,
-      fields.foldMap(renderStructureNode)
-    )
-  }
-
   def renderOperationNode(node: OperationDocNode): Lines = {
     node match {
       case OperationDocNode(operation, input, output) =>
