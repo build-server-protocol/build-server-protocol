@@ -44,6 +44,8 @@ lazy val V = new {
   val ipcsocket = "1.0.1"
   val scalacheck115 = "3.2.14.0"
   val jsonrpc4s = "0.1.0"
+  val approvaltests = "18.6.0"
+  val junitInterface = "0.13.3"
 }
 
 import java.io.File
@@ -206,7 +208,9 @@ lazy val codegen = project
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-collection-compat" % V.scalaCollectionCompat,
       "com.lihaoyi" %% "os-lib" % V.osLib,
-      "com.monovore" %% "decline" % V.decline
+      "com.monovore" %% "decline" % V.decline,
+      "com.approvaltests" % "approvaltests" % V.approvaltests % Test,
+      "com.github.sbt" % "junit-interface" % V.junitInterface % Test
     )
   )
 

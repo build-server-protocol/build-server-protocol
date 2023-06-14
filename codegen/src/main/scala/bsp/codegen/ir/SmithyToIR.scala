@@ -51,7 +51,7 @@ class SmithyToIR(model: Model) {
       }
 
     allExtendableTypeIds.map { id =>
-      val inhabitants = groupedInhabitants.getOrElse(id, List.empty)
+      val inhabitants = groupedInhabitants.getOrElse(id, List.empty).sortBy(_.kind)
       id -> inhabitants
     }.toMap
   }
@@ -350,7 +350,10 @@ class SmithyToIR(model: Model) {
       val id = shape.getId
       if (!map.contains(id)) {
         val associatedDataKinds = if (shape.hasTrait(classOf[DataTrait])) {
-          allDataKindAnnotated(shape.getId).map(_.shape.getId).filter(_.getNamespace == namespace)
+          allDataKindAnnotated(shape.getId)
+            .map(_.shape.getId)
+            .filter(_.getNamespace == namespace)
+            .sorted
         } else {
           List.empty
         }
