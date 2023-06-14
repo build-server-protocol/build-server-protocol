@@ -1,12 +1,13 @@
 package bsp.codegen.docs
 
-import bsp.codegen.ir.{Def, Operation}
+import bsp.codegen.ir.{Def, Operation, PolymorphicDataKind}
 import software.amazon.smithy.model.shapes.ShapeId
 
 case class DocTree(
-    commonShapes: List[ShapeId],
-    services: List[ShapeId],
-    docNodes: Map[ShapeId, DocNode]
+    commonShapeIds: List[ShapeId],
+    services: List[ServiceDocNode],
+    operations: Map[ShapeId, OperationDocNode],
+    structures: Map[ShapeId, StructureDocNode]
 )
 
 sealed trait DocNode {
@@ -20,12 +21,12 @@ case class ServiceDocNode(
 
 case class OperationDocNode(
     operation: Operation,
-    inputNode: Option[ShapeId],
-    outputNode: Option[ShapeId]
+    input: Option[ShapeId],
+    output: Option[ShapeId]
 ) extends DocNode {
   def shapeId = operation.shapeId
 }
 
-case class ShapeDocNode(definition: Def, members: List[ShapeId]) extends DocNode {
+case class StructureDocNode(definition: Def) extends DocNode {
   def shapeId: ShapeId = definition.shapeId
 }
