@@ -42,7 +42,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
         )
 
     // Server comes first because it's bigger.
-    val services = tree.services.sortBy(-_.operations.size).foldMap(renderServiceNode)
+    val services = tree.services.sortBy(_.operations.size).reverse.foldMap(renderServiceNode)
     lines(
       commonShapes,
       services
@@ -81,40 +81,35 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
   }
 
   def renderOperationNode(node: OperationDocNode): Lines = {
-    node match {
-      case OperationDocNode(operation, input, output) =>
-        lines(
-          s"### ${operation.name}: ${methodTpe(operation)}",
-          newline,
-          documentation(operation.hints),
-          newline,
-          s"- method: `${operation.jsonRPCMethod}`",
-          input.foldMap(n => s"- params: `${n.getName()}`"),
-          output.foldMap(n => s"- result: `${n.getName()}`"),
-          newline,
-          input.foldMap(renderStructureNode),
-          output.foldMap(renderStructureNode)
-        )
-    }
-
+    val OperationDocNode(operation, input, output) = node
+    lines(
+      s"### ${operation.name}: ${methodTpe(operation)}",
+      newline,
+      documentation(operation.hints),
+      newline,
+      s"- method: `${operation.jsonRPCMethod}`",
+      input.foldMap(n => s"- params: `${n.getName()}`"),
+      output.foldMap(n => s"- result: `${n.getName()}`"),
+      newline,
+      input.foldMap(renderStructureNode),
+      output.foldMap(renderStructureNode)
+    )
   }
 
   def renderServiceNode(node: ServiceDocNode): Lines = {
-    node match {
-      case ServiceDocNode(shapeId, operations) =>
-        val header = if (shapeId.getName().toLowerCase().contains("server")) {
-          s"## BSP Server remote interface"
-        } else {
-          s"## BSP Client remote interface"
-        }
-        lines(
-          header,
-          newline,
-          operations
-            .map(tree.operations)
-            .foldMap(renderOperationNode)
-        )
+    val ServiceDocNode(shapeId, operations) = node
+    val header = if (shapeId.getName().toLowerCase().contains("server")) {
+      s"## BSP Server remote interface"
+    } else {
+      s"## BSP Client remote interface"
     }
+    lines(
+      header,
+      newline,
+      operations
+        .map(tree.operations)
+        .foldMap(renderOperationNode)
+    )
   }
 
   def methodTpe(operation: Operation): String = operation.jsonRPCMethodType match {
