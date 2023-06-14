@@ -28,9 +28,10 @@ inThisBuild(
 )
 
 lazy val V = new {
-  val scala212 = "2.12.17"
+  val scala212 = "2.12.18"
   val scala213 = "2.13.11"
   val supportedScalaVersions = List(scala212, scala213)
+  val cats = "2.9.0"
   val jsoniter = "2.23.1"
   val java8Compat = "1.0.2"
   val lsp4j = "0.20.1"
@@ -209,6 +210,7 @@ lazy val codegen = project
       "org.scala-lang.modules" %% "scala-collection-compat" % V.scalaCollectionCompat,
       "com.lihaoyi" %% "os-lib" % V.osLib,
       "com.monovore" %% "decline" % V.decline,
+      "org.typelevel" %% "cats-core" % V.cats,
       "com.approvaltests" % "approvaltests" % V.approvaltests % Test,
       "com.github.sbt" % "junit-interface" % V.junitInterface % Test
     )

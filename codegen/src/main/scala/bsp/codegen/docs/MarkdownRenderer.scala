@@ -3,7 +3,7 @@ package bsp.codegen.docs
 import bsp.codegen._
 import bsp.codegen.ir.Hint.Documentation
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
-import bsp.codegen.ir.{Def, Hint, Operation}
+import bsp.codegen.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 
@@ -13,7 +13,14 @@ object MarkdownRenderer {
   def render(tree: DocTree): String = {
     val visited = MSet.empty[ShapeId]
     val renderer = new MarkdownRenderer(tree, visited)
-    renderer.render.get.mkString(System.lineSeparator())
+    val rendered = renderer.render.get.mkString(System.lineSeparator())
+
+    val notRenderedIds = visited.diff(tree.structures.keys.toSet)
+    notRenderedIds.foreach { id =>
+      println(s"warning: ${id.getName} was not rendered")
+    }
+
+    rendered
   }
 }
 
@@ -25,70 +32,84 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
 
   def render: Lines = {
     val commonShapes =
-      if (tree.commonShapes.isEmpty) empty
+      if (tree.commonShapeIds.isEmpty) empty
       else
         lines(
           "## Common shapes",
           newline,
-          tree.commonShapes.foldMap(renderNode),
+          tree.commonShapeIds.foldMap(renderStructureNode),
           newline
         )
 
-    val services = tree.services.foldMap(renderNode)
-    commonShapes ++ services
+    // Server comes first because it's bigger.
+    val services = tree.services.sortBy(_.operations.size).reverse.foldMap(renderServiceNode)
+    lines(
+      commonShapes,
+      services
+    )
   }
 
-  def renderNode(id: ShapeId): Lines = {
+  def renderStructureNode(id: ShapeId): Lines = {
     // We don't want to generate definitions for built-in primitives.
     if (id.getNamespace == "smithy.api") {
       return empty
     }
 
-    tree.docNodes(id) match {
-      case OperationDocNode(operation, inputNode, outputNode) =>
-        lines(
-          s"### ${operation.name}: ${methodTpe(operation)}",
-          newline,
-          documentation(operation.hints),
-          newline,
-          s"- method: `${operation.jsonRPCMethod}`",
-          inputNode.foldMap(n => s"- params: `${n.getName()}`"),
-          outputNode.foldMap(n => s"- result: `${n.getName()}`"),
-          inputNode.foldMap(renderNode),
-          outputNode.foldMap(renderNode),
-          newline
-        )
-      case ServiceDocNode(shapeId, operations) =>
-        if (shapeId.getName().toLowerCase().contains("server")) {
-          lines(
-            s"## BSP Server remote interface",
-            newline,
-            operations.foldMap(renderNode)
-          )
-        } else {
-          lines(
-            s"## BSP Client remote interface",
-            newline,
-            operations.foldMap(renderNode)
-          )
-        }
-      case ShapeDocNode(definition, members) =>
-        if (visited.contains(definition.shapeId)) empty
-        else
-          {
-            visited.add(definition.shapeId)
-            lines(
-              s"#### ${definition.shapeId.getName()}",
-              newline,
-              documentation(definition.hints),
-              newline,
-              tsBlock(definition),
-              newline
-            )
-          } ++ lines(
-            members.foldMap(renderNode)
-          )
+    val node = tree.structures(id)
+
+    if (visited.contains(id)) empty
+    else {
+      visited.add(id)
+      lines(
+        renderStructureNodeDef(node.definition),
+        node.definition.members
+          .filter(_.getNamespace == id.getNamespace)
+          .foldMap(renderStructureNode)
+      )
     }
+  }
+
+  def renderStructureNodeDef(definition: Def): Lines = {
+    lines(
+      s"#### ${definition.shapeId.getName()}",
+      newline,
+      documentation(definition.hints),
+      newline,
+      tsBlock(definition),
+      newline
+    )
+  }
+
+  def renderOperationNode(node: OperationDocNode): Lines = {
+    val OperationDocNode(operation, input, output) = node
+    lines(
+      s"### ${operation.name}: ${methodTpe(operation)}",
+      newline,
+      documentation(operation.hints),
+      newline,
+      s"- method: `${operation.jsonRPCMethod}`",
+      input.foldMap(n => s"- params: `${n.getName()}`"),
+      output.foldMap(n => s"- result: `${n.getName()}`"),
+      newline,
+      input.foldMap(renderStructureNode),
+      output.foldMap(renderStructureNode)
+    )
+  }
+
+  def renderServiceNode(node: ServiceDocNode): Lines = {
+    val ServiceDocNode(shapeId, operations) = node
+    val header = if (shapeId.getName().toLowerCase().contains("server")) {
+      s"## BSP Server remote interface"
+    } else {
+      s"## BSP Client remote interface"
+    }
+    lines(
+      header,
+      newline,
+      operations
+        .map(tree.operations)
+        .foldMap(renderOperationNode)
+    )
   }
 
   def methodTpe(operation: Operation): String = operation.jsonRPCMethodType match {

@@ -1,5 +1,21 @@
 ## Common shapes
 
+#### Long
+
+A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
+
+```ts
+export type Long = number;
+```
+
+#### Integer
+
+An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
+
+```ts
+export type Integer = number;
+```
+
 #### BuildTarget
 
 Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
@@ -23,7 +39,7 @@ export interface BuildTarget {
    * May be presented in the user interface.
    * Should be unique if possible.
    * The id.uri is used if None. */
-  displayName?: String;
+  displayName?: string;
 
   /** The directory where this target belongs to. Multiple build targets are allowed to map
    * to the same base directory, and a build target is not required to have a base directory.
@@ -50,7 +66,7 @@ export interface BuildTarget {
   capabilities: BuildTargetCapabilities;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: BuildTargetDataKind;
 
   /** Language-specific metadata about this target.
    * See ScalaBuildTarget as an example. */
@@ -76,7 +92,7 @@ A resource identifier that is a valid URI according to rfc3986:
 https://tools.ietf.org/html/rfc3986
 
 ```ts
-export type URI = String;
+export type URI = string;
 ```
 
 #### BuildTargetTag
@@ -84,6 +100,8 @@ export type URI = String;
 A list of predefined tags that can be used to categorize build targets.
 
 ```ts
+export type BuildTargetTag = string;
+
 export namespace BuildTargetTag {
   /** Target contains re-usable functionality for downstream targets. May have any
    * combination of capabilities. */
@@ -127,7 +145,7 @@ Language IDs are defined here
 https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem
 
 ```ts
-export type LanguageId = String;
+export type LanguageId = string;
 ```
 
 #### BuildTargetCapabilities
@@ -138,16 +156,16 @@ cannot be used and why.
 ```ts
 export interface BuildTargetCapabilities {
   /** This target can be compiled by the BSP server. */
-  canCompile: Boolean;
+  canCompile: boolean;
 
   /** This target can be tested by the BSP server. */
-  canTest: Boolean;
+  canTest: boolean;
 
   /** This target can be run by the BSP server. */
-  canRun: Boolean;
+  canRun: boolean;
 
   /** This target can be debugged by the BSP server. */
-  canDebug: Boolean;
+  canDebug: boolean;
 }
 ```
 
@@ -155,6 +173,8 @@ export interface BuildTargetCapabilities {
 
 
 ```ts
+export type BuildTargetDataKind = string;
+
 export namespace BuildTargetDataKind {
   /** `data` field must contain a CppBuildTarget object. */
   export const Cpp = "cpp";
@@ -171,6 +191,13 @@ export namespace BuildTargetDataKind {
   /** `data` field must contain a ScalaBuildTarget object. */
   export const Scala = "scala";
 }
+```
+
+#### BuildTargetData
+
+
+```ts
+export type BuildTargetData = any;
 ```
 
 #### TaskId
@@ -195,7 +222,7 @@ export interface TaskId {
 
 
 ```ts
-export type Identifier = String;
+export type Identifier = string;
 ```
 
 #### StatusCode
@@ -232,6 +259,7 @@ requests or notifications to the server.
 - method: `build/initialize`
 - params: `InitializeBuildParams`
 - result: `InitializeBuildResult`
+
 #### InitializeBuildParams
 
 
@@ -241,19 +269,19 @@ export interface InitializeBuildParams {
   rootUri: URI;
 
   /** Name of the client */
-  displayName: String;
+  displayName: string;
 
   /** The version of the client */
-  version: String;
+  version: string;
 
   /** The BSP version that the client speaks */
-  bspVersion: String;
+  bspVersion: string;
 
   /** The capabilities of the client */
   capabilities: BuildClientCapabilities;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: InitializeBuildParamsDataKind;
 
   /** Additional metadata about the client */
   data?: InitializeBuildParamsData;
@@ -277,8 +305,17 @@ export interface BuildClientCapabilities {
 
 
 ```ts
+export type InitializeBuildParamsDataKind = string;
+
 export namespace InitializeBuildParamsDataKind {
 }
+```
+
+#### InitializeBuildParamsData
+
+
+```ts
+export type InitializeBuildParamsData = any;
 ```
 
 #### InitializeBuildResult
@@ -287,19 +324,19 @@ export namespace InitializeBuildParamsDataKind {
 ```ts
 export interface InitializeBuildResult {
   /** Name of the server */
-  displayName: String;
+  displayName: string;
 
   /** The version of the server */
-  version: String;
+  version: string;
 
   /** The BSP version that the server speaks */
-  bspVersion: String;
+  bspVersion: string;
 
   /** The capabilities of the build server */
   capabilities: BuildServerCapabilities;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: InitializeBuildResultDataKind;
 
   /** Additional metadata about the server */
   data?: InitializeBuildResultData;
@@ -328,39 +365,39 @@ export interface BuildServerCapabilities {
 
   /** The server can provide a list of targets that contain a
    * single text document via the method buildTarget/inverseSources */
-  inverseSourcesProvider?: Boolean;
+  inverseSourcesProvider?: boolean;
 
   /** The server provides sources for library dependencies
    * via method buildTarget/dependencySources */
-  dependencySourcesProvider?: Boolean;
+  dependencySourcesProvider?: boolean;
 
   /** The server can provide a list of dependency modules (libraries with meta information)
    * via method buildTarget/dependencyModules */
-  dependencyModulesProvider?: Boolean;
+  dependencyModulesProvider?: boolean;
 
   /** The server provides all the resource dependencies
    * via method buildTarget/resources */
-  resourcesProvider?: Boolean;
+  resourcesProvider?: boolean;
 
   /** The server provides all output paths
    * via method buildTarget/outputPaths */
-  outputPathsProvider?: Boolean;
+  outputPathsProvider?: boolean;
 
   /** The server sends notifications to the client on build
    * target change events via buildTarget/didChange */
-  buildTargetChangedProvider?: Boolean;
+  buildTargetChangedProvider?: boolean;
 
   /** The server can respond to `buildTarget/jvmRunEnvironment` requests with the
    * necessary information required to launch a Java process to run a main class. */
-  jvmRunEnvironmentProvider?: Boolean;
+  jvmRunEnvironmentProvider?: boolean;
 
   /** The server can respond to `buildTarget/jvmTestEnvironment` requests with the
    * necessary information required to launch a Java process for testing or
    * debugging. */
-  jvmTestEnvironmentProvider?: Boolean;
+  jvmTestEnvironmentProvider?: boolean;
 
   /** Reloading the build state through workspace/reload is supported */
-  canReload?: Boolean;
+  canReload?: boolean;
 }
 ```
 
@@ -404,10 +441,18 @@ export interface DebugProvider {
 
 
 ```ts
+export type InitializeBuildResultDataKind = string;
+
 export namespace InitializeBuildResultDataKind {
 }
 ```
 
+#### InitializeBuildResultData
+
+
+```ts
+export type InitializeBuildResultData = any;
+```
 
 ### OnBuildInitialized: notification
 
@@ -443,6 +488,7 @@ for the list of all available build targets in the workspace.
 
 - method: `workspace/buildTargets`
 - result: `WorkspaceBuildTargetsResult`
+
 #### WorkspaceBuildTargetsResult
 
 
@@ -453,7 +499,6 @@ export interface WorkspaceBuildTargetsResult {
   targets?: BuildTarget[];
 }
 ```
-
 
 ### WorkspaceReload: request
 
@@ -474,6 +519,7 @@ workspace, see `buildTarget/dependencySources`.
 - method: `buildTarget/sources`
 - params: `SourcesParams`
 - result: `SourcesResult`
+
 #### SourcesParams
 
 
@@ -523,7 +569,7 @@ export interface SourceItem {
 
   /** Indicates if this source is automatically generated by the build and is not
    * intended to be manually edited by the user. */
-  generated: Boolean;
+  generated: boolean;
 }
 ```
 
@@ -540,7 +586,6 @@ export enum SourceItemKind {
 }
 ```
 
-
 ### BuildTargetInverseSources: request
 
 The inverse sources request is sent from the client to the server to query for
@@ -552,6 +597,7 @@ works for text documents and not directories.
 - method: `buildTarget/inverseSources`
 - params: `InverseSourcesParams`
 - result: `InverseSourcesResult`
+
 #### InverseSourcesParams
 
 
@@ -580,7 +626,6 @@ export interface InverseSourcesResult {
 }
 ```
 
-
 ### BuildTargetDependencySources: request
 
 The build target dependency sources request is sent from the client to the
@@ -596,6 +641,7 @@ dependency sources.
 - method: `buildTarget/dependencySources`
 - params: `DependencySourcesParams`
 - result: `DependencySourcesResult`
+
 #### DependencySourcesParams
 
 
@@ -628,7 +674,6 @@ export interface DependencySourcesItem {
 }
 ```
 
-
 ### BuildTargetDependencyModules: request
 
 The build target dependency modules request is sent from the client to the
@@ -639,6 +684,7 @@ It's an extended version of `buildTarget/sources`.
 - method: `buildTarget/dependencyModules`
 - params: `DependencyModulesParams`
 - result: `DependencyModulesResult`
+
 #### DependencyModulesParams
 
 
@@ -674,13 +720,13 @@ export interface DependencyModulesItem {
 ```ts
 export interface DependencyModule {
   /** Module name */
-  name: String;
+  name: string;
 
   /** Module version */
-  version: String;
+  version: string;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: DependencyModuleDataKind;
 
   /** Language-specific metadata about this module.
    * See MavenDependencyModule as an example. */
@@ -692,12 +738,20 @@ export interface DependencyModule {
 
 
 ```ts
+export type DependencyModuleDataKind = string;
+
 export namespace DependencyModuleDataKind {
   /** `data` field must contain a MavenDependencyModule object. */
   export const Maven = "maven";
 }
 ```
 
+#### DependencyModuleData
+
+
+```ts
+export type DependencyModuleData = any;
+```
 
 ### BuildTargetResources: request
 
@@ -714,6 +768,7 @@ view, for example.
 - method: `buildTarget/resources`
 - params: `ResourcesParams`
 - result: `ResourcesResult`
+
 #### ResourcesParams
 
 
@@ -743,7 +798,6 @@ export interface ResourcesItem {
 }
 ```
 
-
 ### BuildTargetOutputPaths: request
 
 The build target output paths request is sent from the client to the server to
@@ -756,6 +810,7 @@ during the initialize handshake whether this method is supported or not.
 - method: `buildTarget/outputPaths`
 - params: `OutputPathsParams`
 - result: `OutputPathsResult`
+
 #### OutputPathsParams
 
 
@@ -815,7 +870,6 @@ export enum OutputPathItemKind {
 }
 ```
 
-
 ### BuildTargetCompile: request
 
 The compile build target request is sent from the client to the server to
@@ -827,6 +881,7 @@ that all workspace sources typecheck correctly and are up-to-date.
 - method: `buildTarget/compile`
 - params: `CompileParams`
 - result: `CompileResult`
+
 #### CompileParams
 
 
@@ -840,7 +895,7 @@ export interface CompileParams {
   originId?: Identifier;
 
   /** Optional arguments to the compilation process. */
-  arguments?: String[];
+  arguments?: string[];
 }
 ```
 
@@ -856,7 +911,7 @@ export interface CompileResult {
   statusCode: StatusCode;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: CompileResultDataKind;
 
   /** A field containing language-specific information, like products
    * of compilation or compiler-specific metadata the client needs to know. */
@@ -868,10 +923,18 @@ export interface CompileResult {
 
 
 ```ts
+export type CompileResultDataKind = string;
+
 export namespace CompileResultDataKind {
 }
 ```
 
+#### CompileResultData
+
+
+```ts
+export type CompileResultData = any;
+```
 
 ### BuildTargetRun: request
 
@@ -893,6 +956,7 @@ specified in the build tool.
 - method: `buildTarget/run`
 - params: `RunParams`
 - result: `RunResult`
+
 #### RunParams
 
 
@@ -906,10 +970,10 @@ export interface RunParams {
   originId?: Identifier;
 
   /** Optional arguments to the executed application. */
-  arguments?: String[];
+  arguments?: string[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: RunParamsDataKind;
 
   /** Language-specific metadata for this execution.
    * See ScalaMainClass as an example. */
@@ -921,8 +985,17 @@ export interface RunParams {
 
 
 ```ts
+export type RunParamsDataKind = string;
+
 export namespace RunParamsDataKind {
 }
+```
+
+#### RunParamsData
+
+
+```ts
+export type RunParamsData = any;
 ```
 
 #### RunResult
@@ -938,7 +1011,6 @@ export interface RunResult {
 }
 ```
 
-
 ### BuildTargetTest: request
 
 The test build target request is sent from the client to the server to test the
@@ -948,6 +1020,7 @@ handshake whether this method is supported or not.
 - method: `buildTarget/test`
 - params: `TestParams`
 - result: `TestResult`
+
 #### TestParams
 
 
@@ -961,10 +1034,10 @@ export interface TestParams {
   originId?: Identifier;
 
   /** Optional arguments to the test execution engine. */
-  arguments?: String[];
+  arguments?: string[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TestParamsDataKind;
 
   /** Language-specific metadata about for this test execution.
    * See ScalaTestParams as an example. */
@@ -976,10 +1049,19 @@ export interface TestParams {
 
 
 ```ts
+export type TestParamsDataKind = string;
+
 export namespace TestParamsDataKind {
   /** `data` field must contain a ScalaTestParams object. */
   export const ScalaTest = "scala-test";
 }
+```
+
+#### TestParamsData
+
+
+```ts
+export type TestParamsData = any;
 ```
 
 #### TestResult
@@ -994,7 +1076,7 @@ export interface TestResult {
   statusCode: StatusCode;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TestResultDataKind;
 
   /** Language-specific metadata about the test result.
    * See ScalaTestParams as an example. */
@@ -1006,10 +1088,18 @@ export interface TestResult {
 
 
 ```ts
+export type TestResultDataKind = string;
+
 export namespace TestResultDataKind {
 }
 ```
 
+#### TestResultData
+
+
+```ts
+export type TestResultData = any;
+```
 
 ### DebugSessionStart: request
 
@@ -1020,6 +1110,7 @@ and returns a connection URI for the client to interact with.
 - method: `debugSession/start`
 - params: `DebugSessionParams`
 - result: `DebugSessionAddress`
+
 #### DebugSessionParams
 
 
@@ -1029,7 +1120,7 @@ export interface DebugSessionParams {
   targets: BuildTargetIdentifier[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: DebugSessionParamsDataKind;
 
   /** Language-specific metadata for this execution.
    * See ScalaMainClass as an example. */
@@ -1041,6 +1132,8 @@ export interface DebugSessionParams {
 
 
 ```ts
+export type DebugSessionParamsDataKind = string;
+
 export namespace DebugSessionParamsDataKind {
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
@@ -1053,6 +1146,13 @@ export namespace DebugSessionParamsDataKind {
 }
 ```
 
+#### DebugSessionParamsData
+
+
+```ts
+export type DebugSessionParamsData = any;
+```
+
 #### DebugSessionAddress
 
 
@@ -1062,7 +1162,6 @@ export interface DebugSessionAddress {
   uri: URI;
 }
 ```
-
 
 ### BuildTargetCleanCache: request
 
@@ -1080,6 +1179,7 @@ The build tool defines the exact semantics of the clean cache request:
 - method: `buildTarget/cleanCache`
 - params: `CleanCacheParams`
 - result: `CleanCacheResult`
+
 #### CleanCacheParams
 
 
@@ -1096,13 +1196,12 @@ export interface CleanCacheParams {
 ```ts
 export interface CleanCacheResult {
   /** Optional message to display to the user. */
-  message?: String;
+  message?: string;
 
   /** Indicates whether the clean cache request was performed or not. */
-  cleaned: Boolean;
+  cleaned: boolean;
 }
 ```
-
 
 ## BSP Client remote interface
 
@@ -1114,6 +1213,7 @@ A build/showMessage notification is similar to LSP's window/showMessage, except 
 
 - method: `build/showMessage`
 - params: `ShowMessageParams`
+
 #### ShowMessageParams
 
 
@@ -1131,7 +1231,7 @@ export interface ShowMessageParams {
   originId?: RequestId;
 
   /** The actual message. */
-  message: String;
+  message: string;
 }
 ```
 
@@ -1159,9 +1259,8 @@ export enum MessageType {
 Represents the identifier of a BSP request.
 
 ```ts
-export type RequestId = String;
+export type RequestId = string;
 ```
-
 
 ### OnBuildLogMessage: notification
 
@@ -1171,6 +1270,7 @@ A build/logMessage notification is similar to LSP's window/logMessage, except fo
 
 - method: `build/logMessage`
 - params: `LogMessageParams`
+
 #### LogMessageParams
 
 
@@ -1188,10 +1288,9 @@ export interface LogMessageParams {
   originId?: RequestId;
 
   /** The actual message. */
-  message: String;
+  message: string;
 }
 ```
-
 
 ### OnBuildPublishDiagnostics: notification
 
@@ -1214,6 +1313,7 @@ This field will be defined if the client defined it in the original request that
 
 - method: `build/publishDiagnostics`
 - params: `PublishDiagnosticsParams`
+
 #### PublishDiagnosticsParams
 
 
@@ -1236,7 +1336,7 @@ export interface PublishDiagnosticsParams {
 
   /** Whether the client should clear the previous diagnostics
    * mapped to the same `textDocument` and `buildTarget`. */
-  reset: Boolean;
+  reset: boolean;
 }
 ```
 
@@ -1253,21 +1353,21 @@ export interface Diagnostic {
   severity?: DiagnosticSeverity;
 
   /** The diagnostic's code, which might appear in the user interface. */
-  code?: String;
+  code?: string;
 
   /** A human-readable string describing the source of this
    * diagnostic, e.g. 'typescript' or 'super lint'. */
-  source?: String;
+  source?: string;
 
   /** The diagnostic's message. */
-  message: String;
+  message: string;
 
   /** An array of related diagnostic information, e.g. when symbol-names within
    * a scope collide all definitions can be marked via this property. */
   relatedInformation?: DiagnosticRelatedInformation[];
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: DiagnosticDataKind;
 
   /** A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
    * and a `textDocument/codeAction` request. */
@@ -1326,7 +1426,7 @@ export interface DiagnosticRelatedInformation {
   location: Location;
 
   /** The message of this related diagnostic information. */
-  message: String;
+  message: string;
 }
 ```
 
@@ -1345,12 +1445,20 @@ export interface Location {
 
 
 ```ts
+export type DiagnosticDataKind = string;
+
 export namespace DiagnosticDataKind {
   /** `data` field must contain a ScalaDiagnostic object. */
   export const Scala = "scala";
 }
 ```
 
+#### DiagnosticData
+
+
+```ts
+export type DiagnosticData = any;
+```
 
 ### OnBuildTargetDidChange: notification
 
@@ -1360,6 +1468,7 @@ handshake whether this method is supported or not.
 
 - method: `buildTarget/didChange`
 - params: `DidChangeBuildTarget`
+
 #### DidChangeBuildTarget
 
 
@@ -1381,7 +1490,7 @@ export interface BuildTargetEvent {
   kind?: BuildTargetEventKind;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: BuildTargetEventDataKind;
 
   /** Any additional metadata about what information changed. */
   data?: BuildTargetEventData;
@@ -1410,10 +1519,18 @@ export enum BuildTargetEventKind {
 
 
 ```ts
+export type BuildTargetEventDataKind = string;
+
 export namespace BuildTargetEventDataKind {
 }
 ```
 
+#### BuildTargetEventData
+
+
+```ts
+export type BuildTargetEventData = any;
+```
 
 ### OnBuildTaskStart: notification
 
@@ -1440,6 +1557,7 @@ request should reference the request's `originId` parent.
 
 - method: `build/taskStart`
 - params: `TaskStartParams`
+
 #### TaskStartParams
 
 
@@ -1449,25 +1567,18 @@ export interface TaskStartParams {
   taskId: TaskId;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: EventTime;
+  eventTime?: Long;
 
   /** Message describing the task. */
-  message?: String;
+  message?: string;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TaskDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
   data?: TaskData;
 }
-```
-
-#### EventTime
-
-
-```ts
-export type EventTime = Long;
 ```
 
 #### TaskDataKind
@@ -1480,6 +1591,8 @@ There are predefined kinds of objects for compile and test tasks, as described
 in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 
 ```ts
+export type TaskDataKind = string;
+
 export namespace TaskDataKind {
   /** `data` field must contain a CompileReport object. */
   export const CompileReport = "compile-report";
@@ -1499,6 +1612,19 @@ export namespace TaskDataKind {
   /** `data` field must contain a TestTask object. */
   export const TestTask = "test-task";
 }
+```
+
+#### TaskData
+
+Task progress notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
+
+There are predefined kinds of objects for compile and test tasks, as described
+in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+
+```ts
+export type TaskData = any;
 ```
 
 #### CompileReport
@@ -1523,18 +1649,11 @@ export interface CompileReport {
   warnings: Integer;
 
   /** The total number of milliseconds it took to compile the target. */
-  time?: DurationMillis;
+  time?: Long;
 
   /** The compilation was a noOp compilation. */
-  noOp?: Boolean;
+  noOp?: boolean;
 }
-```
-
-#### DurationMillis
-
-
-```ts
-export type DurationMillis = Long;
 ```
 
 #### CompileTask
@@ -1556,10 +1675,10 @@ export interface CompileTask {
 ```ts
 export interface TestFinish {
   /** Name or description of the test. */
-  displayName: String;
+  displayName: string;
 
   /** Information about completion of the test, for example an error message. */
-  message?: String;
+  message?: string;
 
   /** Completion status of the test. */
   status: TestStatus;
@@ -1568,7 +1687,7 @@ export interface TestFinish {
   location?: Location;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TestFinishDataKind;
 
   /** Optionally, structured metadata about the test completion.
    * For example: stack traces, expected/actual values. */
@@ -1602,8 +1721,17 @@ export enum TestStatus {
 
 
 ```ts
+export type TestFinishDataKind = string;
+
 export namespace TestFinishDataKind {
 }
+```
+
+#### TestFinishData
+
+
+```ts
+export type TestFinishData = any;
 ```
 
 #### TestReport
@@ -1632,7 +1760,7 @@ export interface TestReport {
   skipped: Integer;
 
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
-  time?: DurationMillis;
+  time?: Long;
 }
 ```
 
@@ -1642,7 +1770,7 @@ export interface TestReport {
 ```ts
 export interface TestStart {
   /** Name or description of the test. */
-  displayName: String;
+  displayName: string;
 
   /** Source location of the test, as LSP location. */
   location?: Location;
@@ -1662,7 +1790,6 @@ export interface TestTask {
 }
 ```
 
-
 ### OnBuildTaskProgress: notification
 
 After a `taskStart` and before `taskFinish` for a `taskId`, the server may send
@@ -1670,6 +1797,7 @@ any number of progress notifications.
 
 - method: `build/taskProgress`
 - params: `TaskProgressParams`
+
 #### TaskProgressParams
 
 
@@ -1679,10 +1807,10 @@ export interface TaskProgressParams {
   taskId: TaskId;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: EventTime;
+  eventTime?: Long;
 
   /** Message describing the task. */
-  message?: String;
+  message?: string;
 
   /** If known, total amount of work units in this task. */
   total?: Long;
@@ -1691,17 +1819,16 @@ export interface TaskProgressParams {
   progress?: Long;
 
   /** Name of a work unit. For example, "files" or "tests". May be empty. */
-  unit?: String;
+  unit?: string;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TaskDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
   data?: TaskData;
 }
 ```
-
 
 ### OnBuildTaskFinish: notification
 
@@ -1710,6 +1837,7 @@ with the same `taskId` was sent.
 
 - method: `build/taskFinish`
 - params: `TaskFinishParams`
+
 #### TaskFinishParams
 
 
@@ -1719,20 +1847,19 @@ export interface TaskFinishParams {
   taskId: TaskId;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: EventTime;
+  eventTime?: Long;
 
   /** Message describing the task. */
-  message?: String;
+  message?: string;
 
   /** Task completion status. */
   status: StatusCode;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: String;
+  dataKind?: TaskDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
   data?: TaskData;
 }
 ```
-
