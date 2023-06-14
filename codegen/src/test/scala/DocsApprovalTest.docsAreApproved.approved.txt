@@ -8,22 +8,6 @@ A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
 export type Long = number;
 ```
 
-#### Double
-
-A double is a double precision IEEE-754 floating point number.
-
-```ts
-export type Double = number;
-```
-
-#### Float
-
-A float is a single precision IEEE-754 floating point number.
-
-```ts
-export type Float = number;
-```
-
 #### Integer
 
 An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).

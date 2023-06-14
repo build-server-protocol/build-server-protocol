@@ -15,12 +15,6 @@ integer Integer
 /// A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
 long Long
 
-/// A float is a single precision IEEE-754 floating point number.
-float Float
-
-/// A double is a double precision IEEE-754 floating point number.
-double Double
-
 @jsonRPC
 service BuildClient {
     operations: [
