@@ -9,6 +9,7 @@ targets.
 - method: `buildTarget/javacOptions`
 - params: `JavacOptionsParams`
 - result: `JavacOptionsResult`
+
 #### JavacOptionsParams
 
 
@@ -16,27 +17,6 @@ targets.
 export interface JavacOptionsParams {
   targets: BuildTargetIdentifier[];
 }
-```
-
-#### BuildTargetIdentifier
-
-A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
-
-```ts
-export interface BuildTargetIdentifier {
-  /** The target’s Uri */
-  uri: URI;
-}
-```
-
-#### URI
-
-A resource identifier that is a valid URI according to rfc3986:
-https://tools.ietf.org/html/rfc3986
-
-```ts
-export type URI = String;
 ```
 
 #### JavacOptionsResult
@@ -57,16 +37,15 @@ export interface JavacOptionsItem {
 
   /** Additional arguments to the compiler.
    * For example, -deprecation. */
-  options: String[];
+  options: string[];
 
   /** The dependency classpath for this target, must be
    * identical to what is passed as arguments to
    * the -classpath flag in the command line interface
    * of javac. */
-  classpath: String[];
+  classpath: string[];
 
   /** The output directory for classfiles produced by this target */
-  classDirectory: String;
+  classDirectory: string;
 }
 ```
-

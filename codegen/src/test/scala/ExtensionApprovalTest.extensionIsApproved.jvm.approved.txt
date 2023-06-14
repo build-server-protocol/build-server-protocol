@@ -15,17 +15,8 @@ export interface JvmBuildTarget {
 
   /** The java version this target is supposed to use.
    * For example: 1.8 */
-  javaVersion?: String;
+  javaVersion?: string;
 }
-```
-
-#### URI
-
-A resource identifier that is a valid URI according to rfc3986:
-https://tools.ietf.org/html/rfc3986
-
-```ts
-export type URI = String;
 ```
 
 
@@ -45,6 +36,7 @@ after all the targets are compiled.
 - method: `buildTarget/jvmTestEnvironment`
 - params: `JvmTestEnvironmentParams`
 - result: `JvmTestEnvironmentResult`
+
 #### JvmTestEnvironmentParams
 
 
@@ -54,25 +46,6 @@ export interface JvmTestEnvironmentParams {
 
   originId?: Identifier;
 }
-```
-
-#### BuildTargetIdentifier
-
-A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
-
-```ts
-export interface BuildTargetIdentifier {
-  /** The target’s Uri */
-  uri: URI;
-}
-```
-
-#### Identifier
-
-
-```ts
-export type Identifier = String;
 ```
 
 #### JvmTestEnvironmentResult
@@ -91,13 +64,13 @@ export interface JvmTestEnvironmentResult {
 export interface JvmEnvironmentItem {
   target: BuildTargetIdentifier;
 
-  classpath: String[];
+  classpath: string[];
 
-  jvmOptions: String[];
+  jvmOptions: string[];
 
-  workingDirectory: String;
+  workingDirectory: string;
 
-  environmentVariables: Map<String, String>;
+  environmentVariables: Map<string, string>;
 
   mainClasses?: JvmMainClass[];
 }
@@ -108,12 +81,11 @@ export interface JvmEnvironmentItem {
 
 ```ts
 export interface JvmMainClass {
-  className: String;
+  className: string;
 
-  arguments: String[];
+  arguments: string[];
 }
 ```
-
 
 ### JvmRunEnvironment: request
 
@@ -123,6 +95,7 @@ that should be used for regular exection of main classes, not for testing
 - method: `buildTarget/jvmRunEnvironment`
 - params: `JvmRunEnvironmentParams`
 - result: `JvmRunEnvironmentResult`
+
 #### JvmRunEnvironmentParams
 
 
@@ -142,4 +115,3 @@ export interface JvmRunEnvironmentResult {
   items: JvmEnvironmentItem[];
 }
 ```
-
