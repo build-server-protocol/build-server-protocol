@@ -43,7 +43,7 @@ lazy val V = new {
   val diffutils = "1.3.0"
   val scalatest = "3.2.16"
   val ipcsocket = "1.0.1"
-  val scalacheck115 = "3.2.11.0"
+  val scalatestScalacheck = "3.2.14.0"
   val jsonrpc4s = "0.1.0"
   val approvaltests = "18.6.0"
   val junitInterface = "0.13.3"
@@ -118,7 +118,7 @@ lazy val tests = project
       "org.scala-lang.modules" %% "scala-java8-compat" % V.java8Compat,
       "org.scala-sbt.ipcsocket" % "ipcsocket" % V.ipcsocket,
       "org.scalatest" %% "scalatest" % V.scalatest,
-      "org.scalatestplus" %% "scalacheck-1-15" % V.scalacheck115,
+      "org.scalatestplus" %% "scalacheck-1-16" % V.scalatestScalacheck,
       "org.scalacheck" %% "scalacheck" % V.scalacheck,
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % V.jsoniter
     )
