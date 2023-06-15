@@ -10,14 +10,14 @@ the `dataKind` field contains "scala".
 ```ts
 export interface ScalaBuildTarget {
   /** The Scala organization that is used for a target. */
-  scalaOrganization: String;
+  scalaOrganization: string;
 
   /** The scala version to compile this target */
-  scalaVersion: String;
+  scalaVersion: string;
 
   /** The binary version of scalaVersion.
    * For example, 2.12 if scalaVersion is 2.12.4. */
-  scalaBinaryVersion: String;
+  scalaBinaryVersion: string;
 
   /** The target platform for this target */
   platform: ScalaPlatform;
@@ -43,34 +43,6 @@ export enum ScalaPlatform {
 }
 ```
 
-#### URI
-
-A resource identifier that is a valid URI according to rfc3986:
-https://tools.ietf.org/html/rfc3986
-
-```ts
-export type URI = String;
-```
-
-#### JvmBuildTarget
-
-`JvmBuildTarget` is a basic data structure that contains jvm-specific
-metadata, specifically JDK reference. This metadata is embedded in
-the `data: Option[Json]` field of the `BuildTarget` definition, when
-the `dataKind` field contains "jvm".
-
-```ts
-export interface JvmBuildTarget {
-  /** Uri representing absolute path to jdk
-   * For example: file:///usr/lib/jvm/java-8-openjdk-amd64 */
-  javaHome?: URI;
-
-  /** The java version this target is supposed to use.
-   * For example: 1.8 */
-  javaVersion?: String;
-}
-```
-
 
 ## BSP Server remote interface
 
@@ -83,24 +55,13 @@ targets.
 - method: `buildTarget/scalacOptions`
 - params: `ScalacOptionsParams`
 - result: `ScalacOptionsResult`
+
 #### ScalacOptionsParams
 
 
 ```ts
 export interface ScalacOptionsParams {
   targets: BuildTargetIdentifier[];
-}
-```
-
-#### BuildTargetIdentifier
-
-A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
-
-```ts
-export interface BuildTargetIdentifier {
-  /** The target’s Uri */
-  uri: URI;
 }
 ```
 
@@ -120,7 +81,7 @@ export interface ScalacOptionsResult {
 export interface ScalacOptionsItem {
   target: BuildTargetIdentifier;
 
-  options: String[];
+  options: string[];
 
   /** Additional arguments to the compiler.
    * For example, -deprecation.
@@ -128,13 +89,12 @@ export interface ScalacOptionsItem {
    * identical to what is passed as arguments to
    * the -classpath flag in the command line interface
    * of scalac. */
-  classpath: String[];
+  classpath: string[];
 
   /** The output directory for classfiles produced by this target */
-  classDirectory: String;
+  classDirectory: string;
 }
 ```
-
 
 ### ScalaTestClasses: request
 
@@ -165,6 +125,7 @@ The client will get a `originId` field in `ScalaTestClassesResult` if the
 - method: `buildTarget/scalaTestClasses`
 - params: `ScalaTestClassesParams`
 - result: `ScalaTestClassesResult`
+
 #### ScalaTestClassesParams
 
 
@@ -173,7 +134,7 @@ export interface ScalaTestClassesParams {
   targets: BuildTargetIdentifier[];
 
   /** An optional number uniquely identifying a client request. */
-  originId?: String;
+  originId?: string;
 }
 ```
 
@@ -197,13 +158,12 @@ export interface ScalaTestClassesItem {
   /** Name of the the framework to which classes belong.
    * It's optional in order to maintain compatibility, however it is expected
    * from the newer implementations to not leave that field unspecified. */
-  framework?: String;
+  framework?: string;
 
   /** The fully qualified names of the test classes in this target */
-  classes: String[];
+  classes: string[];
 }
 ```
-
 
 ### ScalaMainClasses: request
 
@@ -219,6 +179,7 @@ notifications during compilation before completing the response.
 - method: `buildTarget/scalaMainClasses`
 - params: `ScalaMainClassesParams`
 - result: `ScalaMainClassesResult`
+
 #### ScalaMainClassesParams
 
 
@@ -227,7 +188,7 @@ export interface ScalaMainClassesParams {
   targets: BuildTargetIdentifier[];
 
   /** An optional number uniquely identifying a client request. */
-  originId?: String;
+  originId?: string;
 }
 ```
 
@@ -239,7 +200,7 @@ export interface ScalaMainClassesResult {
   items: ScalaMainClassesItem[];
 
   /** An optional id of the request that triggered this result. */
-  originId?: String;
+  originId?: string;
 }
 ```
 
@@ -262,16 +223,15 @@ export interface ScalaMainClassesItem {
 ```ts
 export interface ScalaMainClass {
   /** The main class to run. */
-  className: String;
+  className: string;
 
   /** The user arguments to the main entrypoint. */
-  arguments: String[];
+  arguments: string[];
 
   /** The jvm options for the application. */
-  jvmOptions: String[];
+  jvmOptions: string[];
 
   /** The environment variables for the application. */
-  environmentVariables?: String[];
+  environmentVariables?: string[];
 }
 ```
-

@@ -9,19 +9,10 @@ the `dataKind` field contains "python".
 
 ```ts
 export interface PythonBuildTarget {
-  version?: String;
+  version?: string;
 
   interpreter?: URI;
 }
-```
-
-#### URI
-
-A resource identifier that is a valid URI according to rfc3986:
-https://tools.ietf.org/html/rfc3986
-
-```ts
-export type URI = String;
 ```
 
 
@@ -36,24 +27,13 @@ targets.
 - method: `buildTarget/pythonOptions`
 - params: `PythonOptionsParams`
 - result: `PythonOptionsResult`
+
 #### PythonOptionsParams
 
 
 ```ts
 export interface PythonOptionsParams {
   targets: BuildTargetIdentifier[];
-}
-```
-
-#### BuildTargetIdentifier
-
-A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
-Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
-
-```ts
-export interface BuildTargetIdentifier {
-  /** The target’s Uri */
-  uri: URI;
 }
 ```
 
@@ -75,7 +55,6 @@ export interface PythonOptionsItem {
 
   /** Attributes added to the interpreter command
    * For example: -E */
-  interpreterOptions: String[];
+  interpreterOptions: string[];
 }
 ```
-

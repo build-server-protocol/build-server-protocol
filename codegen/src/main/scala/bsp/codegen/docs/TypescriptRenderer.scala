@@ -26,7 +26,8 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     definition match {
       case PrimitiveAlias(shapeId, primitiveType, hints) =>
         Some(renderPrimitiveAlias(shapeId, primitiveType, hints))
-      case Structure(shapeId, fields, hints) => Some(renderStructure(shapeId, fields))
+      case Structure(shapeId, fields, hints, associatedDataKinds) =>
+        Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, hints) =>
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, hints) =>
@@ -35,7 +36,7 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     }
   }
 
-  def renderPrimitiveAlias(id: ShapeId, primitive: Primitive, value: List[Hint]): Lines = {
+  def renderPrimitiveAlias(id: ShapeId, primitive: Primitive, hints: List[Hint]): Lines = {
     lines(
       s"export type ${id.getName()} = ${renderPrimitive(primitive)};"
     )
@@ -65,6 +66,13 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
     )
   }
 
+  def renderEnumType[A](enumType: EnumType[A]): String = {
+    enumType match {
+      case IntEnum    => renderPrimitive(Primitive.PInt)
+      case StringEnum => renderPrimitive(Primitive.PString)
+    }
+  }
+
   def renderOpenEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
@@ -72,6 +80,8 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   ): Lines = {
     val tpe = shapeId.getName()
     lines(
+      s"export type $tpe = ${renderEnumType(enumType)};",
+      newline,
       block(s"export namespace $tpe") {
         values
           .map(value =>
@@ -132,15 +142,15 @@ class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   }
 
   def renderPrimitive(prim: Primitive) = prim match {
-    case PFloat     => "Float"
-    case PDouble    => "Double"
+    case PFloat     => "number"
+    case PDouble    => "number"
     case PUnit      => "void"
-    case PString    => "String"
-    case PInt       => "Integer"
+    case PString    => "string"
+    case PInt       => "number"
     case PDocument  => "any"
-    case PBool      => "Boolean"
-    case PLong      => "Long"
-    case PTimestamp => "Long"
+    case PBool      => "boolean"
+    case PLong      => "number"
+    case PTimestamp => "number"
   }
 
   def renderDocumentation(hints: List[Hint]): Lines = hints
