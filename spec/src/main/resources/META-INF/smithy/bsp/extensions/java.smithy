@@ -15,7 +15,7 @@ service JavaBuildServer {
     ]
 }
 
-/// The build target scalac options request is sent from the client to the server to
+/// The build target javac options request is sent from the client to the server to
 /// query for the list of compiler options necessary to compile in a given list of
 /// targets.
 @jsonRequest("buildTarget/javacOptions")
