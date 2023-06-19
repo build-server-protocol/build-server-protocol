@@ -63,7 +63,7 @@ jobs:
           cache: "sbt"
       - run: sbt docs/docusaurusCreateSite
 
-  format-check:
+  code-format-check:
     name: Check Scala formatting
     runs-on: ubuntu-latest
     steps:
@@ -74,3 +74,16 @@ jobs:
           java-version: "11"
           cache: "sbt"
       - run: sbt checkScalaFormat
+
+  website-format-check:
+    name: Check website formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          dry: true
+          prettier_options: --ignore-path website/.prettierignore --check .
