@@ -8,8 +8,7 @@ permissions:
 
 jobs:
   website-prettier:
-
-    name: Run prettier
+    name: Check formatting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,4 +21,4 @@ jobs:
         uses: creyD/prettier_action@v4.3
         with:
           # This part is also where you can pass other options, for example:
-          prettier_options: --ignore-path website/.prettierignore --write **/*.{js,json,css,md}
+          prettier_options: --ignore-path website/.prettierignore --check **/*.{js,json,css,md}
