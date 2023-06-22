@@ -496,7 +496,7 @@ for the list of all available build targets in the workspace.
 export interface WorkspaceBuildTargetsResult {
   /** The build targets in this workspace that
    * contain sources with the given language ids. */
-  targets?: BuildTarget[];
+  targets: BuildTarget[];
 }
 ```
 
