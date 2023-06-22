@@ -1,7 +1,12 @@
 import com.spun.util.{ObjectUtils, StringUtils}
 import com.spun.util.tests.{StackTraceReflectionResult, TestUtils}
 import org.approvaltests.core.Options
-import org.approvaltests.namer.{ApprovalNamer, AttributeStackSelector, NamerFactory, StackTraceNamer}
+import org.approvaltests.namer.{
+  ApprovalNamer,
+  AttributeStackSelector,
+  NamerFactory,
+  StackTraceNamer
+}
 import org.approvaltests.writers.Writer
 
 import java.io.File
@@ -20,11 +25,17 @@ class CustomApprovalNamer(name: String) extends ApprovalNamer {
     info.getSourceFile.getParentFile.toPath.resolve("resources").toAbsolutePath.toString
   }
 
-  override def getReceivedFile(extensionWithDot: String) = new File(getSourceFilePath + "/" + getApprovalName + Writer.received + extensionWithDot)
+  override def getReceivedFile(extensionWithDot: String) = new File(
+    getSourceFilePath + "/" + getApprovalName + Writer.received + extensionWithDot
+  )
 
-  override def getApprovedFile(extensionWithDot: String) = new File(getSourceFilePath + "/" + getApprovalName + Writer.approved + extensionWithDot)
+  override def getApprovedFile(extensionWithDot: String) = new File(
+    getSourceFilePath + "/" + getApprovalName + Writer.approved + extensionWithDot
+  )
 
-  override def addAdditionalInformation(additionalInformation: String) = new CustomApprovalNamer(name + "." + additionalInformation)
+  override def addAdditionalInformation(additionalInformation: String) = new CustomApprovalNamer(
+    name + "." + additionalInformation
+  )
 }
 
 object CustomApprovalNamer {

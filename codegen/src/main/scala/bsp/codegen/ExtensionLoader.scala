@@ -13,7 +13,11 @@ object ExtensionLoader {
         .map(_.getFileName.toString.split("\\.").head)
       extensions
     } catch {
-      case e: Throwable => throw new RuntimeException("Failed to load extensions, make sure that the working directory is set correctly", e)
+      case e: Throwable =>
+        throw new RuntimeException(
+          "Failed to load extensions, make sure that the working directory is set correctly",
+          e
+        )
     }
   }
 
