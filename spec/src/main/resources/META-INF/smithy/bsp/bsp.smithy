@@ -820,7 +820,7 @@ list DiagnosticRelatedInformationList {
 structure WorkspaceBuildTargetsResult {
     /// The build targets in this workspace that
     /// contain sources with the given language ids.
-    // TODO: should be @required
+    @required
     targets: BuildTargets
 }
 
