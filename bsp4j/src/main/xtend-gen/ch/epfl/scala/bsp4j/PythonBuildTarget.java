@@ -9,9 +9,7 @@ public class PythonBuildTarget {
 
   private String interpreter;
 
-  public PythonBuildTarget(final String version, final String interpreter) {
-    this.version = version;
-    this.interpreter = interpreter;
+  public PythonBuildTarget() {
   }
 
   @Pure

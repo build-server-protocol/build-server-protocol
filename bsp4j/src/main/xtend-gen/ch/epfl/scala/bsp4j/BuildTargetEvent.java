@@ -14,6 +14,8 @@ public class BuildTargetEvent {
 
   private BuildTargetEventKind kind;
 
+  private String dataKind;
+
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
 
@@ -41,6 +43,15 @@ public class BuildTargetEvent {
   }
 
   @Pure
+  public String getDataKind() {
+    return this.dataKind;
+  }
+
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -55,6 +66,7 @@ public class BuildTargetEvent {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
     b.add("kind", this.kind);
+    b.add("dataKind", this.dataKind);
     b.add("data", this.data);
     return b.toString();
   }
@@ -79,6 +91,11 @@ public class BuildTargetEvent {
         return false;
     } else if (!this.kind.equals(other.kind))
       return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
       if (other.data != null)
         return false;
@@ -94,6 +111,7 @@ public class BuildTargetEvent {
     int result = 1;
     result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

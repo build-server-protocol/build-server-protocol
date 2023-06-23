@@ -15,12 +15,6 @@ public class JvmRunEnvironmentParams {
 
   public JvmRunEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
-    this.originId = null;
-  }
-
-  public JvmRunEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets, final String originId) {
-    this.targets = targets;
-    this.originId = originId;
   }
 
   @Pure

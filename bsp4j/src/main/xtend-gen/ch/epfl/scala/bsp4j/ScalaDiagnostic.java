@@ -8,6 +8,9 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaDiagnostic {
   private List<ScalaAction> actions;
 
+  public ScalaDiagnostic() {
+  }
+
   @Pure
   public List<ScalaAction> getActions() {
     return this.actions;

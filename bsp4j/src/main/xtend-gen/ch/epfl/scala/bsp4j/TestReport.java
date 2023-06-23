@@ -7,10 +7,10 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestReport {
+  private String originId;
+
   @NonNull
   private BuildTargetIdentifier target;
-
-  private String originId;
 
   @NonNull
   private Integer passed;
@@ -39,6 +39,15 @@ public class TestReport {
   }
 
   @Pure
+  public String getOriginId() {
+    return this.originId;
+  }
+
+  public void setOriginId(final String originId) {
+    this.originId = originId;
+  }
+
+  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -46,15 +55,6 @@ public class TestReport {
 
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
-  }
-
-  @Pure
-  public String getOriginId() {
-    return this.originId;
-  }
-
-  public void setOriginId(final String originId) {
-    this.originId = originId;
   }
 
   @Pure
@@ -120,8 +120,8 @@ public class TestReport {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("target", this.target);
     b.add("originId", this.originId);
+    b.add("target", this.target);
     b.add("passed", this.passed);
     b.add("failed", this.failed);
     b.add("ignored", this.ignored);
@@ -141,15 +141,15 @@ public class TestReport {
     if (getClass() != obj.getClass())
       return false;
     TestReport other = (TestReport) obj;
-    if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
     if (this.originId == null) {
       if (other.originId != null)
         return false;
     } else if (!this.originId.equals(other.originId))
+      return false;
+    if (this.target == null) {
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
       return false;
     if (this.passed == null) {
       if (other.passed != null)
@@ -189,8 +189,8 @@ public class TestReport {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.passed== null) ? 0 : this.passed.hashCode());
     result = prime * result + ((this.failed== null) ? 0 : this.failed.hashCode());
     result = prime * result + ((this.ignored== null) ? 0 : this.ignored.hashCode());

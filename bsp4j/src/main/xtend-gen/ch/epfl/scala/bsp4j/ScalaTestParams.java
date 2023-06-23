@@ -10,6 +10,9 @@ public class ScalaTestParams {
 
   private List<String> jvmOptions;
 
+  public ScalaTestParams() {
+  }
+
   @Pure
   public List<ScalaTestClassesItem> getTestClasses() {
     return this.testClasses;

@@ -56,6 +56,7 @@ import org.eclipse.xtend.core.XtendStandaloneSetup
 Global / cancelable := true
 publish / skip := true
 
+// Bsp4s is now generated from the smithy model
 lazy val bsp4s = project
   .in(file("bsp4s"))
   .settings(
@@ -65,42 +66,33 @@ lazy val bsp4s = project
     libraryDependencies ++= List(
       "me.vican.jorge" %% "jsonrpc4s" % V.jsonrpc4s,
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % V.jsoniter
-    )
-  )
+    ),
+    TaskKey[Unit]("codegen") := {
+      val _ = runCodegen(Compile, "bsp.codegen.bsp4s.Main", "scala").value
 
+    }
+  )
+  .dependsOn(codegen)
+
+// Bsp4j is now generated from the smithy model
 lazy val bsp4j = project
   .in(file("bsp4j"))
   .settings(
     crossVersion := CrossVersion.disabled,
     autoScalaLibrary := false,
     Compile / javacOptions ++= {
-      val specifyRelease =
-        if (sys.props("java.version").startsWith("1.8"))
-          List.empty
-        else
-          List("--release", "8")
-
       List(
         "-Xlint:all",
         "-Werror"
-      ) ++ specifyRelease
+      )
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
+    TaskKey[Unit]("codegen") := {
+      val outputPath = (Compile / sourceDirectory).value / "java"
+      val _ = runCodegen(Compile, "bsp.codegen.bsp4j.Main", "java").value
+    },
     TaskKey[Unit]("xtend") := {
-      val injector = new XtendStandaloneSetup().createInjectorAndDoEMFRegistration
-      val compiler = injector.getInstance(classOf[XtendBatchCompiler])
-      val classpath = (Compile / dependencyClasspath).value.map(_.data).mkString(File.pathSeparator)
-      compiler.setClassPath(classpath)
-      val sourceDir = (Compile / sourceDirectory).value / "java"
-      compiler.setSourcePath(sourceDir.getCanonicalPath)
-      val outDir = (Compile / sourceDirectory).value / "xtend-gen"
-      IO.delete(outDir)
-      compiler.setOutputPath(outDir.getCanonicalPath)
-      object XtendError
-          extends Exception(s"Compilation of Xtend files in $sourceDir failed.")
-          with sbt.internal.util.FeedbackProvidedException
-      if (!compiler.compile())
-        throw XtendError
+      val _ = invokeXtendGeneration(Compile).value
     },
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
     libraryDependencies ++= List(
@@ -108,6 +100,7 @@ lazy val bsp4j = project
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
     )
   )
+  .dependsOn(codegen)
 
 lazy val tests = project
   .in(file("tests"))
@@ -171,51 +164,6 @@ lazy val `spec-traits` = project
       "software.amazon.smithy" % "smithy-model" % V.smithy
     )
   )
-
-lazy val `bsp4s-gen` = project
-  .in(file("bsp4s-gen"))
-  .settings(
-    crossScalaVersions := V.supportedScalaVersions,
-    Test / publishArtifact := false,
-    Compile / doc / sources := Nil,
-    libraryDependencies ++= List(
-      "me.vican.jorge" %% "jsonrpc4s" % V.jsonrpc4s,
-      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % V.jsoniter
-    ),
-    TaskKey[Unit]("codegen") := {
-      val _ = runCodegen(Compile, "bsp.codegen.bsp4s.Main", "scala").value
-
-    }
-  )
-  .dependsOn(codegen)
-
-// A code-generated recreation of the bsp4j module
-lazy val `bsp4j-gen` = project
-  .in(file("bsp4j-gen"))
-  .settings(
-    crossVersion := CrossVersion.disabled,
-    autoScalaLibrary := false,
-    Compile / javacOptions ++= {
-      List(
-        "-Xlint:all",
-        "-Werror"
-      )
-    },
-    Compile / doc / javacOptions := List("-Xdoclint:none"),
-    TaskKey[Unit]("codegen") := {
-      val outputPath = (Compile / sourceDirectory).value / "java"
-      val _ = runCodegen(Compile, "bsp.codegen.bsp4j.Main", "java").value
-    },
-    TaskKey[Unit]("xtend") := {
-      val _ = invokeXtendGeneration(Compile).value
-    },
-    Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "xtend-gen",
-    libraryDependencies ++= List(
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.generator" % V.lsp4j,
-      "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
-    )
-  )
-  .dependsOn(codegen)
 
 // A codegen module that contains the logic for generating bsp4j
 // This will be invoked via shell-out using a bespoke sbt task

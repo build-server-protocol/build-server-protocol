@@ -40,7 +40,6 @@ class HappyMockSuite extends AnyFunSuite {
       .create()
     launcher.startListening()
     val bsp = launcher.getRemoteProxy
-    localClient.onConnectWithServer(bsp)
     val cancelable = Cancelable { () =>
       Cancelable.cancelAll(
         List(Cancelable(() => clientIn.close()), Cancelable(() => clientOut.close()))
@@ -120,7 +119,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertScalacOptions(server: MockBuildServer): Unit = {
     val scalacOptionsParams = new ScalacOptionsParams(getBuildTargetIds(server))
-    val scalacOptionsResult = server.buildTargetScalacOptions(scalacOptionsParams).get
+    val scalacOptionsResult = server.scalacOptions(scalacOptionsParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
     scalacOptionsItems.foreach { item =>
       val options = item.getOptions.asScala
@@ -135,7 +134,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJavacOptions(server: MockBuildServer): Unit = {
     val javacOptionsParams = new JavacOptionsParams(getBuildTargetIds(server))
-    val javacOptionsResult = server.buildTargetJavacOptions(javacOptionsParams).get
+    val javacOptionsResult = server.javacOptions(javacOptionsParams).get
     val javacOptionsItems = javacOptionsResult.getItems.asScala
     javacOptionsItems.foreach { item =>
       val options = item.getOptions.asScala
@@ -150,7 +149,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertCppOptions(server: MockBuildServer): Unit = {
     val cppOptionsParams = new CppOptionsParams(getBuildTargetIds(server))
-    val cppOptionsResult = server.buildTargetCppOptions(cppOptionsParams).get
+    val cppOptionsResult = server.cppOptions(cppOptionsParams).get
     val cppOptionsItems = cppOptionsResult.getItems.asScala
     cppOptionsItems.foreach { item =>
       val options = item.getCopts.asScala
@@ -162,13 +161,13 @@ class HappyMockSuite extends AnyFunSuite {
       val linkopts = item.getLinkopts.asScala
       assert(linkopts.nonEmpty)
       assert(linkopts.exists(_.contains("-pthread")))
-      assert(!item.isLinkshared)
+      assert(!item.getLinkshared)
     }
   }
 
   def assertPythonOptions(server: MockBuildServer): Unit = {
     val pythonOptionsParams = new PythonOptionsParams(getBuildTargetIds(server))
-    val pythonOptionsResult = server.buildTargetPythonOptions(pythonOptionsParams).get
+    val pythonOptionsResult = server.pythonOptions(pythonOptionsParams).get
     val pythonOptionsItems = pythonOptionsResult.getItems.asScala
     pythonOptionsItems.foreach { item =>
       val options = item.getInterpreterOptions.asScala
@@ -337,13 +336,13 @@ class HappyMockSuite extends AnyFunSuite {
         testDirectory.toUri.toString,
         capabilities
       )
-      val serverCapabilities = server.buildInitialize(initializeParams).get().getCapabilities
+      val serverCapabilities = server.initializeBuild(initializeParams).get().getCapabilities
       server.onBuildInitialized()
       try {
         assertServerCapabilities(serverCapabilities)
         assertServerEndpoints(server, client)
       } finally {
-        try server.buildShutdown().get()
+        try server.shutdownBuild().get()
         finally server.onBuildExit()
       }
     } finally {

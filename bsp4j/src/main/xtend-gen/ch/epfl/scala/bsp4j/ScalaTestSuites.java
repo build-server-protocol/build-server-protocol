@@ -11,15 +11,9 @@ public class ScalaTestSuites {
   @NonNull
   private List<ScalaTestSuiteSelection> suites;
 
-  /**
-   * Additional jvmOptions which will be passed to the forked JVM
-   */
   @NonNull
   private List<String> jvmOptions;
 
-  /**
-   * Enviroment variables should be an array of strings in format KEY=VALUE
-   */
   @NonNull
   private List<String> environmentVariables;
 
@@ -39,34 +33,22 @@ public class ScalaTestSuites {
     this.suites = Preconditions.checkNotNull(suites, "suites");
   }
 
-  /**
-   * Additional jvmOptions which will be passed to the forked JVM
-   */
   @Pure
   @NonNull
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
 
-  /**
-   * Additional jvmOptions which will be passed to the forked JVM
-   */
   public void setJvmOptions(@NonNull final List<String> jvmOptions) {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
 
-  /**
-   * Enviroment variables should be an array of strings in format KEY=VALUE
-   */
   @Pure
   @NonNull
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
 
-  /**
-   * Enviroment variables should be an array of strings in format KEY=VALUE
-   */
   public void setEnvironmentVariables(@NonNull final List<String> environmentVariables) {
     this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }

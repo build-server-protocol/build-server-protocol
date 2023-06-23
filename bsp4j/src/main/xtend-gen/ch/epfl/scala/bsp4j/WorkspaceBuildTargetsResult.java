@@ -2,11 +2,13 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class WorkspaceBuildTargetsResult {
+  @NonNull
   private List<BuildTarget> targets;
 
   public WorkspaceBuildTargetsResult(@NonNull final List<BuildTarget> targets) {
@@ -14,12 +16,13 @@ public class WorkspaceBuildTargetsResult {
   }
 
   @Pure
+  @NonNull
   public List<BuildTarget> getTargets() {
     return this.targets;
   }
 
-  public void setTargets(final List<BuildTarget> targets) {
-    this.targets = targets;
+  public void setTargets(@NonNull final List<BuildTarget> targets) {
+    this.targets = Preconditions.checkNotNull(targets, "targets");
   }
 
   @Override

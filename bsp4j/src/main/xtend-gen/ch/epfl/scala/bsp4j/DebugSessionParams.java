@@ -13,16 +13,13 @@ public class DebugSessionParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
 
-  @NonNull
   private String dataKind;
 
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
 
-  public DebugSessionParams(@NonNull final List<BuildTargetIdentifier> targets, @NonNull final String dataKind, final Object data) {
+  public DebugSessionParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
-    this.dataKind = dataKind;
-    this.data = data;
   }
 
   @Pure
@@ -36,13 +33,12 @@ public class DebugSessionParams {
   }
 
   @Pure
-  @NonNull
   public String getDataKind() {
     return this.dataKind;
   }
 
-  public void setDataKind(@NonNull final String dataKind) {
-    this.dataKind = Preconditions.checkNotNull(dataKind, "dataKind");
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
   }
 
   @Pure

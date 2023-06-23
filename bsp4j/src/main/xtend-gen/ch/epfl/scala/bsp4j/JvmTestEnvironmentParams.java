@@ -15,12 +15,6 @@ public class JvmTestEnvironmentParams {
 
   public JvmTestEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
-    this.originId = null;
-  }
-
-  public JvmTestEnvironmentParams(@NonNull final List<BuildTargetIdentifier> targets, final String originId) {
-    this.targets = targets;
-    this.originId = originId;
   }
 
   @Pure

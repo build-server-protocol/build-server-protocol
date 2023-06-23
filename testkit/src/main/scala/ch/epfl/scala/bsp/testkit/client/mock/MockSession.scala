@@ -47,8 +47,6 @@ case class MockSession(
 
     val server: BspMockServer = launcher.getRemoteProxy
 
-    client.onConnectWithServer(server)
-
     val cancelable = () => {
       in.close()
       out.close()

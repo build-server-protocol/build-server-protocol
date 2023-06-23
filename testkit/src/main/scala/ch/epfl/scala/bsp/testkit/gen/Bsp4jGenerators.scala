@@ -118,9 +118,8 @@ trait Bsp4jGenerators {
   } yield new CleanCacheParams(targets)
 
   lazy val genCleanCacheResult: Gen[CleanCacheResult] = for {
-    message <- arbitrary[String].nullable
     cleaned <- arbitrary[Boolean]
-  } yield new CleanCacheResult(message, cleaned)
+  } yield new CleanCacheResult(cleaned)
 
   lazy val genCompileParams: Gen[CompileParams] = for {
     targets <- genBuildTargetIdentifier.list
@@ -236,7 +235,11 @@ trait Bsp4jGenerators {
 
   lazy val genScalaWorkspaceEdit: Gen[ScalaWorkspaceEdit] = for {
     changes <- genScalaTextEdit.list
-  } yield new ScalaWorkspaceEdit(changes)
+  } yield {
+    val edit = new ScalaWorkspaceEdit()
+    edit.setChanges(changes)
+    edit
+  }
 
   lazy val genScalaTextEdit: Gen[ScalaTextEdit] = for {
     range <- genRange
@@ -362,7 +365,12 @@ trait Bsp4jGenerators {
   lazy val genJvmBuildTarget: Gen[JvmBuildTarget] = for {
     javaHome <- genFileUriString.nullable
     javaVersion <- arbitrary[String].nullable
-  } yield new JvmBuildTarget(javaHome, javaVersion)
+  } yield {
+    val buildTarget = new JvmBuildTarget()
+    buildTarget.setJavaHome(javaHome)
+    buildTarget.setJavaVersion(javaVersion)
+    buildTarget
+  }
 
   lazy val genSbtBuildTarget: Gen[SbtBuildTarget] = for {
     sbtVersion <- arbitrary[String]
@@ -746,7 +754,14 @@ trait Bsp4jGenerators {
     compiler <- arbitrary[String].nullable
     cCompiler <- genFileUriString.nullable
     cppCompiler <- genFileUriString.nullable
-  } yield new CppBuildTarget(version, compiler, cCompiler, cppCompiler)
+  } yield {
+    val cppBuildTarget = new CppBuildTarget()
+    cppBuildTarget.setVersion(version)
+    cppBuildTarget.setCompiler(compiler)
+    cppBuildTarget.setCCompiler(cCompiler)
+    cppBuildTarget.setCppCompiler(cppCompiler)
+    cppBuildTarget
+  }
 
   lazy val genCppOptionsItem: Gen[CppOptionsItem] = for {
     target <- genBuildTargetIdentifier
@@ -771,7 +786,12 @@ trait Bsp4jGenerators {
   lazy val genPythonBuildTarget: Gen[PythonBuildTarget] = for {
     version <- arbitrary[String].nullable
     interpreter <- genFileUriString.nullable
-  } yield new PythonBuildTarget(version, interpreter)
+  } yield {
+    val pythonBuildTarget = new PythonBuildTarget()
+    pythonBuildTarget.setVersion(version)
+    pythonBuildTarget.setInterpreter(interpreter)
+    pythonBuildTarget
+  }
 
   lazy val genPythonOptionsItem: Gen[PythonOptionsItem] = for {
     target <- genBuildTargetIdentifier

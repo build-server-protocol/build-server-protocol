@@ -8,16 +8,9 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaTestSuiteSelection {
-  /**
-   * Fully qualified name of the test suite class
-   */
   @NonNull
   private String className;
 
-  /**
-   * List of tests which should be run within this test suite.
-   * Empty collection means that all of them are supposed to be executed.
-   */
   @NonNull
   private List<String> tests;
 
@@ -26,36 +19,22 @@ public class ScalaTestSuiteSelection {
     this.tests = tests;
   }
 
-  /**
-   * Fully qualified name of the test suite class
-   */
   @Pure
   @NonNull
   public String getClassName() {
     return this.className;
   }
 
-  /**
-   * Fully qualified name of the test suite class
-   */
   public void setClassName(@NonNull final String className) {
     this.className = Preconditions.checkNotNull(className, "className");
   }
 
-  /**
-   * List of tests which should be run within this test suite.
-   * Empty collection means that all of them are supposed to be executed.
-   */
   @Pure
   @NonNull
   public List<String> getTests() {
     return this.tests;
   }
 
-  /**
-   * List of tests which should be run within this test suite.
-   * Empty collection means that all of them are supposed to be executed.
-   */
   public void setTests(@NonNull final List<String> tests) {
     this.tests = Preconditions.checkNotNull(tests, "tests");
   }

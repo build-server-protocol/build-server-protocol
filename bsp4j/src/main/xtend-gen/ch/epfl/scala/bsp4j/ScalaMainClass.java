@@ -9,8 +9,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaMainClass {
-  @NonNull
   @SerializedName("class")
+  @NonNull
   private String className;
 
   @NonNull

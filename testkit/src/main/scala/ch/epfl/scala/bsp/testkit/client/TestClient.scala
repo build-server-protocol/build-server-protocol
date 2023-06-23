@@ -228,7 +228,7 @@ class TestClient(
 
   def testSessionInitialization(session: MockSession): Future[Unit] = {
     session.connection.server
-      .buildInitialize(session.initializeBuildParams)
+      .initializeBuild(session.initializeBuildParams)
       .toScala
       .map(initializeBuildResult => {
         val bspVersion = Try(initializeBuildResult.getBspVersion)
@@ -242,7 +242,7 @@ class TestClient(
 
   private def testShutdown(session: MockSession, cleanup: () => Unit): Future[Unit] = {
     session.connection.server
-      .buildShutdown()
+      .shutdownBuild()
       .toScala
       .flatMap(_ => {
         session.connection.server.workspaceBuildTargets().toScala
@@ -742,7 +742,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetJavacOptions(params)
+      .javacOptions(params)
       .toScala
       .map(result => result.getItems)
       .map(javacOptionsItems => {
@@ -779,7 +779,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetScalacOptions(params)
+      .scalacOptions(params)
       .toScala
       .map(result => result.getItems)
       .map(scalacOptionsItems => {
@@ -816,7 +816,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetCppOptions(params)
+      .cppOptions(params)
       .toScala
       .map(result => result.getItems)
       .map(cppOptionsItems => {
@@ -844,7 +844,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetPythonOptions(params)
+      .pythonOptions(params)
       .toScala
       .map(result => result.getItems)
       .map(pythonItems => {
@@ -870,7 +870,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetScalaMainClasses(params)
+      .scalaMainClasses(params)
       .toScala
       .map(result => result.getItems)
       .map(mainItems => {
@@ -898,7 +898,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .buildTargetScalaTestClasses(params)
+      .scalaTestClasses(params)
       .toScala
       .map(result => result.getItems)
       .map(testItems => {
@@ -1015,7 +1015,7 @@ class TestClient(
     val javacOptionsParams = new JavacOptionsParams(javaTargetIds)
 
     bspServer
-      .buildTargetJavacOptions(javacOptionsParams)
+      .javacOptions(javacOptionsParams)
       .toScala
       .map(_ => ())
   }
@@ -1028,7 +1028,7 @@ class TestClient(
     val scalacOptionsParams = new ScalacOptionsParams(scalaTargetIds)
 
     bspServer
-      .buildTargetScalacOptions(scalacOptionsParams)
+      .scalacOptions(scalacOptionsParams)
       .toScala
       .map(_ => ())
   }

@@ -279,7 +279,9 @@ class MockClientSuite extends AnyFunSuite {
     val targets = List(target1, target2, target3, target4, target5).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
-    val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
+    val jvmBuildTarget = new JvmBuildTarget()
+    jvmBuildTarget.setJavaVersion(javaVersion.get)
+    jvmBuildTarget.setJavaHome(javaHome.get)
     val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
     val scalaBuildTarget =
       new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
@@ -289,9 +291,15 @@ class MockClientSuite extends AnyFunSuite {
     val sbtBuildTarget =
       new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
     val cppBuildTarget =
-      new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+      new CppBuildTarget()
+    cppBuildTarget.setVersion("C++11")
+    cppBuildTarget.setCompiler("gcc")
+    cppBuildTarget.setCCompiler("/usr/bin/gcc")
+    cppBuildTarget.setCppCompiler("/usr/bin/g++")
     val pythonBuildTarget =
-      new PythonBuildTarget("3.9", "/usr/bin/python")
+      new PythonBuildTarget()
+    pythonBuildTarget.setInterpreter("/usr/bin/python")
+    pythonBuildTarget.setVersion("3.9")
 
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)

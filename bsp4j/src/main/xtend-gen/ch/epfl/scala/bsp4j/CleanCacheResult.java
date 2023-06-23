@@ -12,8 +12,7 @@ public class CleanCacheResult {
   @NonNull
   private Boolean cleaned;
 
-  public CleanCacheResult(final String message, @NonNull final Boolean cleaned) {
-    this.message = message;
+  public CleanCacheResult(@NonNull final Boolean cleaned) {
     this.cleaned = cleaned;
   }
 

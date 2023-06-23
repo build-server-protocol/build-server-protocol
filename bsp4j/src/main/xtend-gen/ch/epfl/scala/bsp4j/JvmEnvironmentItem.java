@@ -32,7 +32,6 @@ public class JvmEnvironmentItem {
     this.jvmOptions = jvmOptions;
     this.workingDirectory = workingDirectory;
     this.environmentVariables = environmentVariables;
-    this.mainClasses = this.mainClasses;
   }
 
   @Pure

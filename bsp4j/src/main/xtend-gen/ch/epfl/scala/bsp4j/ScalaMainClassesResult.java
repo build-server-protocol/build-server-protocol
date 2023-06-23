@@ -11,6 +11,8 @@ public class ScalaMainClassesResult {
   @NonNull
   private List<ScalaMainClassesItem> items;
 
+  private String originId;
+
   public ScalaMainClassesResult(@NonNull final List<ScalaMainClassesItem> items) {
     this.items = items;
   }
@@ -25,11 +27,21 @@ public class ScalaMainClassesResult {
     this.items = Preconditions.checkNotNull(items, "items");
   }
 
+  @Pure
+  public String getOriginId() {
+    return this.originId;
+  }
+
+  public void setOriginId(final String originId) {
+    this.originId = originId;
+  }
+
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("items", this.items);
+    b.add("originId", this.originId);
     return b.toString();
   }
 
@@ -48,12 +60,20 @@ public class ScalaMainClassesResult {
         return false;
     } else if (!this.items.equals(other.items))
       return false;
+    if (this.originId == null) {
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((this.items== null) ? 0 : this.items.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

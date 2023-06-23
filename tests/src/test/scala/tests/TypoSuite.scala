@@ -73,7 +73,7 @@ class TypoSuite extends AnyFunSuite {
   // Java build server that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
 
-    override def buildInitialize(
+    override def initializeBuild(
         params: InitializeBuildParams
     ): CompletableFuture[InitializeBuildResult] = {
       CompletableFuture.completedFuture {
@@ -97,7 +97,7 @@ class TypoSuite extends AnyFunSuite {
     override def workspaceReload(): CompletableFuture[Object] =
       CompletableFuture.completedFuture(null)
 
-    override def buildShutdown(): CompletableFuture[Object] = {
+    override def shutdownBuild(): CompletableFuture[Object] = {
       CompletableFuture.completedFuture(null)
     }
     override def onBuildExit(): Unit =
@@ -189,7 +189,7 @@ class TypoSuite extends AnyFunSuite {
         params: CleanCacheParams
     ): CompletableFuture[CleanCacheResult] = {
       CompletableFuture.completedFuture {
-        new CleanCacheResult("clean", true)
+        new CleanCacheResult( true)
       }
     }
 
@@ -409,7 +409,7 @@ class TypoSuite extends AnyFunSuite {
       val result: Future[Unit] = for {
         initialize <- {
           scala1
-            .buildInitialize(
+            .initializeBuild(
               new InitializeBuildParams(
                 "test-client",
                 "1.0.0",
@@ -444,7 +444,7 @@ class TypoSuite extends AnyFunSuite {
           .buildTargetTest(new TestParams(buildTargetUris))
           .toScala
         _ <- scala1.workspaceReload().toScala
-        _ <- scala1.buildShutdown().toScala
+        _ <- scala1.shutdownBuild().toScala
         workspace <- scala1.workspaceBuildTargets().toScala
       } yield {
         val obtained = trace1.toString()

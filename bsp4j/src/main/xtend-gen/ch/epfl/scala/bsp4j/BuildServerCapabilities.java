@@ -31,6 +31,9 @@ public class BuildServerCapabilities {
 
   private Boolean canReload;
 
+  public BuildServerCapabilities() {
+  }
+
   @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;

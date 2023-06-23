@@ -37,8 +37,8 @@ public class BuildTarget {
   public BuildTarget(@NonNull final BuildTargetIdentifier id, @NonNull final List<String> tags, @NonNull final List<String> languageIds, @NonNull final List<BuildTargetIdentifier> dependencies, @NonNull final BuildTargetCapabilities capabilities) {
     this.id = id;
     this.tags = tags;
-    this.dependencies = dependencies;
     this.languageIds = languageIds;
+    this.dependencies = dependencies;
     this.capabilities = capabilities;
   }
 

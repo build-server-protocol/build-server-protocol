@@ -156,7 +156,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def buildTargetScalacOptions(
+  override def scalacOptions(
       params: ScalacOptionsParams
   ): CompletableFuture[ScalacOptionsResult] =
     handleRequest {
@@ -172,7 +172,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def buildTargetJavacOptions(
+  override def javacOptions(
       params: JavacOptionsParams
   ): CompletableFuture[JavacOptionsResult] = {
     handleRequest {
@@ -189,7 +189,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def buildTargetCppOptions(
+  override def cppOptions(
       params: CppOptionsParams
   ): CompletableFuture[CppOptionsResult] = {
     handleRequest {
@@ -202,7 +202,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def buildTargetPythonOptions(
+  override def pythonOptions(
       params: PythonOptionsParams
   ): CompletableFuture[PythonOptionsResult] = {
     handleRequest {
@@ -213,7 +213,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def buildTargetScalaTestClasses(
+  override def scalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
     handleRequest {
@@ -227,7 +227,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def buildTargetScalaMainClasses(
+  override def scalaMainClasses(
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
     handleRequest {
@@ -245,7 +245,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def buildInitialize(
+  override def initializeBuild(
       params: InitializeBuildParams
   ): CompletableFuture[InitializeBuildResult] = {
     handleBuildInitializeRequest {
@@ -257,7 +257,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   override def onBuildInitialized(): Unit =
     handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
 
-  override def buildShutdown(): CompletableFuture[AnyRef] = {
+  override def shutdownBuild(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
       isShutdown.success(Right())
       Right("boo")
@@ -272,7 +272,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
       val javaVersion = sys.props.get("java.vm.specification.version")
-      val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
+      val jvmBuildTarget = new JvmBuildTarget()
+      jvmBuildTarget.setJavaHome(javaHome.get)
+        jvmBuildTarget.setJavaVersion(javaVersion.get)
       val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
       val scalaBuildTarget =
         new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
@@ -282,10 +284,15 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val sbtBuildTarget =
         new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
       val cppBuildTarget =
-        new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+        new CppBuildTarget()
+      cppBuildTarget.setVersion("C++11")
+      cppBuildTarget.setCompiler("gcc")
+      cppBuildTarget.setCCompiler("/usr/bin/gcc")
+      cppBuildTarget.setCppCompiler("/usr/bin/g++")
       val pythonBuildTarget =
-        new PythonBuildTarget("3.9", "/usr/bin/python")
-
+        new PythonBuildTarget()
+        pythonBuildTarget.setInterpreter("/usr/bin/python")
+      pythonBuildTarget.setVersion("3.9")
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
       target1.setDataKind(BuildTargetDataKind.SCALA)
@@ -561,7 +568,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       params: CleanCacheParams
   ): CompletableFuture[CleanCacheResult] =
     handleRequest {
-      val result = new CleanCacheResult("cleaned cache", true)
+      val result = new CleanCacheResult(true)
       Right(result)
     }
 

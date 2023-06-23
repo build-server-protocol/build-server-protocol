@@ -13,11 +13,7 @@ public class CppBuildTarget {
 
   private String cppCompiler;
 
-  public CppBuildTarget(final String version, final String compiler, final String cCompiler, final String cppCompiler) {
-    this.version = version;
-    this.compiler = compiler;
-    this.cCompiler = cCompiler;
-    this.cppCompiler = cppCompiler;
+  public CppBuildTarget() {
   }
 
   @Pure

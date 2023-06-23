@@ -111,9 +111,8 @@ trait Bsp4jShrinkers extends UtilShrinkers {
 
   implicit def shrinkCleanCacheResult: Shrink[CleanCacheResult] = Shrink { a =>
     for {
-      message <- shrink(a.getMessage)
       cleaned <- shrink(a.getCleaned)
-    } yield new CleanCacheResult(message, cleaned)
+    } yield new CleanCacheResult(cleaned)
   }
 
   implicit def shrinkCompileParams: Shrink[CompileParams] = Shrink { params =>
@@ -341,7 +340,12 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     for {
       javaHome <- shrink(a.getJavaHome)
       javaVersion <- shrink(a.getJavaVersion)
-    } yield new JvmBuildTarget(javaHome, javaVersion)
+    } yield {
+      val target = new JvmBuildTarget()
+        target.setJavaHome(javaHome)
+        target.setJavaVersion(javaVersion)
+        target
+    }
   }
 
   implicit def shrinkSbtBuildTarget: Shrink[SbtBuildTarget] = Shrink { a =>

@@ -23,7 +23,7 @@ public class BspConnectionDetails {
   @NonNull
   private List<String> languages;
 
-  public BspConnectionDetails(@NonNull final String name, @NonNull final List<String> argv, final String version, final String bspVersion, final List<String> languages) {
+  public BspConnectionDetails(@NonNull final String name, @NonNull final List<String> argv, @NonNull final String version, @NonNull final String bspVersion, @NonNull final List<String> languages) {
     this.name = name;
     this.argv = argv;
     this.version = version;

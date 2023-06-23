@@ -8,8 +8,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class ScalaWorkspaceEdit {
   private List<ScalaTextEdit> changes;
 
-  public ScalaWorkspaceEdit(final List<ScalaTextEdit> changes) {
-    this.changes = changes;
+  public ScalaWorkspaceEdit() {
   }
 
   @Pure

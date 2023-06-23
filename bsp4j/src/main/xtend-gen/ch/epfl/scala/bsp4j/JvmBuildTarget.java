@@ -9,9 +9,7 @@ public class JvmBuildTarget {
 
   private String javaVersion;
 
-  public JvmBuildTarget(final String javaHome, final String javaVersion) {
-    this.javaHome = javaHome;
-    this.javaVersion = javaVersion;
+  public JvmBuildTarget() {
   }
 
   @Pure

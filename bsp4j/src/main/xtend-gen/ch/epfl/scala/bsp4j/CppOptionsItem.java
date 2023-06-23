@@ -20,7 +20,7 @@ public class CppOptionsItem {
   @NonNull
   private List<String> linkopts;
 
-  private boolean linkshared;
+  private Boolean linkshared;
 
   public CppOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> copts, @NonNull final List<String> defines, @NonNull final List<String> linkopts) {
     this.target = target;
@@ -70,11 +70,11 @@ public class CppOptionsItem {
   }
 
   @Pure
-  public boolean isLinkshared() {
+  public Boolean getLinkshared() {
     return this.linkshared;
   }
 
-  public void setLinkshared(final boolean linkshared) {
+  public void setLinkshared(final Boolean linkshared) {
     this.linkshared = linkshared;
   }
 
@@ -120,7 +120,10 @@ public class CppOptionsItem {
         return false;
     } else if (!this.linkopts.equals(other.linkopts))
       return false;
-    if (other.linkshared != this.linkshared)
+    if (this.linkshared == null) {
+      if (other.linkshared != null)
+        return false;
+    } else if (!this.linkshared.equals(other.linkshared))
       return false;
     return true;
   }
@@ -134,6 +137,6 @@ public class CppOptionsItem {
     result = prime * result + ((this.copts== null) ? 0 : this.copts.hashCode());
     result = prime * result + ((this.defines== null) ? 0 : this.defines.hashCode());
     result = prime * result + ((this.linkopts== null) ? 0 : this.linkopts.hashCode());
-    return prime * result + (this.linkshared ? 1231 : 1237);
+    return prime * result + ((this.linkshared== null) ? 0 : this.linkshared.hashCode());
   }
 }

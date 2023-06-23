@@ -1,31 +1,31 @@
 package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
+
+import java.util.concurrent.CompletableFuture;
 
 public interface BuildClient {
 
-    @JsonNotification("build/showMessage")
-    void onBuildShowMessage(ShowMessageParams params);
+  @JsonNotification("build/showMessage")
+  void onBuildShowMessage(ShowMessageParams params);
 
-    @JsonNotification("build/logMessage")
-    void onBuildLogMessage(LogMessageParams params);
+  @JsonNotification("build/logMessage")
+  void onBuildLogMessage(LogMessageParams params);
 
-    @JsonNotification("build/taskStart")
-    void onBuildTaskStart(TaskStartParams params);
+  @JsonNotification("build/publishDiagnostics")
+  void onBuildPublishDiagnostics(PublishDiagnosticsParams params);
 
-    @JsonNotification("build/taskProgress")
-    void onBuildTaskProgress(TaskProgressParams params);
+  @JsonNotification("buildTarget/didChange")
+  void onBuildTargetDidChange(DidChangeBuildTarget params);
 
-    @JsonNotification("build/taskFinish")
-    void onBuildTaskFinish(TaskFinishParams params);
+  @JsonNotification("build/taskStart")
+  void onBuildTaskStart(TaskStartParams params);
 
-    @JsonNotification("build/publishDiagnostics")
-    void onBuildPublishDiagnostics(PublishDiagnosticsParams params);
+  @JsonNotification("build/taskProgress")
+  void onBuildTaskProgress(TaskProgressParams params);
 
-    @JsonNotification("buildTarget/didChange")
-    void onBuildTargetDidChange(DidChangeBuildTarget params);
+  @JsonNotification("build/taskFinish")
+  void onBuildTaskFinish(TaskFinishParams params);
 
-    default void onConnectWithServer(BuildServer server) {
-
-    }
 }
