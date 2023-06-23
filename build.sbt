@@ -225,6 +225,7 @@ lazy val codegen = project
   .settings(
     publish := {},
     publishLocal := {},
+    crossScalaVersions := V.supportedScalaVersions,
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-collection-compat" % V.scalaCollectionCompat,
       "com.lihaoyi" %% "os-lib" % V.osLib,
