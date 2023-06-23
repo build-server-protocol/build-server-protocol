@@ -5,7 +5,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 
-import scala.jdk.CollectionConverters.IterableHasAsJava
+import scala.collection.JavaConverters.seqAsJavaListConverter
 
 // ApprovalTests lib requires JUnit.
 // Running JUnit tests in ScalaTest is not trivial: it requires a custom runner.
@@ -23,6 +23,6 @@ class DocsApprovalTest(namespace: String) {
 object DocsApprovalTest {
   @Parameters(name = "{0}")
   def data(): java.util.Collection[String] = {
-    ExtensionLoader.namespaces().asJavaCollection
+    ExtensionLoader.namespaces().asJava
   }
 }
