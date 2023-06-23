@@ -11,4 +11,7 @@ object dsl {
   def block(line: String)(lines: Lines*): Lines =
     Lines(line).block(lines: _*)
 
+  def paren(line: String)(lines: Lines*): Lines =
+    Lines(line).paren(lines: _*)
+
 }
