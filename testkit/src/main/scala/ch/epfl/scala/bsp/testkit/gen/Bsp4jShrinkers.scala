@@ -342,9 +342,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       javaVersion <- shrink(a.getJavaVersion)
     } yield {
       val target = new JvmBuildTarget()
-        target.setJavaHome(javaHome)
-        target.setJavaVersion(javaVersion)
-        target
+      target.setJavaHome(javaHome)
+      target.setJavaVersion(javaVersion)
+      target
     }
   }
 

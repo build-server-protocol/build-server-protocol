@@ -274,7 +274,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val javaVersion = sys.props.get("java.vm.specification.version")
       val jvmBuildTarget = new JvmBuildTarget()
       jvmBuildTarget.setJavaHome(javaHome.get)
-        jvmBuildTarget.setJavaVersion(javaVersion.get)
+      jvmBuildTarget.setJavaVersion(javaVersion.get)
       val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
       val scalaBuildTarget =
         new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
@@ -291,7 +291,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       cppBuildTarget.setCppCompiler("/usr/bin/g++")
       val pythonBuildTarget =
         new PythonBuildTarget()
-        pythonBuildTarget.setInterpreter("/usr/bin/python")
+      pythonBuildTarget.setInterpreter("/usr/bin/python")
       pythonBuildTarget.setVersion("3.9")
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)

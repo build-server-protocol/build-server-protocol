@@ -189,7 +189,7 @@ class TypoSuite extends AnyFunSuite {
         params: CleanCacheParams
     ): CompletableFuture[CleanCacheResult] = {
       CompletableFuture.completedFuture {
-        new CleanCacheResult( true)
+        new CleanCacheResult(true)
       }
     }
 
