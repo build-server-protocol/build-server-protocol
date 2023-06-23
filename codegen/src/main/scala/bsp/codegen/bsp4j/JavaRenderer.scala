@@ -129,9 +129,10 @@ class JavaRenderer(basepkg: String) {
   }
 
   def renderOperation(operation: Operation): Lines = {
-    val output = operation.outputType match {
-      case TPrimitive(Primitive.PUnit, _) => "void"
-      case other                          => s"CompletableFuture<${renderType(other)}>"
+    val output = (operation.jsonRPCMethodType, operation.outputType) match {
+      case (Notification, _)                         => "void"
+      case (Request, TPrimitive(Primitive.PUnit, _)) => s"CompletableFuture<Object>"
+      case (Request, other)                          => s"CompletableFuture<${renderType(other)}>"
     }
     val input = operation.inputType match {
       case TPrimitive(Primitive.PUnit, _) => ""

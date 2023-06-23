@@ -159,7 +159,7 @@ class SmithyToIR(model: Model) {
         }
         Field(
           "dataKind",
-          TRef(dataKindShapeId(dataTypeShape)),
+          TPrimitive(PString, dataKindShapeId(dataTypeShape)),
           required = false,
           None,
           hints
