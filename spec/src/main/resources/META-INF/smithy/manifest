@@ -7,5 +7,6 @@ bsp/extensions/maven.smithy
 bsp/extensions/python.smithy
 bsp/extensions/sbt.smithy
 bsp/extensions/scala.smithy
+bsp/extensions/rust.smithy
 docs/docs.smithy
 jsonrpc/jsonrpc.smithy
