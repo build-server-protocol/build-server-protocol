@@ -44,7 +44,8 @@ class JavaRenderer(basepkg: String) {
           val assignments = requiredFields.map(_.name).map(n => s"this.$n = $n")
           block(s"new($params)")(assignments)
         }
-      )
+      ),
+      newline
     )
 
     val fileName = shapeId.getName() + ".xtend"
@@ -67,9 +68,10 @@ class JavaRenderer(basepkg: String) {
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
-        values.map(renderEnumValueDef(enumType)).mkString("", ",", ";"),
+        values.map(renderEnumValueDef(enumType)).mkString("", ",\n", ";"),
         newline,
         s"private final $evt value;",
+        newline,
         block(s"$tpe($evt value)") {
           "this.value = value;"
         },

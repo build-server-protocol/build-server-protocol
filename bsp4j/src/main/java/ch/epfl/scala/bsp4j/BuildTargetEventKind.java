@@ -6,9 +6,12 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum BuildTargetEventKind {
 
-  CREATED(1),CHANGED(2),DELETED(3);
+  CREATED(1),
+CHANGED(2),
+DELETED(3);
 
   private final int value;
+
   BuildTargetEventKind(int value){
     this.value = value;
   }

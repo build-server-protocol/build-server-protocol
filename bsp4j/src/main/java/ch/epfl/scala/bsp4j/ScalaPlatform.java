@@ -6,9 +6,12 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum ScalaPlatform {
 
-  JVM(1),JS(2),NATIVE(3);
+  JVM(1),
+JS(2),
+NATIVE(3);
 
   private final int value;
+
   ScalaPlatform(int value){
     this.value = value;
   }

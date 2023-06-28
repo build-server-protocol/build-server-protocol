@@ -6,9 +6,14 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum TestStatus {
 
-  PASSED(1),FAILED(2),IGNORED(3),CANCELLED(4),SKIPPED(5);
+  PASSED(1),
+FAILED(2),
+IGNORED(3),
+CANCELLED(4),
+SKIPPED(5);
 
   private final int value;
+
   TestStatus(int value){
     this.value = value;
   }

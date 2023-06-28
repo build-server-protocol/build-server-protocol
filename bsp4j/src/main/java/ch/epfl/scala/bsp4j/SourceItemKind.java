@@ -6,9 +6,11 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum SourceItemKind {
 
-  FILE(1),DIRECTORY(2);
+  FILE(1),
+DIRECTORY(2);
 
   private final int value;
+
   SourceItemKind(int value){
     this.value = value;
   }

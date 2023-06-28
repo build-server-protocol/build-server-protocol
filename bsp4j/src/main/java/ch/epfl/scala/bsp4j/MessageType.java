@@ -6,9 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum MessageType {
 
-  ERROR(1),WARNING(2),INFO(3),LOG(4);
+  ERROR(1),
+WARNING(2),
+INFO(3),
+LOG(4);
 
   private final int value;
+
   MessageType(int value){
     this.value = value;
   }
