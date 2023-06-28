@@ -20,7 +20,7 @@ public enum BuildTargetEventKind {
         return value;
     }
 
-    public static BuildTargetEventKind forValue (int value){
+    public static BuildTargetEventKind forValue(int value){
         BuildTargetEventKind[] allValues = BuildTargetEventKind.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

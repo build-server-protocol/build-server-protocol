@@ -86,13 +86,14 @@ class JavaRenderer(basepkg: String) {
           "return value;"
         },
         newline,
-        block(s"public static $tpe forValue ($evt value)")(
+        block(s"public static $tpe forValue($evt value)")(
           s"$tpe[] allValues = $tpe.values();",
           "if (value < 1 || value > allValues.length)",
           lines("""throw new IllegalArgumentException("Illegal enum value: " + value);""").indent,
           "return allValues[value - 1];"
         )
-      )
+      ),
+      newline
     )
     val fileName = shapeId.getName() + ".java"
     CodegenFile(shapeId, baseRelPath / fileName, allLines.render)

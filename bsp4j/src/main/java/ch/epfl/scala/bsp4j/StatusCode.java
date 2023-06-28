@@ -20,7 +20,7 @@ public enum StatusCode {
         return value;
     }
 
-    public static StatusCode forValue (int value){
+    public static StatusCode forValue(int value){
         StatusCode[] allValues = StatusCode.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

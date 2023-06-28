@@ -19,7 +19,7 @@ public enum SourceItemKind {
         return value;
     }
 
-    public static SourceItemKind forValue (int value){
+    public static SourceItemKind forValue(int value){
         SourceItemKind[] allValues = SourceItemKind.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

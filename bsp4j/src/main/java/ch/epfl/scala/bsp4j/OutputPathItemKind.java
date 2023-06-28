@@ -19,7 +19,7 @@ public enum OutputPathItemKind {
         return value;
     }
 
-    public static OutputPathItemKind forValue (int value){
+    public static OutputPathItemKind forValue(int value){
         OutputPathItemKind[] allValues = OutputPathItemKind.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);
