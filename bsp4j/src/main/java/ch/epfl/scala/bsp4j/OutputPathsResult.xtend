@@ -9,7 +9,7 @@ class OutputPathsResult {
     @NonNull
     List<OutputPathsItem> items
 
-    new(@NonNull List<OutputPathsItem> items){
+    new(@NonNull List<OutputPathsItem> items) {
         this.items = items
     }
 }

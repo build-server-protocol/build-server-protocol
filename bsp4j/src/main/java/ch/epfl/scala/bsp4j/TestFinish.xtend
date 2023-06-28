@@ -17,7 +17,7 @@ class TestFinish {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull String displayName, @NonNull TestStatus status){
+    new(@NonNull String displayName, @NonNull TestStatus status) {
         this.displayName = displayName
         this.status = status
     }

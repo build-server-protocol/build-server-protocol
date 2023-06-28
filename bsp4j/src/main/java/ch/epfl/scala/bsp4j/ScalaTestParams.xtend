@@ -8,6 +8,6 @@ class ScalaTestParams {
     List<ScalaTestClassesItem> testClasses
     List<String> jvmOptions
 
-    new(){
+    new() {
     }
 }

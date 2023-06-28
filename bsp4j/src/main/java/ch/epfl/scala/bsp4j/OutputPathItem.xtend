@@ -10,7 +10,7 @@ class OutputPathItem {
     @NonNull
     OutputPathItemKind kind
 
-    new(@NonNull String uri, @NonNull OutputPathItemKind kind){
+    new(@NonNull String uri, @NonNull OutputPathItemKind kind) {
         this.uri = uri
         this.kind = kind
     }

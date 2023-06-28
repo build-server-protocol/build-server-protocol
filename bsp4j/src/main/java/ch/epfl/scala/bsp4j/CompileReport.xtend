@@ -15,7 +15,7 @@ class CompileReport {
     Long time
     Boolean noOp
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull Integer errors, @NonNull Integer warnings){
+    new(@NonNull BuildTargetIdentifier target, @NonNull Integer errors, @NonNull Integer warnings) {
         this.target = target
         this.errors = errors
         this.warnings = warnings

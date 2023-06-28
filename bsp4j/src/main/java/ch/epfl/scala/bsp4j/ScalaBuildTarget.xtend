@@ -18,7 +18,7 @@ class ScalaBuildTarget {
     List<String> jars
     JvmBuildTarget jvmBuildTarget
 
-    new(@NonNull String scalaOrganization, @NonNull String scalaVersion, @NonNull String scalaBinaryVersion, @NonNull ScalaPlatform platform, @NonNull List<String> jars){
+    new(@NonNull String scalaOrganization, @NonNull String scalaVersion, @NonNull String scalaBinaryVersion, @NonNull ScalaPlatform platform, @NonNull List<String> jars) {
         this.scalaOrganization = scalaOrganization
         this.scalaVersion = scalaVersion
         this.scalaBinaryVersion = scalaBinaryVersion

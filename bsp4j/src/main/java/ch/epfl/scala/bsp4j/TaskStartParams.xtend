@@ -15,7 +15,7 @@ class TaskStartParams {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull TaskId taskId){
+    new(@NonNull TaskId taskId) {
         this.taskId = taskId
     }
 }

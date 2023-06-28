@@ -9,7 +9,7 @@ class RunProvider {
     @NonNull
     List<String> languageIds
 
-    new(@NonNull List<String> languageIds){
+    new(@NonNull List<String> languageIds) {
         this.languageIds = languageIds
     }
 }

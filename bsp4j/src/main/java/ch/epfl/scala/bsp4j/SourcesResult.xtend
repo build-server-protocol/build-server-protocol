@@ -9,7 +9,7 @@ class SourcesResult {
     @NonNull
     List<SourcesItem> items
 
-    new(@NonNull List<SourcesItem> items){
+    new(@NonNull List<SourcesItem> items) {
         this.items = items
     }
 }

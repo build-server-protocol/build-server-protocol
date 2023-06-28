@@ -11,7 +11,7 @@ class ResourcesItem {
     @NonNull
     List<String> resources
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> resources){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> resources) {
         this.target = target
         this.resources = resources
     }

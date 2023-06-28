@@ -14,15 +14,15 @@ public enum TestStatus {
 
     private final int value;
 
-    TestStatus(int value){
+    TestStatus(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static TestStatus forValue(int value){
+    public static TestStatus forValue(int value) {
         TestStatus[] allValues = TestStatus.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

@@ -12,7 +12,7 @@ class ScalaTestClassesItem {
     @NonNull
     List<String> classes
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classes){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> classes) {
         this.target = target
         this.classes = classes
     }

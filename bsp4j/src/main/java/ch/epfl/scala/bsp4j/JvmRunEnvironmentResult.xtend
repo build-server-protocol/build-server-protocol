@@ -9,7 +9,7 @@ class JvmRunEnvironmentResult {
     @NonNull
     List<JvmEnvironmentItem> items
 
-    new(@NonNull List<JvmEnvironmentItem> items){
+    new(@NonNull List<JvmEnvironmentItem> items) {
         this.items = items
     }
 }

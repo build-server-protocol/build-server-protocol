@@ -9,7 +9,7 @@ class DidChangeBuildTarget {
     @NonNull
     List<BuildTargetEvent> changes
 
-    new(@NonNull List<BuildTargetEvent> changes){
+    new(@NonNull List<BuildTargetEvent> changes) {
         this.changes = changes
     }
 }

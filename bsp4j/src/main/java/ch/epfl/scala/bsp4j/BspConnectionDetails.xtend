@@ -17,7 +17,7 @@ class BspConnectionDetails {
     @NonNull
     List<String> languages
 
-    new(@NonNull String name, @NonNull List<String> argv, @NonNull String version, @NonNull String bspVersion, @NonNull List<String> languages){
+    new(@NonNull String name, @NonNull List<String> argv, @NonNull String version, @NonNull String bspVersion, @NonNull List<String> languages) {
         this.name = name
         this.argv = argv
         this.version = version

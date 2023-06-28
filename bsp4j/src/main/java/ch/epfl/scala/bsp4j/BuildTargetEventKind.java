@@ -12,15 +12,15 @@ public enum BuildTargetEventKind {
 
     private final int value;
 
-    BuildTargetEventKind(int value){
+    BuildTargetEventKind(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static BuildTargetEventKind forValue(int value){
+    public static BuildTargetEventKind forValue(int value) {
         BuildTargetEventKind[] allValues = BuildTargetEventKind.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

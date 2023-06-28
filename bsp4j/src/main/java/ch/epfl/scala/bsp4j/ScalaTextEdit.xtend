@@ -10,7 +10,7 @@ class ScalaTextEdit {
     @NonNull
     String newText
 
-    new(@NonNull Range range, @NonNull String newText){
+    new(@NonNull Range range, @NonNull String newText) {
         this.range = range
         this.newText = newText
     }

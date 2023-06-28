@@ -9,7 +9,7 @@ class CleanCacheResult {
     @NonNull
     Boolean cleaned
 
-    new(@NonNull Boolean cleaned){
+    new(@NonNull Boolean cleaned) {
         this.cleaned = cleaned
     }
 }

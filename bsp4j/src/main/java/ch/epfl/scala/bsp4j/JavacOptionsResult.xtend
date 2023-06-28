@@ -9,7 +9,7 @@ class JavacOptionsResult {
     @NonNull
     List<JavacOptionsItem> items
 
-    new(@NonNull List<JavacOptionsItem> items){
+    new(@NonNull List<JavacOptionsItem> items) {
         this.items = items
     }
 }

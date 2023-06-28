@@ -24,7 +24,7 @@ class BuildTarget {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds, @NonNull List<BuildTargetIdentifier> dependencies, @NonNull BuildTargetCapabilities capabilities){
+    new(@NonNull BuildTargetIdentifier id, @NonNull List<String> tags, @NonNull List<String> languageIds, @NonNull List<BuildTargetIdentifier> dependencies, @NonNull BuildTargetCapabilities capabilities) {
         this.id = id
         this.tags = tags
         this.languageIds = languageIds

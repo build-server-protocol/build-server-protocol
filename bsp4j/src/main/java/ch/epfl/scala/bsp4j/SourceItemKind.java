@@ -11,15 +11,15 @@ public enum SourceItemKind {
 
     private final int value;
 
-    SourceItemKind(int value){
+    SourceItemKind(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static SourceItemKind forValue(int value){
+    public static SourceItemKind forValue(int value) {
         SourceItemKind[] allValues = SourceItemKind.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

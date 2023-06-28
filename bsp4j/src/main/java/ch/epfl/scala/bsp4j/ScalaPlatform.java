@@ -12,15 +12,15 @@ public enum ScalaPlatform {
 
     private final int value;
 
-    ScalaPlatform(int value){
+    ScalaPlatform(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static ScalaPlatform forValue(int value){
+    public static ScalaPlatform forValue(int value) {
         ScalaPlatform[] allValues = ScalaPlatform.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

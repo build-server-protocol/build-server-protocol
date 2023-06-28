@@ -14,7 +14,7 @@ class BuildTargetCapabilities {
     @NonNull
     Boolean canDebug
 
-    new(@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun, @NonNull Boolean canDebug){
+    new(@NonNull Boolean canCompile, @NonNull Boolean canTest, @NonNull Boolean canRun, @NonNull Boolean canDebug) {
         this.canCompile = canCompile
         this.canTest = canTest
         this.canRun = canRun

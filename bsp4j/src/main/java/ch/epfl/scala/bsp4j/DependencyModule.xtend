@@ -15,7 +15,7 @@ class DependencyModule {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull String name, @NonNull String version){
+    new(@NonNull String name, @NonNull String version) {
         this.name = name
         this.version = version
     }

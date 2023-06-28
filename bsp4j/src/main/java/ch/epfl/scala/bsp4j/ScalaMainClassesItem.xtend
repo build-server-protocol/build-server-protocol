@@ -11,7 +11,7 @@ class ScalaMainClassesItem {
     @NonNull
     List<ScalaMainClass> classes
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<ScalaMainClass> classes){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<ScalaMainClass> classes) {
         this.target = target
         this.classes = classes
     }

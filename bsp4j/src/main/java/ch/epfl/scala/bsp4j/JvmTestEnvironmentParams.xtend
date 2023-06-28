@@ -10,7 +10,7 @@ class JvmTestEnvironmentParams {
     List<BuildTargetIdentifier> targets
     String originId
 
-    new(@NonNull List<BuildTargetIdentifier> targets){
+    new(@NonNull List<BuildTargetIdentifier> targets) {
         this.targets = targets
     }
 }

@@ -9,7 +9,7 @@ class DependencySourcesResult {
     @NonNull
     List<DependencySourcesItem> items
 
-    new(@NonNull List<DependencySourcesItem> items){
+    new(@NonNull List<DependencySourcesItem> items) {
         this.items = items
     }
 }

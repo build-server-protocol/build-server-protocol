@@ -13,15 +13,15 @@ public enum MessageType {
 
     private final int value;
 
-    MessageType(int value){
+    MessageType(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static MessageType forValue(int value){
+    public static MessageType forValue(int value) {
         MessageType[] allValues = MessageType.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

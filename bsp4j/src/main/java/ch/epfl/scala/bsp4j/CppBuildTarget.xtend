@@ -9,6 +9,6 @@ class CppBuildTarget {
     String cCompiler
     String cppCompiler
 
-    new(){
+    new() {
     }
 }

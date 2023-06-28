@@ -11,7 +11,7 @@ class OutputPathsItem {
     @NonNull
     List<OutputPathItem> outputPaths
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<OutputPathItem> outputPaths){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<OutputPathItem> outputPaths) {
         this.target = target
         this.outputPaths = outputPaths
     }

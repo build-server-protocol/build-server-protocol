@@ -10,7 +10,7 @@ class DiagnosticRelatedInformation {
     @NonNull
     String message
 
-    new(@NonNull Location location, @NonNull String message){
+    new(@NonNull Location location, @NonNull String message) {
         this.location = location
         this.message = message
     }

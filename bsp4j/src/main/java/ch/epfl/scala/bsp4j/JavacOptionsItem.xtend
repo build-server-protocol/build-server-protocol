@@ -15,7 +15,7 @@ class JavacOptionsItem {
     @NonNull
     String classDirectory
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> options, @NonNull List<String> classpath, @NonNull String classDirectory){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> options, @NonNull List<String> classpath, @NonNull String classDirectory) {
         this.target = target
         this.options = options
         this.classpath = classpath

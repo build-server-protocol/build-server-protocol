@@ -13,15 +13,15 @@ public enum DiagnosticSeverity {
 
     private final int value;
 
-    DiagnosticSeverity(int value){
+    DiagnosticSeverity(int value) {
         this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static DiagnosticSeverity forValue(int value){
+    public static DiagnosticSeverity forValue(int value) {
         DiagnosticSeverity[] allValues = DiagnosticSeverity.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);

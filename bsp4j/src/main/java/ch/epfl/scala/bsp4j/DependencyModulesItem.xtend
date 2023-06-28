@@ -11,7 +11,7 @@ class DependencyModulesItem {
     @NonNull
     List<DependencyModule> modules
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<DependencyModule> modules){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<DependencyModule> modules) {
         this.target = target
         this.modules = modules
     }

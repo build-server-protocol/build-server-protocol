@@ -9,7 +9,7 @@ class DependencyModulesResult {
     @NonNull
     List<DependencyModulesItem> items
 
-    new(@NonNull List<DependencyModulesItem> items){
+    new(@NonNull List<DependencyModulesItem> items) {
         this.items = items
     }
 }

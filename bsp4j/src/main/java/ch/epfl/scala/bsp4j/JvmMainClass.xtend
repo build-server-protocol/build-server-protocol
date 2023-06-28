@@ -11,7 +11,7 @@ class JvmMainClass {
     @NonNull
     List<String> arguments
 
-    new(@NonNull String className, @NonNull List<String> arguments){
+    new(@NonNull String className, @NonNull List<String> arguments) {
         this.className = className
         this.arguments = arguments
     }

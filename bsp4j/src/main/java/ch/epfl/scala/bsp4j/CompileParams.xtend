@@ -11,7 +11,7 @@ class CompileParams {
     String originId
     List<String> arguments
 
-    new(@NonNull List<BuildTargetIdentifier> targets){
+    new(@NonNull List<BuildTargetIdentifier> targets) {
         this.targets = targets
     }
 }

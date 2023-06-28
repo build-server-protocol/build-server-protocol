@@ -12,7 +12,7 @@ class ShowMessageParams {
     @NonNull
     String message
 
-    new(@NonNull MessageType type, @NonNull String message){
+    new(@NonNull MessageType type, @NonNull String message) {
         this.type = type
         this.message = message
     }

@@ -9,7 +9,7 @@ class WorkspaceBuildTargetsResult {
     @NonNull
     List<BuildTarget> targets
 
-    new(@NonNull List<BuildTarget> targets){
+    new(@NonNull List<BuildTarget> targets) {
         this.targets = targets
     }
 }

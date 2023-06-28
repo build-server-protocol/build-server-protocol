@@ -10,7 +10,7 @@ class Position {
     @NonNull
     Integer character
 
-    new(@NonNull Integer line, @NonNull Integer character){
+    new(@NonNull Integer line, @NonNull Integer character) {
         this.line = line
         this.character = character
     }

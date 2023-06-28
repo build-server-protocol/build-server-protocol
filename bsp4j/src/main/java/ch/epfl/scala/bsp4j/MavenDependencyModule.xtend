@@ -16,7 +16,7 @@ class MavenDependencyModule {
     List<MavenDependencyModuleArtifact> artifacts
     String scope
 
-    new(@NonNull String organization, @NonNull String name, @NonNull String version, @NonNull List<MavenDependencyModuleArtifact> artifacts){
+    new(@NonNull String organization, @NonNull String name, @NonNull String version, @NonNull List<MavenDependencyModuleArtifact> artifacts) {
         this.organization = organization
         this.name = name
         this.version = version

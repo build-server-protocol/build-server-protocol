@@ -9,7 +9,7 @@ class ScalacOptionsResult {
     @NonNull
     List<ScalacOptionsItem> items
 
-    new(@NonNull List<ScalacOptionsItem> items){
+    new(@NonNull List<ScalacOptionsItem> items) {
         this.items = items
     }
 }

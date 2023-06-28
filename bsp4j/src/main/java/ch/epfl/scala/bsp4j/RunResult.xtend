@@ -9,7 +9,7 @@ class RunResult {
     @NonNull
     StatusCode statusCode
 
-    new(@NonNull StatusCode statusCode){
+    new(@NonNull StatusCode statusCode) {
         this.statusCode = statusCode
     }
 }

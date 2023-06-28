@@ -10,7 +10,7 @@ class TaskId {
     String id
     List<String> parents
 
-    new(@NonNull String id){
+    new(@NonNull String id) {
         this.id = id
     }
 }

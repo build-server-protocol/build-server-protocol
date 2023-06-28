@@ -9,7 +9,7 @@ class PythonOptionsResult {
     @NonNull
     List<PythonOptionsItem> items
 
-    new(@NonNull List<PythonOptionsItem> items){
+    new(@NonNull List<PythonOptionsItem> items) {
         this.items = items
     }
 }

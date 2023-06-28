@@ -20,7 +20,7 @@ class TestReport {
     Integer skipped
     Long time
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull Integer passed, @NonNull Integer failed, @NonNull Integer ignored, @NonNull Integer cancelled, @NonNull Integer skipped){
+    new(@NonNull BuildTargetIdentifier target, @NonNull Integer passed, @NonNull Integer failed, @NonNull Integer ignored, @NonNull Integer cancelled, @NonNull Integer skipped) {
         this.target = target
         this.passed = passed
         this.failed = failed

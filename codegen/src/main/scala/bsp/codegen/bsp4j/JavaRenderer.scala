@@ -154,9 +154,9 @@ class JavaRenderer(basepkg: String) {
     }
     val method = operation.name.head.toLower + operation.name.tail
     lines(
-      newline,
       annotation,
-      s"$output $method($input);"
+      s"$output $method($input);",
+      newline,
     )
   }
 

@@ -19,7 +19,7 @@ class InitializeBuildResult {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildServerCapabilities capabilities){
+    new(@NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildServerCapabilities capabilities) {
         this.displayName = displayName
         this.version = version
         this.bspVersion = bspVersion

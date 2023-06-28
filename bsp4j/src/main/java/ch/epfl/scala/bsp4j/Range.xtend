@@ -10,7 +10,7 @@ class Range {
     @NonNull
     Position end
 
-    new(@NonNull Position start, @NonNull Position end){
+    new(@NonNull Position start, @NonNull Position end) {
         this.start = start
         this.end = end
     }

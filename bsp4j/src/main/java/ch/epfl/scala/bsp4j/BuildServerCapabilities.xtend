@@ -18,6 +18,6 @@ class BuildServerCapabilities {
     Boolean jvmTestEnvironmentProvider
     Boolean canReload
 
-    new(){
+    new() {
     }
 }

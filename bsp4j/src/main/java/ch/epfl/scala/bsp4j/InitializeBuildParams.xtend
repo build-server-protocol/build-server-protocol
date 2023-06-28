@@ -21,7 +21,7 @@ class InitializeBuildParams {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull String rootUri, @NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildClientCapabilities capabilities){
+    new(@NonNull String rootUri, @NonNull String displayName, @NonNull String version, @NonNull String bspVersion, @NonNull BuildClientCapabilities capabilities) {
         this.rootUri = rootUri
         this.displayName = displayName
         this.version = version

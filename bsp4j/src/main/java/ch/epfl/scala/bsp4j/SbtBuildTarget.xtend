@@ -16,7 +16,7 @@ class SbtBuildTarget {
     @NonNull
     List<BuildTargetIdentifier> children
 
-    new(@NonNull String sbtVersion, @NonNull List<String> autoImports, @NonNull ScalaBuildTarget scalaBuildTarget, @NonNull List<BuildTargetIdentifier> children){
+    new(@NonNull String sbtVersion, @NonNull List<String> autoImports, @NonNull ScalaBuildTarget scalaBuildTarget, @NonNull List<BuildTargetIdentifier> children) {
         this.sbtVersion = sbtVersion
         this.autoImports = autoImports
         this.scalaBuildTarget = scalaBuildTarget

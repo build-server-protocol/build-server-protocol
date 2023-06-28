@@ -10,7 +10,7 @@ class ScalaMainClassesResult {
     List<ScalaMainClassesItem> items
     String originId
 
-    new(@NonNull List<ScalaMainClassesItem> items){
+    new(@NonNull List<ScalaMainClassesItem> items) {
         this.items = items
     }
 }

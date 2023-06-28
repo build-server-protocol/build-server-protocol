@@ -6,7 +6,6 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface BuildServer {
-
     @JsonRequest("build/initialize")
     CompletableFuture<InitializeBuildResult> initializeBuild(InitializeBuildParams params);
 
@@ -57,5 +56,6 @@ public interface BuildServer {
 
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
+
 
 }

@@ -6,7 +6,6 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface BuildClient {
-
     @JsonNotification("build/showMessage")
     void onBuildShowMessage(ShowMessageParams params);
 
@@ -27,5 +26,6 @@ public interface BuildClient {
 
     @JsonNotification("build/taskFinish")
     void onBuildTaskFinish(TaskFinishParams params);
+
 
 }

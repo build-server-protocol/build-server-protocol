@@ -9,7 +9,7 @@ class MavenDependencyModuleArtifact {
     String uri
     String classifier
 
-    new(@NonNull String uri){
+    new(@NonNull String uri) {
         this.uri = uri
     }
 }

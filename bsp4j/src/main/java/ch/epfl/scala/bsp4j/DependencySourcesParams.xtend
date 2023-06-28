@@ -9,7 +9,7 @@ class DependencySourcesParams {
     @NonNull
     List<BuildTargetIdentifier> targets
 
-    new(@NonNull List<BuildTargetIdentifier> targets){
+    new(@NonNull List<BuildTargetIdentifier> targets) {
         this.targets = targets
     }
 }

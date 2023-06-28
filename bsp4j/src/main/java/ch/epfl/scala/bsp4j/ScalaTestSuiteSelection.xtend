@@ -11,7 +11,7 @@ class ScalaTestSuiteSelection {
     @NonNull
     List<String> tests
 
-    new(@NonNull String className, @NonNull List<String> tests){
+    new(@NonNull String className, @NonNull List<String> tests) {
         this.className = className
         this.tests = tests
     }

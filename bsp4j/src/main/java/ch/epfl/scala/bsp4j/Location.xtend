@@ -10,7 +10,7 @@ class Location {
     @NonNull
     Range range
 
-    new(@NonNull String uri, @NonNull Range range){
+    new(@NonNull String uri, @NonNull Range range) {
         this.uri = uri
         this.range = range
     }

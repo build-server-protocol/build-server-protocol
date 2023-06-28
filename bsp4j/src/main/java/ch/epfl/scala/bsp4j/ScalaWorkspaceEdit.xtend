@@ -7,6 +7,6 @@ import java.util.List
 class ScalaWorkspaceEdit {
     List<ScalaTextEdit> changes
 
-    new(){
+    new() {
     }
 }

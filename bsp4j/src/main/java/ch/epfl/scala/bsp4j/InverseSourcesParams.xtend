@@ -8,7 +8,7 @@ class InverseSourcesParams {
     @NonNull
     TextDocumentIdentifier textDocument
 
-    new(@NonNull TextDocumentIdentifier textDocument){
+    new(@NonNull TextDocumentIdentifier textDocument) {
         this.textDocument = textDocument
     }
 }

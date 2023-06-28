@@ -17,7 +17,7 @@ class TaskFinishParams {
     @JsonAdapter(JsonElementTypeAdapter.Factory)
     Object data
 
-    new(@NonNull TaskId taskId, @NonNull StatusCode status){
+    new(@NonNull TaskId taskId, @NonNull StatusCode status) {
         this.taskId = taskId
         this.status = status
     }

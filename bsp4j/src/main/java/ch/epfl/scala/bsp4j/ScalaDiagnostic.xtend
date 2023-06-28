@@ -7,6 +7,6 @@ import java.util.List
 class ScalaDiagnostic {
     List<ScalaAction> actions
 
-    new(){
+    new() {
     }
 }

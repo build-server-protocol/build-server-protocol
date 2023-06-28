@@ -6,8 +6,8 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface CppBuildServer {
-
     @JsonRequest("buildTarget/cppOptions")
     CompletableFuture<CppOptionsResult> cppOptions(CppOptionsParams params);
+
 
 }

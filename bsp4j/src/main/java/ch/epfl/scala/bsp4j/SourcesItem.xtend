@@ -12,7 +12,7 @@ class SourcesItem {
     List<SourceItem> sources
     List<String> roots
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<SourceItem> sources){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<SourceItem> sources) {
         this.target = target
         this.sources = sources
     }

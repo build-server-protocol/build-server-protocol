@@ -11,7 +11,7 @@ class DependencySourcesItem {
     @NonNull
     List<String> sources
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> sources){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> sources) {
         this.target = target
         this.sources = sources
     }

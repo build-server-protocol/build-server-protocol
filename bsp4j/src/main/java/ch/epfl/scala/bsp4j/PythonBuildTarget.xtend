@@ -7,6 +7,6 @@ class PythonBuildTarget {
     String version
     String interpreter
 
-    new(){
+    new() {
     }
 }

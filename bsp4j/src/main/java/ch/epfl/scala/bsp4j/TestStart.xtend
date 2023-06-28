@@ -9,7 +9,7 @@ class TestStart {
     String displayName
     Location location
 
-    new(@NonNull String displayName){
+    new(@NonNull String displayName) {
         this.displayName = displayName
     }
 }

@@ -8,7 +8,7 @@ class CompileTask {
     @NonNull
     BuildTargetIdentifier target
 
-    new(@NonNull BuildTargetIdentifier target){
+    new(@NonNull BuildTargetIdentifier target) {
         this.target = target
     }
 }

@@ -34,10 +34,8 @@ abstract class Lines(implicit val settings: RenderSettings) { self =>
     val openBlock: List[String] =
       current.lastOption.map { line =>
         line.lastOption match {
-          case None      => open
-          case Some('}') => line + open
-          case Some(')') => line + open
-          case Some(_)   => line + s" $open"
+          case None    => open
+          case Some(_) => s"$line $open"
         }
       } match {
         case Some(value) => current.dropRight(1) :+ value

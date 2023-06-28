@@ -10,7 +10,7 @@ class ScalaAction {
     String description
     ScalaWorkspaceEdit edit
 
-    new(@NonNull String title){
+    new(@NonNull String title) {
         this.title = title
     }
 }

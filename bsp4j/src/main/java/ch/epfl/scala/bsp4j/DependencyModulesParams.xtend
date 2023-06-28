@@ -9,7 +9,7 @@ class DependencyModulesParams {
     @NonNull
     List<BuildTargetIdentifier> targets
 
-    new(@NonNull List<BuildTargetIdentifier> targets){
+    new(@NonNull List<BuildTargetIdentifier> targets) {
         this.targets = targets
     }
 }

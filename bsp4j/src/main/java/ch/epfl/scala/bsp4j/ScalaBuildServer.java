@@ -6,7 +6,6 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface ScalaBuildServer {
-
     @JsonRequest("buildTarget/scalacOptions")
     CompletableFuture<ScalacOptionsResult> scalacOptions(ScalacOptionsParams params);
 
@@ -15,5 +14,6 @@ public interface ScalaBuildServer {
 
     @JsonRequest("buildTarget/scalaMainClasses")
     CompletableFuture<ScalaMainClassesResult> scalaMainClasses(ScalaMainClassesParams params);
+
 
 }

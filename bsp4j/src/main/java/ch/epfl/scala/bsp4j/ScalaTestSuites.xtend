@@ -13,7 +13,7 @@ class ScalaTestSuites {
     @NonNull
     List<String> environmentVariables
 
-    new(@NonNull List<ScalaTestSuiteSelection> suites, @NonNull List<String> jvmOptions, @NonNull List<String> environmentVariables){
+    new(@NonNull List<ScalaTestSuiteSelection> suites, @NonNull List<String> jvmOptions, @NonNull List<String> environmentVariables) {
         this.suites = suites
         this.jvmOptions = jvmOptions
         this.environmentVariables = environmentVariables

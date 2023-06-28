@@ -12,7 +12,7 @@ class SourceItem {
     @NonNull
     Boolean generated
 
-    new(@NonNull String uri, @NonNull SourceItemKind kind, @NonNull Boolean generated){
+    new(@NonNull String uri, @NonNull SourceItemKind kind, @NonNull Boolean generated) {
         this.uri = uri
         this.kind = kind
         this.generated = generated

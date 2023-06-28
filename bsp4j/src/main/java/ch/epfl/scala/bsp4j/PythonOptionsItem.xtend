@@ -11,7 +11,7 @@ class PythonOptionsItem {
     @NonNull
     List<String> interpreterOptions
 
-    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> interpreterOptions){
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> interpreterOptions) {
         this.target = target
         this.interpreterOptions = interpreterOptions
     }

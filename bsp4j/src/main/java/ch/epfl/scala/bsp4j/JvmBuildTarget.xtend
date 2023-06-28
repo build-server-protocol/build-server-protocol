@@ -7,6 +7,6 @@ class JvmBuildTarget {
     String javaHome
     String javaVersion
 
-    new(){
+    new() {
     }
 }

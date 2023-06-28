@@ -8,7 +8,7 @@ class TextDocumentIdentifier {
     @NonNull
     String uri
 
-    new(@NonNull String uri){
+    new(@NonNull String uri) {
         this.uri = uri
     }
 }

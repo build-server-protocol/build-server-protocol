@@ -9,7 +9,7 @@ class ScalaTestClassesResult {
     @NonNull
     List<ScalaTestClassesItem> items
 
-    new(@NonNull List<ScalaTestClassesItem> items){
+    new(@NonNull List<ScalaTestClassesItem> items) {
         this.items = items
     }
 }
