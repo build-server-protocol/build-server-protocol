@@ -7,8 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum ScalaPlatform {
 
   JVM(1),
-JS(2),
-NATIVE(3);
+  JS(2),
+  NATIVE(3);
 
   private final int value;
 

@@ -52,6 +52,11 @@ class JavaRenderer(basepkg: String) {
     CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
   }
 
+  def spreadEnumLines[A](enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
+    val renderedValues = values.map(renderEnumValueDef(enumType))
+    renderedValues.init.map(_ + ",") :+ (renderedValues.last + ";")
+  }
+
   def renderClosedEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
@@ -68,7 +73,7 @@ class JavaRenderer(basepkg: String) {
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
-        values.map(renderEnumValueDef(enumType)).mkString("", ",\n", ";"),
+        spreadEnumLines(enumType, values),
         newline,
         s"private final $evt value;",
         newline,

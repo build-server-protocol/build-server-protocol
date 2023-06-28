@@ -7,8 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum BuildTargetEventKind {
 
   CREATED(1),
-CHANGED(2),
-DELETED(3);
+  CHANGED(2),
+  DELETED(3);
 
   private final int value;
 

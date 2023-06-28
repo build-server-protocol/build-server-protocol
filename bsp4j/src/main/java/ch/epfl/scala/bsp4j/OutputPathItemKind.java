@@ -7,7 +7,7 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum OutputPathItemKind {
 
   FILE(1),
-DIRECTORY(2);
+  DIRECTORY(2);
 
   private final int value;
 

@@ -7,10 +7,10 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum TestStatus {
 
   PASSED(1),
-FAILED(2),
-IGNORED(3),
-CANCELLED(4),
-SKIPPED(5);
+  FAILED(2),
+  IGNORED(3),
+  CANCELLED(4),
+  SKIPPED(5);
 
   private final int value;
 

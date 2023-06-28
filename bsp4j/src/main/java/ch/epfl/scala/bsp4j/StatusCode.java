@@ -7,8 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum StatusCode {
 
   OK(1),
-ERROR(2),
-CANCELLED(3);
+  ERROR(2),
+  CANCELLED(3);
 
   private final int value;
 

@@ -7,9 +7,9 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 public enum DiagnosticSeverity {
 
   ERROR(1),
-WARNING(2),
-INFORMATION(3),
-HINT(4);
+  WARNING(2),
+  INFORMATION(3),
+  HINT(4);
 
   private final int value;
 
