@@ -194,12 +194,54 @@ trait Bsp4jGenerators {
     diagnostic
   }
 
+  def genDiagnostic(dataKind: String, data: JsonElement): Gen[Diagnostic] = for {
+    diagnostic <- genDiagnostic
+  } yield {
+    diagnostic.setDataKind(dataKind)
+    diagnostic.setData(data)
+    diagnostic
+  }
+
+  def genDiagnosticWithScala(implicit gson: Gson): Gen[Diagnostic] = for {
+    scalaDiagnostic <- genScalaDiagnostic
+    scalaJson = gson.toJsonTree(scalaDiagnostic)
+    diagnostic <- genDiagnostic("scala", scalaJson)
+  } yield diagnostic
+
   lazy val genDiagnosticRelatedInformation: Gen[DiagnosticRelatedInformation] = for {
     location <- genLocation
     message <- arbitrary[String]
   } yield new DiagnosticRelatedInformation(location, message)
 
   lazy val genDiagnosticSeverity: Gen[DiagnosticSeverity] = Gen.oneOf(DiagnosticSeverity.values())
+
+  lazy val genScalaDiagnostic: Gen[ScalaDiagnostic] = for {
+    actions <- genScalaAction.list
+  } yield {
+    val diagnostic = new ScalaDiagnostic()
+    diagnostic.setActions(actions)
+    diagnostic
+  }
+
+  lazy val genScalaAction: Gen[ScalaAction] = for {
+    title <- arbitrary[String]
+    description <- arbitrary[String].nullable
+    edit <- genScalaWorkspaceEdit.nullable
+  } yield {
+    val action = new ScalaAction(title)
+    action.setDescription(description)
+    action.setEdit(edit)
+    action
+  }
+
+  lazy val genScalaWorkspaceEdit: Gen[ScalaWorkspaceEdit] = for {
+    changes <- genScalaTextEdit.list
+  } yield new ScalaWorkspaceEdit(changes)
+
+  lazy val genScalaTextEdit: Gen[ScalaTextEdit] = for {
+    range <- genRange
+    newText <- arbitrary[String]
+  } yield new ScalaTextEdit(range, newText)
 
   lazy val genDidChangeBuildTarget: Gen[DidChangeBuildTarget] = for {
     events <- genBuildTargetEvent.list

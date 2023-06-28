@@ -50,6 +50,15 @@ trait Bsp4jArbitrary {
   implicit val arbDiagnosticSeverity: Arbitrary[DiagnosticSeverity] = Arbitrary(
     genDiagnosticSeverity
   )
+  implicit val arbScalaCodeAction: Arbitrary[ScalaAction] = Arbitrary(
+    genScalaAction
+  )
+  implicit val arbScalaWorkspaceEdit: Arbitrary[ScalaWorkspaceEdit] = Arbitrary(
+    genScalaWorkspaceEdit
+  )
+  implicit val arbScalaTextEdit: Arbitrary[ScalaTextEdit] = Arbitrary(
+    genScalaTextEdit
+  )
   implicit val arbDidChangeBuildTarget: Arbitrary[DidChangeBuildTarget] = Arbitrary(
     genDidChangeBuildTarget
   )

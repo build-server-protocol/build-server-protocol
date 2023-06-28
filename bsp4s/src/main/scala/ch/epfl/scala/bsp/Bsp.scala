@@ -1221,6 +1221,45 @@ object ScalaTestSuiteSelection {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class ScalaDiagnostic(
+    actions: Option[List[ScalaAction]]
+)
+
+object ScalaDiagnostic {
+  implicit val codec: JsonValueCodec[ScalaDiagnostic] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ScalaAction(
+    title: String,
+    description: Option[String],
+    edit: Option[ScalaWorkspaceEdit]
+)
+
+object ScalaAction {
+  implicit val codec: JsonValueCodec[ScalaAction] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ScalaWorkspaceEdit(
+    changes: Option[List[ScalaTextEdit]]
+)
+
+object ScalaWorkspaceEdit {
+  implicit val codec: JsonValueCodec[ScalaWorkspaceEdit] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ScalaTextEdit(
+    range: Range,
+    newText: String
+)
+
+object ScalaTextEdit {
+  implicit val codec: JsonValueCodec[ScalaTextEdit] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],

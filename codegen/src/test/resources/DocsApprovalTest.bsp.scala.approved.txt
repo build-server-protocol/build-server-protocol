@@ -1,0 +1,237 @@
+## Common shapes
+
+#### ScalaBuildTarget
+
+`ScalaBuildTarget` is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources. This metadata is
+embedded in the `data: Option[Json]` field of the `BuildTarget` definition, when
+the `dataKind` field contains "scala".
+
+```ts
+export interface ScalaBuildTarget {
+  /** The Scala organization that is used for a target. */
+  scalaOrganization: string;
+
+  /** The scala version to compile this target */
+  scalaVersion: string;
+
+  /** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: string;
+
+  /** The target platform for this target */
+  platform: ScalaPlatform;
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  jars: URI[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget?: JvmBuildTarget;
+}
+```
+
+#### ScalaPlatform
+
+
+```ts
+export enum ScalaPlatform {
+  Jvm = 1,
+
+  Js = 2,
+
+  Native = 3,
+}
+```
+
+
+## BSP Server remote interface
+
+### ScalacOptions: request
+
+The build target scalac options request is sent from the client to the server to
+query for the list of compiler options necessary to compile in a given list of
+targets.
+
+- method: `buildTarget/scalacOptions`
+- params: `ScalacOptionsParams`
+- result: `ScalacOptionsResult`
+
+#### ScalacOptionsParams
+
+
+```ts
+export interface ScalacOptionsParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+#### ScalacOptionsResult
+
+
+```ts
+export interface ScalacOptionsResult {
+  items: ScalacOptionsItem[];
+}
+```
+
+#### ScalacOptionsItem
+
+
+```ts
+export interface ScalacOptionsItem {
+  target: BuildTargetIdentifier;
+
+  options: string[];
+
+  /** Additional arguments to the compiler.
+   * For example, -deprecation.
+   * The dependency classpath for this target, must be
+   * identical to what is passed as arguments to
+   * the -classpath flag in the command line interface
+   * of scalac. */
+  classpath: string[];
+
+  /** The output directory for classfiles produced by this target */
+  classDirectory: string;
+}
+```
+
+### ScalaTestClasses: request
+
+The Scala build target test classes request is sent from the client to the
+server to query for the list of fully qualified names of test classes in a given
+list of targets.
+
+This method can for example be used by a client to:
+
+- Show a list of the discovered classes that can be tested.
+- Attach a "Run test suite" button above the definition of a test suite via
+ `textDocument/codeLens`.
+
+(To render the code lens, the language server needs to map the fully qualified
+names of the test targets to the defining source file via
+`textDocument/definition`. Then, once users click on the button, the language
+server can pass the fully qualified name of the test class as an argument to the
+`buildTarget/test` request.)
+
+This request may trigger a compilation on the selected build targets. The server
+is free to send any number of `build/task*`, `build/publishDiagnostics` and
+`build/logMessage` notifications during compilation before completing the
+response.
+
+The client will get a `originId` field in `ScalaTestClassesResult` if the
+`originId` field in the `ScalaTestClassesParams` is defined.
+
+- method: `buildTarget/scalaTestClasses`
+- params: `ScalaTestClassesParams`
+- result: `ScalaTestClassesResult`
+
+#### ScalaTestClassesParams
+
+
+```ts
+export interface ScalaTestClassesParams {
+  targets: BuildTargetIdentifier[];
+
+  /** An optional number uniquely identifying a client request. */
+  originId?: string;
+}
+```
+
+#### ScalaTestClassesResult
+
+
+```ts
+export interface ScalaTestClassesResult {
+  items: ScalaTestClassesItem[];
+}
+```
+
+#### ScalaTestClassesItem
+
+
+```ts
+export interface ScalaTestClassesItem {
+  /** The build target that contains the test classes. */
+  target: BuildTargetIdentifier;
+
+  /** Name of the the framework to which classes belong.
+   * It's optional in order to maintain compatibility, however it is expected
+   * from the newer implementations to not leave that field unspecified. */
+  framework?: string;
+
+  /** The fully qualified names of the test classes in this target */
+  classes: string[];
+}
+```
+
+### ScalaMainClasses: request
+
+The build target main classes request is sent from the client to the server to
+query for the list of main classes that can be fed as arguments to
+`buildTarget/run`. This method can be used for the same use cases than the
+[Scala Test Classes Request](#scala-test-classes-request) enables.
+This request may trigger a compilation on the selected build targets. The server
+is free to send any number of `build/taskStart`, `build/taskProgress`,
+`build/taskFinish`, `build/publishDiagnostics` and `build/logMessage`
+notifications during compilation before completing the response.
+
+- method: `buildTarget/scalaMainClasses`
+- params: `ScalaMainClassesParams`
+- result: `ScalaMainClassesResult`
+
+#### ScalaMainClassesParams
+
+
+```ts
+export interface ScalaMainClassesParams {
+  targets: BuildTargetIdentifier[];
+
+  /** An optional number uniquely identifying a client request. */
+  originId?: string;
+}
+```
+
+#### ScalaMainClassesResult
+
+
+```ts
+export interface ScalaMainClassesResult {
+  items: ScalaMainClassesItem[];
+
+  /** An optional id of the request that triggered this result. */
+  originId?: string;
+}
+```
+
+#### ScalaMainClassesItem
+
+
+```ts
+export interface ScalaMainClassesItem {
+  /** The build target that contains the test classes. */
+  target: BuildTargetIdentifier;
+
+  /** The main class item. */
+  classes: ScalaMainClass[];
+}
+```
+
+#### ScalaMainClass
+
+
+```ts
+export interface ScalaMainClass {
+  /** The main class to run. */
+  className: string;
+
+  /** The user arguments to the main entrypoint. */
+  arguments: string[];
+
+  /** The jvm options for the application. */
+  jvmOptions: string[];
+
+  /** The environment variables for the application. */
+  environmentVariables?: string[];
+}
+```

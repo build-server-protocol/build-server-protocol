@@ -26,7 +26,7 @@ necessary to have an issue or discussion first.
 To change the protocol (e.g. by adding a new field to some request parameters) one has to:
 
 1. Update the appropriate`.xtend` file in the `bsp4j` module.
-2. Manually re-generate java sources via  `sbt bsp4j/xtend`
+2. Manually re-generate java sources via `sbt bsp4j/xtend`
 3. Update the corresponding classes in `bsp4s` module
 
 While working on changes in `bsp4j` you can use
@@ -43,6 +43,7 @@ To ensure the Scala sources are formatted correctly you can run:
 ```sh
 sbt scalaFormat
 ```
+
 ## Releasing
 
 This repo is setup to use
@@ -61,7 +62,7 @@ typecheck Scala snippets and also to generate a static site via
 
 To build the site locally you'll want to follow the below steps:
 
-1. `sbt mdoc` to typecheck and copy the `/docs` to where they need to be
+1. `sbt mdoc` to generate the docs
 2. `cd website` to go into the website directory where the site is managed
 3. `yarn install` to ensure everything is installed
 4. `yarn start` to build and start the server
@@ -71,6 +72,21 @@ need to be replaced with the following 2 steps:
 
 1. `yarn build` to fully build the site
 1. `yarn serve` to serve the site
+
+### Approval tests
+
+Because now most of the docs are generated from the smithy model, we added
+[approval tests](https://approvaltests.com/) which ensure that the generated spec
+doesn't accidentally break. If you make a change which affects the generated spec
+please run `sbt test`. Approval test driver should automatically display
+a diff for you, but if it does not happen, you should review the new version manually.
+In directory `codegen/src/test/scala` there will appear 
+files `<testname>.<generated doc>.received.txt` for each generated doc which differs
+from the previously approved version. Approving means comparing `<file>.received.txt`
+with `<file>.approved.txt` and introducing changes to the `<file>.approved.txt` one.
+
+When you run `sbt test` again the tests should pass and `<file>.received.txt` 
+will be removed.
 
 ## Some notes on maintenance
 
