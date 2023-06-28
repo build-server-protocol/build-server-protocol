@@ -22,23 +22,27 @@ trait Lines {
     if (str.nonEmpty) "  " + str else str
   }
 
-  def block(l: Lines*): Lines = {
+  private def wrap(open: String, close: String, l: Lines*): Lines = {
     val current = self.get
     val openBlock: List[String] =
       current.lastOption.map { line =>
         line.lastOption match {
-          case None      => "{"
-          case Some('}') => line + "{"
-          case Some(')') => line + "{"
-          case Some(_)   => line + " {"
+          case None      => open
+          case Some('}') => line + open
+          case Some(')') => line + open
+          case Some(_)   => line + s" $open"
         }
       } match {
         case Some(value) => current.dropRight(1) :+ value
         case None        => current
       }
 
-    Lines(openBlock) ++ Lines(l: _*).indent ++ Lines("}")
+    Lines(openBlock) ++ Lines(l: _*).indent ++ Lines(close)
   }
+
+  def block(l: Lines*): Lines = wrap("{", "}", l: _*)
+
+  def paren(l: Lines*): Lines = wrap("(", ")", l: _*)
 }
 
 object Lines {

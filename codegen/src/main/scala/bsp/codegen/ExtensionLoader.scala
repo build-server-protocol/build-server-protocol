@@ -1,7 +1,8 @@
 package bsp.codegen
 
 import java.nio.file.{Files, Paths}
-import scala.jdk.StreamConverters.StreamHasToScala
+import java.util.stream.Collectors
+import scala.collection.JavaConverters.collectionAsScalaIterableConverter
 
 object ExtensionLoader {
   def loadExtensions(): List[String] = {
@@ -9,8 +10,10 @@ object ExtensionLoader {
       val extensionsPath = Paths.get("spec/src/main/resources/META-INF/smithy/bsp/extensions")
       val extensions = Files
         .list(extensionsPath)
-        .toScala(List)
+        .collect(Collectors.toList[java.nio.file.Path])
+        .asScala
         .map(_.getFileName.toString.split("\\.").head)
+        .toList
       extensions
     } catch {
       case e: Throwable =>

@@ -40,4 +40,5 @@ website/build
 website/project
 
 bsp4j-gen
+bsp4s-gen
 docs-gen
