@@ -156,7 +156,7 @@ class JavaRenderer(basepkg: String) {
     lines(
       annotation,
       s"$output $method($input);",
-      newline,
+      newline
     )
   }
 

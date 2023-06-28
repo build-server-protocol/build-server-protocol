@@ -78,7 +78,7 @@ lazy val bsp4s = project
 lazy val bsp4j = project
   .in(file("bsp4j"))
   .settings(
-    crossVersion := CrossVersion.disabled,
+    crossScalaVersions := V.supportedScalaVersions,
     autoScalaLibrary := false,
     Compile / javacOptions ++= {
       List(

@@ -116,7 +116,7 @@ Next, trigger the initialize handshake with the remote server.
 
 ```scala mdoc
 val workspace = java.nio.file.Paths.get(".").toAbsolutePath().normalize()
-val initializeResult = server.buildInitialize(new InitializeBuildParams(
+val initializeResult = server.initializeBuild(new InitializeBuildParams(
   "MyClient", // name of this client
   "1.0.0", // version of this client
   "@VERSION@", // BSP version
@@ -140,7 +140,7 @@ To close the BSP session, send the `build/shutdown` request followed by a
 `build/exit` notification.
 
 ```scala mdoc
-server.buildShutdown().thenAccept(new java.util.function.Consumer[Object] {
+server.shutdownBuild().thenAccept(new java.util.function.Consumer[Object] {
   def accept(x: Object): Unit = {
     server.onBuildExit()
   }
@@ -163,8 +163,8 @@ import org.eclipse.lsp4j.jsonrpc.Launcher
 
 class MyBuildServer extends BuildServer {
   var client: BuildClient = null // will be updated later
-  def buildInitialize(params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = ???
-  def buildShutdown(): CompletableFuture[Object] = ???
+  def initializeBuild(params: InitializeBuildParams): CompletableFuture[InitializeBuildResult] = ???
+  def shutdownBuild(): CompletableFuture[Object] = ???
   def buildTargetCleanCache(params: CleanCacheParams): CompletableFuture[CleanCacheResult] = ???
   def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] = ???
   def buildTargetDependencySources(params: DependencySourcesParams): CompletableFuture[DependencySourcesResult] = ???
