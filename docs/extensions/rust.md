@@ -16,13 +16,13 @@ the `dataKind` field contains "rust".
 
 ```ts
 export interface RustBuildTarget {
-  /** The Rust edition this target is supposed to use. 
-    * For example: 2021 */
+  /** The Rust edition this target is supposed to use.
+   * For example: 2021 */
   edition?: String;
 
-  /** URI representing the path to the Rust compiler. 
-    * For example: file:///usr/bin/cargo */
-  compiler?: Uri;  
+  /** URI representing the path to the Rust compiler.
+   * For example: file:///usr/bin/cargo */
+  compiler?: Uri;
 }
 ```
 
@@ -52,9 +52,9 @@ export interface RustOptionsResult {
 
 export interface RustOptionsItem {
   target: BuildTargetIdentifier;
-    
+
   /** Attributes added to the compiler command
-    * For example: -q */
+   * For example: -q */
   compilerOptions: String[];
 }
 ```
