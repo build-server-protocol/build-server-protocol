@@ -12,6 +12,7 @@ import cats.syntax.all._
 import software.amazon.smithy.model.shapes.ShapeId
 
 class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
+  import bsp.codegen.Settings.typescript
 
   def renderFile(definition: Def): Option[CodegenFile] = {
     val fileName = definition.shapeId.getName() + ".ts"

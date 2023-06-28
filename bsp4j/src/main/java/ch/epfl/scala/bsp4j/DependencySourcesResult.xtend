@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class DependencySourcesResult {
-  @NonNull
-  List<DependencySourcesItem> items
+    @NonNull
+    List<DependencySourcesItem> items
 
-  new(@NonNull List<DependencySourcesItem> items){
-    this.items = items
-  }
+    new(@NonNull List<DependencySourcesItem> items){
+        this.items = items
+    }
 }

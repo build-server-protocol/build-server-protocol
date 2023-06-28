@@ -5,10 +5,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class InverseSourcesParams {
-  @NonNull
-  TextDocumentIdentifier textDocument
+    @NonNull
+    TextDocumentIdentifier textDocument
 
-  new(@NonNull TextDocumentIdentifier textDocument){
-    this.textDocument = textDocument
-  }
+    new(@NonNull TextDocumentIdentifier textDocument){
+        this.textDocument = textDocument
+    }
 }

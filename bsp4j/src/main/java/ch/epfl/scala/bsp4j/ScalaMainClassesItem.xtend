@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaMainClassesItem {
-  @NonNull
-  BuildTargetIdentifier target
-  @NonNull
-  List<ScalaMainClass> classes
+    @NonNull
+    BuildTargetIdentifier target
+    @NonNull
+    List<ScalaMainClass> classes
 
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<ScalaMainClass> classes){
-    this.target = target
-    this.classes = classes
-  }
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<ScalaMainClass> classes){
+        this.target = target
+        this.classes = classes
+    }
 }

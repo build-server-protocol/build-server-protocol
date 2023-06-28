@@ -5,10 +5,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class CompileTask {
-  @NonNull
-  BuildTargetIdentifier target
+    @NonNull
+    BuildTargetIdentifier target
 
-  new(@NonNull BuildTargetIdentifier target){
-    this.target = target
-  }
+    new(@NonNull BuildTargetIdentifier target){
+        this.target = target
+    }
 }

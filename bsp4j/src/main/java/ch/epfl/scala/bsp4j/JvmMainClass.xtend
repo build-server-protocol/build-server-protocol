@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class JvmMainClass {
-  @NonNull
-  String className
-  @NonNull
-  List<String> arguments
+    @NonNull
+    String className
+    @NonNull
+    List<String> arguments
 
-  new(@NonNull String className, @NonNull List<String> arguments){
-    this.className = className
-    this.arguments = arguments
-  }
+    new(@NonNull String className, @NonNull List<String> arguments){
+        this.className = className
+        this.arguments = arguments
+    }
 }

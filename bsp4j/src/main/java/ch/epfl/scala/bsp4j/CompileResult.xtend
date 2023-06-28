@@ -7,14 +7,14 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class CompileResult {
-  String originId
-  @NonNull
-  StatusCode statusCode
-  String dataKind
-  @JsonAdapter(JsonElementTypeAdapter.Factory)
-  Object data
+    String originId
+    @NonNull
+    StatusCode statusCode
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory)
+    Object data
 
-  new(@NonNull StatusCode statusCode){
-    this.statusCode = statusCode
-  }
+    new(@NonNull StatusCode statusCode){
+        this.statusCode = statusCode
+    }
 }

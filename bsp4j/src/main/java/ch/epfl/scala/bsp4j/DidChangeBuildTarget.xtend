@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class DidChangeBuildTarget {
-  @NonNull
-  List<BuildTargetEvent> changes
+    @NonNull
+    List<BuildTargetEvent> changes
 
-  new(@NonNull List<BuildTargetEvent> changes){
-    this.changes = changes
-  }
+    new(@NonNull List<BuildTargetEvent> changes){
+        this.changes = changes
+    }
 }

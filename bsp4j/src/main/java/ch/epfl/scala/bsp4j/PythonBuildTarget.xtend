@@ -4,9 +4,9 @@ import org.eclipse.lsp4j.generator.JsonRpcData
 
 @JsonRpcData
 class PythonBuildTarget {
-  String version
-  String interpreter
+    String version
+    String interpreter
 
-  new(){
-  }
+    new(){
+    }
 }

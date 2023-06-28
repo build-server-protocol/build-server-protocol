@@ -5,13 +5,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class OutputPathItem {
-  @NonNull
-  String uri
-  @NonNull
-  OutputPathItemKind kind
+    @NonNull
+    String uri
+    @NonNull
+    OutputPathItemKind kind
 
-  new(@NonNull String uri, @NonNull OutputPathItemKind kind){
-    this.uri = uri
-    this.kind = kind
-  }
+    new(@NonNull String uri, @NonNull OutputPathItemKind kind){
+        this.uri = uri
+        this.kind = kind
+    }
 }

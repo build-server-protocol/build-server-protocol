@@ -8,15 +8,15 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class RunParams {
-  @NonNull
-  BuildTargetIdentifier target
-  String originId
-  List<String> arguments
-  String dataKind
-  @JsonAdapter(JsonElementTypeAdapter.Factory)
-  Object data
+    @NonNull
+    BuildTargetIdentifier target
+    String originId
+    List<String> arguments
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory)
+    Object data
 
-  new(@NonNull BuildTargetIdentifier target){
-    this.target = target
-  }
+    new(@NonNull BuildTargetIdentifier target){
+        this.target = target
+    }
 }

@@ -5,11 +5,11 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class MavenDependencyModuleArtifact {
-  @NonNull
-  String uri
-  String classifier
+    @NonNull
+    String uri
+    String classifier
 
-  new(@NonNull String uri){
-    this.uri = uri
-  }
+    new(@NonNull String uri){
+        this.uri = uri
+    }
 }

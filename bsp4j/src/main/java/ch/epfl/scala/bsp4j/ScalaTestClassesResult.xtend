@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaTestClassesResult {
-  @NonNull
-  List<ScalaTestClassesItem> items
+    @NonNull
+    List<ScalaTestClassesItem> items
 
-  new(@NonNull List<ScalaTestClassesItem> items){
-    this.items = items
-  }
+    new(@NonNull List<ScalaTestClassesItem> items){
+        this.items = items
+    }
 }

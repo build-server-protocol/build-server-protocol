@@ -13,6 +13,7 @@ import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
 class JavaRenderer(basepkg: String) {
+  import bsp.codegen.Settings.java
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 

@@ -5,13 +5,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaTextEdit {
-  @NonNull
-  Range range
-  @NonNull
-  String newText
+    @NonNull
+    Range range
+    @NonNull
+    String newText
 
-  new(@NonNull Range range, @NonNull String newText){
-    this.range = range
-    this.newText = newText
-  }
+    new(@NonNull Range range, @NonNull String newText){
+        this.range = range
+        this.newText = newText
+    }
 }

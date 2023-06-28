@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class JvmRunEnvironmentResult {
-  @NonNull
-  List<JvmEnvironmentItem> items
+    @NonNull
+    List<JvmEnvironmentItem> items
 
-  new(@NonNull List<JvmEnvironmentItem> items){
-    this.items = items
-  }
+    new(@NonNull List<JvmEnvironmentItem> items){
+        this.items = items
+    }
 }

@@ -5,9 +5,9 @@ import java.util.List
 
 @JsonRpcData
 class ScalaTestParams {
-  List<ScalaTestClassesItem> testClasses
-  List<String> jvmOptions
+    List<ScalaTestClassesItem> testClasses
+    List<String> jvmOptions
 
-  new(){
-  }
+    new(){
+    }
 }

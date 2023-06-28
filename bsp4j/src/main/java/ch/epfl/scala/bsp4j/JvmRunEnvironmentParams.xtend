@@ -6,11 +6,11 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class JvmRunEnvironmentParams {
-  @NonNull
-  List<BuildTargetIdentifier> targets
-  String originId
+    @NonNull
+    List<BuildTargetIdentifier> targets
+    String originId
 
-  new(@NonNull List<BuildTargetIdentifier> targets){
-    this.targets = targets
-  }
+    new(@NonNull List<BuildTargetIdentifier> targets){
+        this.targets = targets
+    }
 }

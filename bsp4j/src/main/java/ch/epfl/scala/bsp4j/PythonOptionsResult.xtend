@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class PythonOptionsResult {
-  @NonNull
-  List<PythonOptionsItem> items
+    @NonNull
+    List<PythonOptionsItem> items
 
-  new(@NonNull List<PythonOptionsItem> items){
-    this.items = items
-  }
+    new(@NonNull List<PythonOptionsItem> items){
+        this.items = items
+    }
 }

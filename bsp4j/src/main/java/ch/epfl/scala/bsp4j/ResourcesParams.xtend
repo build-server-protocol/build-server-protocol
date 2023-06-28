@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ResourcesParams {
-  @NonNull
-  List<BuildTargetIdentifier> targets
+    @NonNull
+    List<BuildTargetIdentifier> targets
 
-  new(@NonNull List<BuildTargetIdentifier> targets){
-    this.targets = targets
-  }
+    new(@NonNull List<BuildTargetIdentifier> targets){
+        this.targets = targets
+    }
 }

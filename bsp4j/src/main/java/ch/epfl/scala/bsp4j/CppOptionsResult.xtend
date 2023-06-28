@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class CppOptionsResult {
-  @NonNull
-  List<CppOptionsItem> items
+    @NonNull
+    List<CppOptionsItem> items
 
-  new(@NonNull List<CppOptionsItem> items){
-    this.items = items
-  }
+    new(@NonNull List<CppOptionsItem> items){
+        this.items = items
+    }
 }

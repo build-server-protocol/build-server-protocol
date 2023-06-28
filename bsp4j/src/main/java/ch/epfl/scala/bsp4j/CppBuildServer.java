@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface CppBuildServer {
 
-  @JsonRequest("buildTarget/cppOptions")
-  CompletableFuture<CppOptionsResult> cppOptions(CppOptionsParams params);
+    @JsonRequest("buildTarget/cppOptions")
+    CompletableFuture<CppOptionsResult> cppOptions(CppOptionsParams params);
 
 }

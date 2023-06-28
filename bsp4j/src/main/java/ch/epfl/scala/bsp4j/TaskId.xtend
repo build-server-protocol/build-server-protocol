@@ -6,11 +6,11 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class TaskId {
-  @NonNull
-  String id
-  List<String> parents
+    @NonNull
+    String id
+    List<String> parents
 
-  new(@NonNull String id){
-    this.id = id
-  }
+    new(@NonNull String id){
+        this.id = id
+    }
 }

@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class WorkspaceBuildTargetsResult {
-  @NonNull
-  List<BuildTarget> targets
+    @NonNull
+    List<BuildTarget> targets
 
-  new(@NonNull List<BuildTarget> targets){
-    this.targets = targets
-  }
+    new(@NonNull List<BuildTarget> targets){
+        this.targets = targets
+    }
 }

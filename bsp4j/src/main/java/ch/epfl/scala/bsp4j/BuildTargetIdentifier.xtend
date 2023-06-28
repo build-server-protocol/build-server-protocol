@@ -5,10 +5,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class BuildTargetIdentifier {
-  @NonNull
-  String uri
+    @NonNull
+    String uri
 
-  new(@NonNull String uri){
-    this.uri = uri
-  }
+    new(@NonNull String uri){
+        this.uri = uri
+    }
 }

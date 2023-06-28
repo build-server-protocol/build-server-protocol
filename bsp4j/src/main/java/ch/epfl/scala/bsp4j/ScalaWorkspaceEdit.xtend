@@ -5,8 +5,8 @@ import java.util.List
 
 @JsonRpcData
 class ScalaWorkspaceEdit {
-  List<ScalaTextEdit> changes
+    List<ScalaTextEdit> changes
 
-  new(){
-  }
+    new(){
+    }
 }

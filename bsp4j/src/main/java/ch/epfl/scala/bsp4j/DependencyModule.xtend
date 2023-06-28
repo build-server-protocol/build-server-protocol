@@ -7,16 +7,16 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class DependencyModule {
-  @NonNull
-  String name
-  @NonNull
-  String version
-  String dataKind
-  @JsonAdapter(JsonElementTypeAdapter.Factory)
-  Object data
+    @NonNull
+    String name
+    @NonNull
+    String version
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory)
+    Object data
 
-  new(@NonNull String name, @NonNull String version){
-    this.name = name
-    this.version = version
-  }
+    new(@NonNull String name, @NonNull String version){
+        this.name = name
+        this.version = version
+    }
 }

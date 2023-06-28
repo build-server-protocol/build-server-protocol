@@ -5,15 +5,15 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class LogMessageParams {
-  @NonNull
-  MessageType type
-  TaskId task
-  String originId
-  @NonNull
-  String message
+    @NonNull
+    MessageType type
+    TaskId task
+    String originId
+    @NonNull
+    String message
 
-  new(@NonNull MessageType type, @NonNull String message){
-    this.type = type
-    this.message = message
-  }
+    new(@NonNull MessageType type, @NonNull String message){
+        this.type = type
+        this.message = message
+    }
 }

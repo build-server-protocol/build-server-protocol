@@ -6,20 +6,20 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class SbtBuildTarget {
-  @NonNull
-  String sbtVersion
-  @NonNull
-  List<String> autoImports
-  @NonNull
-  ScalaBuildTarget scalaBuildTarget
-  BuildTargetIdentifier parent
-  @NonNull
-  List<BuildTargetIdentifier> children
+    @NonNull
+    String sbtVersion
+    @NonNull
+    List<String> autoImports
+    @NonNull
+    ScalaBuildTarget scalaBuildTarget
+    BuildTargetIdentifier parent
+    @NonNull
+    List<BuildTargetIdentifier> children
 
-  new(@NonNull String sbtVersion, @NonNull List<String> autoImports, @NonNull ScalaBuildTarget scalaBuildTarget, @NonNull List<BuildTargetIdentifier> children){
-    this.sbtVersion = sbtVersion
-    this.autoImports = autoImports
-    this.scalaBuildTarget = scalaBuildTarget
-    this.children = children
-  }
+    new(@NonNull String sbtVersion, @NonNull List<String> autoImports, @NonNull ScalaBuildTarget scalaBuildTarget, @NonNull List<BuildTargetIdentifier> children){
+        this.sbtVersion = sbtVersion
+        this.autoImports = autoImports
+        this.scalaBuildTarget = scalaBuildTarget
+        this.children = children
+    }
 }

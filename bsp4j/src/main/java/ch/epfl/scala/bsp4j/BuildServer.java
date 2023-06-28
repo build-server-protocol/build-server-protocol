@@ -7,55 +7,55 @@ import java.util.concurrent.CompletableFuture;
 
 public interface BuildServer {
 
-  @JsonRequest("build/initialize")
-  CompletableFuture<InitializeBuildResult> initializeBuild(InitializeBuildParams params);
+    @JsonRequest("build/initialize")
+    CompletableFuture<InitializeBuildResult> initializeBuild(InitializeBuildParams params);
 
-  @JsonNotification("build/initialized")
-  void onBuildInitialized();
+    @JsonNotification("build/initialized")
+    void onBuildInitialized();
 
-  @JsonRequest("build/shutdown")
-  CompletableFuture<Object> shutdownBuild();
+    @JsonRequest("build/shutdown")
+    CompletableFuture<Object> shutdownBuild();
 
-  @JsonNotification("build/exit")
-  void onBuildExit();
+    @JsonNotification("build/exit")
+    void onBuildExit();
 
-  @JsonRequest("workspace/buildTargets")
-  CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
+    @JsonRequest("workspace/buildTargets")
+    CompletableFuture<WorkspaceBuildTargetsResult> workspaceBuildTargets();
 
-  @JsonRequest("workspace/reload")
-  CompletableFuture<Object> workspaceReload();
+    @JsonRequest("workspace/reload")
+    CompletableFuture<Object> workspaceReload();
 
-  @JsonRequest("buildTarget/sources")
-  CompletableFuture<SourcesResult> buildTargetSources(SourcesParams params);
+    @JsonRequest("buildTarget/sources")
+    CompletableFuture<SourcesResult> buildTargetSources(SourcesParams params);
 
-  @JsonRequest("buildTarget/inverseSources")
-  CompletableFuture<InverseSourcesResult> buildTargetInverseSources(InverseSourcesParams params);
+    @JsonRequest("buildTarget/inverseSources")
+    CompletableFuture<InverseSourcesResult> buildTargetInverseSources(InverseSourcesParams params);
 
-  @JsonRequest("buildTarget/dependencySources")
-  CompletableFuture<DependencySourcesResult> buildTargetDependencySources(DependencySourcesParams params);
+    @JsonRequest("buildTarget/dependencySources")
+    CompletableFuture<DependencySourcesResult> buildTargetDependencySources(DependencySourcesParams params);
 
-  @JsonRequest("buildTarget/dependencyModules")
-  CompletableFuture<DependencyModulesResult> buildTargetDependencyModules(DependencyModulesParams params);
+    @JsonRequest("buildTarget/dependencyModules")
+    CompletableFuture<DependencyModulesResult> buildTargetDependencyModules(DependencyModulesParams params);
 
-  @JsonRequest("buildTarget/resources")
-  CompletableFuture<ResourcesResult> buildTargetResources(ResourcesParams params);
+    @JsonRequest("buildTarget/resources")
+    CompletableFuture<ResourcesResult> buildTargetResources(ResourcesParams params);
 
-  @JsonRequest("buildTarget/outputPaths")
-  CompletableFuture<OutputPathsResult> buildTargetOutputPaths(OutputPathsParams params);
+    @JsonRequest("buildTarget/outputPaths")
+    CompletableFuture<OutputPathsResult> buildTargetOutputPaths(OutputPathsParams params);
 
-  @JsonRequest("buildTarget/compile")
-  CompletableFuture<CompileResult> buildTargetCompile(CompileParams params);
+    @JsonRequest("buildTarget/compile")
+    CompletableFuture<CompileResult> buildTargetCompile(CompileParams params);
 
-  @JsonRequest("buildTarget/run")
-  CompletableFuture<RunResult> buildTargetRun(RunParams params);
+    @JsonRequest("buildTarget/run")
+    CompletableFuture<RunResult> buildTargetRun(RunParams params);
 
-  @JsonRequest("buildTarget/test")
-  CompletableFuture<TestResult> buildTargetTest(TestParams params);
+    @JsonRequest("buildTarget/test")
+    CompletableFuture<TestResult> buildTargetTest(TestParams params);
 
-  @JsonRequest("debugSession/start")
-  CompletableFuture<DebugSessionAddress> debugSessionStart(DebugSessionParams params);
+    @JsonRequest("debugSession/start")
+    CompletableFuture<DebugSessionAddress> debugSessionStart(DebugSessionParams params);
 
-  @JsonRequest("buildTarget/cleanCache")
-  CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
+    @JsonRequest("buildTarget/cleanCache")
+    CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
 }

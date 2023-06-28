@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class DependencySourcesItem {
-  @NonNull
-  BuildTargetIdentifier target
-  @NonNull
-  List<String> sources
+    @NonNull
+    BuildTargetIdentifier target
+    @NonNull
+    List<String> sources
 
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> sources){
-    this.target = target
-    this.sources = sources
-  }
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> sources){
+        this.target = target
+        this.sources = sources
+    }
 }

@@ -12,6 +12,7 @@ import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
 class ScalaRenderer(basepkg: String, definitions: List[Def]) {
+  import bsp.codegen.Settings.scala
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 

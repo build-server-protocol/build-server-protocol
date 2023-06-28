@@ -8,20 +8,20 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class Diagnostic {
-  @NonNull
-  Range range
-  DiagnosticSeverity severity
-  String code
-  String source
-  @NonNull
-  String message
-  List<DiagnosticRelatedInformation> relatedInformation
-  String dataKind
-  @JsonAdapter(JsonElementTypeAdapter.Factory)
-  Object data
+    @NonNull
+    Range range
+    DiagnosticSeverity severity
+    String code
+    String source
+    @NonNull
+    String message
+    List<DiagnosticRelatedInformation> relatedInformation
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory)
+    Object data
 
-  new(@NonNull Range range, @NonNull String message){
-    this.range = range
-    this.message = message
-  }
+    new(@NonNull Range range, @NonNull String message){
+        this.range = range
+        this.message = message
+    }
 }

@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaTestSuiteSelection {
-  @NonNull
-  String className
-  @NonNull
-  List<String> tests
+    @NonNull
+    String className
+    @NonNull
+    List<String> tests
 
-  new(@NonNull String className, @NonNull List<String> tests){
-    this.className = className
-    this.tests = tests
-  }
+    new(@NonNull String className, @NonNull List<String> tests){
+        this.className = className
+        this.tests = tests
+    }
 }

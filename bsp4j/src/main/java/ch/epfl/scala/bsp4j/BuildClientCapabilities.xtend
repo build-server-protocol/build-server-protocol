@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class BuildClientCapabilities {
-  @NonNull
-  List<String> languageIds
+    @NonNull
+    List<String> languageIds
 
-  new(@NonNull List<String> languageIds){
-    this.languageIds = languageIds
-  }
+    new(@NonNull List<String> languageIds){
+        this.languageIds = languageIds
+    }
 }

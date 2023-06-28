@@ -5,8 +5,8 @@ import java.util.List
 
 @JsonRpcData
 class ScalaDiagnostic {
-  List<ScalaAction> actions
+    List<ScalaAction> actions
 
-  new(){
-  }
+    new(){
+    }
 }

@@ -6,13 +6,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class OutputPathsItem {
-  @NonNull
-  BuildTargetIdentifier target
-  @NonNull
-  List<OutputPathItem> outputPaths
+    @NonNull
+    BuildTargetIdentifier target
+    @NonNull
+    List<OutputPathItem> outputPaths
 
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<OutputPathItem> outputPaths){
-    this.target = target
-    this.outputPaths = outputPaths
-  }
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<OutputPathItem> outputPaths){
+        this.target = target
+        this.outputPaths = outputPaths
+    }
 }

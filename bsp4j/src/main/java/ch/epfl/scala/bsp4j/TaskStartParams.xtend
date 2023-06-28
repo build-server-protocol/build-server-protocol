@@ -7,15 +7,15 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class TaskStartParams {
-  @NonNull
-  TaskId taskId
-  Long eventTime
-  String message
-  String dataKind
-  @JsonAdapter(JsonElementTypeAdapter.Factory)
-  Object data
+    @NonNull
+    TaskId taskId
+    Long eventTime
+    String message
+    String dataKind
+    @JsonAdapter(JsonElementTypeAdapter.Factory)
+    Object data
 
-  new(@NonNull TaskId taskId){
-    this.taskId = taskId
-  }
+    new(@NonNull TaskId taskId){
+        this.taskId = taskId
+    }
 }

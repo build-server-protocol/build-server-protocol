@@ -5,12 +5,12 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaAction {
-  @NonNull
-  String title
-  String description
-  ScalaWorkspaceEdit edit
+    @NonNull
+    String title
+    String description
+    ScalaWorkspaceEdit edit
 
-  new(@NonNull String title){
-    this.title = title
-  }
+    new(@NonNull String title){
+        this.title = title
+    }
 }

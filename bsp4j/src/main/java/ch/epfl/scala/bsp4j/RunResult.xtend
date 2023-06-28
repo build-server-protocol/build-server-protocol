@@ -5,11 +5,11 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class RunResult {
-  String originId
-  @NonNull
-  StatusCode statusCode
+    String originId
+    @NonNull
+    StatusCode statusCode
 
-  new(@NonNull StatusCode statusCode){
-    this.statusCode = statusCode
-  }
+    new(@NonNull StatusCode statusCode){
+        this.statusCode = statusCode
+    }
 }

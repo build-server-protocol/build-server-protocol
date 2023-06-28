@@ -6,11 +6,11 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalaMainClassesResult {
-  @NonNull
-  List<ScalaMainClassesItem> items
-  String originId
+    @NonNull
+    List<ScalaMainClassesItem> items
+    String originId
 
-  new(@NonNull List<ScalaMainClassesItem> items){
-    this.items = items
-  }
+    new(@NonNull List<ScalaMainClassesItem> items){
+        this.items = items
+    }
 }

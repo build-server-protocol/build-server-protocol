@@ -6,19 +6,19 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class ScalacOptionsItem {
-  @NonNull
-  BuildTargetIdentifier target
-  @NonNull
-  List<String> options
-  @NonNull
-  List<String> classpath
-  @NonNull
-  String classDirectory
+    @NonNull
+    BuildTargetIdentifier target
+    @NonNull
+    List<String> options
+    @NonNull
+    List<String> classpath
+    @NonNull
+    String classDirectory
 
-  new(@NonNull BuildTargetIdentifier target, @NonNull List<String> options, @NonNull List<String> classpath, @NonNull String classDirectory){
-    this.target = target
-    this.options = options
-    this.classpath = classpath
-    this.classDirectory = classDirectory
-  }
+    new(@NonNull BuildTargetIdentifier target, @NonNull List<String> options, @NonNull List<String> classpath, @NonNull String classDirectory){
+        this.target = target
+        this.options = options
+        this.classpath = classpath
+        this.classDirectory = classDirectory
+    }
 }

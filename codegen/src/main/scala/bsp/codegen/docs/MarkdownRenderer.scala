@@ -25,7 +25,7 @@ object MarkdownRenderer {
 }
 
 class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
-
+  import bsp.codegen.Settings.typescript
   import dsl._
 
   val tsRenderer = new TypescriptRenderer(None)

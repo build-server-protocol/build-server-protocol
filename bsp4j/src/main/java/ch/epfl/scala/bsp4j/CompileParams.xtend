@@ -6,12 +6,12 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull
 
 @JsonRpcData
 class CompileParams {
-  @NonNull
-  List<BuildTargetIdentifier> targets
-  String originId
-  List<String> arguments
+    @NonNull
+    List<BuildTargetIdentifier> targets
+    String originId
+    List<String> arguments
 
-  new(@NonNull List<BuildTargetIdentifier> targets){
-    this.targets = targets
-  }
+    new(@NonNull List<BuildTargetIdentifier> targets){
+        this.targets = targets
+    }
 }
