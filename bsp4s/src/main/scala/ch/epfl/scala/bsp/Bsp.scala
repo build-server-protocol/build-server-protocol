@@ -127,7 +127,7 @@ object BuildTargetEvent {
 
 object BuildTargetEventDataKind {}
 
-sealed abstract class BuildTargetEventKind(val id: Int)
+sealed abstract class BuildTargetEventKind(val value: Int)
 object BuildTargetEventKind {
   case object Created extends BuildTargetEventKind(1)
   case object Changed extends BuildTargetEventKind(2)
@@ -136,7 +136,7 @@ object BuildTargetEventKind {
   implicit val codec: JsonValueCodec[BuildTargetEventKind] =
     new JsonValueCodec[BuildTargetEventKind] {
       def nullValue: BuildTargetEventKind = null
-      def encodeValue(msg: BuildTargetEventKind, out: JsonWriter): Unit = out.writeVal(msg.id)
+      def encodeValue(msg: BuildTargetEventKind, out: JsonWriter): Unit = out.writeVal(msg.value)
       def decodeValue(in: JsonReader, default: BuildTargetEventKind): BuildTargetEventKind = {
         in.readInt() match {
           case 1 => Created
@@ -420,7 +420,7 @@ object DiagnosticRelatedInformation {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class DiagnosticSeverity(val id: Int)
+sealed abstract class DiagnosticSeverity(val value: Int)
 object DiagnosticSeverity {
   case object Error extends DiagnosticSeverity(1)
   case object Warning extends DiagnosticSeverity(2)
@@ -429,7 +429,7 @@ object DiagnosticSeverity {
 
   implicit val codec: JsonValueCodec[DiagnosticSeverity] = new JsonValueCodec[DiagnosticSeverity] {
     def nullValue: DiagnosticSeverity = null
-    def encodeValue(msg: DiagnosticSeverity, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: DiagnosticSeverity, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: DiagnosticSeverity): DiagnosticSeverity = {
       in.readInt() match {
         case 1 => Error
@@ -651,7 +651,7 @@ object MavenDependencyModuleArtifact {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class MessageType(val id: Int)
+sealed abstract class MessageType(val value: Int)
 object MessageType {
   case object Error extends MessageType(1)
   case object Warning extends MessageType(2)
@@ -660,7 +660,7 @@ object MessageType {
 
   implicit val codec: JsonValueCodec[MessageType] = new JsonValueCodec[MessageType] {
     def nullValue: MessageType = null
-    def encodeValue(msg: MessageType, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: MessageType, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: MessageType): MessageType = {
       in.readInt() match {
         case 1 => Error
@@ -682,14 +682,14 @@ object OutputPathItem {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class OutputPathItemKind(val id: Int)
+sealed abstract class OutputPathItemKind(val value: Int)
 object OutputPathItemKind {
   case object File extends OutputPathItemKind(1)
   case object Directory extends OutputPathItemKind(2)
 
   implicit val codec: JsonValueCodec[OutputPathItemKind] = new JsonValueCodec[OutputPathItemKind] {
     def nullValue: OutputPathItemKind = null
-    def encodeValue(msg: OutputPathItemKind, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: OutputPathItemKind, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: OutputPathItemKind): OutputPathItemKind = {
       in.readInt() match {
         case 1 => File
@@ -944,7 +944,7 @@ object ScalaMainClassesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class ScalaPlatform(val id: Int)
+sealed abstract class ScalaPlatform(val value: Int)
 object ScalaPlatform {
   case object Jvm extends ScalaPlatform(1)
   case object Js extends ScalaPlatform(2)
@@ -952,7 +952,7 @@ object ScalaPlatform {
 
   implicit val codec: JsonValueCodec[ScalaPlatform] = new JsonValueCodec[ScalaPlatform] {
     def nullValue: ScalaPlatform = null
-    def encodeValue(msg: ScalaPlatform, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: ScalaPlatform, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: ScalaPlatform): ScalaPlatform = {
       in.readInt() match {
         case 1 => Jvm
@@ -1095,14 +1095,14 @@ object SourceItem {
   implicit val codec: JsonValueCodec[SourceItem] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class SourceItemKind(val id: Int)
+sealed abstract class SourceItemKind(val value: Int)
 object SourceItemKind {
   case object File extends SourceItemKind(1)
   case object Directory extends SourceItemKind(2)
 
   implicit val codec: JsonValueCodec[SourceItemKind] = new JsonValueCodec[SourceItemKind] {
     def nullValue: SourceItemKind = null
-    def encodeValue(msg: SourceItemKind, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: SourceItemKind, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: SourceItemKind): SourceItemKind = {
       in.readInt() match {
         case 1 => File
@@ -1140,7 +1140,7 @@ object SourcesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class StatusCode(val id: Int)
+sealed abstract class StatusCode(val value: Int)
 object StatusCode {
   case object Ok extends StatusCode(1)
   case object Error extends StatusCode(2)
@@ -1148,7 +1148,7 @@ object StatusCode {
 
   implicit val codec: JsonValueCodec[StatusCode] = new JsonValueCodec[StatusCode] {
     def nullValue: StatusCode = null
-    def encodeValue(msg: StatusCode, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: StatusCode, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: StatusCode): StatusCode = {
       in.readInt() match {
         case 1 => Ok
@@ -1296,7 +1296,7 @@ object TestStart {
   implicit val codec: JsonValueCodec[TestStart] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-sealed abstract class TestStatus(val id: Int)
+sealed abstract class TestStatus(val value: Int)
 object TestStatus {
   case object Passed extends TestStatus(1)
   case object Failed extends TestStatus(2)
@@ -1306,7 +1306,7 @@ object TestStatus {
 
   implicit val codec: JsonValueCodec[TestStatus] = new JsonValueCodec[TestStatus] {
     def nullValue: TestStatus = null
-    def encodeValue(msg: TestStatus, out: JsonWriter): Unit = out.writeVal(msg.id)
+    def encodeValue(msg: TestStatus, out: JsonWriter): Unit = out.writeVal(msg.value)
     def decodeValue(in: JsonReader, default: TestStatus): TestStatus = {
       in.readInt() match {
         case 1 => Passed

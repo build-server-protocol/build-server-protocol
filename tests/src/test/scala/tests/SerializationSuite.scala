@@ -44,7 +44,7 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4jValue.getTaskId.getParents.asScala == bsp4sValue.taskId.parents.get)
     assert(bsp4jValue.getEventTime == bsp4sValue.eventTime.get)
     assert(bsp4jValue.getDataKind == bsp4sValue.dataKind.get)
-    assert(bsp4jValue.getStatus.getValue == bsp4sValue.status.id)
+    assert(bsp4jValue.getStatus.getValue == bsp4sValue.status.value)
 
     assert(bsp4jValueData.getOriginId == report.originId.get)
     assert(bsp4jValueData.getTarget.getUri == report.target.uri.value)
@@ -112,7 +112,7 @@ class SerializationSuite extends AnyFunSuite {
     val bsp4jDiagnostic1 = bsp4jValue.getDiagnostics.get(0)
     assert(bsp4jDiagnostic1.getMessage == bsp4sValue.diagnostics.head.message)
     assert(
-      bsp4jDiagnostic1.getSeverity.getValue == bsp4sValue.diagnostics.head.severity.get.id
+      bsp4jDiagnostic1.getSeverity.getValue == bsp4sValue.diagnostics.head.severity.get.value
     )
     assert(bsp4sValueDecoded.diagnostics.head.data == diagnostic1.data)
     assert(bsp4sValueDecoded == bsp4sValue)

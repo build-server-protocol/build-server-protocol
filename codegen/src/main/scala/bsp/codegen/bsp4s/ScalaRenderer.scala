@@ -108,7 +108,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
     val valueType = enumValueType(enumType)
     val enumName = shapeId.getName()
     lines(
-      s"sealed abstract class $enumName(val id: $valueType)",
+      s"sealed abstract class $enumName(val value: $valueType)",
       block(s"object $enumName")(
         values.map(renderEnumValueDef(enumType, shapeId)),
         newline,
@@ -116,7 +116,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
           s"implicit val codec: JsonValueCodec[${shapeId.getName}] = new JsonValueCodec[${shapeId.getName}]"
         )(
           s"def nullValue: $enumName = null",
-          s"def encodeValue(msg: $enumName, out: JsonWriter): Unit = out.writeVal(msg.id)",
+          s"def encodeValue(msg: $enumName, out: JsonWriter): Unit = out.writeVal(msg.value)",
           block(s"def decodeValue(in: JsonReader, default: $enumName): $enumName = ")(
             block("in.readInt() match ")(
               values.map { ev =>
