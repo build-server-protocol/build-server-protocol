@@ -120,7 +120,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
           block(s"def decodeValue(in: JsonReader, default: $enumName): $enumName = ")(
             block("in.readInt() match ")(
               values.map { ev =>
-                s"case ${ev.value} => ${ev.name}"
+                s"case ${ev.value} => ${toUpperCamelCase(ev.name)}"
               },
               s"""case n => in.decodeError(s"Unknown message type id for $$n")"""
             )
@@ -180,22 +180,26 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
     case StringEnum => "String"
   }
 
+  def toUpperCamelCase(str: String): String = {
+    str.toLowerCase.split("_").map(_.capitalize).mkString("")
+  }
+
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"""val ${ev.name} = ${ev.value}"""
+        (ev: EnumValue[Int]) => s"""val ${toUpperCamelCase(ev.name)} = ${ev.value}"""
       case StringEnum =>
-        (ev: EnumValue[String]) => s"""val ${ev.name} = "${ev.value}""""
+        (ev: EnumValue[String]) => s"""val ${toUpperCamelCase(ev.name)} = "${ev.value}""""
     }
   }
 
   def renderEnumValueDef[A](enumType: EnumType[A], shapeId: ShapeId): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"case object ${ev.name} extends ${shapeId.getName}(${ev.value})"
+        (ev: EnumValue[Int]) => s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
         (ev: EnumValue[String]) =>
-          s"""case object ${ev.name} extends ${shapeId.getName}("${ev.value}")"""
+          s"""case object ${ev.name} extends ${toUpperCamelCase(shapeId.getName)}("${ev.value}")"""
     }
   }
 

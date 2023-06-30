@@ -27,8 +27,8 @@ class SerializationSuite extends AnyFunSuite {
       id,
       Some(12345),
       Some("message"),
-      bsp4s.StatusCode.OK,
-      Some(bsp4s.TaskDataKind.COMPILE_REPORT),
+      bsp4s.StatusCode.Ok,
+      Some(bsp4s.TaskDataKind.CompileReport),
       Option(RawJson(writeToArray(report)))
     )
 
@@ -81,7 +81,7 @@ class SerializationSuite extends AnyFunSuite {
     val diagnostic1 =
       bsp4s.Diagnostic(
         range1,
-        Some(bsp4s.DiagnosticSeverity.ERROR),
+        Some(bsp4s.DiagnosticSeverity.Error),
         None,
         None,
         "message",

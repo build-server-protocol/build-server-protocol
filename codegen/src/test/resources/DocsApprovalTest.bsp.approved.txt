@@ -103,17 +103,13 @@ A list of predefined tags that can be used to categorize build targets.
 export type BuildTargetTag = string;
 
 export namespace BuildTargetTag {
-  /** Target contains re-usable functionality for downstream targets. May have any
-   * combination of capabilities. */
-  export const Library = "library";
-
   /** Target contains source code for producing any kind of application, may have
    * but does not require the `canRun` capability. */
   export const Application = "application";
 
-  /** Target contains source code for testing purposes, may have but does not
-   * require the `canTest` capability. */
-  export const Test = "test";
+  /** Target contains source code to measure performance of a program, may have
+   * but does not require the `canRun` build target capability. */
+  export const Benchmark = "benchmark";
 
   /** Target contains source code for integration testing purposes, may have
    * but does not require the `canTest` capability.
@@ -122,12 +118,9 @@ export namespace BuildTargetTag {
    * and require more computing resources to execute. */
   export const IntegrationTest = "integration-test";
 
-  /** Target contains source code to measure performance of a program, may have
-   * but does not require the `canRun` build target capability. */
-  export const Benchmark = "benchmark";
-
-  /** Target should be ignored by IDEs. */
-  export const NoIde = "no-ide";
+  /** Target contains re-usable functionality for downstream targets. May have any
+   * combination of capabilities. */
+  export const Library = "library";
 
   /** Actions on the target such as build and test should only be invoked manually
    * and explicitly. For example, triggering a build on all targets in the workspace
@@ -136,6 +129,13 @@ export namespace BuildTargetTag {
    * that exists in Bazel, where targets with this tag have to be specified explicitly
    * on the command line. */
   export const Manual = "manual";
+
+  /** Target should be ignored by IDEs. */
+  export const NoIde = "no-ide";
+
+  /** Target contains source code for testing purposes, may have but does not
+   * require the `canTest` capability. */
+  export const Test = "test";
 }
 ```
 
