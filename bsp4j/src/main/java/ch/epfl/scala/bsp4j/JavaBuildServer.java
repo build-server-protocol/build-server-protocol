@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface JavaBuildServer {
     @JsonRequest("buildTarget/javacOptions")
-    CompletableFuture<JavacOptionsResult> javacOptions(JavacOptionsParams params);
+    CompletableFuture<JavacOptionsResult> buildTargetJavacOptions(JavacOptionsParams params);
 
 
 }

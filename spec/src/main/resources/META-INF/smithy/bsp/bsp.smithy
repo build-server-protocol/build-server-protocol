@@ -31,9 +31,9 @@ service BuildClient {
 @jsonRPC
 service BuildServer {
     operations: [
-        InitializeBuild
+        BuildInitialize
         OnBuildInitialized
-        ShutdownBuild
+        BuildShutdown
         OnBuildExit
         WorkspaceBuildTargets
         WorkspaceReload
@@ -239,7 +239,7 @@ structure BspConnectionDetails {
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
-operation InitializeBuild {
+operation BuildInitialize {
     input: InitializeBuildParams
     output: InitializeBuildResult
 }
@@ -259,7 +259,7 @@ operation OnBuildInitialized {
 /// (otherwise the response might not be delivered correctly to the client). There
 /// is a separate exit notification that asks the server to exit.
 @jsonRequest("build/shutdown")
-operation ShutdownBuild {
+operation BuildShutdown {
 }
 
 /// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0

@@ -7,13 +7,13 @@ import java.util.concurrent.CompletableFuture;
 
 public interface BuildServer {
     @JsonRequest("build/initialize")
-    CompletableFuture<InitializeBuildResult> initializeBuild(InitializeBuildParams params);
+    CompletableFuture<InitializeBuildResult> buildInitialize(InitializeBuildParams params);
 
     @JsonNotification("build/initialized")
     void onBuildInitialized();
 
     @JsonRequest("build/shutdown")
-    CompletableFuture<Object> shutdownBuild();
+    CompletableFuture<Object> buildShutdown();
 
     @JsonNotification("build/exit")
     void onBuildExit();

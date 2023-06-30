@@ -119,7 +119,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertScalacOptions(server: MockBuildServer): Unit = {
     val scalacOptionsParams = new ScalacOptionsParams(getBuildTargetIds(server))
-    val scalacOptionsResult = server.scalacOptions(scalacOptionsParams).get
+    val scalacOptionsResult = server.buildTargetScalacOptions(scalacOptionsParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
     scalacOptionsItems.foreach { item =>
       val options = item.getOptions.asScala
@@ -134,7 +134,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJavacOptions(server: MockBuildServer): Unit = {
     val javacOptionsParams = new JavacOptionsParams(getBuildTargetIds(server))
-    val javacOptionsResult = server.javacOptions(javacOptionsParams).get
+    val javacOptionsResult = server.buildTargetJavacOptions(javacOptionsParams).get
     val javacOptionsItems = javacOptionsResult.getItems.asScala
     javacOptionsItems.foreach { item =>
       val options = item.getOptions.asScala
@@ -149,7 +149,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertCppOptions(server: MockBuildServer): Unit = {
     val cppOptionsParams = new CppOptionsParams(getBuildTargetIds(server))
-    val cppOptionsResult = server.cppOptions(cppOptionsParams).get
+    val cppOptionsResult = server.buildTargetCppOptions(cppOptionsParams).get
     val cppOptionsItems = cppOptionsResult.getItems.asScala
     cppOptionsItems.foreach { item =>
       val options = item.getCopts.asScala
@@ -167,7 +167,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertPythonOptions(server: MockBuildServer): Unit = {
     val pythonOptionsParams = new PythonOptionsParams(getBuildTargetIds(server))
-    val pythonOptionsResult = server.pythonOptions(pythonOptionsParams).get
+    val pythonOptionsResult = server.buildTargetPythonOptions(pythonOptionsParams).get
     val pythonOptionsItems = pythonOptionsResult.getItems.asScala
     pythonOptionsItems.foreach { item =>
       val options = item.getInterpreterOptions.asScala
@@ -178,7 +178,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
-    val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get
+    val scalacOptionsResult = server.buildTargetJvmTestEnvironment(jvmTestEnvironmentParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
     scalacOptionsItems.foreach { item =>
       val options = item.getJvmOptions.asScala
@@ -195,7 +195,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJvmRunEnvironment(server: MockBuildServer): Unit = {
     val jvmRunEnvironmentParams = new JvmRunEnvironmentParams(getBuildTargetIds(server))
-    val testEnvResult = server.jvmRunEnvironment(jvmRunEnvironmentParams).get
+    val testEnvResult = server.buildTargetJvmRunEnvironment(jvmRunEnvironmentParams).get
     val testEnvItems = testEnvResult.getItems.asScala
     testEnvItems.foreach { item =>
       val options = item.getJvmOptions.asScala
@@ -336,13 +336,13 @@ class HappyMockSuite extends AnyFunSuite {
         testDirectory.toUri.toString,
         capabilities
       )
-      val serverCapabilities = server.initializeBuild(initializeParams).get().getCapabilities
+      val serverCapabilities = server.buildInitialize(initializeParams).get().getCapabilities
       server.onBuildInitialized()
       try {
         assertServerCapabilities(serverCapabilities)
         assertServerEndpoints(server, client)
       } finally {
-        try server.shutdownBuild().get()
+        try server.buildShutdown().get()
         finally server.onBuildExit()
       }
     } finally {

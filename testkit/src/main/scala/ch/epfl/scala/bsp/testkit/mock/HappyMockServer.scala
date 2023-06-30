@@ -138,7 +138,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     item1.setMainClasses(List(mainClass).asJava)
     item1
   }
-  override def jvmRunEnvironment(
+  override def buildTargetJvmRunEnvironment(
       params: JvmRunEnvironmentParams
   ): CompletableFuture[JvmRunEnvironmentResult] =
     handleRequest {
@@ -147,7 +147,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def jvmTestEnvironment(
+  override def buildTargetJvmTestEnvironment(
       params: JvmTestEnvironmentParams
   ): CompletableFuture[JvmTestEnvironmentResult] =
     handleRequest {
@@ -156,7 +156,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def scalacOptions(
+  override def buildTargetScalacOptions(
       params: ScalacOptionsParams
   ): CompletableFuture[ScalacOptionsResult] =
     handleRequest {
@@ -172,7 +172,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def javacOptions(
+  override def buildTargetJavacOptions(
       params: JavacOptionsParams
   ): CompletableFuture[JavacOptionsResult] = {
     handleRequest {
@@ -189,7 +189,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def cppOptions(
+  override def buildTargetCppOptions(
       params: CppOptionsParams
   ): CompletableFuture[CppOptionsResult] = {
     handleRequest {
@@ -202,7 +202,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def pythonOptions(
+  override def buildTargetPythonOptions(
       params: PythonOptionsParams
   ): CompletableFuture[PythonOptionsResult] = {
     handleRequest {
@@ -213,7 +213,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
-  override def scalaTestClasses(
+  override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
     handleRequest {
@@ -227,7 +227,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def scalaMainClasses(
+  override def buildTargetScalaMainClasses(
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
     handleRequest {
@@ -245,7 +245,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def initializeBuild(
+  override def buildInitialize(
       params: InitializeBuildParams
   ): CompletableFuture[InitializeBuildResult] = {
     handleBuildInitializeRequest {
@@ -257,7 +257,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   override def onBuildInitialized(): Unit =
     handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
 
-  override def shutdownBuild(): CompletableFuture[AnyRef] = {
+  override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
       isShutdown.success(Right())
       Right("boo")

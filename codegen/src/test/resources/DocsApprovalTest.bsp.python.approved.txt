@@ -18,7 +18,7 @@ export interface PythonBuildTarget {
 
 ## BSP Server remote interface
 
-### PythonOptions: request
+### BuildTargetPythonOptions: request
 
 The Python Options Request is sent from the client to the server to
 query for the list of the interpreter flags used to run a given list of

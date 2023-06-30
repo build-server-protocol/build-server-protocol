@@ -22,7 +22,7 @@ export interface JvmBuildTarget {
 
 ## BSP Server remote interface
 
-### JvmTestEnvironment: request
+### BuildTargetJvmTestEnvironment: request
 
 The JVM test environment request is sent from the client to the server in order to
 gather information required to launch a Java process. This is useful when the
@@ -87,7 +87,7 @@ export interface JvmMainClass {
 }
 ```
 
-### JvmRunEnvironment: request
+### BuildTargetJvmRunEnvironment: request
 
 Similar to `buildTarget/jvmTestEnvironment`, but returns environment
 that should be used for regular exection of main classes, not for testing

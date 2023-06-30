@@ -7,13 +7,13 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ScalaBuildServer {
     @JsonRequest("buildTarget/scalacOptions")
-    CompletableFuture<ScalacOptionsResult> scalacOptions(ScalacOptionsParams params);
+    CompletableFuture<ScalacOptionsResult> buildTargetScalacOptions(ScalacOptionsParams params);
 
     @JsonRequest("buildTarget/scalaTestClasses")
-    CompletableFuture<ScalaTestClassesResult> scalaTestClasses(ScalaTestClassesParams params);
+    CompletableFuture<ScalaTestClassesResult> buildTargetScalaTestClasses(ScalaTestClassesParams params);
 
     @JsonRequest("buildTarget/scalaMainClasses")
-    CompletableFuture<ScalaMainClassesResult> scalaMainClasses(ScalaMainClassesParams params);
+    CompletableFuture<ScalaMainClassesResult> buildTargetScalaMainClasses(ScalaMainClassesParams params);
 
 
 }

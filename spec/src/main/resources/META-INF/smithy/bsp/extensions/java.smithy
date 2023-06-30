@@ -11,7 +11,7 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service JavaBuildServer {
     operations: [
-        JavacOptions
+        BuildTargetJavacOptions
     ]
 }
 
@@ -19,7 +19,7 @@ service JavaBuildServer {
 /// query for the list of compiler options necessary to compile in a given list of
 /// targets.
 @jsonRequest("buildTarget/javacOptions")
-operation JavacOptions {
+operation BuildTargetJavacOptions {
     input: JavacOptionsParams
     output: JavacOptionsResult
 }

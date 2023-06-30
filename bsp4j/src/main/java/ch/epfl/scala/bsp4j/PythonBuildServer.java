@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface PythonBuildServer {
     @JsonRequest("buildTarget/pythonOptions")
-    CompletableFuture<PythonOptionsResult> pythonOptions(PythonOptionsParams params);
+    CompletableFuture<PythonOptionsResult> buildTargetPythonOptions(PythonOptionsParams params);
 
 
 }

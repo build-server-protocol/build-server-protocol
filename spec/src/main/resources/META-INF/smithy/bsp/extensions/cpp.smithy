@@ -13,7 +13,7 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service CppBuildServer {
     operations: [
-        CppOptions
+        BuildTargetCppOptions
     ]
 }
 
@@ -42,7 +42,7 @@ structure CppBuildTarget {
 /// query for the list of compiler options necessary to compile in a given list of
 /// targets.
 @jsonRequest("buildTarget/cppOptions")
-operation CppOptions {
+operation BuildTargetCppOptions {
     input: CppOptionsParams
     output: CppOptionsResult
 }
