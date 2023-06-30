@@ -22,7 +22,7 @@ service PythonBuildServer {
 /// This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
 /// the `dataKind` field contains "python".
 @tags(["basic"])
-@dataKind(kind: "python", extends: BuildTargetData)
+@dataKind(kind: "python", extends: [BuildTargetData])
 structure PythonBuildTarget {
     version: String
     interpreter: URI

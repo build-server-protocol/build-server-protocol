@@ -8,7 +8,7 @@ use jsonrpc#dataKind
 
 /// `MavenDependencyModule` is a basic data structure that contains maven-like
 /// metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
-@dataKind(kind: "maven", extends: DependencyModuleData)
+@dataKind(kind: "maven", extends: [DependencyModuleData])
 @tags(["basic"])
 structure MavenDependencyModule {
     @required
