@@ -202,7 +202,7 @@ class SmithyToIR(model: Model) {
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
+        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues.sortBy(_.name), hints))
         case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
       }
     }
@@ -214,7 +214,7 @@ class SmithyToIR(model: Model) {
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues.sortBy(_.name), hints))
         case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
       }
     }

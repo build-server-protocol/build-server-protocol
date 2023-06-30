@@ -9,7 +9,7 @@ object Codegen {
     val ir = new SmithyToIR(model)
     val namespaces = ExtensionLoader.namespaces()
 
-    val definitions = namespaces.flatMap(ir.definitions)
+    val definitions = namespaces.flatMap(ir.definitions).sortBy(_.shapeId.getName)
 
     val scalaRenderer = new ScalaRenderer("ch.epfl.scala.bsp", definitions)
 
