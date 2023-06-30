@@ -34,71 +34,75 @@ object Uri {
   }
 }
 
-final case class BspConnectionDetails (
-  name: String,
-  argv: List[String],
-  version: String,
-  bspVersion: String,
-  languages: List[String],
+final case class BspConnectionDetails(
+    name: String,
+    argv: List[String],
+    version: String,
+    bspVersion: String,
+    languages: List[String]
 )
 
 object BspConnectionDetails {
-  implicit val codec: JsonValueCodec[BspConnectionDetails] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BspConnectionDetails] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class BuildClientCapabilities (
-  languageIds: List[String],
+final case class BuildClientCapabilities(
+    languageIds: List[String]
 )
 
 object BuildClientCapabilities {
-  implicit val codec: JsonValueCodec[BuildClientCapabilities] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BuildClientCapabilities] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class BuildServerCapabilities (
-  compileProvider: Option[CompileProvider],
-  testProvider: Option[TestProvider],
-  runProvider: Option[RunProvider],
-  debugProvider: Option[DebugProvider],
-  inverseSourcesProvider: Option[Boolean],
-  dependencySourcesProvider: Option[Boolean],
-  dependencyModulesProvider: Option[Boolean],
-  resourcesProvider: Option[Boolean],
-  outputPathsProvider: Option[Boolean],
-  buildTargetChangedProvider: Option[Boolean],
-  jvmRunEnvironmentProvider: Option[Boolean],
-  jvmTestEnvironmentProvider: Option[Boolean],
-  canReload: Option[Boolean],
+final case class BuildServerCapabilities(
+    compileProvider: Option[CompileProvider],
+    testProvider: Option[TestProvider],
+    runProvider: Option[RunProvider],
+    debugProvider: Option[DebugProvider],
+    inverseSourcesProvider: Option[Boolean],
+    dependencySourcesProvider: Option[Boolean],
+    dependencyModulesProvider: Option[Boolean],
+    resourcesProvider: Option[Boolean],
+    outputPathsProvider: Option[Boolean],
+    buildTargetChangedProvider: Option[Boolean],
+    jvmRunEnvironmentProvider: Option[Boolean],
+    jvmTestEnvironmentProvider: Option[Boolean],
+    canReload: Option[Boolean]
 )
 
 object BuildServerCapabilities {
-  implicit val codec: JsonValueCodec[BuildServerCapabilities] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BuildServerCapabilities] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class BuildTarget (
-  id: BuildTargetIdentifier,
-  displayName: Option[String],
-  baseDirectory: Option[Uri],
-  tags: List[String],
-  languageIds: List[String],
-  dependencies: List[BuildTargetIdentifier],
-  capabilities: BuildTargetCapabilities,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class BuildTarget(
+    id: BuildTargetIdentifier,
+    displayName: Option[String],
+    baseDirectory: Option[Uri],
+    tags: List[String],
+    languageIds: List[String],
+    dependencies: List[BuildTargetIdentifier],
+    capabilities: BuildTargetCapabilities,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object BuildTarget {
   implicit val codec: JsonValueCodec[BuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class BuildTargetCapabilities (
-  canCompile: Boolean,
-  canTest: Boolean,
-  canRun: Boolean,
-  canDebug: Boolean,
+final case class BuildTargetCapabilities(
+    canCompile: Boolean,
+    canTest: Boolean,
+    canRun: Boolean,
+    canDebug: Boolean
 )
 
 object BuildTargetCapabilities {
-  implicit val codec: JsonValueCodec[BuildTargetCapabilities] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BuildTargetCapabilities] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 object BuildTargetDataKind {
@@ -109,19 +113,19 @@ object BuildTargetDataKind {
   val Scala = "scala"
 }
 
-final case class BuildTargetEvent (
-  target: BuildTargetIdentifier,
-  kind: Option[BuildTargetEventKind],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class BuildTargetEvent(
+    target: BuildTargetIdentifier,
+    kind: Option[BuildTargetEventKind],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object BuildTargetEvent {
-  implicit val codec: JsonValueCodec[BuildTargetEvent] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BuildTargetEvent] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object BuildTargetEventDataKind {
-}
+object BuildTargetEventDataKind {}
 
 sealed abstract class BuildTargetEventKind(val id: Int)
 object BuildTargetEventKind {
@@ -129,25 +133,27 @@ object BuildTargetEventKind {
   case object Changed extends BuildTargetEventKind(2)
   case object Deleted extends BuildTargetEventKind(3)
 
-  implicit val codec: JsonValueCodec[BuildTargetEventKind] = new JsonValueCodec[BuildTargetEventKind] {
-    def nullValue: BuildTargetEventKind = null
-    def encodeValue(msg: BuildTargetEventKind, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: BuildTargetEventKind): BuildTargetEventKind =  {
-      in.readInt() match  {
-        case 1 => Created
-        case 2 => Changed
-        case 3 => Deleted
-        case n => in.decodeError(s"Unknown message type id for $n")
+  implicit val codec: JsonValueCodec[BuildTargetEventKind] =
+    new JsonValueCodec[BuildTargetEventKind] {
+      def nullValue: BuildTargetEventKind = null
+      def encodeValue(msg: BuildTargetEventKind, out: JsonWriter): Unit = out.writeVal(msg.id)
+      def decodeValue(in: JsonReader, default: BuildTargetEventKind): BuildTargetEventKind = {
+        in.readInt() match {
+          case 1 => Created
+          case 2 => Changed
+          case 3 => Deleted
+          case n => in.decodeError(s"Unknown message type id for $n")
+        }
       }
     }
-  }
 }
-final case class BuildTargetIdentifier (
-  uri: Uri,
+final case class BuildTargetIdentifier(
+    uri: Uri
 )
 
 object BuildTargetIdentifier {
-  implicit val codec: JsonValueCodec[BuildTargetIdentifier] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[BuildTargetIdentifier] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 object BuildTargetTag {
@@ -160,139 +166,151 @@ object BuildTargetTag {
   val Test = "test"
 }
 
-final case class CleanCacheParams (
-  targets: List[BuildTargetIdentifier],
+final case class CleanCacheParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object CleanCacheParams {
-  implicit val codec: JsonValueCodec[CleanCacheParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CleanCacheParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CleanCacheResult (
-  message: Option[String],
-  cleaned: Boolean,
+final case class CleanCacheResult(
+    message: Option[String],
+    cleaned: Boolean
 )
 
 object CleanCacheResult {
-  implicit val codec: JsonValueCodec[CleanCacheResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CleanCacheResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CompileParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
-  arguments: Option[List[String]],
+final case class CompileParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String],
+    arguments: Option[List[String]]
 )
 
 object CompileParams {
-  implicit val codec: JsonValueCodec[CompileParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CompileParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CompileProvider (
-  languageIds: List[String],
+final case class CompileProvider(
+    languageIds: List[String]
 )
 
 object CompileProvider {
-  implicit val codec: JsonValueCodec[CompileProvider] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CompileProvider] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CompileReport (
-  target: BuildTargetIdentifier,
-  originId: Option[String],
-  errors: Int,
-  warnings: Int,
-  time: Option[Long],
-  noOp: Option[Boolean],
+final case class CompileReport(
+    target: BuildTargetIdentifier,
+    originId: Option[String],
+    errors: Int,
+    warnings: Int,
+    time: Option[Long],
+    noOp: Option[Boolean]
 )
 
 object CompileReport {
-  implicit val codec: JsonValueCodec[CompileReport] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CompileReport] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CompileResult (
-  originId: Option[String],
-  statusCode: StatusCode,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class CompileResult(
+    originId: Option[String],
+    statusCode: StatusCode,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object CompileResult {
-  implicit val codec: JsonValueCodec[CompileResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CompileResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object CompileResultDataKind {
-}
+object CompileResultDataKind {}
 
-final case class CompileTask (
-  target: BuildTargetIdentifier,
+final case class CompileTask(
+    target: BuildTargetIdentifier
 )
 
 object CompileTask {
   implicit val codec: JsonValueCodec[CompileTask] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CppBuildTarget (
-  version: Option[String],
-  compiler: Option[String],
-  cCompiler: Option[Uri],
-  cppCompiler: Option[Uri],
+final case class CppBuildTarget(
+    version: Option[String],
+    compiler: Option[String],
+    cCompiler: Option[Uri],
+    cppCompiler: Option[Uri]
 )
 
 object CppBuildTarget {
-  implicit val codec: JsonValueCodec[CppBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CppBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CppOptionsItem (
-  target: BuildTargetIdentifier,
-  copts: List[String],
-  defines: List[String],
-  linkopts: List[String],
-  linkshared: Option[Boolean],
+final case class CppOptionsItem(
+    target: BuildTargetIdentifier,
+    copts: List[String],
+    defines: List[String],
+    linkopts: List[String],
+    linkshared: Option[Boolean]
 )
 
 object CppOptionsItem {
-  implicit val codec: JsonValueCodec[CppOptionsItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CppOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CppOptionsParams (
-  targets: List[BuildTargetIdentifier],
+final case class CppOptionsParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object CppOptionsParams {
-  implicit val codec: JsonValueCodec[CppOptionsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CppOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class CppOptionsResult (
-  items: List[CppOptionsItem],
+final case class CppOptionsResult(
+    items: List[CppOptionsItem]
 )
 
 object CppOptionsResult {
-  implicit val codec: JsonValueCodec[CppOptionsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[CppOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DebugProvider (
-  languageIds: List[String],
+final case class DebugProvider(
+    languageIds: List[String]
 )
 
 object DebugProvider {
-  implicit val codec: JsonValueCodec[DebugProvider] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DebugProvider] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DebugSessionAddress (
-  uri: Uri,
+final case class DebugSessionAddress(
+    uri: Uri
 )
 
 object DebugSessionAddress {
-  implicit val codec: JsonValueCodec[DebugSessionAddress] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DebugSessionAddress] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DebugSessionParams (
-  targets: List[BuildTargetIdentifier],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class DebugSessionParams(
+    targets: List[BuildTargetIdentifier],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object DebugSessionParams {
-  implicit val codec: JsonValueCodec[DebugSessionParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DebugSessionParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 object DebugSessionParamsDataKind {
@@ -301,80 +319,87 @@ object DebugSessionParamsDataKind {
   val ScalaTestSuitesSelection = "scala-test-suites-selection"
 }
 
-final case class DependencyModule (
-  name: String,
-  version: String,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class DependencyModule(
+    name: String,
+    version: String,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object DependencyModule {
-  implicit val codec: JsonValueCodec[DependencyModule] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencyModule] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 object DependencyModuleDataKind {
   val Maven = "maven"
 }
 
-final case class DependencyModulesItem (
-  target: BuildTargetIdentifier,
-  modules: List[DependencyModule],
+final case class DependencyModulesItem(
+    target: BuildTargetIdentifier,
+    modules: List[DependencyModule]
 )
 
 object DependencyModulesItem {
-  implicit val codec: JsonValueCodec[DependencyModulesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencyModulesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DependencyModulesParams (
-  targets: List[BuildTargetIdentifier],
+final case class DependencyModulesParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object DependencyModulesParams {
-  implicit val codec: JsonValueCodec[DependencyModulesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencyModulesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DependencyModulesResult (
-  items: List[DependencyModulesItem],
+final case class DependencyModulesResult(
+    items: List[DependencyModulesItem]
 )
 
 object DependencyModulesResult {
-  implicit val codec: JsonValueCodec[DependencyModulesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencyModulesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DependencySourcesItem (
-  target: BuildTargetIdentifier,
-  sources: List[Uri],
+final case class DependencySourcesItem(
+    target: BuildTargetIdentifier,
+    sources: List[Uri]
 )
 
 object DependencySourcesItem {
-  implicit val codec: JsonValueCodec[DependencySourcesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencySourcesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DependencySourcesParams (
-  targets: List[BuildTargetIdentifier],
+final case class DependencySourcesParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object DependencySourcesParams {
-  implicit val codec: JsonValueCodec[DependencySourcesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencySourcesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DependencySourcesResult (
-  items: List[DependencySourcesItem],
+final case class DependencySourcesResult(
+    items: List[DependencySourcesItem]
 )
 
 object DependencySourcesResult {
-  implicit val codec: JsonValueCodec[DependencySourcesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DependencySourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class Diagnostic (
-  range: Range,
-  severity: Option[DiagnosticSeverity],
-  code: Option[String],
-  source: Option[String],
-  message: String,
-  relatedInformation: Option[List[DiagnosticRelatedInformation]],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class Diagnostic(
+    range: Range,
+    severity: Option[DiagnosticSeverity],
+    code: Option[String],
+    source: Option[String],
+    message: String,
+    relatedInformation: Option[List[DiagnosticRelatedInformation]],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object Diagnostic {
@@ -385,13 +410,14 @@ object DiagnosticDataKind {
   val Scala = "scala"
 }
 
-final case class DiagnosticRelatedInformation (
-  location: Location,
-  message: String,
+final case class DiagnosticRelatedInformation(
+    location: Location,
+    message: String
 )
 
 object DiagnosticRelatedInformation {
-  implicit val codec: JsonValueCodec[DiagnosticRelatedInformation] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DiagnosticRelatedInformation] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 sealed abstract class DiagnosticSeverity(val id: Int)
@@ -404,8 +430,8 @@ object DiagnosticSeverity {
   implicit val codec: JsonValueCodec[DiagnosticSeverity] = new JsonValueCodec[DiagnosticSeverity] {
     def nullValue: DiagnosticSeverity = null
     def encodeValue(msg: DiagnosticSeverity, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: DiagnosticSeverity): DiagnosticSeverity =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: DiagnosticSeverity): DiagnosticSeverity = {
+      in.readInt() match {
         case 1 => Error
         case 2 => Warning
         case 3 => Information
@@ -416,198 +442,213 @@ object DiagnosticSeverity {
   }
 }
 object DiagnosticTag {
-  val Deprecated = 2
   val Unnecessary = 1
+  val Deprecated = 2
 }
 
-final case class DidChangeBuildTarget (
-  changes: List[BuildTargetEvent],
+final case class DidChangeBuildTarget(
+    changes: List[BuildTargetEvent]
 )
 
 object DidChangeBuildTarget {
-  implicit val codec: JsonValueCodec[DidChangeBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[DidChangeBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class InitializeBuildParams (
-  rootUri: Uri,
-  displayName: String,
-  version: String,
-  bspVersion: String,
-  capabilities: BuildClientCapabilities,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class InitializeBuildParams(
+    rootUri: Uri,
+    displayName: String,
+    version: String,
+    bspVersion: String,
+    capabilities: BuildClientCapabilities,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object InitializeBuildParams {
-  implicit val codec: JsonValueCodec[InitializeBuildParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[InitializeBuildParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object InitializeBuildParamsDataKind {
-}
+object InitializeBuildParamsDataKind {}
 
-final case class InitializeBuildResult (
-  displayName: String,
-  version: String,
-  bspVersion: String,
-  capabilities: BuildServerCapabilities,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class InitializeBuildResult(
+    displayName: String,
+    version: String,
+    bspVersion: String,
+    capabilities: BuildServerCapabilities,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object InitializeBuildResult {
-  implicit val codec: JsonValueCodec[InitializeBuildResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[InitializeBuildResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object InitializeBuildResultDataKind {
-}
+object InitializeBuildResultDataKind {}
 
-final case class InverseSourcesParams (
-  textDocument: TextDocumentIdentifier,
+final case class InverseSourcesParams(
+    textDocument: TextDocumentIdentifier
 )
 
 object InverseSourcesParams {
-  implicit val codec: JsonValueCodec[InverseSourcesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[InverseSourcesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class InverseSourcesResult (
-  targets: List[BuildTargetIdentifier],
+final case class InverseSourcesResult(
+    targets: List[BuildTargetIdentifier]
 )
 
 object InverseSourcesResult {
-  implicit val codec: JsonValueCodec[InverseSourcesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[InverseSourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JavacOptionsItem (
-  target: BuildTargetIdentifier,
-  options: List[String],
-  classpath: List[String],
-  classDirectory: String,
+final case class JavacOptionsItem(
+    target: BuildTargetIdentifier,
+    options: List[String],
+    classpath: List[String],
+    classDirectory: String
 )
 
 object JavacOptionsItem {
-  implicit val codec: JsonValueCodec[JavacOptionsItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JavacOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JavacOptionsParams (
-  targets: List[BuildTargetIdentifier],
+final case class JavacOptionsParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object JavacOptionsParams {
-  implicit val codec: JsonValueCodec[JavacOptionsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JavacOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JavacOptionsResult (
-  items: List[JavacOptionsItem],
+final case class JavacOptionsResult(
+    items: List[JavacOptionsItem]
 )
 
 object JavacOptionsResult {
-  implicit val codec: JsonValueCodec[JavacOptionsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JavacOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmBuildTarget (
-  javaHome: Option[Uri],
-  javaVersion: Option[String],
+final case class JvmBuildTarget(
+    javaHome: Option[Uri],
+    javaVersion: Option[String]
 )
 
 object JvmBuildTarget {
-  implicit val codec: JsonValueCodec[JvmBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmEnvironmentItem (
-  target: BuildTargetIdentifier,
-  classpath: List[String],
-  jvmOptions: List[String],
-  workingDirectory: String,
-  environmentVariables: Map[String, String],
-  mainClasses: Option[List[JvmMainClass]],
+final case class JvmEnvironmentItem(
+    target: BuildTargetIdentifier,
+    classpath: List[String],
+    jvmOptions: List[String],
+    workingDirectory: String,
+    environmentVariables: Map[String, String],
+    mainClasses: Option[List[JvmMainClass]]
 )
 
 object JvmEnvironmentItem {
-  implicit val codec: JsonValueCodec[JvmEnvironmentItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmEnvironmentItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmMainClass (
-  className: String,
-  arguments: List[String],
+final case class JvmMainClass(
+    className: String,
+    arguments: List[String]
 )
 
 object JvmMainClass {
   implicit val codec: JsonValueCodec[JvmMainClass] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmRunEnvironmentParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
+final case class JvmRunEnvironmentParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
 )
 
 object JvmRunEnvironmentParams {
-  implicit val codec: JsonValueCodec[JvmRunEnvironmentParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmRunEnvironmentParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmRunEnvironmentResult (
-  items: List[JvmEnvironmentItem],
+final case class JvmRunEnvironmentResult(
+    items: List[JvmEnvironmentItem]
 )
 
 object JvmRunEnvironmentResult {
-  implicit val codec: JsonValueCodec[JvmRunEnvironmentResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmRunEnvironmentResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmTestEnvironmentParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
+final case class JvmTestEnvironmentParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
 )
 
 object JvmTestEnvironmentParams {
-  implicit val codec: JsonValueCodec[JvmTestEnvironmentParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmTestEnvironmentParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class JvmTestEnvironmentResult (
-  items: List[JvmEnvironmentItem],
+final case class JvmTestEnvironmentResult(
+    items: List[JvmEnvironmentItem]
 )
 
 object JvmTestEnvironmentResult {
-  implicit val codec: JsonValueCodec[JvmTestEnvironmentResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[JvmTestEnvironmentResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class Location (
-  uri: Uri,
-  range: Range,
+final case class Location(
+    uri: Uri,
+    range: Range
 )
 
 object Location {
   implicit val codec: JsonValueCodec[Location] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class LogMessageParams (
-  `type`: MessageType,
-  task: Option[TaskId],
-  originId: Option[String],
-  message: String,
+final case class LogMessageParams(
+    `type`: MessageType,
+    task: Option[TaskId],
+    originId: Option[String],
+    message: String
 )
 
 object LogMessageParams {
-  implicit val codec: JsonValueCodec[LogMessageParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[LogMessageParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class MavenDependencyModule (
-  organization: String,
-  name: String,
-  version: String,
-  artifacts: List[MavenDependencyModuleArtifact],
-  scope: Option[String],
+final case class MavenDependencyModule(
+    organization: String,
+    name: String,
+    version: String,
+    artifacts: List[MavenDependencyModuleArtifact],
+    scope: Option[String]
 )
 
 object MavenDependencyModule {
-  implicit val codec: JsonValueCodec[MavenDependencyModule] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[MavenDependencyModule] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class MavenDependencyModuleArtifact (
-  uri: Uri,
-  classifier: Option[String],
+final case class MavenDependencyModuleArtifact(
+    uri: Uri,
+    classifier: Option[String]
 )
 
 object MavenDependencyModuleArtifact {
-  implicit val codec: JsonValueCodec[MavenDependencyModuleArtifact] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[MavenDependencyModuleArtifact] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 sealed abstract class MessageType(val id: Int)
@@ -620,8 +661,8 @@ object MessageType {
   implicit val codec: JsonValueCodec[MessageType] = new JsonValueCodec[MessageType] {
     def nullValue: MessageType = null
     def encodeValue(msg: MessageType, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: MessageType): MessageType =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: MessageType): MessageType = {
+      in.readInt() match {
         case 1 => Error
         case 2 => Warning
         case 3 => Info
@@ -631,13 +672,14 @@ object MessageType {
     }
   }
 }
-final case class OutputPathItem (
-  uri: Uri,
-  kind: OutputPathItemKind,
+final case class OutputPathItem(
+    uri: Uri,
+    kind: OutputPathItemKind
 )
 
 object OutputPathItem {
-  implicit val codec: JsonValueCodec[OutputPathItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[OutputPathItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 sealed abstract class OutputPathItemKind(val id: Int)
@@ -648,8 +690,8 @@ object OutputPathItemKind {
   implicit val codec: JsonValueCodec[OutputPathItemKind] = new JsonValueCodec[OutputPathItemKind] {
     def nullValue: OutputPathItemKind = null
     def encodeValue(msg: OutputPathItemKind, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: OutputPathItemKind): OutputPathItemKind =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: OutputPathItemKind): OutputPathItemKind = {
+      in.readInt() match {
         case 1 => File
         case 2 => Directory
         case n => in.decodeError(s"Unknown message type id for $n")
@@ -657,232 +699,249 @@ object OutputPathItemKind {
     }
   }
 }
-final case class OutputPathsItem (
-  target: BuildTargetIdentifier,
-  outputPaths: List[OutputPathItem],
+final case class OutputPathsItem(
+    target: BuildTargetIdentifier,
+    outputPaths: List[OutputPathItem]
 )
 
 object OutputPathsItem {
-  implicit val codec: JsonValueCodec[OutputPathsItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[OutputPathsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class OutputPathsParams (
-  targets: List[BuildTargetIdentifier],
+final case class OutputPathsParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object OutputPathsParams {
-  implicit val codec: JsonValueCodec[OutputPathsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[OutputPathsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class OutputPathsResult (
-  items: List[OutputPathsItem],
+final case class OutputPathsResult(
+    items: List[OutputPathsItem]
 )
 
 object OutputPathsResult {
-  implicit val codec: JsonValueCodec[OutputPathsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[OutputPathsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class Position (
-  line: Int,
-  character: Int,
+final case class Position(
+    line: Int,
+    character: Int
 )
 
 object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PublishDiagnosticsParams (
-  textDocument: TextDocumentIdentifier,
-  buildTarget: BuildTargetIdentifier,
-  originId: Option[String],
-  diagnostics: List[Diagnostic],
-  reset: Boolean,
+final case class PublishDiagnosticsParams(
+    textDocument: TextDocumentIdentifier,
+    buildTarget: BuildTargetIdentifier,
+    originId: Option[String],
+    diagnostics: List[Diagnostic],
+    reset: Boolean
 )
 
 object PublishDiagnosticsParams {
-  implicit val codec: JsonValueCodec[PublishDiagnosticsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[PublishDiagnosticsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PythonBuildTarget (
-  version: Option[String],
-  interpreter: Option[Uri],
+final case class PythonBuildTarget(
+    version: Option[String],
+    interpreter: Option[Uri]
 )
 
 object PythonBuildTarget {
-  implicit val codec: JsonValueCodec[PythonBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[PythonBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PythonOptionsItem (
-  target: BuildTargetIdentifier,
-  interpreterOptions: List[String],
+final case class PythonOptionsItem(
+    target: BuildTargetIdentifier,
+    interpreterOptions: List[String]
 )
 
 object PythonOptionsItem {
-  implicit val codec: JsonValueCodec[PythonOptionsItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[PythonOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PythonOptionsParams (
-  targets: List[BuildTargetIdentifier],
+final case class PythonOptionsParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object PythonOptionsParams {
-  implicit val codec: JsonValueCodec[PythonOptionsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[PythonOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PythonOptionsResult (
-  items: List[PythonOptionsItem],
+final case class PythonOptionsResult(
+    items: List[PythonOptionsItem]
 )
 
 object PythonOptionsResult {
-  implicit val codec: JsonValueCodec[PythonOptionsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[PythonOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class Range (
-  start: Position,
-  end: Position,
+final case class Range(
+    start: Position,
+    end: Position
 )
 
 object Range {
   implicit val codec: JsonValueCodec[Range] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ResourcesItem (
-  target: BuildTargetIdentifier,
-  resources: List[Uri],
+final case class ResourcesItem(
+    target: BuildTargetIdentifier,
+    resources: List[Uri]
 )
 
 object ResourcesItem {
-  implicit val codec: JsonValueCodec[ResourcesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ResourcesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ResourcesParams (
-  targets: List[BuildTargetIdentifier],
+final case class ResourcesParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object ResourcesParams {
-  implicit val codec: JsonValueCodec[ResourcesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ResourcesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ResourcesResult (
-  items: List[ResourcesItem],
+final case class ResourcesResult(
+    items: List[ResourcesItem]
 )
 
 object ResourcesResult {
-  implicit val codec: JsonValueCodec[ResourcesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ResourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class RunParams (
-  target: BuildTargetIdentifier,
-  originId: Option[String],
-  arguments: Option[List[String]],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class RunParams(
+    target: BuildTargetIdentifier,
+    originId: Option[String],
+    arguments: Option[List[String]],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object RunParams {
   implicit val codec: JsonValueCodec[RunParams] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object RunParamsDataKind {
-}
+object RunParamsDataKind {}
 
-final case class RunProvider (
-  languageIds: List[String],
+final case class RunProvider(
+    languageIds: List[String]
 )
 
 object RunProvider {
   implicit val codec: JsonValueCodec[RunProvider] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class RunResult (
-  originId: Option[String],
-  statusCode: StatusCode,
+final case class RunResult(
+    originId: Option[String],
+    statusCode: StatusCode
 )
 
 object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class SbtBuildTarget (
-  sbtVersion: String,
-  autoImports: List[String],
-  scalaBuildTarget: ScalaBuildTarget,
-  parent: Option[BuildTargetIdentifier],
-  children: List[BuildTargetIdentifier],
+final case class SbtBuildTarget(
+    sbtVersion: String,
+    autoImports: List[String],
+    scalaBuildTarget: ScalaBuildTarget,
+    parent: Option[BuildTargetIdentifier],
+    children: List[BuildTargetIdentifier]
 )
 
 object SbtBuildTarget {
-  implicit val codec: JsonValueCodec[SbtBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[SbtBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaAction (
-  title: String,
-  description: Option[String],
-  edit: Option[ScalaWorkspaceEdit],
+final case class ScalaAction(
+    title: String,
+    description: Option[String],
+    edit: Option[ScalaWorkspaceEdit]
 )
 
 object ScalaAction {
   implicit val codec: JsonValueCodec[ScalaAction] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaBuildTarget (
-  scalaOrganization: String,
-  scalaVersion: String,
-  scalaBinaryVersion: String,
-  platform: ScalaPlatform,
-  jars: List[Uri],
-  jvmBuildTarget: Option[JvmBuildTarget],
+final case class ScalaBuildTarget(
+    scalaOrganization: String,
+    scalaVersion: String,
+    scalaBinaryVersion: String,
+    platform: ScalaPlatform,
+    jars: List[Uri],
+    jvmBuildTarget: Option[JvmBuildTarget]
 )
 
 object ScalaBuildTarget {
-  implicit val codec: JsonValueCodec[ScalaBuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaDiagnostic (
-  actions: Option[List[ScalaAction]],
+final case class ScalaDiagnostic(
+    actions: Option[List[ScalaAction]]
 )
 
 object ScalaDiagnostic {
-  implicit val codec: JsonValueCodec[ScalaDiagnostic] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaDiagnostic] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaMainClass (
-  @named("class")
-  className: String,
-  arguments: List[String],
-  jvmOptions: List[String],
-  environmentVariables: Option[List[String]],
+final case class ScalaMainClass(
+    @named("class")
+    className: String,
+    arguments: List[String],
+    jvmOptions: List[String],
+    environmentVariables: Option[List[String]]
 )
 
 object ScalaMainClass {
-  implicit val codec: JsonValueCodec[ScalaMainClass] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaMainClass] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaMainClassesItem (
-  target: BuildTargetIdentifier,
-  classes: List[ScalaMainClass],
+final case class ScalaMainClassesItem(
+    target: BuildTargetIdentifier,
+    classes: List[ScalaMainClass]
 )
 
 object ScalaMainClassesItem {
-  implicit val codec: JsonValueCodec[ScalaMainClassesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaMainClassesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaMainClassesParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
+final case class ScalaMainClassesParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
 )
 
 object ScalaMainClassesParams {
-  implicit val codec: JsonValueCodec[ScalaMainClassesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaMainClassesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaMainClassesResult (
-  items: List[ScalaMainClassesItem],
-  originId: Option[String],
+final case class ScalaMainClassesResult(
+    items: List[ScalaMainClassesItem],
+    originId: Option[String]
 )
 
 object ScalaMainClassesResult {
-  implicit val codec: JsonValueCodec[ScalaMainClassesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaMainClassesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 sealed abstract class ScalaPlatform(val id: Int)
@@ -894,8 +953,8 @@ object ScalaPlatform {
   implicit val codec: JsonValueCodec[ScalaPlatform] = new JsonValueCodec[ScalaPlatform] {
     def nullValue: ScalaPlatform = null
     def encodeValue(msg: ScalaPlatform, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: ScalaPlatform): ScalaPlatform =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: ScalaPlatform): ScalaPlatform = {
+      in.readInt() match {
         case 1 => Jvm
         case 2 => Js
         case 3 => Native
@@ -904,120 +963,132 @@ object ScalaPlatform {
     }
   }
 }
-final case class ScalaTestClassesItem (
-  target: BuildTargetIdentifier,
-  framework: Option[String],
-  classes: List[String],
+final case class ScalaTestClassesItem(
+    target: BuildTargetIdentifier,
+    framework: Option[String],
+    classes: List[String]
 )
 
 object ScalaTestClassesItem {
-  implicit val codec: JsonValueCodec[ScalaTestClassesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestClassesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTestClassesParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
+final case class ScalaTestClassesParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String]
 )
 
 object ScalaTestClassesParams {
-  implicit val codec: JsonValueCodec[ScalaTestClassesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestClassesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTestClassesResult (
-  items: List[ScalaTestClassesItem],
+final case class ScalaTestClassesResult(
+    items: List[ScalaTestClassesItem]
 )
 
 object ScalaTestClassesResult {
-  implicit val codec: JsonValueCodec[ScalaTestClassesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestClassesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTestParams (
-  testClasses: Option[List[ScalaTestClassesItem]],
-  jvmOptions: Option[List[String]],
+final case class ScalaTestParams(
+    testClasses: Option[List[ScalaTestClassesItem]],
+    jvmOptions: Option[List[String]]
 )
 
 object ScalaTestParams {
-  implicit val codec: JsonValueCodec[ScalaTestParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTestSuiteSelection (
-  className: String,
-  tests: List[String],
+final case class ScalaTestSuiteSelection(
+    className: String,
+    tests: List[String]
 )
 
 object ScalaTestSuiteSelection {
-  implicit val codec: JsonValueCodec[ScalaTestSuiteSelection] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestSuiteSelection] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTestSuites (
-  suites: List[ScalaTestSuiteSelection],
-  jvmOptions: List[String],
-  environmentVariables: List[String],
+final case class ScalaTestSuites(
+    suites: List[ScalaTestSuiteSelection],
+    jvmOptions: List[String],
+    environmentVariables: List[String]
 )
 
 object ScalaTestSuites {
-  implicit val codec: JsonValueCodec[ScalaTestSuites] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTestSuites] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaTextEdit (
-  range: Range,
-  newText: String,
+final case class ScalaTextEdit(
+    range: Range,
+    newText: String
 )
 
 object ScalaTextEdit {
-  implicit val codec: JsonValueCodec[ScalaTextEdit] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaTextEdit] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalaWorkspaceEdit (
-  changes: Option[List[ScalaTextEdit]],
+final case class ScalaWorkspaceEdit(
+    changes: Option[List[ScalaTextEdit]]
 )
 
 object ScalaWorkspaceEdit {
-  implicit val codec: JsonValueCodec[ScalaWorkspaceEdit] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalaWorkspaceEdit] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalacOptionsItem (
-  target: BuildTargetIdentifier,
-  options: List[String],
-  classpath: List[String],
-  classDirectory: String,
+final case class ScalacOptionsItem(
+    target: BuildTargetIdentifier,
+    options: List[String],
+    classpath: List[String],
+    classDirectory: String
 )
 
 object ScalacOptionsItem {
-  implicit val codec: JsonValueCodec[ScalacOptionsItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalacOptionsItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalacOptionsParams (
-  targets: List[BuildTargetIdentifier],
+final case class ScalacOptionsParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object ScalacOptionsParams {
-  implicit val codec: JsonValueCodec[ScalacOptionsParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalacOptionsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ScalacOptionsResult (
-  items: List[ScalacOptionsItem],
+final case class ScalacOptionsResult(
+    items: List[ScalacOptionsItem]
 )
 
 object ScalacOptionsResult {
-  implicit val codec: JsonValueCodec[ScalacOptionsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ScalacOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ShowMessageParams (
-  `type`: MessageType,
-  task: Option[TaskId],
-  originId: Option[String],
-  message: String,
+final case class ShowMessageParams(
+    `type`: MessageType,
+    task: Option[TaskId],
+    originId: Option[String],
+    message: String
 )
 
 object ShowMessageParams {
-  implicit val codec: JsonValueCodec[ShowMessageParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[ShowMessageParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class SourceItem (
-  uri: Uri,
-  kind: SourceItemKind,
-  generated: Boolean,
+final case class SourceItem(
+    uri: Uri,
+    kind: SourceItemKind,
+    generated: Boolean
 )
 
 object SourceItem {
@@ -1032,8 +1103,8 @@ object SourceItemKind {
   implicit val codec: JsonValueCodec[SourceItemKind] = new JsonValueCodec[SourceItemKind] {
     def nullValue: SourceItemKind = null
     def encodeValue(msg: SourceItemKind, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: SourceItemKind): SourceItemKind =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: SourceItemKind): SourceItemKind = {
+      in.readInt() match {
         case 1 => File
         case 2 => Directory
         case n => in.decodeError(s"Unknown message type id for $n")
@@ -1041,30 +1112,32 @@ object SourceItemKind {
     }
   }
 }
-final case class SourcesItem (
-  target: BuildTargetIdentifier,
-  sources: List[SourceItem],
-  roots: Option[List[Uri]],
+final case class SourcesItem(
+    target: BuildTargetIdentifier,
+    sources: List[SourceItem],
+    roots: Option[List[Uri]]
 )
 
 object SourcesItem {
   implicit val codec: JsonValueCodec[SourcesItem] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class SourcesParams (
-  targets: List[BuildTargetIdentifier],
+final case class SourcesParams(
+    targets: List[BuildTargetIdentifier]
 )
 
 object SourcesParams {
-  implicit val codec: JsonValueCodec[SourcesParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[SourcesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class SourcesResult (
-  items: List[SourcesItem],
+final case class SourcesResult(
+    items: List[SourcesItem]
 )
 
 object SourcesResult {
-  implicit val codec: JsonValueCodec[SourcesResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[SourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 sealed abstract class StatusCode(val id: Int)
@@ -1076,8 +1149,8 @@ object StatusCode {
   implicit val codec: JsonValueCodec[StatusCode] = new JsonValueCodec[StatusCode] {
     def nullValue: StatusCode = null
     def encodeValue(msg: StatusCode, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: StatusCode): StatusCode =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: StatusCode): StatusCode = {
+      in.readInt() match {
         case 1 => Ok
         case 2 => Error
         case 3 => Cancelled
@@ -1095,77 +1168,79 @@ object TaskDataKind {
   val TestTask = "test-task"
 }
 
-final case class TaskFinishParams (
-  taskId: TaskId,
-  eventTime: Option[Long],
-  message: Option[String],
-  status: StatusCode,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TaskFinishParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    status: StatusCode,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TaskFinishParams {
-  implicit val codec: JsonValueCodec[TaskFinishParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[TaskFinishParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TaskId (
-  id: String,
-  parents: Option[List[String]],
+final case class TaskId(
+    id: String,
+    parents: Option[List[String]]
 )
 
 object TaskId {
   implicit val codec: JsonValueCodec[TaskId] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TaskProgressParams (
-  taskId: TaskId,
-  eventTime: Option[Long],
-  message: Option[String],
-  total: Option[Long],
-  progress: Option[Long],
-  unit: Option[String],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TaskProgressParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    total: Option[Long],
+    progress: Option[Long],
+    unit: Option[String],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TaskProgressParams {
-  implicit val codec: JsonValueCodec[TaskProgressParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[TaskProgressParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TaskStartParams (
-  taskId: TaskId,
-  eventTime: Option[Long],
-  message: Option[String],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TaskStartParams(
+    taskId: TaskId,
+    eventTime: Option[Long],
+    message: Option[String],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TaskStartParams {
-  implicit val codec: JsonValueCodec[TaskStartParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[TaskStartParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TestFinish (
-  displayName: String,
-  message: Option[String],
-  status: TestStatus,
-  location: Option[Location],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TestFinish(
+    displayName: String,
+    message: Option[String],
+    status: TestStatus,
+    location: Option[Location],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TestFinish {
   implicit val codec: JsonValueCodec[TestFinish] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object TestFinishDataKind {
-}
+object TestFinishDataKind {}
 
-final case class TestParams (
-  targets: List[BuildTargetIdentifier],
-  originId: Option[String],
-  arguments: Option[List[String]],
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TestParams(
+    targets: List[BuildTargetIdentifier],
+    originId: Option[String],
+    arguments: Option[List[String]],
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TestParams {
@@ -1176,46 +1251,45 @@ object TestParamsDataKind {
   val ScalaTest = "scala-test"
 }
 
-final case class TestProvider (
-  languageIds: List[String],
+final case class TestProvider(
+    languageIds: List[String]
 )
 
 object TestProvider {
   implicit val codec: JsonValueCodec[TestProvider] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TestReport (
-  originId: Option[String],
-  target: BuildTargetIdentifier,
-  passed: Int,
-  failed: Int,
-  ignored: Int,
-  cancelled: Int,
-  skipped: Int,
-  time: Option[Long],
+final case class TestReport(
+    originId: Option[String],
+    target: BuildTargetIdentifier,
+    passed: Int,
+    failed: Int,
+    ignored: Int,
+    cancelled: Int,
+    skipped: Int,
+    time: Option[Long]
 )
 
 object TestReport {
   implicit val codec: JsonValueCodec[TestReport] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TestResult (
-  originId: Option[String],
-  statusCode: StatusCode,
-  dataKind: Option[String],
-  data: Option[RawJson],
+final case class TestResult(
+    originId: Option[String],
+    statusCode: StatusCode,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object TestResult {
   implicit val codec: JsonValueCodec[TestResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object TestResultDataKind {
-}
+object TestResultDataKind {}
 
-final case class TestStart (
-  displayName: String,
-  location: Option[Location],
+final case class TestStart(
+    displayName: String,
+    location: Option[Location]
 )
 
 object TestStart {
@@ -1233,8 +1307,8 @@ object TestStatus {
   implicit val codec: JsonValueCodec[TestStatus] = new JsonValueCodec[TestStatus] {
     def nullValue: TestStatus = null
     def encodeValue(msg: TestStatus, out: JsonWriter): Unit = out.writeVal(msg.id)
-    def decodeValue(in: JsonReader, default: TestStatus): TestStatus =  {
-      in.readInt() match  {
+    def decodeValue(in: JsonReader, default: TestStatus): TestStatus = {
+      in.readInt() match {
         case 1 => Passed
         case 2 => Failed
         case 3 => Ignored
@@ -1245,26 +1319,28 @@ object TestStatus {
     }
   }
 }
-final case class TestTask (
-  target: BuildTargetIdentifier,
+final case class TestTask(
+    target: BuildTargetIdentifier
 )
 
 object TestTask {
   implicit val codec: JsonValueCodec[TestTask] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class TextDocumentIdentifier (
-  uri: Uri,
+final case class TextDocumentIdentifier(
+    uri: Uri
 )
 
 object TextDocumentIdentifier {
-  implicit val codec: JsonValueCodec[TextDocumentIdentifier] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[TextDocumentIdentifier] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class WorkspaceBuildTargetsResult (
-  targets: List[BuildTarget],
+final case class WorkspaceBuildTargetsResult(
+    targets: List[BuildTarget]
 )
 
 object WorkspaceBuildTargetsResult {
-  implicit val codec: JsonValueCodec[WorkspaceBuildTargetsResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codec: JsonValueCodec[WorkspaceBuildTargetsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }

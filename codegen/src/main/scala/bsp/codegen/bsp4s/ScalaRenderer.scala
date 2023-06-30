@@ -196,7 +196,8 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
   def renderEnumValueDef[A](enumType: EnumType[A], shapeId: ShapeId): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
+        (ev: EnumValue[Int]) =>
+          s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
         (ev: EnumValue[String]) =>
           s"""case object ${ev.name} extends ${toUpperCamelCase(shapeId.getName)}("${ev.value}")"""
