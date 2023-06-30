@@ -175,6 +175,8 @@ This request may trigger a compilation on the selected build targets. The server
 is free to send any number of `build/taskStart`, `build/taskProgress`,
 `build/taskFinish`, `build/publishDiagnostics` and `build/logMessage`
 notifications during compilation before completing the response.
+The client will get a `originId` field in `ScalaMainClassesResult` if the
+`originId` field in the `ScalaMainClassesParams` is defined.
 
 - method: `buildTarget/scalaMainClasses`
 - params: `ScalaMainClassesParams`
