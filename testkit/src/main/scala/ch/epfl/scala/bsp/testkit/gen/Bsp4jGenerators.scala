@@ -84,7 +84,14 @@ trait Bsp4jGenerators {
     canTest <- arbitrary[Boolean]
     canRun <- arbitrary[Boolean]
     canDebug <- arbitrary[Boolean]
-  } yield new BuildTargetCapabilities(canCompile, canTest, canRun, canDebug)
+  } yield {
+    val capabilities = new BuildTargetCapabilities()
+    capabilities.setCanCompile(canCompile)
+    capabilities.setCanTest(canTest)
+    capabilities.setCanRun(canRun)
+    capabilities.setCanDebug(canDebug)
+    capabilities
+  }
 
   lazy val genBuildTargetEvent: Gen[BuildTargetEvent] = for {
     target <- genBuildTargetIdentifier

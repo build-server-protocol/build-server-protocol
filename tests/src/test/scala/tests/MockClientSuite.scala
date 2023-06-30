@@ -43,37 +43,56 @@ class MockClientSuite extends AnyFunSuite {
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
-    Collections.emptyList(),
-    new BuildTargetCapabilities(true, false, false, false)
+    Collections.emptyList(), {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities
+    }
   )
 
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
-    List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    List(targetId1).asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanTest(true)
+      capabilities
+    }
   )
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
-    List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List(targetId1).asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
   val target4 = new BuildTarget(
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     List("cpp").asJava,
-    List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List.empty.asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
   val target5 = new BuildTarget(
     targetId5,
     List(BuildTargetTag.APPLICATION).asJava,
     List("python").asJava,
-    List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List.empty.asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
 
   private val client = TestClient(

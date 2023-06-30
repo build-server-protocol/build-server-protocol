@@ -104,7 +104,11 @@ class TypoSuite extends AnyFunSuite {
       ()
     override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = {
       CompletableFuture.completedFuture {
-        val capabilities = new BuildTargetCapabilities(true, true, true, true)
+        val capabilities = new BuildTargetCapabilities()
+        capabilities.setCanCompile(true)
+        capabilities.setCanTest(true)
+        capabilities.setCanRun(true)
+        capabilities.setCanDebug(true)
         val target = new BuildTarget(
           buildTargetUri,
           Collections.singletonList("tag"),

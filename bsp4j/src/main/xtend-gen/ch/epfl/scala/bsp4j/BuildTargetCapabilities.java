@@ -1,69 +1,55 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class BuildTargetCapabilities {
-  @NonNull
   private Boolean canCompile;
 
-  @NonNull
   private Boolean canTest;
 
-  @NonNull
   private Boolean canRun;
 
-  @NonNull
   private Boolean canDebug;
 
-  public BuildTargetCapabilities(@NonNull final Boolean canCompile, @NonNull final Boolean canTest, @NonNull final Boolean canRun, @NonNull final Boolean canDebug) {
-    this.canCompile = canCompile;
-    this.canTest = canTest;
-    this.canRun = canRun;
-    this.canDebug = canDebug;
+  public BuildTargetCapabilities() {
   }
 
   @Pure
-  @NonNull
   public Boolean getCanCompile() {
     return this.canCompile;
   }
 
-  public void setCanCompile(@NonNull final Boolean canCompile) {
-    this.canCompile = Preconditions.checkNotNull(canCompile, "canCompile");
+  public void setCanCompile(final Boolean canCompile) {
+    this.canCompile = canCompile;
   }
 
   @Pure
-  @NonNull
   public Boolean getCanTest() {
     return this.canTest;
   }
 
-  public void setCanTest(@NonNull final Boolean canTest) {
-    this.canTest = Preconditions.checkNotNull(canTest, "canTest");
+  public void setCanTest(final Boolean canTest) {
+    this.canTest = canTest;
   }
 
   @Pure
-  @NonNull
   public Boolean getCanRun() {
     return this.canRun;
   }
 
-  public void setCanRun(@NonNull final Boolean canRun) {
-    this.canRun = Preconditions.checkNotNull(canRun, "canRun");
+  public void setCanRun(final Boolean canRun) {
+    this.canRun = canRun;
   }
 
   @Pure
-  @NonNull
   public Boolean getCanDebug() {
     return this.canDebug;
   }
 
-  public void setCanDebug(@NonNull final Boolean canDebug) {
-    this.canDebug = Preconditions.checkNotNull(canDebug, "canDebug");
+  public void setCanDebug(final Boolean canDebug) {
+    this.canDebug = canDebug;
   }
 
   @Override

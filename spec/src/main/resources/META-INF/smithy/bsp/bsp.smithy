@@ -140,16 +140,12 @@ list BuildTargetTags {
 /// cannot be used and why.
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
-    @required
     canCompile: Boolean
     /// This target can be tested by the BSP server.
-    @required
     canTest: Boolean
     /// This target can be run by the BSP server.
-    @required
     canRun: Boolean
     /// This target can be debugged by the BSP server.
-    @required
     canDebug: Boolean
 }
 

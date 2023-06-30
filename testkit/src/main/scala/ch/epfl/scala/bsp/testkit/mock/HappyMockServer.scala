@@ -69,43 +69,58 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
+  private val capabilities1 = new BuildTargetCapabilities()
+  capabilities1.setCanCompile(true)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, false, false)
+    capabilities1
   )
+
+  private val capabilities2 = new BuildTargetCapabilities()
+  capabilities2.setCanCompile(true)
+  capabilities2.setCanTest(true)
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    capabilities2
   )
 
+  val capabilities3 = new BuildTargetCapabilities()
+  capabilities3.setCanCompile(true)
+  capabilities3.setCanRun(true)
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities3
   )
 
+  val capabilities4 = new BuildTargetCapabilities()
+  capabilities4.setCanCompile(true)
+  capabilities4.setCanRun(true)
   val target4 = new BuildTarget(
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     cppLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities4
   )
 
+  val capabilities5 = new BuildTargetCapabilities()
+  capabilities5.setCanCompile(true)
+  capabilities5.setCanRun(true)
   val target5 = new BuildTarget(
     targetId5,
     List(BuildTargetTag.APPLICATION).asJava,
     pythonLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities5
   )
 
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(

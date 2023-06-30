@@ -94,10 +94,10 @@ object BuildTarget {
 }
 
 final case class BuildTargetCapabilities(
-    canCompile: Boolean,
-    canTest: Boolean,
-    canRun: Boolean,
-    canDebug: Boolean
+    canCompile: Option[Boolean],
+    canTest: Option[Boolean],
+    canRun: Option[Boolean],
+    canDebug: Option[Boolean]
 )
 
 object BuildTargetCapabilities {

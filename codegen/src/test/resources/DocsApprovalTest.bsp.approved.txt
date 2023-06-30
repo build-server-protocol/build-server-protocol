@@ -156,16 +156,16 @@ cannot be used and why.
 ```ts
 export interface BuildTargetCapabilities {
   /** This target can be compiled by the BSP server. */
-  canCompile: boolean;
+  canCompile?: boolean;
 
   /** This target can be tested by the BSP server. */
-  canTest: boolean;
+  canTest?: boolean;
 
   /** This target can be run by the BSP server. */
-  canRun: boolean;
+  canRun?: boolean;
 
   /** This target can be debugged by the BSP server. */
-  canDebug: boolean;
+  canDebug?: boolean;
 }
 ```
 
