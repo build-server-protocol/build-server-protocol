@@ -13,9 +13,9 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '11'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "11"
+          cache: "sbt"
       - name: Publish ${{ github.ref }}
         run: sbt ci-release docs/docusaurusPublishGhpages
         env:

@@ -80,12 +80,12 @@ Because now most of the docs are generated from the smithy model, we added
 doesn't accidentally break. If you make a change which affects the generated spec
 please run `sbt test`. Approval test driver should automatically display
 a diff for you, but if it does not happen, you should review the new version manually.
-In directory `codegen/src/test/scala` there will appear 
+In directory `codegen/src/test/scala` there will appear
 files `<testname>.<generated doc>.received.txt` for each generated doc which differs
 from the previously approved version. Approving means comparing `<file>.received.txt`
 with `<file>.approved.txt` and introducing changes to the `<file>.approved.txt` one.
 
-When you run `sbt test` again the tests should pass and `<file>.received.txt` 
+When you run `sbt test` again the tests should pass and `<file>.received.txt`
 will be removed.
 
 ## Some notes on maintenance
