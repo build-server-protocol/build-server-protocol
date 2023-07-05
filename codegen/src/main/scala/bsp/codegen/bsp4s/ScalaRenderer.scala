@@ -7,6 +7,7 @@ import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
+import bsp.codegen.ir.Hint.{Documentation, Deprecated}
 import cats.implicits.toFoldableOps
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
@@ -170,7 +171,13 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       case TPrimitive(Primitive.PUnit, _) => "Unit"
       case other                          => renderType(other)
     }
+
+    val maybeDeprecated = operation.hints.collectFirst { case Hint.Deprecated(message) =>
+      if (message.isEmpty) "@deprecated" else s"""@deprecated("$message")"""
+    }
+
     lines(
+      maybeDeprecated,
       s"""object $name extends Endpoint[$input, $output]("${operation.jsonRPCMethod}")"""
     )
   }

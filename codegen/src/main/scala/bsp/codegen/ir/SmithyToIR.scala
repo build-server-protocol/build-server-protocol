@@ -359,8 +359,14 @@ class SmithyToIR(model: Model) {
       .toScala
       .map(_.getValue)
       .map(Hint.Documentation)
-      .toList
-    documentation
+
+    val deprecated = shape
+      .getTrait(classOf[DeprecatedTrait])
+      .toScala
+      .map(_.getMessage.orElse(""))
+      .map(Hint.Deprecated)
+
+    List(documentation, deprecated).flatten
   }
 
   class DocShapeVisitor(map: MMap[ShapeId, DocNode]) extends ShapeVisitor.Default[Unit] {

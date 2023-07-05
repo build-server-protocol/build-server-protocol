@@ -1,7 +1,7 @@
 package bsp.codegen.docs
 
 import bsp.codegen._
-import bsp.codegen.ir.Hint.Documentation
+import bsp.codegen.ir.Hint.{Documentation, Deprecated}
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import cats.syntax.all._
@@ -118,7 +118,22 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
   }
 
   def documentation(hints: List[Hint]): Lines = Lines {
-    hints.collect { case Documentation(string) => string.split(System.lineSeparator()).toList }
+    val maybeDeprecated = hints.collectFirst { case Deprecated(message) =>
+      val line = if (message.isEmpty) List("**Deprecated**") else List(s"**Deprecated**: $message")
+      lines(
+        line,
+        newline
+      )
+    }
+
+    val docs = hints.collect { case Documentation(string) =>
+      string.split(System.lineSeparator()).toList
+    }
+
+    lines(
+      maybeDeprecated,
+      docs
+    )
   }
 
   def tsBlock(definition: Def): Lines =

@@ -145,6 +145,7 @@ list ScalacOptionsList {
 /// The client will get a `originId` field in `ScalaTestClassesResult` if the
 /// `originId` field in the `ScalaTestClassesParams` is defined.
 @jsonRequest("buildTarget/scalaTestClasses")
+@deprecated(message: "Use buildTarget/jvmTestEnvironment instead")
 operation BuildTargetScalaTestClasses {
     input: ScalaTestClassesParams
     output: ScalaTestClassesResult
@@ -195,6 +196,7 @@ list ScalaTestClassesList {
 /// The client will get a `originId` field in `ScalaMainClassesResult` if the
 /// `originId` field in the `ScalaMainClassesParams` is defined.
 @jsonRequest("buildTarget/scalaMainClasses")
+@deprecated(message: "Use buildTarget/jvmRunEnvironment instead")
 operation BuildTargetScalaMainClasses {
     input: ScalaMainClassesParams
     output: ScalaMainClassesResult

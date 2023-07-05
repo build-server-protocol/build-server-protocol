@@ -54,10 +54,12 @@ trait BuildTarget {
       extends Endpoint[PythonOptionsParams, PythonOptionsResult]("buildTarget/pythonOptions")
   object scalacOptions
       extends Endpoint[ScalacOptionsParams, ScalacOptionsResult]("buildTarget/scalacOptions")
+  @deprecated("Use buildTarget/jvmTestEnvironment instead")
   object scalaTestClasses
       extends Endpoint[ScalaTestClassesParams, ScalaTestClassesResult](
         "buildTarget/scalaTestClasses"
       )
+  @deprecated("Use buildTarget/jvmRunEnvironment instead")
   object scalaMainClasses
       extends Endpoint[ScalaMainClassesParams, ScalaMainClassesResult](
         "buildTarget/scalaMainClasses"

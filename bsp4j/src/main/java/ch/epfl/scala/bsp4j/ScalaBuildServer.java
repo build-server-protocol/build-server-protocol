@@ -9,9 +9,11 @@ public interface ScalaBuildServer {
     @JsonRequest("buildTarget/scalacOptions")
     CompletableFuture<ScalacOptionsResult> buildTargetScalacOptions(ScalacOptionsParams params);
 
+    @Deprecated
     @JsonRequest("buildTarget/scalaTestClasses")
     CompletableFuture<ScalaTestClassesResult> buildTargetScalaTestClasses(ScalaTestClassesParams params);
 
+    @Deprecated
     @JsonRequest("buildTarget/scalaMainClasses")
     CompletableFuture<ScalaMainClassesResult> buildTargetScalaMainClasses(ScalaMainClassesParams params);
 

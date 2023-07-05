@@ -9,6 +9,7 @@ import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
 import cats.implicits.toFoldableOps
+import bsp.codegen.ir.Hint.{Deprecated}
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
@@ -148,13 +149,15 @@ class JavaRenderer(basepkg: String) {
       case other                          => s"${renderType(other)} params"
     }
     val rpcMethod = operation.jsonRPCMethod
-    val annotation = operation.jsonRPCMethodType match {
+    val rpcAnnotation = operation.jsonRPCMethodType match {
       case Notification => s"""@JsonNotification("$rpcMethod")"""
       case Request      => s"""@JsonRequest("$rpcMethod")"""
     }
+    val maybeDeprecated = operation.hints.collectFirst({ case Deprecated(_) => "@Deprecated" })
     val method = operation.name.head.toLower + operation.name.tail
     lines(
-      annotation,
+      maybeDeprecated,
+      rpcAnnotation,
       s"$output $method($input);",
       newline
     )
