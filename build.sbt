@@ -88,7 +88,6 @@ lazy val bsp4j = project
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
     TaskKey[Unit]("codegen") := {
-      val outputPath = (Compile / sourceDirectory).value / "java"
       val _ = runCodegen(Compile, "bsp.codegen.bsp4j.Main", "java").value
     },
     TaskKey[Unit]("xtend") := {
@@ -222,6 +221,8 @@ def invokeXtendGeneration(configuration: Configuration) = Def.task {
       with sbt.internal.util.FeedbackProvidedException
   if (!compiler.compile())
     throw XtendError
+  IO.copyDirectory(outDir, sourceDir, overwrite = true)
+  IO.delete(outDir)
 }
 def runCodegen(
     config: Configuration,

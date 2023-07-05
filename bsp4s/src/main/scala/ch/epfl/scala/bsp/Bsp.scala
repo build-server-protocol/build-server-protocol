@@ -836,7 +836,9 @@ object RunParams {
   implicit val codec: JsonValueCodec[RunParams] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object RunParamsDataKind {}
+object RunParamsDataKind {
+  val ScalaMainClass = "scala-main-class"
+}
 
 final case class RunProvider(
     languageIds: List[String]
