@@ -1,1 +1,3 @@
-*.xtend @adpi2 @ckipp01 @jastice
+codegen @agluszak
+bsp4s @ckipp01 @adpi2
+bsp4j @jastice
