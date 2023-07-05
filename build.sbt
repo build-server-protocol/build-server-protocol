@@ -56,6 +56,11 @@ import org.eclipse.xtend.core.XtendStandaloneSetup
 Global / cancelable := true
 publish / skip := true
 
+addCommandAlias(
+  "generate",
+  "codegen ; xtend ; scalafmtAll ; scalafmtSbt"
+)
+
 // Bsp4s is now generated from the smithy model
 lazy val bsp4s = project
   .in(file("bsp4s"))

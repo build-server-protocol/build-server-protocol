@@ -16,8 +16,8 @@ jobs:
           java-version: "11"
           cache: "sbt"
 
-      - name: generate xtend
-        run: sbt bsp4j/xtend
+      - name: generate
+        run: sbt generate
 
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v16
@@ -25,12 +25,13 @@ jobs:
         with:
           files: |
             **/*.java
+            **/*.scala
 
       - name: Fail if we detect changed files
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           echo "Detected changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
-          echo "Make sure to run 'sbt bsp4j/extend' before pushing."
+          echo "Make sure to run 'sbt generate' before pushing."
           exit 1
 
   test:
