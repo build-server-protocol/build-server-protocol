@@ -456,10 +456,10 @@ object DidChangeBuildTarget {
 }
 
 final case class InitializeBuildParams(
-    rootUri: Uri,
     displayName: String,
     version: String,
     bspVersion: String,
+    rootUri: Uri,
     capabilities: BuildClientCapabilities,
     dataKind: Option[String],
     data: Option[RawJson]

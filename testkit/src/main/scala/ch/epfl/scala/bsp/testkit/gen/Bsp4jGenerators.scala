@@ -264,7 +264,7 @@ trait Bsp4jGenerators {
     rootUri <- genFileUriString
     capabilities <- genBuildClientCapabilities
   } yield {
-    val params = new InitializeBuildParams(rootUri, displayName, version, bspVersion, capabilities)
+    val params = new InitializeBuildParams(displayName, version, bspVersion, rootUri, capabilities)
     params.setData(null)
     params
   }

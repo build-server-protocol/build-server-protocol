@@ -521,9 +521,6 @@ document BuildTargetData
 document InitializeBuildParamsData
 
 structure InitializeBuildParams {
-    /// The rootUri of the workspace
-    @required
-    rootUri: URI
     /// Name of the client
     @required
     displayName: String
@@ -533,6 +530,9 @@ structure InitializeBuildParams {
     /// The BSP version that the client speaks
     @required
     bspVersion: String
+    /// The rootUri of the workspace
+    @required
+    rootUri: URI
     /// The capabilities of the client
     @required
     capabilities: BuildClientCapabilities

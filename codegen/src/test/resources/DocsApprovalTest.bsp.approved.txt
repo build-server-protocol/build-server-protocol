@@ -265,9 +265,6 @@ requests or notifications to the server.
 
 ```ts
 export interface InitializeBuildParams {
-  /** The rootUri of the workspace */
-  rootUri: URI;
-
   /** Name of the client */
   displayName: string;
 
@@ -276,6 +273,9 @@ export interface InitializeBuildParams {
 
   /** The BSP version that the client speaks */
   bspVersion: string;
+
+  /** The rootUri of the workspace */
+  rootUri: URI;
 
   /** The capabilities of the client */
   capabilities: BuildClientCapabilities;
