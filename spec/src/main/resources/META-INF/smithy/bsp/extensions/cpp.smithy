@@ -22,7 +22,7 @@ service CppBuildServer {
 /// the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "cpp".
 @tags(["basic"])
-@dataKind(kind: "cpp", extends: BuildTargetData)
+@dataKind(kind: "cpp", extends: [BuildTargetData])
 structure CppBuildTarget {
     /// The c++ version this target is supposed to use.
     /// For example: C++11

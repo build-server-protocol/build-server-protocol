@@ -25,7 +25,7 @@ service JvmBuildServer {
 /// the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "jvm".
 @tags(["basic"])
-@dataKind(kind: "jvm", extends: BuildTargetData)
+@dataKind(kind: "jvm", extends: [BuildTargetData])
 structure JvmBuildTarget {
     /// Uri representing absolute path to jdk
     /// For example: file:///usr/lib/jvm/java-8-openjdk-amd64

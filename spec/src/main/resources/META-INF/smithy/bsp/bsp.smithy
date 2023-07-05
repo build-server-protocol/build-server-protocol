@@ -1166,7 +1166,7 @@ structure CompileResult {
 /// `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
 /// include a `CompileTask` object:
-@dataKind(kind: "compile-task", extends: TaskData)
+@dataKind(kind: "compile-task", extends: [TaskData])
 structure CompileTask {
     @required
     target: BuildTargetIdentifier
@@ -1177,7 +1177,7 @@ structure CompileTask {
 /// `build/taskFinish` notification. When the compilation unit is a build target,
 /// the notification's `dataKind` field must be `compile-report` and the `data`
 /// field must include a `CompileReport` object:
-@dataKind(kind: "compile-report", extends: TaskData)
+@dataKind(kind: "compile-report", extends: [TaskData])
 structure CompileReport {
     /// The build target that was compiled.
     @required
@@ -1242,13 +1242,13 @@ structure TestResult {
 /// `build/taskStart` notification. When the testing unit is a build target, the
 /// notification's `dataKind` field must be `test-task` and the `data` field must
 /// include a `TestTask` object.
-@dataKind(kind: "test-task", extends: TaskData)
+@dataKind(kind: "test-task", extends: [TaskData])
 structure TestTask {
     @required
     target: BuildTargetIdentifier
 }
 
-@dataKind(kind: "test-report", extends: TaskData)
+@dataKind(kind: "test-report", extends: [TaskData])
 structure TestReport {
     originId: Identifier
     /// The build target that was compiled.
@@ -1279,7 +1279,7 @@ structure TestReport {
     time: Long
 }
 
-@dataKind(kind: "test-start", extends: TaskData)
+@dataKind(kind: "test-start", extends: [TaskData])
 structure TestStart {
     /// Name or description of the test.
     @required
@@ -1292,7 +1292,7 @@ structure TestStart {
 @data
 document TestFinishData
 
-@dataKind(kind: "test-finish", extends: TaskData)
+@dataKind(kind: "test-finish", extends: [TaskData])
 structure TestFinish {
     /// Name or description of the test.
     @required

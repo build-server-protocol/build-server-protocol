@@ -9,12 +9,15 @@ import software.amazon.smithy.model.traits.TraitService;
 import software.amazon.smithy.utils.SmithyBuilder;
 import software.amazon.smithy.utils.ToSmithyBuilder;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilder<DataKindTrait> {
 
 	public static final ShapeId ID = ShapeId.from("jsonrpc#dataKind");
 
 	private final String kind;
-	private final ShapeId polymorphicData;
+	private final List<ShapeId> polymorphicData;
 
 	private DataKindTrait(DataKindTrait.Builder builder) {
 		super(ID, builder.getSourceLocation());
@@ -22,7 +25,7 @@ public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilde
 		this.polymorphicData = builder.polymorphicData;
 	}
 
-	public ShapeId getPolymorphicData() {
+	public List<ShapeId> getPolymorphicData() {
 		return this.polymorphicData;
 	}
 
@@ -33,7 +36,9 @@ public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilde
 	@Override
 	protected Node createNode() {
 		ObjectNode.Builder builder = Node.objectNodeBuilder();
-		builder.withMember("extends", getPolymorphicData().toString());
+		List<Node> polymorphicDataNodes = getPolymorphicData().stream().map(ShapeId::toString).map(Node::from).collect(Collectors.toList());
+		Node extendsNode = Node.fromNodes(polymorphicDataNodes);
+		builder.withMember("extends", Node.arrayNode());
 		builder.withMember("kind", getKind());
 		return builder.build();
 	}
@@ -53,14 +58,14 @@ public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilde
 	public static final class Builder extends AbstractTraitBuilder<DataKindTrait, DataKindTrait.Builder> {
 
 		private String kind;
-		private ShapeId polymorphicData;
+		private List<ShapeId> polymorphicData;
 
 		public DataKindTrait.Builder kind(String kind) {
 			this.kind = kind;
 			return this;
 		}
 
-		public DataKindTrait.Builder polymorphicData(ShapeId polymorphicData) {
+		public DataKindTrait.Builder polymorphicData(List<ShapeId> polymorphicData) {
 			this.polymorphicData = polymorphicData;
 			return this;
 		}
@@ -81,7 +86,7 @@ public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilde
 		@Override
 		public DataKindTrait createTrait(ShapeId target, Node value) {
 			ObjectNode objectNode = value.expectObjectNode();
-			ShapeId polymorphicData = ShapeId.fromNode(objectNode.expectMember("extends").expectStringNode());
+			List<ShapeId> polymorphicData = objectNode.expectMember("extends").expectArrayNode().getElementsAs(ShapeId::fromNode);
 			String kind = objectNode.expectMember("kind").expectStringNode().getValue();
 			return builder().kind(kind).polymorphicData(polymorphicData).build();
 		}

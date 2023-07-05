@@ -32,7 +32,7 @@ class SmithyToIR(model: Model) {
 
     // Validate that all data kinds extend a known extendable type.
     dataKindInhabitants.foreach(inhabitant => {
-      val correct = allExtendableTypeIds.contains(inhabitant._2.getPolymorphicData)
+      val correct = inhabitant._2.getPolymorphicData.asScala.forall(allExtendableTypeIds.contains)
       if (!correct) {
         throw new RuntimeException(
           s"DataKindTrait on ${inhabitant._1.getId.getName} must extend a known extendable type."
@@ -41,10 +41,13 @@ class SmithyToIR(model: Model) {
     })
 
     val groupedInhabitants = dataKindInhabitants
-      .groupBy { case (_, tr) => tr.getPolymorphicData }
+      .flatMap { case (shape, dataKindTrait) =>
+        dataKindTrait.getPolymorphicData.asScala.map((shape, dataKindTrait.getKind, _))
+      }
+      .groupBy { case (_, _, referencedShapeId) => referencedShapeId }
       .map { case (dataType, shapeAndTraits) =>
-        dataType -> shapeAndTraits.map { case (shape, tr) =>
-          PolymorphicDataKind(tr.getKind, shape.getId)
+        dataType -> shapeAndTraits.map { case (shape, dataKind, _) =>
+          PolymorphicDataKind(dataKind, shape.getId)
         }
       }
 

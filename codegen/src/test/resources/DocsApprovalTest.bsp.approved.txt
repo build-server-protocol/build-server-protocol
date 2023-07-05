@@ -988,6 +988,8 @@ export interface RunParams {
 export type RunParamsDataKind = string;
 
 export namespace RunParamsDataKind {
+  /** `data` field must contain a ScalaMainClass object. */
+  export const ScalaMainClass = "scala-main-class";
 }
 ```
 

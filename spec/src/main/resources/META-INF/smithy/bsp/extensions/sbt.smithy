@@ -25,7 +25,7 @@ use jsonrpc#dataKind
 /// `parent` information can be defined from `children` but it's provided by the
 /// server to simplify the data processing on the client side.
 @tags(["basic"])
-@dataKind(kind: "sbt", extends: BuildTargetData)
+@dataKind(kind: "sbt", extends: [BuildTargetData])
 structure SbtBuildTarget {
     @required
     sbtVersion: String
