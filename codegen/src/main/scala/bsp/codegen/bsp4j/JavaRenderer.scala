@@ -38,7 +38,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       "package ch.epfl.scala.bsp4j;",
       newline,
       block("public class Bsp4j")(
-        s"public static final String PROTOCOL_VERSION = new String(\"$version\");"
+        s"""public static final String PROTOCOL_VERSION = new String("$version");"""
       ),
       newline
     )
