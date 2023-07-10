@@ -12,8 +12,9 @@ import scala.collection.mutable.{Set => MSet}
 object MarkdownRenderer {
   def render(tree: DocTree): String = {
     val visited = MSet.empty[ShapeId]
-    val renderer = new MarkdownRenderer(tree, visited)
-    val rendered = renderer.render.get.mkString(System.lineSeparator())
+    val version = VersionLoader.version()
+    val renderer = new MarkdownRenderer(tree, visited, version)
+    val rendered = renderer.render.render
 
     val notRenderedIds = visited.diff(tree.structures.keys.toSet)
     notRenderedIds.foreach { id =>
@@ -24,7 +25,7 @@ object MarkdownRenderer {
   }
 }
 
-class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
+class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: String) {
   import bsp.codegen.Settings.typescript
   import dsl._
 
@@ -44,6 +45,9 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
     // Server comes first because it's bigger.
     val services = tree.services.sortBy(_.operations.size).reverse.foldMap(renderServiceNode)
     lines(
+      "## BSP version",
+      s"`$version`",
+      newline,
       commonShapes,
       services
     )

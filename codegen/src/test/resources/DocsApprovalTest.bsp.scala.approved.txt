@@ -1,3 +1,6 @@
+## BSP version
+`2.1.0`
+
 ## Common shapes
 
 #### ScalaBuildTarget
