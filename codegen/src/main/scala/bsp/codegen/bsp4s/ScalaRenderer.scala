@@ -47,7 +47,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
       "import jsonrpc4s.RawJson",
       newline,
       block("object Bsp4s") {
-        s"val ProtocolVersion: String = \"$version\""
+        s"""val ProtocolVersion: String = "$version""""
       },
       newline,
       // Special handling for URI
