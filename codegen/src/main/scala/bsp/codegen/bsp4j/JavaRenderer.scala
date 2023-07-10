@@ -39,7 +39,8 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       newline,
       block("public class Bsp4j")(
         "public static final String PROTOCOL_VERSION = \"" + version + "\";"
-      )
+      ),
+      newline
     )
 
     CodegenFile(baseRelPath / "Bsp4j.java", contents.render)
