@@ -12,12 +12,18 @@ import cats.implicits.toFoldableOps
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
-class ScalaRenderer(basepkg: String, definitions: List[Def]) {
+class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   import bsp.codegen.Settings.scala
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 
-  def renderDefinitions(): Lines = {
+  def render(): List[CodegenFile] = {
+    List(renderEndpoints(), renderDefinitions())
+  }
+
+  def renderDefinitions(): CodegenFile = {
+    val filePath = baseRelPath / "Bsp.scala"
+
     val renderedDefinitions = lines(definitions.map {
       case PrimitiveAlias(shapeId, tpe, _)  => Lines.empty
       case Structure(shapeId, fields, _, _) => renderStructure(shapeId, fields)
@@ -27,7 +33,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       case Service(shapeId, operations, hints)    => Lines.empty
     })
 
-    lines(
+    val contents = lines(
       "package ch.epfl.scala.bsp",
       newline,
       "import java.net.{URI, URISyntaxException}",
@@ -39,6 +45,11 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       "import com.github.plokhotnyuk.jsoniter_scala.core.JsonReader",
       "import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker",
       "import jsonrpc4s.RawJson",
+      newline,
+      block("object Bsp4s") {
+        s"val ProtocolVersion: String = \"$version\""
+      },
+      newline,
       // Special handling for URI
       """
         |final case class Uri private[Uri] (val value: String) {
@@ -67,16 +78,22 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       newline,
       renderedDefinitions
     )
+
+    CodegenFile(filePath, contents.render)
   }
 
-  def renderEndpoints(): Lines = {
+  def renderEndpoints(): CodegenFile = {
+    val endpointsPath = baseRelPath / "endpoints" / "Endpoints.scala"
+
     val operations = definitions.collect { case Service(shapeId, operations, _) =>
       operations
     }.flatten
 
+    // In bsp4s there's no split between client and server endpoints
+
     val renderedOperations = renderOperations(operations)
 
-    lines(
+    val contents = lines(
       "package ch.epfl.scala.bsp",
       "package endpoints",
       newline,
@@ -84,6 +101,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       "import jsonrpc4s.Endpoint.unitCodec",
       renderedOperations
     )
+
+    CodegenFile(endpointsPath, contents.render)
+
   }
 
   def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {

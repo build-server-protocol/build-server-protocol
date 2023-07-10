@@ -10,6 +10,10 @@ import com.github.plokhotnyuk.jsoniter_scala.core.JsonReader
 import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import jsonrpc4s.RawJson
 
+object Bsp4s {
+  val ProtocolVersion: String = "2.1.0"
+}
+
 final case class Uri private[Uri] (val value: String) {
   def toPath: java.nio.file.Path =
     java.nio.file.Paths.get(new java.net.URI(value))

@@ -4,21 +4,48 @@ import bsp.codegen._
 import bsp.codegen.dsl.{block, empty, lines, newline}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.ir.Hint.Deprecated
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
 import cats.implicits.toFoldableOps
-import bsp.codegen.ir.Hint.{Deprecated}
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
-class JavaRenderer(basepkg: String) {
+class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
   import bsp.codegen.Settings.java
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 
-  def render(definition: Def): Option[CodegenFile] = {
+  def render(): List[CodegenFile] = {
+    definitions.flatMap(renderDef) ++ List(renderVersion(), copyPreconditions())
+  }
+
+  def copyPreconditions(): CodegenFile = {
+    val preconditionsSourcePath =
+      os.pwd / "codegen" / "src" / "main" / "resources" / "Preconditions.java"
+    // TODO: dehardcode "codegen" path above
+    val preconditionsContents = os.read(preconditionsSourcePath)
+    val preconditionsPath = os.rel / "org" / "eclipse" / "lsp4j" / "util" / "Preconditions.java"
+    // For some reason extend expects this file to be present in this specific location,
+    // it can be removed once we stop using extend
+    CodegenFile(preconditionsPath, preconditionsContents)
+  }
+
+  def renderVersion(): CodegenFile = {
+    val contents = lines(
+      "package ch.epfl.scala.bsp4j;",
+      newline,
+      block("public class Bsp4j")(
+        "public static final String PROTOCOL_VERSION = \"" + version + "\";"
+      )
+    )
+
+    CodegenFile(baseRelPath / "Bsp4j.java", contents.render)
+  }
+
+  def renderDef(definition: Def): Option[CodegenFile] = {
     definition match {
       case PrimitiveAlias(shapeId, tpe, _)  => None
       case Structure(shapeId, fields, _, _) => Some(renderStructure(shapeId, fields))
@@ -51,7 +78,7 @@ class JavaRenderer(basepkg: String) {
     )
 
     val fileName = shapeId.getName() + ".xtend"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def spreadEnumLines[A](enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
@@ -97,7 +124,7 @@ class JavaRenderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderOpenEnum[A](
@@ -116,7 +143,7 @@ class JavaRenderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
@@ -135,7 +162,7 @@ class JavaRenderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderOperation(operation: Operation): Lines = {

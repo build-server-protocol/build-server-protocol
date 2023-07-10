@@ -2,16 +2,21 @@ package bsp.codegen
 
 import com.monovore.decline._
 
-class FilesGenerator(run: os.Path => List[os.Path])
+class FilesGenerator(codegenFiles: List[CodegenFile])
     extends CommandApp(
       name = "bsp-codegen",
       header = "code generator for bsp",
       main = {
         val out = System.out
         System.setOut(System.err)
+
         MainArgs.opts.map { args =>
-          val generatedFiles = run(args.outputDir)
-          generatedFiles.foreach(path => out.println(path))
+          codegenFiles.map { file =>
+            val fullPath = args.outputDir / file.path
+            os.write.over(fullPath, file.contents, createFolders = true)
+            fullPath
+          }
+          codegenFiles.foreach(file => out.println(file.path))
         }
       }
     )

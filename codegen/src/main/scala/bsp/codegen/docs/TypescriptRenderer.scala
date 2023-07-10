@@ -14,15 +14,6 @@ import software.amazon.smithy.model.shapes.ShapeId
 class TypescriptRenderer(baseRelPath: Option[os.RelPath]) {
   import bsp.codegen.Settings.typescript
 
-  def renderFile(definition: Def): Option[CodegenFile] = {
-    val fileName = definition.shapeId.getName() + ".ts"
-    baseRelPath.flatMap { base =>
-      render(definition).map { lines =>
-        CodegenFile(definition.shapeId, base / fileName, lines.render)
-      }
-    }
-  }
-
   def render(definition: Def): Option[Lines] = {
     definition match {
       case PrimitiveAlias(shapeId, primitiveType, hints) =>
