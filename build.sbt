@@ -45,7 +45,7 @@ lazy val V = new {
   val ipcsocket = "1.0.1"
   val scalatestScalacheck = "3.2.14.0"
   val jsonrpc4s = "0.1.0"
-  val approvaltests = "18.6.1"
+  val approvaltests = "18.7.1"
   val junitInterface = "0.13.3"
 }
 
