@@ -81,7 +81,6 @@ with `<file>.approved.txt` and introducing changes to the `<file>.approved.txt` 
 When you run `sbt test` again the tests should pass and `<file>.received.txt`
 will be removed.
 
-
 ## Some notes on maintenance
 
 As BSP is becoming more popular and widely used, it's important that all the main
