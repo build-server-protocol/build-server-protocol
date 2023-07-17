@@ -15,8 +15,8 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service JvmBuildServer {
     operations: [
-        JvmTestEnvironment,
-        JvmRunEnvironment
+        BuildTargetJvmTestEnvironment,
+        BuildTargetJvmRunEnvironment
     ]
 }
 
@@ -58,7 +58,7 @@ structure JvmEnvironmentItem {
 /// not be cached in any form. The client should ask for it right before test execution,
 /// after all the targets are compiled.
 @jsonRequest("buildTarget/jvmTestEnvironment")
-operation JvmTestEnvironment {
+operation BuildTargetJvmTestEnvironment {
     input: JvmTestEnvironmentParams
     output: JvmTestEnvironmentResult
 }
@@ -81,7 +81,7 @@ list JvmEnvironmentItems {
 /// Similar to `buildTarget/jvmTestEnvironment`, but returns environment
 /// that should be used for regular exection of main classes, not for testing
 @jsonRequest("buildTarget/jvmRunEnvironment")
-operation JvmRunEnvironment {
+operation BuildTargetJvmRunEnvironment {
     input: JvmRunEnvironmentParams
     output: JvmRunEnvironmentResult
 }

@@ -31,9 +31,9 @@ service BuildClient {
 @jsonRPC
 service BuildServer {
     operations: [
-        InitializeBuild
+        BuildInitialize
         OnBuildInitialized
-        ShutdownBuild
+        BuildShutdown
         OnBuildExit
         WorkspaceBuildTargets
         WorkspaceReload
@@ -140,16 +140,12 @@ list BuildTargetTags {
 /// cannot be used and why.
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
-    @required
     canCompile: Boolean
     /// This target can be tested by the BSP server.
-    @required
     canTest: Boolean
     /// This target can be run by the BSP server.
-    @required
     canRun: Boolean
     /// This target can be debugged by the BSP server.
-    @required
     canDebug: Boolean
 }
 
@@ -239,7 +235,7 @@ structure BspConnectionDetails {
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
-operation InitializeBuild {
+operation BuildInitialize {
     input: InitializeBuildParams
     output: InitializeBuildResult
 }
@@ -259,7 +255,7 @@ operation OnBuildInitialized {
 /// (otherwise the response might not be delivered correctly to the client). There
 /// is a separate exit notification that asks the server to exit.
 @jsonRequest("build/shutdown")
-operation ShutdownBuild {
+operation BuildShutdown {
 }
 
 /// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
@@ -525,9 +521,6 @@ document BuildTargetData
 document InitializeBuildParamsData
 
 structure InitializeBuildParams {
-    /// The rootUri of the workspace
-    @required
-    rootUri: URI
     /// Name of the client
     @required
     displayName: String
@@ -537,6 +530,9 @@ structure InitializeBuildParams {
     /// The BSP version that the client speaks
     @required
     bspVersion: String
+    /// The rootUri of the workspace
+    @required
+    rootUri: URI
     /// The capabilities of the client
     @required
     capabilities: BuildClientCapabilities

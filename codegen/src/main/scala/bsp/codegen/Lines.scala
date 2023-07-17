@@ -2,8 +2,15 @@ package bsp.codegen
 
 import cats.kernel.Monoid
 
-trait Lines {
-  self =>
+case class RenderSettings(indent: String)
+
+object Settings {
+  implicit val java: RenderSettings = RenderSettings("    ")
+  implicit val typescript: RenderSettings = RenderSettings("  ")
+  implicit val scala: RenderSettings = RenderSettings("  ")
+}
+
+abstract class Lines(implicit val settings: RenderSettings) { self =>
   def get: List[String]
 
   def render = get.mkString(System.lineSeparator())
@@ -19,7 +26,7 @@ trait Lines {
   }
 
   def indent: Lines = map { str =>
-    if (str.nonEmpty) "  " + str else str
+    if (str.nonEmpty) settings.indent + str else str
   }
 
   private def wrap(open: String, close: String, l: Lines*): Lines = {
@@ -27,10 +34,8 @@ trait Lines {
     val openBlock: List[String] =
       current.lastOption.map { line =>
         line.lastOption match {
-          case None      => open
-          case Some('}') => line + open
-          case Some(')') => line + open
-          case Some(_)   => line + s" $open"
+          case None    => open
+          case Some(_) => s"$line $open"
         }
       } match {
         case Some(value) => current.dropRight(1) :+ value
@@ -47,25 +52,27 @@ trait Lines {
 
 object Lines {
 
-  object empty extends Lines {
+  def empty(implicit settings: RenderSettings): Lines = new Lines {
     def get: List[String] = Nil
   }
 
-  implicit val monoidLines: Monoid[Lines] = Monoid.instance(empty, _ ++ _)
+  implicit def monoidLines(implicit settings: RenderSettings): Monoid[Lines] =
+    Monoid.instance(empty, _ ++ _)
 
-  def apply(lines: List[String]): Lines = new Lines {
+  def apply(lines: List[String])(implicit settings: RenderSettings): Lines = new Lines {
     def get: List[String] = lines
   }
 
-  def make[A](lines: List[A])(implicit toLines: ToLines[A]): Lines = new Lines {
-    def get: List[String] = lines.flatMap(toLines.lines(_))
-  }
+  def make[A](lines: List[A])(implicit toLines: ToLines[A], settings: RenderSettings): Lines =
+    new Lines {
+      def get: List[String] = lines.flatMap(toLines.lines)
+    }
 
-  def apply(all: Lines*): Lines = new Lines {
+  def apply(all: Lines*)(implicit settings: RenderSettings): Lines = new Lines {
     def get: List[String] = all.flatMap(_.get).toList
   }
 
-  implicit def fromToLines[A: ToLines](a: A): Lines = new Lines {
+  implicit def fromToLines[A: ToLines](a: A)(implicit settings: RenderSettings): Lines = new Lines {
     def get = ToLines(a)
   }
 

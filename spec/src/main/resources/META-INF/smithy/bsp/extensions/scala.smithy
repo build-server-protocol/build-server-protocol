@@ -23,9 +23,9 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service ScalaBuildServer {
     operations: [
-        ScalacOptions,
-        ScalaTestClasses,
-        ScalaMainClasses,
+        BuildTargetScalacOptions,
+        BuildTargetScalaTestClasses,
+        BuildTargetScalaMainClasses,
     ]
 }
 
@@ -80,7 +80,7 @@ structure ScalaTestParams {
 /// query for the list of compiler options necessary to compile in a given list of
 /// targets.
 @jsonRequest("buildTarget/scalacOptions")
-operation ScalacOptions {
+operation BuildTargetScalacOptions {
     input: ScalacOptionsParams
     output: ScalacOptionsResult
 }
@@ -145,7 +145,8 @@ list ScalacOptionsList {
 /// The client will get a `originId` field in `ScalaTestClassesResult` if the
 /// `originId` field in the `ScalaTestClassesParams` is defined.
 @jsonRequest("buildTarget/scalaTestClasses")
-operation ScalaTestClasses {
+@deprecated(message: "Use buildTarget/jvmTestEnvironment instead")
+operation BuildTargetScalaTestClasses {
     input: ScalaTestClassesParams
     output: ScalaTestClassesResult
 }
@@ -195,7 +196,8 @@ list ScalaTestClassesList {
 /// The client will get a `originId` field in `ScalaMainClassesResult` if the
 /// `originId` field in the `ScalaMainClassesParams` is defined.
 @jsonRequest("buildTarget/scalaMainClasses")
-operation ScalaMainClasses {
+@deprecated(message: "Use buildTarget/jvmRunEnvironment instead")
+operation BuildTargetScalaMainClasses {
     input: ScalaMainClassesParams
     output: ScalaMainClassesResult
 }
@@ -320,6 +322,7 @@ list ScalaActions {
 
 /// A workspace edit represents changes to many resources managed in the workspace.
 structure ScalaWorkspaceEdit {
+    @required
     changes: ScalaTextEdits
 }
 

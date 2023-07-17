@@ -202,7 +202,8 @@ class SmithyToIR(model: Model) {
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
+        case OPEN =>
+          List(Def.OpenEnum(shape.getId, EnumType.IntEnum, enumValues.sortBy(_.value), hints))
         case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.IntEnum, enumValues, hints))
       }
     }
@@ -214,7 +215,8 @@ class SmithyToIR(model: Model) {
       }.toList
       val hints = getHints(shape)
       shape.expectTrait(classOf[EnumKindTrait]).getEnumKind match {
-        case OPEN   => List(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
+        case OPEN =>
+          List(Def.OpenEnum(shape.getId, EnumType.StringEnum, enumValues.sortBy(_.name), hints))
         case CLOSED => List(Def.ClosedEnum(shape.getId, EnumType.StringEnum, enumValues, hints))
       }
     }
@@ -357,8 +359,14 @@ class SmithyToIR(model: Model) {
       .toScala
       .map(_.getValue)
       .map(Hint.Documentation)
-      .toList
-    documentation
+
+    val deprecated = shape
+      .getTrait(classOf[DeprecatedTrait])
+      .toScala
+      .map(_.getMessage.orElse(""))
+      .map(Hint.Deprecated)
+
+    List(documentation, deprecated).flatten
   }
 
   class DocShapeVisitor(map: MMap[ShapeId, DocNode]) extends ShapeVisitor.Default[Unit] {

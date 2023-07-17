@@ -1,3 +1,6 @@
+## BSP version
+`2.1.0`
+
 ## Common shapes
 
 #### Long
@@ -103,17 +106,13 @@ A list of predefined tags that can be used to categorize build targets.
 export type BuildTargetTag = string;
 
 export namespace BuildTargetTag {
-  /** Target contains re-usable functionality for downstream targets. May have any
-   * combination of capabilities. */
-  export const Library = "library";
-
   /** Target contains source code for producing any kind of application, may have
    * but does not require the `canRun` capability. */
   export const Application = "application";
 
-  /** Target contains source code for testing purposes, may have but does not
-   * require the `canTest` capability. */
-  export const Test = "test";
+  /** Target contains source code to measure performance of a program, may have
+   * but does not require the `canRun` build target capability. */
+  export const Benchmark = "benchmark";
 
   /** Target contains source code for integration testing purposes, may have
    * but does not require the `canTest` capability.
@@ -122,12 +121,9 @@ export namespace BuildTargetTag {
    * and require more computing resources to execute. */
   export const IntegrationTest = "integration-test";
 
-  /** Target contains source code to measure performance of a program, may have
-   * but does not require the `canRun` build target capability. */
-  export const Benchmark = "benchmark";
-
-  /** Target should be ignored by IDEs. */
-  export const NoIde = "no-ide";
+  /** Target contains re-usable functionality for downstream targets. May have any
+   * combination of capabilities. */
+  export const Library = "library";
 
   /** Actions on the target such as build and test should only be invoked manually
    * and explicitly. For example, triggering a build on all targets in the workspace
@@ -136,6 +132,13 @@ export namespace BuildTargetTag {
    * that exists in Bazel, where targets with this tag have to be specified explicitly
    * on the command line. */
   export const Manual = "manual";
+
+  /** Target should be ignored by IDEs. */
+  export const NoIde = "no-ide";
+
+  /** Target contains source code for testing purposes, may have but does not
+   * require the `canTest` capability. */
+  export const Test = "test";
 }
 ```
 
@@ -156,16 +159,16 @@ cannot be used and why.
 ```ts
 export interface BuildTargetCapabilities {
   /** This target can be compiled by the BSP server. */
-  canCompile: boolean;
+  canCompile?: boolean;
 
   /** This target can be tested by the BSP server. */
-  canTest: boolean;
+  canTest?: boolean;
 
   /** This target can be run by the BSP server. */
-  canRun: boolean;
+  canRun?: boolean;
 
   /** This target can be debugged by the BSP server. */
-  canDebug: boolean;
+  canDebug?: boolean;
 }
 ```
 
@@ -245,7 +248,7 @@ export enum StatusCode {
 
 ## BSP Server remote interface
 
-### InitializeBuild: request
+### BuildInitialize: request
 
 Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 If the server receives a request or notification before the initialize request it should act as follows:
@@ -265,9 +268,6 @@ requests or notifications to the server.
 
 ```ts
 export interface InitializeBuildParams {
-  /** The rootUri of the workspace */
-  rootUri: URI;
-
   /** Name of the client */
   displayName: string;
 
@@ -276,6 +276,9 @@ export interface InitializeBuildParams {
 
   /** The BSP version that the client speaks */
   bspVersion: string;
+
+  /** The rootUri of the workspace */
+  rootUri: URI;
 
   /** The capabilities of the client */
   capabilities: BuildClientCapabilities;
@@ -465,7 +468,7 @@ The initialized notification may only be sent once.
 
 - method: `build/initialized`
 
-### ShutdownBuild: request
+### BuildShutdown: request
 
 Like the language server protocol, the shutdown build request is sent from the
 client to the server. It asks the server to shut down, but to not exit

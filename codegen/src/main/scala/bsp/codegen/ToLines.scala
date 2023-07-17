@@ -14,4 +14,7 @@ object ToLines {
 
   implicit def linesToLines: ToLines[Lines] = (a: Lines) => a.get
 
+  implicit def optionToLines[A: ToLines]: ToLines[Option[A]] = (a: Option[A]) =>
+    a.toList.flatMap(ToLines(_))
+
 }

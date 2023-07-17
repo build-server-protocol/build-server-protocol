@@ -22,12 +22,10 @@ public enum TestStatus {
         return value;
     }
 
-
     public static TestStatus forValue(int value) {
         TestStatus[] allValues = TestStatus.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);
         return allValues[value - 1];
     }
-
 }

@@ -1,7 +1,7 @@
 package bsp.codegen.docs
 
 import bsp.codegen._
-import bsp.codegen.ir.Hint.Documentation
+import bsp.codegen.ir.Hint.{Documentation, Deprecated}
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import cats.syntax.all._
@@ -12,8 +12,9 @@ import scala.collection.mutable.{Set => MSet}
 object MarkdownRenderer {
   def render(tree: DocTree): String = {
     val visited = MSet.empty[ShapeId]
-    val renderer = new MarkdownRenderer(tree, visited)
-    val rendered = renderer.render.get.mkString(System.lineSeparator())
+    val version = VersionLoader.version()
+    val renderer = new MarkdownRenderer(tree, visited, version)
+    val rendered = renderer.render.render
 
     val notRenderedIds = visited.diff(tree.structures.keys.toSet)
     notRenderedIds.foreach { id =>
@@ -24,8 +25,8 @@ object MarkdownRenderer {
   }
 }
 
-class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
-
+class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: String) {
+  import bsp.codegen.Settings.typescript
   import dsl._
 
   val tsRenderer = new TypescriptRenderer(None)
@@ -44,6 +45,9 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
     // Server comes first because it's bigger.
     val services = tree.services.sortBy(_.operations.size).reverse.foldMap(renderServiceNode)
     lines(
+      "## BSP version",
+      s"`$version`",
+      newline,
       commonShapes,
       services
     )
@@ -118,7 +122,22 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId]) {
   }
 
   def documentation(hints: List[Hint]): Lines = Lines {
-    hints.collect { case Documentation(string) => string.split(System.lineSeparator()).toList }
+    val maybeDeprecated = hints.collectFirst { case Deprecated(message) =>
+      val line = if (message.isEmpty) List("**Deprecated**") else List(s"**Deprecated**: $message")
+      lines(
+        line,
+        newline
+      )
+    }
+
+    val docs = hints.collect { case Documentation(string) =>
+      string.split(System.lineSeparator()).toList
+    }
+
+    lines(
+      maybeDeprecated,
+      docs
+    )
   }
 
   def tsBlock(definition: Def): Lines =

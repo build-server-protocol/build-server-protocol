@@ -1,3 +1,6 @@
+## BSP version
+`2.1.0`
+
 ## Common shapes
 
 #### ScalaBuildTarget
@@ -46,7 +49,7 @@ export enum ScalaPlatform {
 
 ## BSP Server remote interface
 
-### ScalacOptions: request
+### BuildTargetScalacOptions: request
 
 The build target scalac options request is sent from the client to the server to
 query for the list of compiler options necessary to compile in a given list of
@@ -96,7 +99,9 @@ export interface ScalacOptionsItem {
 }
 ```
 
-### ScalaTestClasses: request
+### BuildTargetScalaTestClasses: request
+
+**Deprecated**: Use buildTarget/jvmTestEnvironment instead
 
 The Scala build target test classes request is sent from the client to the
 server to query for the list of fully qualified names of test classes in a given
@@ -165,7 +170,9 @@ export interface ScalaTestClassesItem {
 }
 ```
 
-### ScalaMainClasses: request
+### BuildTargetScalaMainClasses: request
+
+**Deprecated**: Use buildTarget/jvmRunEnvironment instead
 
 The build target main classes request is sent from the client to the server to
 query for the list of main classes that can be fed as arguments to

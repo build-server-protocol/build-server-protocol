@@ -13,7 +13,7 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service PythonBuildServer {
     operations: [
-        PythonOptions
+        BuildTargetPythonOptions
     ]
 }
 
@@ -32,7 +32,7 @@ structure PythonBuildTarget {
 /// query for the list of the interpreter flags used to run a given list of
 /// targets.
 @jsonRequest("buildTarget/pythonOptions")
-operation PythonOptions {
+operation BuildTargetPythonOptions {
     input: PythonOptionsParams
     output: PythonOptionsResult
 }

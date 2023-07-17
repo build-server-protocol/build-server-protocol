@@ -7,15 +7,23 @@ import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
+import bsp.codegen.ir.Hint.{Documentation, Deprecated}
 import cats.implicits.toFoldableOps
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
-class ScalaRenderer(basepkg: String, definitions: List[Def]) {
+class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
+  import bsp.codegen.Settings.scala
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 
-  def renderDefinitions(): Lines = {
+  def render(): List[CodegenFile] = {
+    List(renderEndpoints(), renderDefinitions())
+  }
+
+  def renderDefinitions(): CodegenFile = {
+    val filePath = baseRelPath / "Bsp.scala"
+
     val renderedDefinitions = lines(definitions.map {
       case PrimitiveAlias(shapeId, tpe, _)  => Lines.empty
       case Structure(shapeId, fields, _, _) => renderStructure(shapeId, fields)
@@ -25,7 +33,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       case Service(shapeId, operations, hints)    => Lines.empty
     })
 
-    lines(
+    val contents = lines(
       "package ch.epfl.scala.bsp",
       newline,
       "import java.net.{URI, URISyntaxException}",
@@ -37,6 +45,11 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       "import com.github.plokhotnyuk.jsoniter_scala.core.JsonReader",
       "import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker",
       "import jsonrpc4s.RawJson",
+      newline,
+      block("object Bsp4s") {
+        s"""val ProtocolVersion: String = "$version""""
+      },
+      newline,
       // Special handling for URI
       """
         |final case class Uri private[Uri] (val value: String) {
@@ -65,16 +78,22 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       newline,
       renderedDefinitions
     )
+
+    CodegenFile(filePath, contents.render)
   }
 
-  def renderEndpoints(): Lines = {
+  def renderEndpoints(): CodegenFile = {
+    val endpointsPath = baseRelPath / "endpoints" / "Endpoints.scala"
+
     val operations = definitions.collect { case Service(shapeId, operations, _) =>
       operations
     }.flatten
 
+    // In bsp4s there's no split between client and server endpoints
+
     val renderedOperations = renderOperations(operations)
 
-    lines(
+    val contents = lines(
       "package ch.epfl.scala.bsp",
       "package endpoints",
       newline,
@@ -82,6 +101,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       "import jsonrpc4s.Endpoint.unitCodec",
       renderedOperations
     )
+
+    CodegenFile(endpointsPath, contents.render)
+
   }
 
   def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {
@@ -107,7 +129,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
     val valueType = enumValueType(enumType)
     val enumName = shapeId.getName()
     lines(
-      s"sealed abstract class $enumName(val id: $valueType)",
+      s"sealed abstract class $enumName(val value: $valueType)",
       block(s"object $enumName")(
         values.map(renderEnumValueDef(enumType, shapeId)),
         newline,
@@ -115,11 +137,11 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
           s"implicit val codec: JsonValueCodec[${shapeId.getName}] = new JsonValueCodec[${shapeId.getName}]"
         )(
           s"def nullValue: $enumName = null",
-          s"def encodeValue(msg: $enumName, out: JsonWriter): Unit = out.writeVal(msg.id)",
+          s"def encodeValue(msg: $enumName, out: JsonWriter): Unit = out.writeVal(msg.value)",
           block(s"def decodeValue(in: JsonReader, default: $enumName): $enumName = ")(
             block("in.readInt() match ")(
               values.map { ev =>
-                s"case ${ev.value} => ${ev.name}"
+                s"case ${ev.value} => ${toUpperCamelCase(ev.name)}"
               },
               s"""case n => in.decodeError(s"Unknown message type id for $$n")"""
             )
@@ -169,7 +191,13 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
       case TPrimitive(Primitive.PUnit, _) => "Unit"
       case other                          => renderType(other)
     }
+
+    val maybeDeprecated = operation.hints.collectFirst { case Hint.Deprecated(message) =>
+      if (message.isEmpty) "@deprecated" else s"""@deprecated("$message")"""
+    }
+
     lines(
+      maybeDeprecated,
       s"""object $name extends Endpoint[$input, $output]("${operation.jsonRPCMethod}")"""
     )
   }
@@ -179,22 +207,27 @@ class ScalaRenderer(basepkg: String, definitions: List[Def]) {
     case StringEnum => "String"
   }
 
+  def toUpperCamelCase(str: String): String = {
+    str.toLowerCase.split("_").map(_.capitalize).mkString("")
+  }
+
   def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"""val ${ev.name} = ${ev.value}"""
+        (ev: EnumValue[Int]) => s"""val ${toUpperCamelCase(ev.name)} = ${ev.value}"""
       case StringEnum =>
-        (ev: EnumValue[String]) => s"""val ${ev.name} = "${ev.value}""""
+        (ev: EnumValue[String]) => s"""val ${toUpperCamelCase(ev.name)} = "${ev.value}""""
     }
   }
 
   def renderEnumValueDef[A](enumType: EnumType[A], shapeId: ShapeId): EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"case object ${ev.name} extends ${shapeId.getName}(${ev.value})"
+        (ev: EnumValue[Int]) =>
+          s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
         (ev: EnumValue[String]) =>
-          s"""case object ${ev.name} extends ${shapeId.getName}("${ev.value}")"""
+          s"""case object ${ev.name} extends ${toUpperCamelCase(shapeId.getName)}("${ev.value}")"""
     }
   }
 
