@@ -1,36 +1,6 @@
 ## BSP version
 `2.1.0`
 
-## Common shapes
-
-#### CppBuildTarget
-
-`CppBuildTarget` is a basic data structure that contains c++-specific
-metadata, specifically compiler reference. This metadata is embedded in
-the `data: Option[Json]` field of the `BuildTarget` definition, when
-the `dataKind` field contains "cpp".
-
-```ts
-export interface CppBuildTarget {
-  /** The c++ version this target is supposed to use.
-   * For example: C++11 */
-  version?: string;
-
-  /** The type of compiler this target is supposed to use.
-   * For example: gcc */
-  compiler?: string;
-
-  /** Uri representating path to the c compiler.
-   * For example: file:///usr/bin/gcc */
-  cCompiler?: URI;
-
-  /** Uri representating path to the c++ compiler.
-   * For example: file:///usr/bin/g++ */
-  cppCompiler?: URI;
-}
-```
-
-
 ## BSP Server remote interface
 
 ### BuildTargetCppOptions: request
@@ -88,5 +58,37 @@ export interface CppOptionsItem {
   /** Create a shared library.
    * The presence of this flag means that linking occurs with the -shared flag */
   linkshared?: boolean;
+}
+```
+
+## BuildTargetData kinds
+
+### CppBuildTarget
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"cpp"`.
+
+#### CppBuildTarget
+
+`CppBuildTarget` is a basic data structure that contains c++-specific
+metadata, specifically compiler reference.
+
+```ts
+export interface CppBuildTarget {
+  /** The c++ version this target is supposed to use.
+   * For example: C++11 */
+  version?: string;
+
+  /** The type of compiler this target is supposed to use.
+   * For example: gcc */
+  compiler?: string;
+
+  /** Uri representating path to the c compiler.
+   * For example: file:///usr/bin/gcc */
+  cCompiler?: URI;
+
+  /** Uri representating path to the c++ compiler.
+   * For example: file:///usr/bin/g++ */
+  cppCompiler?: URI;
 }
 ```

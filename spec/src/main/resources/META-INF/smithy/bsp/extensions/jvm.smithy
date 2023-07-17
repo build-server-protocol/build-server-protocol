@@ -21,10 +21,7 @@ service JvmBuildServer {
 }
 
 /// `JvmBuildTarget` is a basic data structure that contains jvm-specific
-/// metadata, specifically JDK reference. This metadata is embedded in
-/// the `data: Option[Json]` field of the `BuildTarget` definition, when
-/// the `dataKind` field contains "jvm".
-@tags(["basic"])
+/// metadata, specifically JDK reference.
 @dataKind(kind: "jvm", extends: [BuildTargetData])
 structure JvmBuildTarget {
     /// Uri representing absolute path to jdk

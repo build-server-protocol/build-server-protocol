@@ -54,6 +54,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, _) => Some(renderOpenEnum(shapeId, enumType, values))
       case Service(shapeId, operations, _)        => Some(renderService(shapeId, operations))
+      case ListDef(_, _, _)                       => None
     }
   }
 

@@ -1868,3 +1868,35 @@ export interface TaskFinishParams {
   data?: TaskData;
 }
 ```
+
+## TaskData kinds
+
+### CompileReport
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"compile-report"`.
+
+### CompileTask
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"compile-task"`.
+
+### TestFinish
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"test-finish"`.
+
+### TestReport
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"test-report"`.
+
+### TestStart
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"test-start"`.
+
+### TestTask
+This structure is embedded in
+the `data?: TaskData` field, when
+the `dataKind` field contains `"test-task"`.

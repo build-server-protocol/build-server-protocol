@@ -16,6 +16,8 @@ sealed trait Def {
 object Def {
   final case class PrimitiveAlias(shapeId: ShapeId, prim: Primitive, hints: List[Hint]) extends Def
 
+  final case class ListDef(shapeId: ShapeId, elementType: Type, hints: List[Hint]) extends Def
+
   final case class Structure(
       shapeId: ShapeId,
       fields: List[Field],

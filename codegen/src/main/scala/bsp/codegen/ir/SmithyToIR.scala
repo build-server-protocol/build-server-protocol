@@ -79,8 +79,13 @@ class SmithyToIR(model: Model) {
     val services = docNodes.collect({ case (id, node: ServiceDocNode) => (id, node) }).values.toList
     val operations = docNodes.collect({ case (id, node: OperationDocNode) => (id, node) })
     val structures = docNodes.collect({ case (id, node: StructureDocNode) => (id, node) })
+    val dataKindInhabitants = allDataKindAnnotated
+      .collect { case (extendableType, inhabitants) =>
+        (extendableType, inhabitants.filter(_.shapeId.getNamespace == namespace))
+      }
+      .filter(_._2.nonEmpty)
 
-    DocTree(commonShapeIds, services, operations, structures)
+    DocTree(commonShapeIds, services, operations, structures, dataKindInhabitants)
   }
 
   def definitions(namespace: String): List[Def] =
@@ -193,6 +198,12 @@ class SmithyToIR(model: Model) {
       val updatedFields = insertDiscriminator(fields)
 
       List(Def.Structure(shape.getId, updatedFields, getHints(shape), associatedDataKinds))
+    }
+
+    override def listShape(shape: ListShape): List[Def] = {
+      val memberType = getType(shape.getMember.getId).get
+      val hints = getHints(shape)
+      List(Def.ListDef(shape.getId, memberType, hints))
     }
 
     override def intEnumShape(shape: IntEnumShape): List[Def] = {

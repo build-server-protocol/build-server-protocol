@@ -19,9 +19,6 @@ service PythonBuildServer {
 
 /// `PythonBuildTarget` is a basic data structure that contains Python-specific
 /// metadata, specifically the interpreter reference and the Python version.
-/// This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
-/// the `dataKind` field contains "python".
-@tags(["basic"])
 @dataKind(kind: "python", extends: [BuildTargetData])
 structure PythonBuildTarget {
     version: String

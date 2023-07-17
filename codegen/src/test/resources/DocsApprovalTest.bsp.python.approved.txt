@@ -1,24 +1,6 @@
 ## BSP version
 `2.1.0`
 
-## Common shapes
-
-#### PythonBuildTarget
-
-`PythonBuildTarget` is a basic data structure that contains Python-specific
-metadata, specifically the interpreter reference and the Python version.
-This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
-the `dataKind` field contains "python".
-
-```ts
-export interface PythonBuildTarget {
-  version?: string;
-
-  interpreter?: URI;
-}
-```
-
-
 ## BSP Server remote interface
 
 ### BuildTargetPythonOptions: request
@@ -59,5 +41,25 @@ export interface PythonOptionsItem {
   /** Attributes added to the interpreter command
    * For example: -E */
   interpreterOptions: string[];
+}
+```
+
+## BuildTargetData kinds
+
+### PythonBuildTarget
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"python"`.
+
+#### PythonBuildTarget
+
+`PythonBuildTarget` is a basic data structure that contains Python-specific
+metadata, specifically the interpreter reference and the Python version.
+
+```ts
+export interface PythonBuildTarget {
+  version?: string;
+
+  interpreter?: URI;
 }
 ```

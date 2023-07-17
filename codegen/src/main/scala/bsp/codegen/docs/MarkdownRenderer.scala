@@ -29,7 +29,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: 
   import bsp.codegen.Settings.typescript
   import dsl._
 
-  val tsRenderer = new TypescriptRenderer(None)
+  val tsRenderer = new TypescriptRenderer
 
   def render: Lines = {
     val commonShapes =
@@ -44,12 +44,22 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: 
 
     // Server comes first because it's bigger.
     val services = tree.services.sortBy(_.operations.size).reverse.foldMap(renderServiceNode)
-    lines(
+
+    val dataKinds = tree.dataKindInhabitants.toList.foldMap { case (extendableType, kinds) =>
+      renderExtendableTypeNode(extendableType, kinds)
+    }
+
+    val versionRendered = lines(
       "## BSP version",
       s"`$version`",
-      newline,
+      newline
+    )
+
+    lines(
+      versionRendered,
       commonShapes,
-      services
+      services,
+      dataKinds
     )
   }
 
@@ -81,6 +91,27 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: 
       newline,
       tsBlock(definition),
       newline
+    )
+  }
+
+  def renderExtendableTypeNode(extendableType: ShapeId, kinds: List[PolymorphicDataKind]): Lines = {
+    val header = s"## ${extendableType.getName()} kinds"
+    val kindNodes = kinds.foldMap(renderDataKindNode(extendableType))
+    lines(
+      header,
+      newline,
+      kindNodes
+    )
+  }
+
+  def renderDataKindNode(extendableType: ShapeId)(kind: PolymorphicDataKind): Lines = {
+    lines(
+      s"### ${kind.shapeId.getName()}",
+      "This structure is embedded in",
+      s"the `data?: ${extendableType.getName()}` field, when",
+      s"the `dataKind` field contains `\"${kind.kind}\"`.",
+      newline,
+      renderStructureNode(kind.shapeId)
     )
   }
 
