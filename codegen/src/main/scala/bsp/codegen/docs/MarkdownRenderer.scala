@@ -109,7 +109,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: 
       s"### ${kind.shapeId.getName()}",
       "This structure is embedded in",
       s"the `data?: ${extendableType.getName()}` field, when",
-      s"the `dataKind` field contains `\"${kind.kind}\"`.",
+      s"""the `dataKind` field contains `"${kind.kind}"`.""",
       newline,
       renderStructureNode(kind.shapeId)
     )
