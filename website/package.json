@@ -15,7 +15,7 @@
     "@docusaurus/plugin-client-redirects": "2.4.1",
     "@docusaurus/preset-classic": "2.4.1",
     "@easyops-cn/docusaurus-search-local": "^0.35.0",
-    "clsx": "^1.1.1",
+    "clsx": "^2.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
