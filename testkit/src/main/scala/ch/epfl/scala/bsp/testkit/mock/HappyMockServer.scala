@@ -69,43 +69,58 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
   val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val targetId5 = new BuildTargetIdentifier(baseUri.resolve("target5").toString)
+  private val capabilities1 = new BuildTargetCapabilities()
+  capabilities1.setCanCompile(true)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, false, false)
+    capabilities1
   )
+
+  private val capabilities2 = new BuildTargetCapabilities()
+  capabilities2.setCanCompile(true)
+  capabilities2.setCanTest(true)
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    capabilities2
   )
 
+  val capabilities3 = new BuildTargetCapabilities()
+  capabilities3.setCanCompile(true)
+  capabilities3.setCanRun(true)
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
     List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities3
   )
 
+  val capabilities4 = new BuildTargetCapabilities()
+  capabilities4.setCanCompile(true)
+  capabilities4.setCanRun(true)
   val target4 = new BuildTarget(
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     cppLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities4
   )
 
+  val capabilities5 = new BuildTargetCapabilities()
+  capabilities5.setCanCompile(true)
+  capabilities5.setCanRun(true)
   val target5 = new BuildTarget(
     targetId5,
     List(BuildTargetTag.APPLICATION).asJava,
     pythonLanguageId,
     List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    capabilities5
   )
 
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(
@@ -138,7 +153,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     item1.setMainClasses(List(mainClass).asJava)
     item1
   }
-  override def jvmRunEnvironment(
+  override def buildTargetJvmRunEnvironment(
       params: JvmRunEnvironmentParams
   ): CompletableFuture[JvmRunEnvironmentResult] =
     handleRequest {
@@ -147,7 +162,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
 
-  override def jvmTestEnvironment(
+  override def buildTargetJvmTestEnvironment(
       params: JvmTestEnvironmentParams
   ): CompletableFuture[JvmTestEnvironmentResult] =
     handleRequest {
@@ -272,7 +287,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
       val javaVersion = sys.props.get("java.vm.specification.version")
-      val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
+      val jvmBuildTarget = new JvmBuildTarget()
+      jvmBuildTarget.setJavaHome(javaHome.get)
+      jvmBuildTarget.setJavaVersion(javaVersion.get)
       val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
       val scalaBuildTarget =
         new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
@@ -282,10 +299,15 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val sbtBuildTarget =
         new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
       val cppBuildTarget =
-        new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+        new CppBuildTarget()
+      cppBuildTarget.setVersion("C++11")
+      cppBuildTarget.setCompiler("gcc")
+      cppBuildTarget.setCCompiler("/usr/bin/gcc")
+      cppBuildTarget.setCppCompiler("/usr/bin/g++")
       val pythonBuildTarget =
-        new PythonBuildTarget("3.9", "/usr/bin/python")
-
+        new PythonBuildTarget()
+      pythonBuildTarget.setInterpreter("/usr/bin/python")
+      pythonBuildTarget.setVersion("3.9")
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
       target1.setDataKind(BuildTargetDataKind.SCALA)
@@ -561,7 +583,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       params: CleanCacheParams
   ): CompletableFuture[CleanCacheResult] =
     handleRequest {
-      val result = new CleanCacheResult("cleaned cache", true)
+      val result = new CleanCacheResult(true)
       Right(result)
     }
 

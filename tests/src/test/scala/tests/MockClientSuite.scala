@@ -43,37 +43,56 @@ class MockClientSuite extends AnyFunSuite {
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
     languageIds,
-    Collections.emptyList(),
-    new BuildTargetCapabilities(true, false, false, false)
+    Collections.emptyList(), {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities
+    }
   )
 
   val target2 = new BuildTarget(
     targetId2,
     List(BuildTargetTag.TEST).asJava,
     languageIds,
-    List(targetId1).asJava,
-    new BuildTargetCapabilities(true, true, false, false)
+    List(targetId1).asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanTest(true)
+      capabilities
+    }
   )
   val target3 = new BuildTarget(
     targetId3,
     List(BuildTargetTag.APPLICATION).asJava,
     languageIds,
-    List(targetId1).asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List(targetId1).asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
   val target4 = new BuildTarget(
     targetId4,
     List(BuildTargetTag.APPLICATION).asJava,
     List("cpp").asJava,
-    List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List.empty.asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
   val target5 = new BuildTarget(
     targetId5,
     List(BuildTargetTag.APPLICATION).asJava,
     List("python").asJava,
-    List.empty.asJava,
-    new BuildTargetCapabilities(true, false, true, false)
+    List.empty.asJava, {
+      val capabilities = new BuildTargetCapabilities()
+      capabilities.setCanCompile(true)
+      capabilities.setCanRun(true)
+      capabilities
+    }
   )
 
   private val client = TestClient(
@@ -279,7 +298,9 @@ class MockClientSuite extends AnyFunSuite {
     val targets = List(target1, target2, target3, target4, target5).asJava
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
-    val jvmBuildTarget = new JvmBuildTarget(javaHome.get, javaVersion.get)
+    val jvmBuildTarget = new JvmBuildTarget()
+    jvmBuildTarget.setJavaVersion(javaVersion.get)
+    jvmBuildTarget.setJavaHome(javaHome.get)
     val scalaJars = List("scala-compiler.jar", "scala-reflect.jar", "scala-library.jar").asJava
     val scalaBuildTarget =
       new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
@@ -289,9 +310,15 @@ class MockClientSuite extends AnyFunSuite {
     val sbtBuildTarget =
       new SbtBuildTarget("1.0.0", autoImports, scalaBuildTarget, children)
     val cppBuildTarget =
-      new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
+      new CppBuildTarget()
+    cppBuildTarget.setVersion("C++11")
+    cppBuildTarget.setCompiler("gcc")
+    cppBuildTarget.setCCompiler("/usr/bin/gcc")
+    cppBuildTarget.setCppCompiler("/usr/bin/g++")
     val pythonBuildTarget =
-      new PythonBuildTarget("3.9", "/usr/bin/python")
+      new PythonBuildTarget()
+    pythonBuildTarget.setInterpreter("/usr/bin/python")
+    pythonBuildTarget.setVersion("3.9")
 
     target1.setDisplayName("target 1")
     target1.setBaseDirectory(targetId1.getUri)

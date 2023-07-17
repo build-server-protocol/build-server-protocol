@@ -672,7 +672,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .jvmRunEnvironment(params)
+      .buildTargetJvmRunEnvironment(params)
       .toScala
       .map(result => result.getItems)
       .map(jvmItems => {
@@ -698,7 +698,7 @@ class TestClient(
       session: MockSession
   ): Future[Unit] = {
     session.connection.server
-      .jvmTestEnvironment(params)
+      .buildTargetJvmTestEnvironment(params)
       .toScala
       .map(result => result.getItems)
       .map(jvmItems => {

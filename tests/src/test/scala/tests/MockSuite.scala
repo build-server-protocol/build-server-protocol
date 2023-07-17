@@ -40,7 +40,6 @@ class HappyMockSuite extends AnyFunSuite {
       .create()
     launcher.startListening()
     val bsp = launcher.getRemoteProxy
-    localClient.onConnectWithServer(bsp)
     val cancelable = Cancelable { () =>
       Cancelable.cancelAll(
         List(Cancelable(() => clientIn.close()), Cancelable(() => clientOut.close()))
@@ -162,7 +161,7 @@ class HappyMockSuite extends AnyFunSuite {
       val linkopts = item.getLinkopts.asScala
       assert(linkopts.nonEmpty)
       assert(linkopts.exists(_.contains("-pthread")))
-      assert(!item.isLinkshared)
+      assert(!item.getLinkshared)
     }
   }
 
@@ -179,7 +178,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
-    val scalacOptionsResult = server.jvmTestEnvironment(jvmTestEnvironmentParams).get
+    val scalacOptionsResult = server.buildTargetJvmTestEnvironment(jvmTestEnvironmentParams).get
     val scalacOptionsItems = scalacOptionsResult.getItems.asScala
     scalacOptionsItems.foreach { item =>
       val options = item.getJvmOptions.asScala
@@ -196,7 +195,7 @@ class HappyMockSuite extends AnyFunSuite {
 
   def assertJvmRunEnvironment(server: MockBuildServer): Unit = {
     val jvmRunEnvironmentParams = new JvmRunEnvironmentParams(getBuildTargetIds(server))
-    val testEnvResult = server.jvmRunEnvironment(jvmRunEnvironmentParams).get
+    val testEnvResult = server.buildTargetJvmRunEnvironment(jvmRunEnvironmentParams).get
     val testEnvItems = testEnvResult.getItems.asScala
     testEnvItems.foreach { item =>
       val options = item.getJvmOptions.asScala

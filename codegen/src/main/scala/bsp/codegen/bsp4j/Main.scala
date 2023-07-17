@@ -1,32 +1,19 @@
 package bsp.codegen.bsp4j
 
-import com.monovore.decline._
+import bsp.codegen.bsp4j.Codegen.run
+import bsp.codegen.{CodegenFile, ExtensionLoader, FilesGenerator, ModelLoader, VersionLoader}
+import bsp.codegen.ir.SmithyToIR
 
-object Main
-    extends CommandApp(
-      name = "bsp-codegen",
-      header = "codegenerator for bsp4j",
-      main = {
-        val out = System.out
-        System.setOut(System.err)
-        MainArgs.opts.map { args =>
-          val results = Codegen.run(args.outputDir)
-          results.foreach(path => out.println(path))
-        }
-      }
-    )
-
-case class MainArgs(
-    outputDir: os.Path
-)
-
-object MainArgs {
-
-  val outputDir = Opts
-    .option[java.nio.file.Path](long = "output", help = "output directory", short = "o")
-    .map(os.Path(_))
-    .withDefault(os.pwd)
-
-  val opts = outputDir.map(MainArgs(_))
-
+object Codegen {
+  def run(): List[CodegenFile] = {
+    val model = ModelLoader.loadModel()
+    val namespaces = ExtensionLoader.namespaces()
+    val ir = new SmithyToIR(model)
+    val definitions = namespaces.flatMap(ir.definitions)
+    val version = VersionLoader.version()
+    val renderer = new JavaRenderer("ch.epfl.scala.bsp4j", definitions, version)
+    renderer.render()
+  }
 }
+
+object Main extends FilesGenerator(run()) {}

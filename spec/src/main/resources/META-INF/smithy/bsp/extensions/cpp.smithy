@@ -13,7 +13,7 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service CppBuildServer {
     operations: [
-        CppOptions
+        BuildTargetCppOptions
     ]
 }
 
@@ -22,7 +22,7 @@ service CppBuildServer {
 /// the `data: Option[Json]` field of the `BuildTarget` definition, when
 /// the `dataKind` field contains "cpp".
 @tags(["basic"])
-@dataKind(kind: "cpp", extends: BuildTargetData)
+@dataKind(kind: "cpp", extends: [BuildTargetData])
 structure CppBuildTarget {
     /// The c++ version this target is supposed to use.
     /// For example: C++11
@@ -42,7 +42,7 @@ structure CppBuildTarget {
 /// query for the list of compiler options necessary to compile in a given list of
 /// targets.
 @jsonRequest("buildTarget/cppOptions")
-operation CppOptions {
+operation BuildTargetCppOptions {
     input: CppOptionsParams
     output: CppOptionsResult
 }

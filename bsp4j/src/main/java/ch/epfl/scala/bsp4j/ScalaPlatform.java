@@ -20,12 +20,10 @@ public enum ScalaPlatform {
         return value;
     }
 
-
     public static ScalaPlatform forValue(int value) {
         ScalaPlatform[] allValues = ScalaPlatform.values();
         if (value < 1 || value > allValues.length)
             throw new IllegalArgumentException("Illegal enum value: " + value);
         return allValues[value - 1];
     }
-
 }

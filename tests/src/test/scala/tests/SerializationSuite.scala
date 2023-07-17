@@ -8,13 +8,14 @@ import org.scalatest.funsuite.AnyFunSuite
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToArray
 import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
+import com.github.plokhotnyuk.jsoniter_scala.core.WriterConfig
 
 import scala.collection.JavaConverters._
 import jsonrpc4s.RawJson
 
 class SerializationSuite extends AnyFunSuite {
 
-  val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
+  val gson: Gson = new GsonBuilder().create()
 
   test("TaskFinishParams") {
     val buildTarget = new URI("anUri")
@@ -43,7 +44,7 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4jValue.getTaskId.getParents.asScala == bsp4sValue.taskId.parents.get)
     assert(bsp4jValue.getEventTime == bsp4sValue.eventTime.get)
     assert(bsp4jValue.getDataKind == bsp4sValue.dataKind.get)
-    assert(bsp4jValue.getStatus.getValue == bsp4sValue.status.code)
+    assert(bsp4jValue.getStatus.getValue == bsp4sValue.status.value)
 
     assert(bsp4jValueData.getOriginId == report.originId.get)
     assert(bsp4jValueData.getTarget.getUri == report.target.uri.value)
@@ -62,6 +63,20 @@ class SerializationSuite extends AnyFunSuite {
     val location = bsp4s.Location(bsp4s.Uri(new URI("other")), range1)
 
     val relatedInformation = bsp4s.DiagnosticRelatedInformation(location, "message")
+    val data = bsp4s.ScalaDiagnostic(
+      actions = Some(
+        bsp4s.ScalaAction(
+          title = "something syntax",
+          description = None,
+          edit = Some(
+            bsp4s.ScalaWorkspaceEdit(
+              changes = bsp4s.ScalaTextEdit(range1, "something") :: Nil
+            )
+          )
+        ) :: Nil
+      )
+    )
+    val dataJson = RawJson(writeToArray(data, WriterConfig))
 
     val diagnostic1 =
       bsp4s.Diagnostic(
@@ -71,8 +86,8 @@ class SerializationSuite extends AnyFunSuite {
         None,
         "message",
         Some(List(relatedInformation)),
-        None,
-        None
+        dataKind = Some("scala"),
+        data = Some(dataJson)
       )
 
     val bsp4sValue = bsp4s.PublishDiagnosticsParams(
@@ -84,7 +99,7 @@ class SerializationSuite extends AnyFunSuite {
     )
 
     // val bsp4sJson = bsp4sValue.asJson.toString()
-    val bsp4sJson = writeToString(bsp4sValue)
+    val bsp4sJson = writeToString(bsp4sValue, WriterConfig)
     val bsp4jValue = gson.fromJson(bsp4sJson, classOf[bsp4j.PublishDiagnosticsParams])
     val bsp4jJson = gson.toJson(bsp4jValue)
     // val bsp4sValueDecoded = decode[bsp4s.PublishDiagnosticsParams](bsp4jJson).right.get
@@ -94,36 +109,13 @@ class SerializationSuite extends AnyFunSuite {
     assert(bsp4jValue.getOriginId == bsp4sValue.originId.get)
     assert(bsp4jValue.getReset == bsp4sValue.reset)
     assert(bsp4jValue.getTextDocument.getUri == bsp4sValue.textDocument.uri.value)
-    assert(bsp4jValue.getDiagnostics.get(0).getMessage == bsp4sValue.diagnostics.head.message)
+    val bsp4jDiagnostic1 = bsp4jValue.getDiagnostics.get(0)
+    assert(bsp4jDiagnostic1.getMessage == bsp4sValue.diagnostics.head.message)
     assert(
-      bsp4jValue.getDiagnostics
-        .get(0)
-        .getSeverity
-        .getValue == bsp4sValue.diagnostics.head.severity.get.id
+      bsp4jDiagnostic1.getSeverity.getValue == bsp4sValue.diagnostics.head.severity.get.value
     )
-
+    assert(bsp4sValueDecoded.diagnostics.head.data == diagnostic1.data)
     assert(bsp4sValueDecoded == bsp4sValue)
-  }
-
-  test("BuildTargetCapabilities - backward compatible canDebug") {
-    val legacyJson =
-      """
-        |{
-        |  "canCompile": true,
-        |  "canTest": true,
-        |  "canRun": true
-        |}""".stripMargin
-
-    val bsp4jValue = gson.fromJson(legacyJson, classOf[bsp4j.BuildTargetCapabilities])
-    val bsp4sValue = readFromString[bsp4s.BuildTargetCapabilities](legacyJson)
-
-    assert(bsp4jValue.getCanCompile == bsp4sValue.canCompile)
-    assert(bsp4jValue.getCanTest == bsp4sValue.canTest)
-    assert(bsp4jValue.getCanRun == bsp4sValue.canRun)
-    assert(bsp4jValue.getCanDebug == bsp4sValue.canDebug)
-
-    assert(bsp4jValue.getCanDebug == false)
-    assert(bsp4sValue.canDebug == false)
   }
 
   test("ScalaTestClassesItem - backward compatible framework") {

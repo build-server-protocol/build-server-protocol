@@ -4,6 +4,7 @@ import bsp.codegen._
 import bsp.codegen.dsl.{block, empty, lines, newline}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.ir.Hint.Deprecated
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
@@ -12,14 +13,43 @@ import cats.implicits.toFoldableOps
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
-class JavaRenderer(basepkg: String) {
+class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
+  import bsp.codegen.Settings.java
 
   val baseRelPath: RelPath = os.rel / basepkg.split('.')
 
-  def render(definition: Def): Option[CodegenFile] = {
+  def render(): List[CodegenFile] = {
+    definitions.flatMap(renderDef) ++ List(renderVersion(), copyPreconditions())
+  }
+
+  def copyPreconditions(): CodegenFile = {
+    val preconditionsSourcePath =
+      os.pwd / "codegen" / "src" / "main" / "resources" / "Preconditions.java"
+    // TODO: dehardcode "codegen" path above
+    val preconditionsContents = os.read(preconditionsSourcePath)
+    val preconditionsPath = os.rel / "org" / "eclipse" / "lsp4j" / "util" / "Preconditions.java"
+    // For some reason extend expects this file to be present in this specific location,
+    // it can be removed once we stop using extend
+    CodegenFile(preconditionsPath, preconditionsContents)
+  }
+
+  def renderVersion(): CodegenFile = {
+    val contents = lines(
+      "package ch.epfl.scala.bsp4j;",
+      newline,
+      block("public class Bsp4j")(
+        s"""public static final String PROTOCOL_VERSION = new String("$version");"""
+      ),
+      newline
+    )
+
+    CodegenFile(baseRelPath / "Bsp4j.java", contents.render)
+  }
+
+  def renderDef(definition: Def): Option[CodegenFile] = {
     definition match {
-      case PrimitiveAlias(shapeId, tpe, _) => None
-      case Structure(shapeId, fields, _)   => Some(renderStructure(shapeId, fields))
+      case PrimitiveAlias(shapeId, tpe, _)  => None
+      case Structure(shapeId, fields, _, _) => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, _) =>
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, _) => Some(renderOpenEnum(shapeId, enumType, values))
@@ -44,11 +74,17 @@ class JavaRenderer(basepkg: String) {
           val assignments = requiredFields.map(_.name).map(n => s"this.$n = $n")
           block(s"new($params)")(assignments)
         }
-      )
+      ),
+      newline
     )
 
     val fileName = shapeId.getName() + ".xtend"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
+  def spreadEnumLines[A](enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
+    val renderedValues = values.map(renderEnumValueDef(enumType))
+    renderedValues.init.map(_ + ",") :+ (renderedValues.last + ";")
   }
 
   def renderClosedEnum[A](
@@ -67,9 +103,10 @@ class JavaRenderer(basepkg: String) {
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
-        values.map(renderEnumValueDef(enumType)).mkString("", ",", ";"),
+        spreadEnumLines(enumType, values),
         newline,
         s"private final $evt value;",
+        newline,
         block(s"$tpe($evt value)") {
           "this.value = value;"
         },
@@ -78,16 +115,17 @@ class JavaRenderer(basepkg: String) {
           "return value;"
         },
         newline,
-        block(s"public static $tpe forValue ($evt value)")(
+        block(s"public static $tpe forValue($evt value)")(
           s"$tpe[] allValues = $tpe.values();",
           "if (value < 1 || value > allValues.length)",
           lines("""throw new IllegalArgumentException("Illegal enum value: " + value);""").indent,
           "return allValues[value - 1];"
         )
-      )
+      ),
+      newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderOpenEnum[A](
@@ -106,7 +144,7 @@ class JavaRenderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
@@ -125,28 +163,31 @@ class JavaRenderer(basepkg: String) {
       newline
     )
     val fileName = shapeId.getName() + ".java"
-    CodegenFile(shapeId, baseRelPath / fileName, allLines.render)
+    CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
   def renderOperation(operation: Operation): Lines = {
-    val output = operation.outputType match {
-      case TPrimitive(Primitive.PUnit, _) => "void"
-      case other                          => s"CompletableFuture<${renderType(other)}>"
+    val output = (operation.jsonRPCMethodType, operation.outputType) match {
+      case (Notification, _)                         => "void"
+      case (Request, TPrimitive(Primitive.PUnit, _)) => s"CompletableFuture<Object>"
+      case (Request, other)                          => s"CompletableFuture<${renderType(other)}>"
     }
     val input = operation.inputType match {
       case TPrimitive(Primitive.PUnit, _) => ""
       case other                          => s"${renderType(other)} params"
     }
     val rpcMethod = operation.jsonRPCMethod
-    val annotation = operation.jsonRPCMethodType match {
+    val rpcAnnotation = operation.jsonRPCMethodType match {
       case Notification => s"""@JsonNotification("$rpcMethod")"""
       case Request      => s"""@JsonRequest("$rpcMethod")"""
     }
+    val maybeDeprecated = operation.hints.collectFirst({ case Deprecated(_) => "@Deprecated" })
     val method = operation.name.head.toLower + operation.name.tail
     lines(
-      newline,
-      annotation,
-      s"$output $method($input);"
+      maybeDeprecated,
+      rpcAnnotation,
+      s"$output $method($input);",
+      newline
     )
   }
 

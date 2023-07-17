@@ -13,7 +13,7 @@ use jsonrpc#jsonRequest
 @jsonRPC
 service PythonBuildServer {
     operations: [
-        PythonOptions
+        BuildTargetPythonOptions
     ]
 }
 
@@ -22,7 +22,7 @@ service PythonBuildServer {
 /// This metadata is embedded in the `data: Option[Json]` field of the `BuildTarget` definition when
 /// the `dataKind` field contains "python".
 @tags(["basic"])
-@dataKind(kind: "python", extends: BuildTargetData)
+@dataKind(kind: "python", extends: [BuildTargetData])
 structure PythonBuildTarget {
     version: String
     interpreter: URI
@@ -32,7 +32,7 @@ structure PythonBuildTarget {
 /// query for the list of the interpreter flags used to run a given list of
 /// targets.
 @jsonRequest("buildTarget/pythonOptions")
-operation PythonOptions {
+operation BuildTargetPythonOptions {
     input: PythonOptionsParams
     output: PythonOptionsResult
 }

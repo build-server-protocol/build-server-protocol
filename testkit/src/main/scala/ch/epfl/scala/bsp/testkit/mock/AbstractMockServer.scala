@@ -24,7 +24,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def logMessage(
       message: String,
-      messageType: MessageType = MessageType.INFORMATION,
+      messageType: MessageType = MessageType.INFO,
       task: Option[TaskId] = None,
       origin: Option[String] = None
   ): Unit = {
@@ -37,7 +37,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def showMessage(
       message: String,
-      messageType: MessageType = MessageType.INFORMATION,
+      messageType: MessageType = MessageType.INFO,
       task: Option[TaskId] = None,
       origin: Option[String] = None
   ): Unit = {

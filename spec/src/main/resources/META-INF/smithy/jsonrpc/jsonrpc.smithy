@@ -67,5 +67,9 @@ structure dataKind {
     /// Indicates what polymorphic document type this piece
     /// of data can fulfill.
     @required
-    extends: PolymorphicData
+    extends: PolymorphicDataList
+}
+
+list PolymorphicDataList {
+    member: PolymorphicData
 }

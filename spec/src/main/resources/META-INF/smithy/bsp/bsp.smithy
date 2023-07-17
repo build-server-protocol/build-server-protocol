@@ -9,6 +9,12 @@ use jsonrpc#jsonNotification
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
+/// An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
+integer Integer
+
+/// A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
+long Long
+
 @jsonRPC
 service BuildClient {
     operations: [
@@ -25,9 +31,9 @@ service BuildClient {
 @jsonRPC
 service BuildServer {
     operations: [
-        InitializeBuild
+        BuildInitialize
         OnBuildInitialized
-        ShutdownBuild
+        BuildShutdown
         OnBuildExit
         WorkspaceBuildTargets
         WorkspaceReload
@@ -119,7 +125,6 @@ enum BuildTargetTag {
     /// Actions on the target such as build and test should only be invoked manually
     /// and explicitly. For example, triggering a build on all targets in the workspace
     /// should by default not include this target.
-    ///
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
@@ -135,16 +140,12 @@ list BuildTargetTags {
 /// cannot be used and why.
 structure BuildTargetCapabilities {
     /// This target can be compiled by the BSP server.
-    @required
     canCompile: Boolean
     /// This target can be tested by the BSP server.
-    @required
     canTest: Boolean
     /// This target can be run by the BSP server.
-    @required
     canRun: Boolean
     /// This target can be debugged by the BSP server.
-    @required
     canDebug: Boolean
 }
 
@@ -234,7 +235,7 @@ structure BspConnectionDetails {
 /// Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 /// requests or notifications to the server.
 @jsonRequest("build/initialize")
-operation InitializeBuild {
+operation BuildInitialize {
     input: InitializeBuildParams
     output: InitializeBuildResult
 }
@@ -254,7 +255,7 @@ operation OnBuildInitialized {
 /// (otherwise the response might not be delivered correctly to the client). There
 /// is a separate exit notification that asks the server to exit.
 @jsonRequest("build/shutdown")
-operation ShutdownBuild {
+operation BuildShutdown {
 }
 
 /// Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
@@ -282,7 +283,7 @@ operation OnBuildLogMessage {
 
 /// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
 ///
-/// Diagnostic is defined as it is in the LSP
+/// Diagnostic is defined as it is in the LSP.
 ///
 /// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 /// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
@@ -513,10 +514,6 @@ list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
 }
 
-timestamp EventTime
-
-long DurationMillis
-
 @data
 document BuildTargetData
 
@@ -524,9 +521,6 @@ document BuildTargetData
 document InitializeBuildParamsData
 
 structure InitializeBuildParams {
-    /// The rootUri of the workspace
-    @required
-    rootUri: URI
     /// Name of the client
     @required
     displayName: String
@@ -536,6 +530,9 @@ structure InitializeBuildParams {
     /// The BSP version that the client speaks
     @required
     bspVersion: String
+    /// The rootUri of the workspace
+    @required
+    rootUri: URI
     /// The capabilities of the client
     @required
     capabilities: BuildClientCapabilities
@@ -819,7 +816,7 @@ list DiagnosticRelatedInformationList {
 structure WorkspaceBuildTargetsResult {
     /// The build targets in this workspace that
     /// contain sources with the given language ids.
-    // TODO: should be @required
+    @required
     targets: BuildTargets
 }
 
@@ -1071,7 +1068,7 @@ structure TaskStartParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1087,7 +1084,7 @@ structure TaskProgressParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1112,7 +1109,7 @@ structure TaskFinishParams {
     taskId: TaskId
 
     /// Timestamp of when the event started in milliseconds since Epoch.
-    eventTime: EventTime,
+    eventTime: Long,
 
     /// Message describing the task.
     message: String
@@ -1165,7 +1162,7 @@ structure CompileResult {
 /// `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
 /// include a `CompileTask` object:
-@dataKind(kind: "compile-task", extends: TaskData)
+@dataKind(kind: "compile-task", extends: [TaskData])
 structure CompileTask {
     @required
     target: BuildTargetIdentifier
@@ -1176,7 +1173,7 @@ structure CompileTask {
 /// `build/taskFinish` notification. When the compilation unit is a build target,
 /// the notification's `dataKind` field must be `compile-report` and the `data`
 /// field must include a `CompileReport` object:
-@dataKind(kind: "compile-report", extends: TaskData)
+@dataKind(kind: "compile-report", extends: [TaskData])
 structure CompileReport {
     /// The build target that was compiled.
     @required
@@ -1194,7 +1191,7 @@ structure CompileReport {
     warnings: Integer
 
     /// The total number of milliseconds it took to compile the target.
-    time: DurationMillis
+    time: Long
 
     /// The compilation was a noOp compilation.
     noOp: Boolean
@@ -1241,13 +1238,13 @@ structure TestResult {
 /// `build/taskStart` notification. When the testing unit is a build target, the
 /// notification's `dataKind` field must be `test-task` and the `data` field must
 /// include a `TestTask` object.
-@dataKind(kind: "test-task", extends: TaskData)
+@dataKind(kind: "test-task", extends: [TaskData])
 structure TestTask {
     @required
     target: BuildTargetIdentifier
 }
 
-@dataKind(kind: "test-report", extends: TaskData)
+@dataKind(kind: "test-report", extends: [TaskData])
 structure TestReport {
     originId: Identifier
     /// The build target that was compiled.
@@ -1275,10 +1272,10 @@ structure TestReport {
     skipped: Integer
 
     /// The total number of milliseconds tests take to run (e.g. doesn't include compile times).
-    time: DurationMillis
+    time: Long
 }
 
-@dataKind(kind: "test-start", extends: TaskData)
+@dataKind(kind: "test-start", extends: [TaskData])
 structure TestStart {
     /// Name or description of the test.
     @required
@@ -1291,7 +1288,7 @@ structure TestStart {
 @data
 document TestFinishData
 
-@dataKind(kind: "test-finish", extends: TaskData)
+@dataKind(kind: "test-finish", extends: [TaskData])
 structure TestFinish {
     /// Name or description of the test.
     @required
