@@ -242,11 +242,7 @@ trait Bsp4jGenerators {
 
   lazy val genScalaWorkspaceEdit: Gen[ScalaWorkspaceEdit] = for {
     changes <- genScalaTextEdit.list
-  } yield {
-    val edit = new ScalaWorkspaceEdit()
-    edit.setChanges(changes)
-    edit
-  }
+  } yield new ScalaWorkspaceEdit(changes)
 
   lazy val genScalaTextEdit: Gen[ScalaTextEdit] = for {
     range <- genRange

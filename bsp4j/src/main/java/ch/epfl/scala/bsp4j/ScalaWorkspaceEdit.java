@@ -1,23 +1,28 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaWorkspaceEdit {
+  @NonNull
   private List<ScalaTextEdit> changes;
 
-  public ScalaWorkspaceEdit() {
+  public ScalaWorkspaceEdit(@NonNull final List<ScalaTextEdit> changes) {
+    this.changes = changes;
   }
 
   @Pure
+  @NonNull
   public List<ScalaTextEdit> getChanges() {
     return this.changes;
   }
 
-  public void setChanges(final List<ScalaTextEdit> changes) {
-    this.changes = changes;
+  public void setChanges(@NonNull final List<ScalaTextEdit> changes) {
+    this.changes = Preconditions.checkNotNull(changes, "changes");
   }
 
   @Override

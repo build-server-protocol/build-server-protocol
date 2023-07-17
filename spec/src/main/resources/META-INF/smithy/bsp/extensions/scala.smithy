@@ -322,6 +322,7 @@ list ScalaActions {
 
 /// A workspace edit represents changes to many resources managed in the workspace.
 structure ScalaWorkspaceEdit {
+    @required
     changes: ScalaTextEdits
 }
 

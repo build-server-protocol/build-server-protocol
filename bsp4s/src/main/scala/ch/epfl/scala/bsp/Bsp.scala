@@ -1041,7 +1041,7 @@ object ScalaTextEdit {
 }
 
 final case class ScalaWorkspaceEdit(
-    changes: Option[List[ScalaTextEdit]]
+    changes: List[ScalaTextEdit]
 )
 
 object ScalaWorkspaceEdit {

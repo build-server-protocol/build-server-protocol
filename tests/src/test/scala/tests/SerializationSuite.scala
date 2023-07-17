@@ -70,7 +70,7 @@ class SerializationSuite extends AnyFunSuite {
           description = None,
           edit = Some(
             bsp4s.ScalaWorkspaceEdit(
-              changes = Some(bsp4s.ScalaTextEdit(range1, "something") :: Nil)
+              changes = bsp4s.ScalaTextEdit(range1, "something") :: Nil
             )
           )
         ) :: Nil
