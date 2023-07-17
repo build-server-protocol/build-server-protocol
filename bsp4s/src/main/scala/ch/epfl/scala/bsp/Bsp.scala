@@ -1165,13 +1165,10 @@ object StatusCode {
     }
   }
 }
-object TaskDataKind {
+object TaskFinishDataKind {
   val CompileReport = "compile-report"
-  val CompileTask = "compile-task"
   val TestFinish = "test-finish"
   val TestReport = "test-report"
-  val TestStart = "test-start"
-  val TestTask = "test-task"
 }
 
 final case class TaskFinishParams(
@@ -1197,6 +1194,8 @@ object TaskId {
   implicit val codec: JsonValueCodec[TaskId] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+object TaskProgressDataKind {}
+
 final case class TaskProgressParams(
     taskId: TaskId,
     eventTime: Option[Long],
@@ -1211,6 +1210,12 @@ final case class TaskProgressParams(
 object TaskProgressParams {
   implicit val codec: JsonValueCodec[TaskProgressParams] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object TaskStartDataKind {
+  val CompileTask = "compile-task"
+  val TestStart = "test-start"
+  val TestTask = "test-task"
 }
 
 final case class TaskStartParams(

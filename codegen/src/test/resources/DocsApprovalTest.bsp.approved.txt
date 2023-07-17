@@ -1578,17 +1578,17 @@ export interface TaskStartParams {
   message?: string;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: TaskDataKind;
+  dataKind?: TaskStartDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
-  data?: TaskData;
+  data?: TaskStartData;
 }
 ```
 
-#### TaskDataKind
+#### TaskStartDataKind
 
-Task progress notifications may contain an arbitrary interface in their `data`
+Task start notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
 
@@ -1596,20 +1596,11 @@ There are predefined kinds of objects for compile and test tasks, as described
 in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 
 ```ts
-export type TaskDataKind = string;
+export type TaskStartDataKind = string;
 
-export namespace TaskDataKind {
-  /** `data` field must contain a CompileReport object. */
-  export const CompileReport = "compile-report";
-
+export namespace TaskStartDataKind {
   /** `data` field must contain a CompileTask object. */
   export const CompileTask = "compile-task";
-
-  /** `data` field must contain a TestFinish object. */
-  export const TestFinish = "test-finish";
-
-  /** `data` field must contain a TestReport object. */
-  export const TestReport = "test-report";
 
   /** `data` field must contain a TestStart object. */
   export const TestStart = "test-start";
@@ -1619,9 +1610,9 @@ export namespace TaskDataKind {
 }
 ```
 
-#### TaskData
+#### TaskStartData
 
-Task progress notifications may contain an arbitrary interface in their `data`
+Task start notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
 
@@ -1629,7 +1620,180 @@ There are predefined kinds of objects for compile and test tasks, as described
 in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 
 ```ts
-export type TaskData = any;
+export type TaskStartData = any;
+```
+
+#### CompileTask
+
+The beginning of a compilation unit may be signalled to the client with a
+`build/taskStart` notification. When the compilation unit is a build target, the
+notification's `dataKind` field must be "compile-task" and the `data` field must
+include a `CompileTask` object:
+
+```ts
+export interface CompileTask {
+  target: BuildTargetIdentifier;
+}
+```
+
+#### TestStart
+
+
+```ts
+export interface TestStart {
+  /** Name or description of the test. */
+  displayName: string;
+
+  /** Source location of the test, as LSP location. */
+  location?: Location;
+}
+```
+
+#### TestTask
+
+The beginning of a testing unit may be signalled to the client with a
+`build/taskStart` notification. When the testing unit is a build target, the
+notification's `dataKind` field must be `test-task` and the `data` field must
+include a `TestTask` object.
+
+```ts
+export interface TestTask {
+  target: BuildTargetIdentifier;
+}
+```
+
+### OnBuildTaskProgress: notification
+
+After a `taskStart` and before `taskFinish` for a `taskId`, the server may send
+any number of progress notifications.
+
+- method: `build/taskProgress`
+- params: `TaskProgressParams`
+
+#### TaskProgressParams
+
+
+```ts
+export interface TaskProgressParams {
+  /** Unique id of the task with optional reference to parent task id */
+  taskId: TaskId;
+
+  /** Timestamp of when the event started in milliseconds since Epoch. */
+  eventTime?: Long;
+
+  /** Message describing the task. */
+  message?: string;
+
+  /** If known, total amount of work units in this task. */
+  total?: Long;
+
+  /** If known, completed amount of work units in this task. */
+  progress?: Long;
+
+  /** Name of a work unit. For example, "files" or "tests". May be empty. */
+  unit?: string;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TaskProgressDataKind;
+
+  /** Optional metadata about the task.
+   * Objects for specific tasks like compile, test, etc are specified in the protocol. */
+  data?: TaskProgressData;
+}
+```
+
+#### TaskProgressDataKind
+
+Task progress notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
+
+```ts
+export type TaskProgressDataKind = string;
+
+export namespace TaskProgressDataKind {
+}
+```
+
+#### TaskProgressData
+
+Task progress notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
+
+```ts
+export type TaskProgressData = any;
+```
+
+### OnBuildTaskFinish: notification
+
+A `build/taskFinish` notification must always be sent after a `build/taskStart`
+with the same `taskId` was sent.
+
+- method: `build/taskFinish`
+- params: `TaskFinishParams`
+
+#### TaskFinishParams
+
+
+```ts
+export interface TaskFinishParams {
+  /** Unique id of the task with optional reference to parent task id */
+  taskId: TaskId;
+
+  /** Timestamp of when the event started in milliseconds since Epoch. */
+  eventTime?: Long;
+
+  /** Message describing the task. */
+  message?: string;
+
+  /** Task completion status. */
+  status: StatusCode;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TaskFinishDataKind;
+
+  /** Optional metadata about the task.
+   * Objects for specific tasks like compile, test, etc are specified in the protocol. */
+  data?: TaskFinishData;
+}
+```
+
+#### TaskFinishDataKind
+
+Task finish notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
+
+There are predefined kinds of objects for compile and test tasks, as described
+in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+
+```ts
+export type TaskFinishDataKind = string;
+
+export namespace TaskFinishDataKind {
+  /** `data` field must contain a CompileReport object. */
+  export const CompileReport = "compile-report";
+
+  /** `data` field must contain a TestFinish object. */
+  export const TestFinish = "test-finish";
+
+  /** `data` field must contain a TestReport object. */
+  export const TestReport = "test-report";
+}
+```
+
+#### TaskFinishData
+
+Task finish notifications may contain an arbitrary interface in their `data`
+field. The kind of interface that is contained in a notification must be
+specified in the `dataKind` field.
+
+There are predefined kinds of objects for compile and test tasks, as described
+in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+
+```ts
+export type TaskFinishData = any;
 ```
 
 #### CompileReport
@@ -1658,19 +1822,6 @@ export interface CompileReport {
 
   /** The compilation was a noOp compilation. */
   noOp?: boolean;
-}
-```
-
-#### CompileTask
-
-The beginning of a compilation unit may be signalled to the client with a
-`build/taskStart` notification. When the compilation unit is a build target, the
-notification's `dataKind` field must be "compile-task" and the `data` field must
-include a `CompileTask` object:
-
-```ts
-export interface CompileTask {
-  target: BuildTargetIdentifier;
 }
 ```
 
