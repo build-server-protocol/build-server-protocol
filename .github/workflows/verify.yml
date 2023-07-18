@@ -26,6 +26,7 @@ jobs:
           files: |
             **/*.java
             **/*.scala
+            **/*.md
 
       - name: Fail if we detect changed files
         if: steps.verify-changed-files.outputs.files_changed == 'true'
