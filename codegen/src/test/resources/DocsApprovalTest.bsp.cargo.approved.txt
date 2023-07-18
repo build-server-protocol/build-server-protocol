@@ -1,0 +1,85 @@
+## BSP version
+`2.1.0`
+
+## BSP Server remote interface
+
+### CargoFeaturesState: request
+
+The cargo features state request is sent from the client to the server to
+query for the current state of the Cargo features. Provides also mapping
+between Cargo packages and build target identifiers.
+
+- method: `workspace/CargoFeaturesState`
+- result: `CargoFeaturesStateResult`
+
+#### CargoFeaturesStateResult
+
+
+```ts
+export interface CargoFeaturesStateResult {
+  /** The list of Cargo packages with assigned to them target
+   * identifiers and available features. */
+  packagesFeatures: PackageFeatures;
+}
+```
+
+#### PackageFeatures
+
+
+```ts
+export interface PackageFeatures {
+  /** The Cargo package identifier. */
+  packageId?: string;
+
+  /** The list of build target identifiers assigned to the Cargo package. */
+  targets?: BuildTargetIdentifier[];
+
+  /** The list of available features for the Cargo package. */
+  availableFeatures?: string[];
+
+  /** The list of enabled features for the Cargo package. */
+  enabledFeatures?: string[];
+}
+```
+
+### EnableCargoFeatures: request
+
+The enable cargo features request is sent from the client to the server to
+enable features for the specified Cargo package.
+
+- method: `workspace/EnableCargoFeatures`
+- params: `EnableCargoFeaturesParams`
+
+#### EnableCargoFeaturesParams
+
+
+```ts
+export interface EnableCargoFeaturesParams {
+  /** Package ID to enable features for. */
+  packageId: string;
+
+  /** The list of features to enable. */
+  features: string[];
+}
+```
+
+### DisableCargoFeatures: request
+
+The disable cargo features request is sent from the client to the server to
+disable features for the specified Cargo package.
+
+- method: `workspace/DisableCargoFeatures`
+- params: `DisableCargoFeaturesParams`
+
+#### DisableCargoFeaturesParams
+
+
+```ts
+export interface DisableCargoFeaturesParams {
+  /** Package ID to disable features for. */
+  packageId: string;
+
+  /** The list of features to disable. */
+  features: string[];
+}
+```
