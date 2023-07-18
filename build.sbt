@@ -58,7 +58,7 @@ publish / skip := true
 
 addCommandAlias(
   "generate",
-  "codegen ; xtend ; scalafmtAll ; scalafmtSbt"
+  "codegen ; xtend ; scalafmtAll ; scalafmtSbt; mdoc"
 )
 
 // Bsp4s is now generated from the smithy model
