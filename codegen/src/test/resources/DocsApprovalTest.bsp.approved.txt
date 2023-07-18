@@ -1920,134 +1920,36 @@ export interface TestReport {
 }
 ```
 
-#### TestStart
-
-
-```ts
-export interface TestStart {
-  /** Name or description of the test. */
-  displayName: string;
-
-  /** Source location of the test, as LSP location. */
-  location?: Location;
-}
-```
-
-#### TestTask
-
-The beginning of a testing unit may be signalled to the client with a
-`build/taskStart` notification. When the testing unit is a build target, the
-notification's `dataKind` field must be `test-task` and the `data` field must
-include a `TestTask` object.
-
-```ts
-export interface TestTask {
-  target: BuildTargetIdentifier;
-}
-```
-
-### OnBuildTaskProgress: notification
-
-After a `taskStart` and before `taskFinish` for a `taskId`, the server may send
-any number of progress notifications.
-
-- method: `build/taskProgress`
-- params: `TaskProgressParams`
-
-#### TaskProgressParams
-
-
-```ts
-export interface TaskProgressParams {
-  /** Unique id of the task with optional reference to parent task id */
-  taskId: TaskId;
-
-  /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: Long;
-
-  /** Message describing the task. */
-  message?: string;
-
-  /** If known, total amount of work units in this task. */
-  total?: Long;
-
-  /** If known, completed amount of work units in this task. */
-  progress?: Long;
-
-  /** Name of a work unit. For example, "files" or "tests". May be empty. */
-  unit?: string;
-
-  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: TaskDataKind;
-
-  /** Optional metadata about the task.
-   * Objects for specific tasks like compile, test, etc are specified in the protocol. */
-  data?: TaskData;
-}
-```
-
-### OnBuildTaskFinish: notification
-
-A `build/taskFinish` notification must always be sent after a `build/taskStart`
-with the same `taskId` was sent.
-
-- method: `build/taskFinish`
-- params: `TaskFinishParams`
-
-#### TaskFinishParams
-
-
-```ts
-export interface TaskFinishParams {
-  /** Unique id of the task with optional reference to parent task id */
-  taskId: TaskId;
-
-  /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: Long;
-
-  /** Message describing the task. */
-  message?: string;
-
-  /** Task completion status. */
-  status: StatusCode;
-
-  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
-  dataKind?: TaskDataKind;
-
-  /** Optional metadata about the task.
-   * Objects for specific tasks like compile, test, etc are specified in the protocol. */
-  data?: TaskData;
-}
-```
-
-## TaskData kinds
+## TaskFinishData kinds
 
 ### CompileReport
 This structure is embedded in
-the `data?: TaskData` field, when
+the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"compile-report"`.
-
-### CompileTask
-This structure is embedded in
-the `data?: TaskData` field, when
-the `dataKind` field contains `"compile-task"`.
 
 ### TestFinish
 This structure is embedded in
-the `data?: TaskData` field, when
+the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-finish"`.
 
 ### TestReport
 This structure is embedded in
-the `data?: TaskData` field, when
+the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-report"`.
+
+## TaskStartData kinds
+
+### CompileTask
+This structure is embedded in
+the `data?: TaskStartData` field, when
+the `dataKind` field contains `"compile-task"`.
 
 ### TestStart
 This structure is embedded in
-the `data?: TaskData` field, when
+the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-start"`.
 
 ### TestTask
 This structure is embedded in
-the `data?: TaskData` field, when
+the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-task"`.
