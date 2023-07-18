@@ -69,6 +69,12 @@ object Workspace extends Workspace
 trait Workspace {
   object buildTargets extends Endpoint[Unit, WorkspaceBuildTargetsResult]("workspace/buildTargets")
   object reload extends Endpoint[Unit, Unit]("workspace/reload")
+  object cargoFeaturesState
+      extends Endpoint[Unit, CargoFeaturesStateResult]("workspace/cargoFeaturesState")
+  object enableCargoFeatures
+      extends Endpoint[EnableCargoFeaturesParams, Unit]("workspace/enableCargoFeatures")
+  object disableCargoFeatures
+      extends Endpoint[DisableCargoFeaturesParams, Unit]("workspace/disableCargoFeatures")
 }
 object DebugSession extends DebugSession
 trait DebugSession {

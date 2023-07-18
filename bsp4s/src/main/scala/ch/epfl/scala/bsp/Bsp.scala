@@ -170,6 +170,15 @@ object BuildTargetTag {
   val Test = "test"
 }
 
+final case class CargoFeaturesStateResult(
+    packagesFeatures: PackageFeatures
+)
+
+object CargoFeaturesStateResult {
+  implicit val codec: JsonValueCodec[CargoFeaturesStateResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class CleanCacheParams(
     targets: List[BuildTargetIdentifier]
 )
@@ -459,6 +468,26 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class DisableCargoFeaturesParams(
+    packageId: String,
+    features: List[String]
+)
+
+object DisableCargoFeaturesParams {
+  implicit val codec: JsonValueCodec[DisableCargoFeaturesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class EnableCargoFeaturesParams(
+    packageId: String,
+    features: List[String]
+)
+
+object EnableCargoFeaturesParams {
+  implicit val codec: JsonValueCodec[EnableCargoFeaturesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -728,6 +757,18 @@ final case class OutputPathsResult(
 
 object OutputPathsResult {
   implicit val codec: JsonValueCodec[OutputPathsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class PackageFeatures(
+    packageId: String,
+    targets: List[BuildTargetIdentifier],
+    availableFeatures: List[String],
+    enabledFeatures: List[String]
+)
+
+object PackageFeatures {
+  implicit val codec: JsonValueCodec[PackageFeatures] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
