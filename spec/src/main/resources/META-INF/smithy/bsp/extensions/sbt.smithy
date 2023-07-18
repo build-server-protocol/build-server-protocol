@@ -9,9 +9,7 @@ use bsp.scala#ScalaBuildTarget
 use jsonrpc#dataKind
 
 /// `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
-/// for providing editor support for sbt build files. This metadata is embedded in
-/// the `data: Option[Json]` field of the `BuildTarget` definition when the
-/// `dataKind` field contains "sbt".
+/// for providing editor support for sbt build files.
 ///
 /// For example, say we have a project in `/foo/bar` defining projects `A` and `B`
 /// and two meta builds `M1` (defined in `/foo/bar/project`) and `M2` (defined in
@@ -24,7 +22,6 @@ use jsonrpc#dataKind
 /// Clients can use this information to reconstruct the tree of sbt meta builds. The
 /// `parent` information can be defined from `children` but it's provided by the
 /// server to simplify the data processing on the client side.
-@tags(["basic"])
 @dataKind(kind: "sbt", extends: [BuildTargetData])
 structure SbtBuildTarget {
     @required

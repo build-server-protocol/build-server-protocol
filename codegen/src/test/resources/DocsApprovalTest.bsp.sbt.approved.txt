@@ -1,14 +1,17 @@
 ## BSP version
 `2.1.0`
 
-## Common shapes
+## BuildTargetData kinds
+
+### SbtBuildTarget
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"sbt"`.
 
 #### SbtBuildTarget
 
 `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
-for providing editor support for sbt build files. This metadata is embedded in
-the `data: Option[Json]` field of the `BuildTarget` definition when the
-`dataKind` field contains "sbt".
+for providing editor support for sbt build files.
 
 For example, say we have a project in `/foo/bar` defining projects `A` and `B`
 and two meta builds `M1` (defined in `/foo/bar/project`) and `M2` (defined in
@@ -35,4 +38,3 @@ export interface SbtBuildTarget {
   children: BuildTargetIdentifier[];
 }
 ```
-

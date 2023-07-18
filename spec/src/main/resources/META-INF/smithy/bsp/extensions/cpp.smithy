@@ -18,10 +18,7 @@ service CppBuildServer {
 }
 
 /// `CppBuildTarget` is a basic data structure that contains c++-specific
-/// metadata, specifically compiler reference. This metadata is embedded in
-/// the `data: Option[Json]` field of the `BuildTarget` definition, when
-/// the `dataKind` field contains "cpp".
-@tags(["basic"])
+/// metadata, specifically compiler reference.
 @dataKind(kind: "cpp", extends: [BuildTargetData])
 structure CppBuildTarget {
     /// The c++ version this target is supposed to use.

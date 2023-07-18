@@ -7,7 +7,8 @@ case class DocTree(
     commonShapeIds: List[ShapeId],
     services: List[ServiceDocNode],
     operations: Map[ShapeId, OperationDocNode],
-    structures: Map[ShapeId, StructureDocNode]
+    structures: Map[ShapeId, StructureDocNode],
+    dataKindInhabitants: Map[ShapeId, List[PolymorphicDataKind]]
 )
 
 sealed trait DocNode {
