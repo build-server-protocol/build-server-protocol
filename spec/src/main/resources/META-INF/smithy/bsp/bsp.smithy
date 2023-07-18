@@ -1053,14 +1053,29 @@ intEnum OutputPathItemKind {
 }
 
 
-/// Task progress notifications may contain an arbitrary interface in their `data`
+/// Task start notifications may contain an arbitrary interface in their `data`
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
 ///
 /// There are predefined kinds of objects for compile and test tasks, as described
 /// in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 @data
-document TaskData
+document TaskStartData
+
+/// Task progress notifications may contain an arbitrary interface in their `data`
+/// field. The kind of interface that is contained in a notification must be
+/// specified in the `dataKind` field.
+@data
+document TaskProgressData
+
+/// Task finish notifications may contain an arbitrary interface in their `data`
+/// field. The kind of interface that is contained in a notification must be
+/// specified in the `dataKind` field.
+///
+/// There are predefined kinds of objects for compile and test tasks, as described
+/// in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+@data
+document TaskFinishData
 
 structure TaskStartParams {
     /// Unique id of the task with optional reference to parent task id
@@ -1075,7 +1090,7 @@ structure TaskStartParams {
 
     /// Optional metadata about the task.
     /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-    data: TaskData
+    data: TaskStartData
 }
 
 structure TaskProgressParams {
@@ -1100,7 +1115,7 @@ structure TaskProgressParams {
 
     /// Optional metadata about the task.
     /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-    data: TaskData
+    data: TaskProgressData
 }
 
 structure TaskFinishParams {
@@ -1120,7 +1135,7 @@ structure TaskFinishParams {
 
     /// Optional metadata about the task.
     /// Objects for specific tasks like compile, test, etc are specified in the protocol.
-    data: TaskData
+    data: TaskFinishData
 }
 
 
@@ -1162,7 +1177,7 @@ structure CompileResult {
 /// `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
 /// include a `CompileTask` object:
-@dataKind(kind: "compile-task", extends: [TaskData])
+@dataKind(kind: "compile-task", extends: [TaskStartData])
 structure CompileTask {
     @required
     target: BuildTargetIdentifier
@@ -1173,7 +1188,7 @@ structure CompileTask {
 /// `build/taskFinish` notification. When the compilation unit is a build target,
 /// the notification's `dataKind` field must be `compile-report` and the `data`
 /// field must include a `CompileReport` object:
-@dataKind(kind: "compile-report", extends: [TaskData])
+@dataKind(kind: "compile-report", extends: [TaskFinishData])
 structure CompileReport {
     /// The build target that was compiled.
     @required
@@ -1238,13 +1253,13 @@ structure TestResult {
 /// `build/taskStart` notification. When the testing unit is a build target, the
 /// notification's `dataKind` field must be `test-task` and the `data` field must
 /// include a `TestTask` object.
-@dataKind(kind: "test-task", extends: [TaskData])
+@dataKind(kind: "test-task", extends: [TaskStartData])
 structure TestTask {
     @required
     target: BuildTargetIdentifier
 }
 
-@dataKind(kind: "test-report", extends: [TaskData])
+@dataKind(kind: "test-report", extends: [TaskFinishData])
 structure TestReport {
     originId: Identifier
     /// The build target that was compiled.
@@ -1275,7 +1290,7 @@ structure TestReport {
     time: Long
 }
 
-@dataKind(kind: "test-start", extends: [TaskData])
+@dataKind(kind: "test-start", extends: [TaskStartData])
 structure TestStart {
     /// Name or description of the test.
     @required
@@ -1288,7 +1303,7 @@ structure TestStart {
 @data
 document TestFinishData
 
-@dataKind(kind: "test-finish", extends: [TaskData])
+@dataKind(kind: "test-finish", extends: [TaskFinishData])
 structure TestFinish {
     /// Name or description of the test.
     @required
