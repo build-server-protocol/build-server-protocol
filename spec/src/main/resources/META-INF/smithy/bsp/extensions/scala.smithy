@@ -258,6 +258,11 @@ list ScalaTestSuiteClasses {
     member: String
 }
 
+/// TODO
+@dataKind(kind: "scala-attach-remote", extends: [DebugSessionParamsData])
+structure ScalaAttachRemote {
+}
+
 @dataKind(kind: "scala-test-suites-selection", extends: [DebugSessionParamsData])
 structure ScalaTestSuites {
     /// The fully qualified names of the test classes in this target and the tests in this test classes

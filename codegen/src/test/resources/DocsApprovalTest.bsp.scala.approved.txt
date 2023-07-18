@@ -208,6 +208,20 @@ the `dataKind` field contains `"scala-main-class"`.
 
 ## DebugSessionParamsData kinds
 
+### ScalaAttachRemote
+This structure is embedded in
+the `data?: DebugSessionParamsData` field, when
+the `dataKind` field contains `"scala-attach-remote"`.
+
+#### ScalaAttachRemote
+
+TODO
+
+```ts
+export interface ScalaAttachRemote {
+}
+```
+
 ### ScalaMainClass
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when

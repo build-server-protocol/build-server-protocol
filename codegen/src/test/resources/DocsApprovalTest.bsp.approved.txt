@@ -1140,6 +1140,9 @@ export interface DebugSessionParams {
 export type DebugSessionParamsDataKind = string;
 
 export namespace DebugSessionParamsDataKind {
+  /** `data` field must contain a ScalaAttachRemote object. */
+  export const ScalaAttachRemote = "scala-attach-remote";
+
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
 
