@@ -28,7 +28,7 @@ class SerializationSuite extends AnyFunSuite {
       Some(12345),
       Some("message"),
       bsp4s.StatusCode.Ok,
-      Some(bsp4s.TaskDataKind.CompileReport),
+      Some(bsp4s.TaskFinishDataKind.CompileReport),
       Option(RawJson(writeToArray(report)))
     )
 

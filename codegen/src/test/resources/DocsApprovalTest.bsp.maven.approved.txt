@@ -1,7 +1,12 @@
 ## BSP version
 `2.1.0`
 
-## Common shapes
+## DependencyModuleData kinds
+
+### MavenDependencyModule
+This structure is embedded in
+the `data?: DependencyModuleData` field, when
+the `dataKind` field contains `"maven"`.
 
 #### MavenDependencyModule
 
@@ -39,4 +44,3 @@ export interface MavenDependencyModuleArtifact {
   classifier?: string;
 }
 ```
-
