@@ -9,7 +9,7 @@ The cargo features state request is sent from the client to the server to
 query for the current state of the Cargo features. Provides also mapping
 between Cargo packages and build target identifiers.
 
-- method: `workspace/CargoFeaturesState`
+- method: `workspace/cargoFeaturesState`
 - result: `CargoFeaturesStateResult`
 
 #### CargoFeaturesStateResult
@@ -29,16 +29,16 @@ export interface CargoFeaturesStateResult {
 ```ts
 export interface PackageFeatures {
   /** The Cargo package identifier. */
-  packageId?: string;
+  packageId: string;
 
   /** The list of build target identifiers assigned to the Cargo package. */
-  targets?: BuildTargetIdentifier[];
+  targets: BuildTargetIdentifier[];
 
   /** The list of available features for the Cargo package. */
-  availableFeatures?: string[];
+  availableFeatures: string[];
 
   /** The list of enabled features for the Cargo package. */
-  enabledFeatures?: string[];
+  enabledFeatures: string[];
 }
 ```
 
@@ -47,7 +47,7 @@ export interface PackageFeatures {
 The enable cargo features request is sent from the client to the server to
 enable features for the specified Cargo package.
 
-- method: `workspace/EnableCargoFeatures`
+- method: `workspace/enableCargoFeatures`
 - params: `EnableCargoFeaturesParams`
 
 #### EnableCargoFeaturesParams
@@ -68,7 +68,7 @@ export interface EnableCargoFeaturesParams {
 The disable cargo features request is sent from the client to the server to
 disable features for the specified Cargo package.
 
-- method: `workspace/DisableCargoFeatures`
+- method: `workspace/disableCargoFeatures`
 - params: `DisableCargoFeaturesParams`
 
 #### DisableCargoFeaturesParams
