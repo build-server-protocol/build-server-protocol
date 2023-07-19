@@ -210,6 +210,7 @@ the `dataKind` field contains `"scala-main-class"`.
 ## DebugSessionParamsData kinds
 
 ### ScalaAttachRemote
+
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
 the `dataKind` field contains `"scala-attach-remote"`.
@@ -219,8 +220,7 @@ the `dataKind` field contains `"scala-attach-remote"`.
 The debug session will connect to a running process. The DAP client will send the port of the running process later.
 
 ```ts
-export interface ScalaAttachRemote {
-}
+export interface ScalaAttachRemote {}
 ```
 
 ### ScalaMainClass

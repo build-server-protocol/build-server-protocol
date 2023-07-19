@@ -16,7 +16,7 @@ Add the following snippet to your build to add dependency on `bsp4j`.
 ### Gradle
 
 ```groovy
-compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6.alpha+2-7c10d649+20230719-2300-SNAPSHOT'
+compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6.alpha+3-cb745dde-SNAPSHOT'
 ```
 
 ### Maven
@@ -25,14 +25,14 @@ compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6.alpha+2-7c10d6
 <dependency>
     <groupId>ch.epfl.scala</groupId>
     <artifactId>bsp4j</artifactId>
-    <version>2.1.0-M6.alpha+2-7c10d649+20230719-2300-SNAPSHOT</version>
+    <version>2.1.0-M6.alpha+3-cb745dde-SNAPSHOT</version>
 </dependency>
 ```
 
 ### sbt
 
 ```scala
-libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.1.0-M6.alpha+2-7c10d649+20230719-2300-SNAPSHOT"
+libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.1.0-M6.alpha+3-cb745dde-SNAPSHOT"
 ```
 
 ## Examples
@@ -72,7 +72,7 @@ Optionally, create a custom `ExecutorService` to run client responses
 ```scala
 import java.util.concurrent._
 val es = Executors.newFixedThreadPool(1)
-// es: ExecutorService = java.util.concurrent.ThreadPoolExecutor@79abfab7[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0]
+// es: ExecutorService = java.util.concurrent.ThreadPoolExecutor@3ebaba2a[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0]
 ```
 
 Next, wire the client implementation together with the remote build server.
@@ -85,14 +85,14 @@ val launcher = new Launcher.Builder[BuildServer]()
   .setExecutorService(es)
   .setRemoteInterface(classOf[BuildServer])
   .create()
-// launcher: Launcher[BuildServer] = org.eclipse.lsp4j.jsonrpc.StandardLauncher@2e3584c5
+// launcher: Launcher[BuildServer] = org.eclipse.lsp4j.jsonrpc.StandardLauncher@130c8d8a
 ```
 
 Next, obtain an instance of the remote `BuildServer` via `getRemoteProxy()`.
 
 ```scala
 val server = launcher.getRemoteProxy
-// server: BuildServer = EndpointProxy for org.eclipse.lsp4j.jsonrpc.RemoteEndpoint@cdfc350
+// server: BuildServer = EndpointProxy for org.eclipse.lsp4j.jsonrpc.RemoteEndpoint@685bd401
 ```
 
 Next, start listening to the remote build server on a separate thread. The
@@ -102,7 +102,7 @@ Next, start listening to the remote build server on a separate thread. The
 new Thread {
   override def run() = launcher.startListening().get()
 }
-// res0: Thread = Thread[#535,Thread-78,5,main]
+// res0: Thread = Thread[#314,Thread-15,5,main]
 ```
 
 Next, trigger the initialize handshake with the remote server.
@@ -113,11 +113,11 @@ val workspace = java.nio.file.Paths.get(".").toAbsolutePath().normalize()
 val initializeResult = server.buildInitialize(new InitializeBuildParams(
   "MyClient", // name of this client
   "1.0.0", // version of this client
-  "2.1.0-M6.alpha+2-7c10d649+20230719-2300-SNAPSHOT", // BSP version
+  "2.1.0-M6.alpha+3-cb745dde-SNAPSHOT", // BSP version
   workspace.toUri().toString(),
   new BuildClientCapabilities(java.util.Collections.singletonList("scala"))
 ))
-// initializeResult: CompletableFuture[InitializeBuildResult] = org.eclipse.lsp4j.jsonrpc.RemoteEndpoint$1@30377e08[Not completed, 1 dependents]
+// initializeResult: CompletableFuture[InitializeBuildResult] = org.eclipse.lsp4j.jsonrpc.RemoteEndpoint$1@5cfe4dc6[Not completed, 1 dependents]
 ```
 
 After receiving the initialize response, send the `build/initialized`
@@ -125,7 +125,7 @@ notification.
 
 ```scala
 initializeResult.thenAccept(_ => server.onBuildInitialized())
-// res1: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@2ada169c[Not completed]
+// res1: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@5d038059[Not completed]
 ```
 
 After sending the `build/initialized` notification, you can send any BSP
@@ -141,7 +141,7 @@ server.buildShutdown().thenAccept(new java.util.function.Consumer[Object] {
     server.onBuildExit()
   }
 })
-// res2: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@28cbbcae[Not completed]
+// res2: CompletableFuture[Void] = java.util.concurrent.CompletableFuture@2a1426ae[Not completed]
 ```
 
 ### Server
@@ -174,7 +174,7 @@ class MyBuildServer extends BuildServer {
   def workspaceReload(): CompletableFuture[Object] = ???
 }
 val localServer = new MyBuildServer()
-// localServer: MyBuildServer = repl.MdocSession$MdocApp4$MyBuildServer@65452de3
+// localServer: MyBuildServer = repl.MdocSession$MdocApp4$MyBuildServer@2c21a77c
 ```
 
 Next, construct a launcher for the remote build client.
@@ -186,7 +186,7 @@ val launcher = new Launcher.Builder[BuildClient]()
   .setLocalService(localServer)
   .setRemoteInterface(classOf[BuildClient])
   .create()
-// launcher: Launcher[BuildClient] = org.eclipse.lsp4j.jsonrpc.StandardLauncher@324cda33
+// launcher: Launcher[BuildClient] = org.eclipse.lsp4j.jsonrpc.StandardLauncher@211b670b
 ```
 
 Next, update the remote build client reference in `localServer`.
