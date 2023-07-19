@@ -215,7 +215,7 @@ the `dataKind` field contains `"scala-attach-remote"`.
 
 #### ScalaAttachRemote
 
-TODO
+The debug session will connect to a running process. The DAP client will send the port of the running process later.
 
 ```ts
 export interface ScalaAttachRemote {
