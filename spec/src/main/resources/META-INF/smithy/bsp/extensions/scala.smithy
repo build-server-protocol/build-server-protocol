@@ -258,7 +258,7 @@ list ScalaTestSuiteClasses {
     member: String
 }
 
-/// TODO
+/// The debug session will connect to a running process. The DAP client will send the port of the running process later.
 @dataKind(kind: "scala-attach-remote", extends: [DebugSessionParamsData])
 structure ScalaAttachRemote {
 }
