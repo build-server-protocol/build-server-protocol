@@ -86,14 +86,13 @@ lazy val bsp4s = project
 
     }
   )
-  .dependsOn(codegen)
 
 // Bsp4j is now generated from the smithy model
 lazy val bsp4j = project
   .in(file("bsp4j"))
   .settings(
-    crossScalaVersions := V.supportedScalaVersions,
     autoScalaLibrary := false,
+    crossPaths := false,
     Compile / javacOptions ++= {
       List(
         "-Xlint:all",
@@ -113,7 +112,6 @@ lazy val bsp4j = project
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
     )
   )
-  .dependsOn(codegen)
 
 lazy val tests = project
   .in(file("tests"))
