@@ -197,6 +197,7 @@ lazy val codegen = project
 
 // Remove whatever comes after the + sign in the version
 def cleanLibraryVersion(version: String): String = {
+  println(s"Cleaning version $version")
   val idx = version.indexOf('+')
   if (idx < 0) version
   else version.substring(0, idx)
