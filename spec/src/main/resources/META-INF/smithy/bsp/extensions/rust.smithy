@@ -57,12 +57,16 @@ structure RustPackage {
     @required
     features: RustFeatures
     @required
-    enabledFeatures: Strings
+    enabledFeatures: RustPackageEnabledFeatures
     cfgOptions: RustCfgOptions
     @required
-    env: RustEnvDatas
+    env: RustEnvironmentVariables
     outDirUrl: String
     procMacroArtifact: RustProcMacroArtifact
+}
+
+list RustPackageEnabledFeatures {
+    feature: String
 }
 
 list RustTargets {
@@ -78,10 +82,23 @@ structure RustTarget {
     @required
     packageRootUrl: String
     @required
-    kind: String
+    kind: RustTargetKind
     edition: String
     doctest: Boolean
-    requiredFeatures: Strings
+    requiredFeatures: RustPackageRequiredFeatures
+}
+
+enum RustTargetKind {
+    BIN
+    TEST
+    EXAMPLE
+    BENCH
+    CUSTOMBUILD
+    UNKNOWN
+}
+
+list RustPackageRequiredFeatures {
+    feature: String
 }
 
 list RustFeatures {
@@ -91,30 +108,38 @@ list RustFeatures {
 structure RustFeature {
     @required
     name: String
-    deps: Strings
+    deps: RustFeatureDependencies
 }
 
-list Strings {
-    member: String
+list RustFeatureDependencies {
+    dependence: String
 }
 
 structure RustCfgOptions {
     keyValueOptions: KeyValueOptions
-    nameOptions: Strings
+    nameOptions: RustCfgOptionsNames
+}
+
+list RustCfgOptionsNames {
+    name: String
 }
 
 map KeyValueOptions {
     key: String
-    value: Strings
+    value: Values
 }
 
-map RustEnvDatas {
+list Values {
+    value: String
+}
+
+map RustEnvironmentVariables {
     key: String
     value: String
 }
 
 structure RustProcMacroArtifact {
-    path: String
+    path: URI
     // TODO: we don't need hash. It is calculated by IntelliJ-Rust
 }
 
@@ -130,9 +155,13 @@ structure RustRawDependency {
     kind: String
     target: String
     optional: Boolean
-    uses_default_features: Boolean
+    usesDefaultFeatures: Boolean
     @required
-    features: Strings
+    features: RustRawDependencyFeatures
+}
+
+list RustRawDependencyFeatures {
+    feature: String
 }
 
 map RustDependencies {
@@ -153,8 +182,16 @@ list DepKinds {
 
 structure DepKind {
     @required
-    kind: String
+    kind: DepKindEnum
     target: String
+}
+
+enum DepKindEnum {
+    UNCLASSIFIED
+    STDLIB
+    NORMAL
+    DEV
+    BUILD
 }
 
 @jsonRequest("buildTarget/rustToolchain")
@@ -180,16 +217,16 @@ list RustToolchainsItems {
 structure RustToolchainsItem {
     rustStdLib: RustcInfo
     @required
-    cargoBinPath: String
+    cargoBinPath: URI
     @required
-    procMacroSrvPath: String
+    procMacroSrvPath: URI
 }
 
 structure RustcInfo {
     @required
-    sysroot: String
+    sysrootPath: URI
     @required
-    srcSysroot: String
+    srcSysrootPath: URI
     @required
     version: String
     @required
