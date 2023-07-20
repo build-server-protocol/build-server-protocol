@@ -80,14 +80,14 @@ val localClient = new MyClient()
 
 Optionally, create a custom `ExecutorService` to run client responses
 
-```scala mdoc
+```scala mdoc:silent
 import java.util.concurrent._
 val es = Executors.newFixedThreadPool(1)
 ```
 
 Next, wire the client implementation together with the remote build server.
 
-```scala mdoc
+```scala mdoc:silent
 val launcher = new Launcher.Builder[BuildServer]()
   .setOutput(output)
   .setInput(input)
@@ -99,14 +99,14 @@ val launcher = new Launcher.Builder[BuildServer]()
 
 Next, obtain an instance of the remote `BuildServer` via `getRemoteProxy()`.
 
-```scala mdoc
+```scala mdoc:silent
 val server = launcher.getRemoteProxy
 ```
 
 Next, start listening to the remote build server on a separate thread. The
 `.get()` method call is blocking during the lifetime of BSP session.
 
-```scala mdoc
+```scala mdoc:silent
 new Thread {
   override def run() = launcher.startListening().get()
 }
@@ -114,7 +114,7 @@ new Thread {
 
 Next, trigger the initialize handshake with the remote server.
 
-```scala mdoc
+```scala mdoc:silent
 val workspace = java.nio.file.Paths.get(".").toAbsolutePath().normalize()
 val initializeResult = server.buildInitialize(new InitializeBuildParams(
   "MyClient", // name of this client
@@ -128,7 +128,7 @@ val initializeResult = server.buildInitialize(new InitializeBuildParams(
 After receiving the initialize response, send the `build/initialized`
 notification.
 
-```scala mdoc
+```scala mdoc:silent
 initializeResult.thenAccept(_ => server.onBuildInitialized())
 ```
 
@@ -139,7 +139,7 @@ requests and notications such as `workspace/buildTargets`,
 To close the BSP session, send the `build/shutdown` request followed by a
 `build/exit` notification.
 
-```scala mdoc
+```scala mdoc:silent
 server.buildShutdown().thenAccept(new java.util.function.Consumer[Object] {
   def accept(x: Object): Unit = {
     server.onBuildExit()
@@ -156,7 +156,7 @@ es.shutdown()
 
 First, implement the `BuildServer` interface.
 
-```scala mdoc:reset
+```scala mdoc:reset:silent
 import java.util.concurrent._
 import ch.epfl.scala.bsp4j._
 import org.eclipse.lsp4j.jsonrpc.Launcher
@@ -186,7 +186,7 @@ val localServer = new MyBuildServer()
 
 Next, construct a launcher for the remote build client.
 
-```scala mdoc
+```scala mdoc:silent
 val launcher = new Launcher.Builder[BuildClient]()
   .setOutput(System.out)
   .setInput(System.in)
@@ -197,13 +197,13 @@ val launcher = new Launcher.Builder[BuildClient]()
 
 Next, update the remote build client reference in `localServer`.
 
-```scala mdoc
+```scala mdoc:silent
 localServer.client = launcher.getRemoteProxy()
 ```
 
 Finally, in a `main` method wire everything together.
 
-```scala mdoc
+```scala mdoc:silent
 def main(args: Array[String]): Unit = {
   launcher.startListening().get() // listen until BSP session is over.
 }
