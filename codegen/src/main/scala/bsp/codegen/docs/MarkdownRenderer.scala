@@ -12,7 +12,7 @@ import scala.collection.mutable.{Set => MSet}
 object MarkdownRenderer {
   def render(tree: DocTree): String = {
     val visited = MSet.empty[ShapeId]
-    val version = VersionLoader.version()
+    val version = ProtocolVersionLoader.version()
     val renderer = new MarkdownRenderer(tree, visited, version)
     val rendered = renderer.render.render
 
@@ -25,7 +25,7 @@ object MarkdownRenderer {
   }
 }
 
-class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: String) {
+class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], protocolVersion: String) {
   import bsp.codegen.Settings.typescript
   import dsl._
 
@@ -51,7 +51,7 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], version: 
 
     val versionRendered = lines(
       "## BSP version",
-      s"`$version`",
+      s"`$protocolVersion`",
       newline
     )
 

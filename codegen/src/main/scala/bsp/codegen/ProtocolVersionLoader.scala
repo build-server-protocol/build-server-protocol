@@ -2,7 +2,7 @@ package bsp.codegen
 
 import java.nio.file.{Files, Paths}
 
-object VersionLoader {
+object ProtocolVersionLoader {
   def version(): String = {
     try {
       val path = Paths.get("spec/src/main/resources/META-INF/smithy/bsp/version")
@@ -10,7 +10,7 @@ object VersionLoader {
     } catch {
       case e: Throwable =>
         throw new RuntimeException(
-          "Failed to load extensions, make sure that the working directory is set correctly",
+          "Failed to load the protocol version, make sure that the working directory is set correctly",
           e
         )
     }

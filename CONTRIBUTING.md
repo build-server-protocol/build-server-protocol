@@ -68,18 +68,9 @@ need to be replaced with the following 2 steps:
 
 ### Approval tests
 
-Because now most of the docs are generated from the smithy model, we added
-[approval tests](https://approvaltests.com/) which ensure that the generated spec
-doesn't accidentally break. If you make a change which affects the generated spec
-please run `sbt test`. Approval test driver should automatically display
-a diff for you, but if it does not happen, you should review the new version manually.
-In directory `codegen/src/test/scala` there will appear
-files `<testname>.<generated doc>.received.txt` for each generated doc which differs
-from the previously approved version. Approving means comparing `<file>.received.txt`
-with `<file>.approved.txt` and introducing changes to the `<file>.approved.txt` one.
-
-When you run `sbt test` again the tests should pass and `<file>.received.txt`
-will be removed.
+Upon committing changes to the protocol specification, a test is run to ensure that the generated
+protocol specification is identical to the committed one.
+If the test fails, please run `sbt generate` and commit the changes.
 
 ## Some notes on maintenance
 
