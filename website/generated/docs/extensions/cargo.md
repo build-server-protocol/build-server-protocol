@@ -1,4 +1,14 @@
+---
+id: cargo
+title: Cargo Extension
+sidebar_label: Cargo
+---
+
+The following section contains Cargo-specific extensions to the build server
+protocol.
+
 ## BSP version
+
 `2.1.0`
 
 ## BSP Server remote interface
@@ -14,7 +24,6 @@ between Cargo packages and build target identifiers.
 
 #### CargoFeaturesStateResult
 
-
 ```ts
 export interface CargoFeaturesStateResult {
   /** The list of Cargo packages with assigned to them target
@@ -24,7 +33,6 @@ export interface CargoFeaturesStateResult {
 ```
 
 #### PackageFeatures
-
 
 ```ts
 export interface PackageFeatures {
@@ -52,7 +60,6 @@ enable features for the specified Cargo package.
 
 #### EnableCargoFeaturesParams
 
-
 ```ts
 export interface EnableCargoFeaturesParams {
   /** Package ID to enable features for. */
@@ -72,7 +79,6 @@ disable features for the specified Cargo package.
 - params: `DisableCargoFeaturesParams`
 
 #### DisableCargoFeaturesParams
-
 
 ```ts
 export interface DisableCargoFeaturesParams {
