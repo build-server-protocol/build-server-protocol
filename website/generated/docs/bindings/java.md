@@ -108,7 +108,7 @@ val workspace = java.nio.file.Paths.get(".").toAbsolutePath().normalize()
 val initializeResult = server.buildInitialize(new InitializeBuildParams(
   "MyClient", // name of this client
   "1.0.0", // version of this client
-  "2.1.0-M6.alpha", // BSP version
+  Bsp4j.PROTOCOL_VERSION,
   workspace.toUri().toString(),
   new BuildClientCapabilities(java.util.Collections.singletonList("scala"))
 ))

@@ -16,7 +16,7 @@ Add the following snippet to your build to add dependency on `bsp4j`.
 ### Gradle
 
 ```groovy
-compile group: 'ch.epfl.scala', name: 'bsp4j', version: '@VERSION@'
+compile group: 'ch.epfl.scala', name: 'bsp4j', version: '@LIBRARY_VERSION@'
 ```
 
 ### Maven
@@ -25,14 +25,14 @@ compile group: 'ch.epfl.scala', name: 'bsp4j', version: '@VERSION@'
 <dependency>
     <groupId>ch.epfl.scala</groupId>
     <artifactId>bsp4j</artifactId>
-    <version>@VERSION@</version>
+    <version>@LIBRARY_VERSION@</version>
 </dependency>
 ```
 
 ### sbt
 
 ```scala
-libraryDependencies += "ch.epfl.scala" % "bsp4j" % "@VERSION@"
+libraryDependencies += "ch.epfl.scala" % "bsp4j" % "@LIBRARY_VERSION@"
 ```
 
 ## Examples
@@ -119,7 +119,7 @@ val workspace = java.nio.file.Paths.get(".").toAbsolutePath().normalize()
 val initializeResult = server.buildInitialize(new InitializeBuildParams(
   "MyClient", // name of this client
   "1.0.0", // version of this client
-  "@VERSION@", // BSP version
+  Bsp4j.PROTOCOL_VERSION,
   workspace.toUri().toString(),
   new BuildClientCapabilities(java.util.Collections.singletonList("scala"))
 ))

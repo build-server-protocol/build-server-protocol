@@ -1,6 +1,12 @@
 package bsp.codegen.bsp4s
 
-import bsp.codegen.{CodegenFile, ExtensionLoader, FilesGenerator, ModelLoader, ProtocolVersionLoader}
+import bsp.codegen.{
+  CodegenFile,
+  ExtensionLoader,
+  FilesGenerator,
+  ModelLoader,
+  ProtocolVersionLoader
+}
 import bsp.codegen.ir.SmithyToIR
 
 object Codegen {

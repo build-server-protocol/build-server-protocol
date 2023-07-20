@@ -1,7 +1,13 @@
 package bsp.codegen.bsp4j
 
 import bsp.codegen.bsp4j.Codegen.run
-import bsp.codegen.{CodegenFile, ExtensionLoader, FilesGenerator, ModelLoader, ProtocolVersionLoader}
+import bsp.codegen.{
+  CodegenFile,
+  ExtensionLoader,
+  FilesGenerator,
+  ModelLoader,
+  ProtocolVersionLoader
+}
 import bsp.codegen.ir.SmithyToIR
 
 object Codegen {

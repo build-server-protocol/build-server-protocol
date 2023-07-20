@@ -196,10 +196,10 @@ lazy val codegen = project
   )
 
 // Remove whatever comes after the + sign in the version
-def cleanVersion(version: String): String = {
-    val idx = version.indexOf('+')
-    if (idx < 0) version
-    else version.substring(0, idx)
+def cleanLibraryVersion(version: String): String = {
+  val idx = version.indexOf('+')
+  if (idx < 0) version
+  else version.substring(0, idx)
 }
 
 lazy val docs = project
@@ -210,7 +210,7 @@ lazy val docs = project
     publish / skip := true,
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "generated" / "docs",
     mdocVariables := Map(
-      "VERSION" -> cleanVersion(version.value)
+      "LIBRARY_VERSION" -> cleanLibraryVersion(version.value)
     ),
     TaskKey[Unit]("format") := {
       "yarn --cwd website install" #&&
