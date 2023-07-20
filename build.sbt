@@ -45,10 +45,9 @@ lazy val V = new {
   val ipcsocket = "1.0.1"
   val scalatestScalacheck = "3.2.14.0"
   val jsonrpc4s = "0.1.0"
-  val approvaltests = "18.7.1"
-  val junitInterface = "0.13.3"
 }
 
+import scala.sys.process._
 import java.io.File
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
 import org.eclipse.xtend.core.XtendStandaloneSetup
@@ -58,7 +57,17 @@ publish / skip := true
 
 addCommandAlias(
   "generate",
-  "codegen ; xtend ; scalafmtAll ; scalafmtSbt; mdoc"
+  "generateCode ; generateWebsite"
+)
+
+addCommandAlias(
+  "generateCode",
+  "codegen ; xtend ; scalafmtAll ; scalafmtSbt"
+)
+
+addCommandAlias(
+  "generateWebsite",
+  "mdoc ; format"
 )
 
 // Bsp4s is now generated from the smithy model
@@ -182,11 +191,17 @@ lazy val codegen = project
       "org.scala-lang.modules" %% "scala-collection-compat" % V.scalaCollectionCompat,
       "com.lihaoyi" %% "os-lib" % V.osLib,
       "com.monovore" %% "decline" % V.decline,
-      "org.typelevel" %% "cats-core" % V.cats,
-      "com.approvaltests" % "approvaltests" % V.approvaltests % Test,
-      "com.github.sbt" % "junit-interface" % V.junitInterface % Test
+      "org.typelevel" %% "cats-core" % V.cats
     )
   )
+
+// Remove whatever comes after the + sign in the version
+def cleanLibraryVersion(version: String): String = {
+  println(s"Cleaning version $version")
+  val idx = version.indexOf('+')
+  if (idx < 0) version
+  else version.substring(0, idx)
+}
 
 lazy val docs = project
   .in(file("bsp-docs"))
@@ -194,10 +209,14 @@ lazy val docs = project
   .settings(
     scalaVersion := V.scala213,
     publish / skip := true,
-    mdocOut := (ThisBuild / baseDirectory).value / "website" / "target" / "docs",
+    mdocOut := (ThisBuild / baseDirectory).value / "website" / "generated" / "docs",
     mdocVariables := Map(
-      "VERSION" -> version.value
-    )
+      "LIBRARY_VERSION" -> cleanLibraryVersion(version.value)
+    ),
+    TaskKey[Unit]("format") := {
+      "yarn --cwd website install" #&&
+        "yarn --cwd website format" !
+    }
   )
   .enablePlugins(DocusaurusPlugin)
 

@@ -1,4 +1,112 @@
+---
+id: specification
+title: Build Server Protocol
+sidebar_label: Specification
+---
+
+This document is the specification of the Build Server Protocol (BSP).
+
+Edits to this specification can be made via a pull request against this markdown
+document, see "edit" button at the bottom of this page on the website.
+
+## Motivation
+
+The goal of BSP is to reduce the effort required by tooling developers to
+integrate between available IDEs and build tools. Currently, every IDE must
+implement a custom integration for each supported build tool in order to extract
+information such as source directory layouts or compiler options. Likewise, new
+build tools are expected to integrate with all available IDEs. The growing
+number of IDEs and build tools in the wider programming community means tooling
+developers spend a lot of time working on these integrations.
+
+The Build Server Protocol defines common functionality that both build tools
+(servers) and IDEs (clients) understand. This common functionality enables
+tooling developers to provide their end users the best developer experience
+while supporting build tools and language servers with less effort and time.
+
+## Background
+
+The Build Server Protocol takes inspiration from the Language Server Protocol
+(LSP). Unlike in the Language Server Protocol, the language server or IDE is
+referred to as the “client” and a build tool such as sbt/Gradle/Bazel is
+referred to as the “server”.
+
+The best way to read this document is by considering it as a wishlist from the
+perspective of an IDE developer.
+
+The code listings in this document are written using TypeScript syntax. Every
+data strucuture in this document has a direct translation to JSON and Protobuf.
+
+## Relationship with LSP
+
+BSP can be used together with LSP in the same architecture. The diagram below
+illustrates an example how an LSP server can also act as a BSP client.
+
+![](https://i.imgur.com/q4KEas9.png)
+
+BSP can also be used without LSP. In the example above, IntelliJ acts as a BSP
+client even if IntelliJ does not use LSP.
+
+## Status
+
+The Build Server Protocol is not an approved standard. Everything in this
+document is subject to change and open for discussions, including core data
+structures.
+
+The creation of BSP clients and servers is under active development.
+
+In the clients space, IntelliJ has been the first language server to implement
+BSP. The integration is available in the nightly releases of the Scala plugin.
+Other language servers, like [Dotty IDE](https://github.com/lampepfl/dotty) and
+[scalameta/metals](https://github.com/scalameta/metals), are currently working
+or planning to work on a BSP integrations.
+
+On the server side,
+
+- [Bloop](https://github.com/scalacenter/bloop) was the first
+  server to implement BSP
+- sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
+- Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+- Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
+
+We're looking for third parties that implement BSP natively in other build tools
+such as Gradle.
+
+The Build Server Protocol has been designed to be language-agnostic. We're
+looking for ways to collaborate with other programming language communities and
+build tool authors.
+
+The best way to share your thoughts on the Build Server Protocol or to get
+involved in its development is to open an issue or pull request to this
+repository. Any help on developing integrations will be much appreciated.
+
+## Base protocol
+
+The base protocol is identical to the language server base protocol. See
+<https://microsoft.github.io/language-server-protocol/specification> for more
+details.
+
+Like the language server protocol, the build server protocol defines a set of
+JSON-RPC request, response and notification messages which are exchanged using
+the base protocol.
+
+### Capabilities
+
+Unlike the language server protocol, the build server protocol does not support
+dynamic registration of capabilities. The motivation for this change is
+simplicity. If a motivating example for dynamic registration comes up this
+decision can be reconsidered. The server and client capabilities must be
+communicated through the initialize request.
+
+### Server lifetime
+
+Like the language server protocol, the current protocol specification defines
+that the lifetime of a build server is managed by the client (e.g. a language
+server like Dotty IDE). It is up to the client to decide when to start
+(process-wise) and when to shutdown a server.
+
 ## BSP version
+
 `2.1.0`
 
 ## Common shapes
@@ -23,13 +131,13 @@ export type Integer = number;
 
 Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
 
-* sbt: a build target is a combined project + config. Example:
-* a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
-* a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
-* a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
-* a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
-* Pants: a pants target corresponds one-to-one with a BuildTarget
-* Bazel: a bazel target corresponds one-to-one with a BuildTarget
+- sbt: a build target is a combined project + config. Example:
+- a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
+- a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
+- a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+- a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
+- Pants: a pants target corresponds one-to-one with a BuildTarget
+- Bazel: a bazel target corresponds one-to-one with a BuildTarget
 
 The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 
@@ -174,7 +282,6 @@ export interface BuildTargetCapabilities {
 
 #### BuildTargetDataKind
 
-
 ```ts
 export type BuildTargetDataKind = string;
 
@@ -197,7 +304,6 @@ export namespace BuildTargetDataKind {
 ```
 
 #### BuildTargetData
-
 
 ```ts
 export type BuildTargetData = any;
@@ -223,7 +329,6 @@ export interface TaskId {
 
 #### Identifier
 
-
 ```ts
 export type Identifier = string;
 ```
@@ -245,7 +350,6 @@ export enum StatusCode {
 }
 ```
 
-
 ## BSP Server remote interface
 
 ### BuildInitialize: request
@@ -253,8 +357,8 @@ export enum StatusCode {
 Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 If the server receives a request or notification before the initialize request it should act as follows:
 
-* For a request the response should be an error with code: -32002. The message can be picked by the server.
-* Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
+- For a request the response should be an error with code: -32002. The message can be picked by the server.
+- Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
 
 Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 requests or notifications to the server.
@@ -264,7 +368,6 @@ requests or notifications to the server.
 - result: `InitializeBuildResult`
 
 #### InitializeBuildParams
-
 
 ```ts
 export interface InitializeBuildParams {
@@ -293,7 +396,6 @@ export interface InitializeBuildParams {
 
 #### BuildClientCapabilities
 
-
 ```ts
 export interface BuildClientCapabilities {
   /** The languages that this client supports.
@@ -306,23 +408,19 @@ export interface BuildClientCapabilities {
 
 #### InitializeBuildParamsDataKind
 
-
 ```ts
 export type InitializeBuildParamsDataKind = string;
 
-export namespace InitializeBuildParamsDataKind {
-}
+export namespace InitializeBuildParamsDataKind {}
 ```
 
 #### InitializeBuildParamsData
-
 
 ```ts
 export type InitializeBuildParamsData = any;
 ```
 
 #### InitializeBuildResult
-
 
 ```ts
 export interface InitializeBuildResult {
@@ -406,7 +504,6 @@ export interface BuildServerCapabilities {
 
 #### CompileProvider
 
-
 ```ts
 export interface CompileProvider {
   languageIds: LanguageId[];
@@ -414,7 +511,6 @@ export interface CompileProvider {
 ```
 
 #### TestProvider
-
 
 ```ts
 export interface TestProvider {
@@ -424,7 +520,6 @@ export interface TestProvider {
 
 #### RunProvider
 
-
 ```ts
 export interface RunProvider {
   languageIds: LanguageId[];
@@ -432,7 +527,6 @@ export interface RunProvider {
 ```
 
 #### DebugProvider
-
 
 ```ts
 export interface DebugProvider {
@@ -442,16 +536,13 @@ export interface DebugProvider {
 
 #### InitializeBuildResultDataKind
 
-
 ```ts
 export type InitializeBuildResultDataKind = string;
 
-export namespace InitializeBuildResultDataKind {
-}
+export namespace InitializeBuildResultDataKind {}
 ```
 
 #### InitializeBuildResultData
-
 
 ```ts
 export type InitializeBuildResultData = any;
@@ -494,7 +585,6 @@ for the list of all available build targets in the workspace.
 
 #### WorkspaceBuildTargetsResult
 
-
 ```ts
 export interface WorkspaceBuildTargetsResult {
   /** The build targets in this workspace that
@@ -525,7 +615,6 @@ workspace, see `buildTarget/dependencySources`.
 
 #### SourcesParams
 
-
 ```ts
 export interface SourcesParams {
   targets: BuildTargetIdentifier[];
@@ -534,7 +623,6 @@ export interface SourcesParams {
 
 #### SourcesResult
 
-
 ```ts
 export interface SourcesResult {
   items: SourcesItem[];
@@ -542,7 +630,6 @@ export interface SourcesResult {
 ```
 
 #### SourcesItem
-
 
 ```ts
 export interface SourcesItem {
@@ -558,7 +645,6 @@ export interface SourcesItem {
 ```
 
 #### SourceItem
-
 
 ```ts
 export interface SourceItem {
@@ -577,7 +663,6 @@ export interface SourceItem {
 ```
 
 #### SourceItemKind
-
 
 ```ts
 export enum SourceItemKind {
@@ -603,7 +688,6 @@ works for text documents and not directories.
 
 #### InverseSourcesParams
 
-
 ```ts
 export interface InverseSourcesParams {
   textDocument: TextDocumentIdentifier;
@@ -611,7 +695,6 @@ export interface InverseSourcesParams {
 ```
 
 #### TextDocumentIdentifier
-
 
 ```ts
 export interface TextDocumentIdentifier {
@@ -621,7 +704,6 @@ export interface TextDocumentIdentifier {
 ```
 
 #### InverseSourcesResult
-
 
 ```ts
 export interface InverseSourcesResult {
@@ -647,7 +729,6 @@ dependency sources.
 
 #### DependencySourcesParams
 
-
 ```ts
 export interface DependencySourcesParams {
   targets: BuildTargetIdentifier[];
@@ -656,7 +737,6 @@ export interface DependencySourcesParams {
 
 #### DependencySourcesResult
 
-
 ```ts
 export interface DependencySourcesResult {
   items: DependencySourcesItem[];
@@ -664,7 +744,6 @@ export interface DependencySourcesResult {
 ```
 
 #### DependencySourcesItem
-
 
 ```ts
 export interface DependencySourcesItem {
@@ -690,7 +769,6 @@ It's an extended version of `buildTarget/sources`.
 
 #### DependencyModulesParams
 
-
 ```ts
 export interface DependencyModulesParams {
   targets: BuildTargetIdentifier[];
@@ -699,7 +777,6 @@ export interface DependencyModulesParams {
 
 #### DependencyModulesResult
 
-
 ```ts
 export interface DependencyModulesResult {
   items: DependencyModulesItem[];
@@ -707,7 +784,6 @@ export interface DependencyModulesResult {
 ```
 
 #### DependencyModulesItem
-
 
 ```ts
 export interface DependencyModulesItem {
@@ -718,7 +794,6 @@ export interface DependencyModulesItem {
 ```
 
 #### DependencyModule
-
 
 ```ts
 export interface DependencyModule {
@@ -739,7 +814,6 @@ export interface DependencyModule {
 
 #### DependencyModuleDataKind
 
-
 ```ts
 export type DependencyModuleDataKind = string;
 
@@ -750,7 +824,6 @@ export namespace DependencyModuleDataKind {
 ```
 
 #### DependencyModuleData
-
 
 ```ts
 export type DependencyModuleData = any;
@@ -774,7 +847,6 @@ view, for example.
 
 #### ResourcesParams
 
-
 ```ts
 export interface ResourcesParams {
   targets: BuildTargetIdentifier[];
@@ -783,7 +855,6 @@ export interface ResourcesParams {
 
 #### ResourcesResult
 
-
 ```ts
 export interface ResourcesResult {
   items: ResourcesItem[];
@@ -791,7 +862,6 @@ export interface ResourcesResult {
 ```
 
 #### ResourcesItem
-
 
 ```ts
 export interface ResourcesItem {
@@ -816,7 +886,6 @@ during the initialize handshake whether this method is supported or not.
 
 #### OutputPathsParams
 
-
 ```ts
 export interface OutputPathsParams {
   targets: BuildTargetIdentifier[];
@@ -825,7 +894,6 @@ export interface OutputPathsParams {
 
 #### OutputPathsResult
 
-
 ```ts
 export interface OutputPathsResult {
   items: OutputPathsItem[];
@@ -833,7 +901,6 @@ export interface OutputPathsResult {
 ```
 
 #### OutputPathsItem
-
 
 ```ts
 export interface OutputPathsItem {
@@ -846,7 +913,6 @@ export interface OutputPathsItem {
 ```
 
 #### OutputPathItem
-
 
 ```ts
 export interface OutputPathItem {
@@ -861,7 +927,6 @@ export interface OutputPathItem {
 ```
 
 #### OutputPathItemKind
-
 
 ```ts
 export enum OutputPathItemKind {
@@ -887,7 +952,6 @@ that all workspace sources typecheck correctly and are up-to-date.
 
 #### CompileParams
 
-
 ```ts
 export interface CompileParams {
   /** A sequence of build targets to compile. */
@@ -903,7 +967,6 @@ export interface CompileParams {
 ```
 
 #### CompileResult
-
 
 ```ts
 export interface CompileResult {
@@ -924,16 +987,13 @@ export interface CompileResult {
 
 #### CompileResultDataKind
 
-
 ```ts
 export type CompileResultDataKind = string;
 
-export namespace CompileResultDataKind {
-}
+export namespace CompileResultDataKind {}
 ```
 
 #### CompileResultData
-
 
 ```ts
 export type CompileResultData = any;
@@ -962,7 +1022,6 @@ specified in the build tool.
 
 #### RunParams
 
-
 ```ts
 export interface RunParams {
   /** The build target to run. */
@@ -986,7 +1045,6 @@ export interface RunParams {
 
 #### RunParamsDataKind
 
-
 ```ts
 export type RunParamsDataKind = string;
 
@@ -998,13 +1056,11 @@ export namespace RunParamsDataKind {
 
 #### RunParamsData
 
-
 ```ts
 export type RunParamsData = any;
 ```
 
 #### RunResult
-
 
 ```ts
 export interface RunResult {
@@ -1027,7 +1083,6 @@ handshake whether this method is supported or not.
 - result: `TestResult`
 
 #### TestParams
-
 
 ```ts
 export interface TestParams {
@@ -1052,7 +1107,6 @@ export interface TestParams {
 
 #### TestParamsDataKind
 
-
 ```ts
 export type TestParamsDataKind = string;
 
@@ -1064,13 +1118,11 @@ export namespace TestParamsDataKind {
 
 #### TestParamsData
 
-
 ```ts
 export type TestParamsData = any;
 ```
 
 #### TestResult
-
 
 ```ts
 export interface TestResult {
@@ -1091,16 +1143,13 @@ export interface TestResult {
 
 #### TestResultDataKind
 
-
 ```ts
 export type TestResultDataKind = string;
 
-export namespace TestResultDataKind {
-}
+export namespace TestResultDataKind {}
 ```
 
 #### TestResultData
-
 
 ```ts
 export type TestResultData = any;
@@ -1118,7 +1167,6 @@ and returns a connection URI for the client to interact with.
 
 #### DebugSessionParams
 
-
 ```ts
 export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
@@ -1135,11 +1183,13 @@ export interface DebugSessionParams {
 
 #### DebugSessionParamsDataKind
 
-
 ```ts
 export type DebugSessionParamsDataKind = string;
 
 export namespace DebugSessionParamsDataKind {
+  /** `data` field must contain a ScalaAttachRemote object. */
+  export const ScalaAttachRemote = "scala-attach-remote";
+
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
 
@@ -1153,13 +1203,11 @@ export namespace DebugSessionParamsDataKind {
 
 #### DebugSessionParamsData
 
-
 ```ts
 export type DebugSessionParamsData = any;
 ```
 
 #### DebugSessionAddress
-
 
 ```ts
 export interface DebugSessionAddress {
@@ -1187,7 +1235,6 @@ The build tool defines the exact semantics of the clean cache request:
 
 #### CleanCacheParams
 
-
 ```ts
 export interface CleanCacheParams {
   /** The build targets to clean. */
@@ -1196,7 +1243,6 @@ export interface CleanCacheParams {
 ```
 
 #### CleanCacheResult
-
 
 ```ts
 export interface CleanCacheResult {
@@ -1221,7 +1267,6 @@ A build/showMessage notification is similar to LSP's window/showMessage, except 
 
 #### ShowMessageParams
 
-
 ```ts
 export interface ShowMessageParams {
   /** the message type. */
@@ -1241,7 +1286,6 @@ export interface ShowMessageParams {
 ```
 
 #### MessageType
-
 
 ```ts
 export enum MessageType {
@@ -1277,7 +1321,6 @@ A build/logMessage notification is similar to LSP's window/logMessage, except fo
 - params: `LogMessageParams`
 
 #### LogMessageParams
-
 
 ```ts
 export interface LogMessageParams {
@@ -1321,7 +1364,6 @@ This field will be defined if the client defined it in the original request that
 
 #### PublishDiagnosticsParams
 
-
 ```ts
 export interface PublishDiagnosticsParams {
   /** The document where the diagnostics are published. */
@@ -1346,7 +1388,6 @@ export interface PublishDiagnosticsParams {
 ```
 
 #### Diagnostic
-
 
 ```ts
 export interface Diagnostic {
@@ -1382,7 +1423,6 @@ export interface Diagnostic {
 
 #### Range
 
-
 ```ts
 export interface Range {
   start: Position;
@@ -1392,7 +1432,6 @@ export interface Range {
 ```
 
 #### Position
-
 
 ```ts
 export interface Position {
@@ -1405,7 +1444,6 @@ export interface Position {
 ```
 
 #### DiagnosticSeverity
-
 
 ```ts
 export enum DiagnosticSeverity {
@@ -1437,7 +1475,6 @@ export interface DiagnosticRelatedInformation {
 
 #### Location
 
-
 ```ts
 export interface Location {
   uri: URI;
@@ -1447,7 +1484,6 @@ export interface Location {
 ```
 
 #### DiagnosticDataKind
-
 
 ```ts
 export type DiagnosticDataKind = string;
@@ -1459,7 +1495,6 @@ export namespace DiagnosticDataKind {
 ```
 
 #### DiagnosticData
-
 
 ```ts
 export type DiagnosticData = any;
@@ -1476,7 +1511,6 @@ handshake whether this method is supported or not.
 
 #### DidChangeBuildTarget
 
-
 ```ts
 export interface DidChangeBuildTarget {
   changes: BuildTargetEvent[];
@@ -1484,7 +1518,6 @@ export interface DidChangeBuildTarget {
 ```
 
 #### BuildTargetEvent
-
 
 ```ts
 export interface BuildTargetEvent {
@@ -1522,16 +1555,13 @@ export enum BuildTargetEventKind {
 
 #### BuildTargetEventDataKind
 
-
 ```ts
 export type BuildTargetEventDataKind = string;
 
-export namespace BuildTargetEventDataKind {
-}
+export namespace BuildTargetEventDataKind {}
 ```
 
 #### BuildTargetEventData
-
 
 ```ts
 export type BuildTargetEventData = any;
@@ -1564,7 +1594,6 @@ request should reference the request's `originId` parent.
 - params: `TaskStartParams`
 
 #### TaskStartParams
-
 
 ```ts
 export interface TaskStartParams {
@@ -1638,7 +1667,6 @@ export interface CompileTask {
 
 #### TestStart
 
-
 ```ts
 export interface TestStart {
   /** Name or description of the test. */
@@ -1671,7 +1699,6 @@ any number of progress notifications.
 - params: `TaskProgressParams`
 
 #### TaskProgressParams
-
 
 ```ts
 export interface TaskProgressParams {
@@ -1711,8 +1738,7 @@ specified in the `dataKind` field.
 ```ts
 export type TaskProgressDataKind = string;
 
-export namespace TaskProgressDataKind {
-}
+export namespace TaskProgressDataKind {}
 ```
 
 #### TaskProgressData
@@ -1734,7 +1760,6 @@ with the same `taskId` was sent.
 - params: `TaskFinishParams`
 
 #### TaskFinishParams
-
 
 ```ts
 export interface TaskFinishParams {
@@ -1827,7 +1852,6 @@ export interface CompileReport {
 
 #### TestFinish
 
-
 ```ts
 export interface TestFinish {
   /** Name or description of the test. */
@@ -1853,7 +1877,6 @@ export interface TestFinish {
 
 #### TestStatus
 
-
 ```ts
 export enum TestStatus {
   /** The test passed successfully. */
@@ -1875,23 +1898,19 @@ export enum TestStatus {
 
 #### TestFinishDataKind
 
-
 ```ts
 export type TestFinishDataKind = string;
 
-export namespace TestFinishDataKind {
-}
+export namespace TestFinishDataKind {}
 ```
 
 #### TestFinishData
-
 
 ```ts
 export type TestFinishData = any;
 ```
 
 #### TestReport
-
 
 ```ts
 export interface TestReport {
@@ -1923,16 +1942,19 @@ export interface TestReport {
 ## TaskFinishData kinds
 
 ### CompileReport
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"compile-report"`.
 
 ### TestFinish
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-finish"`.
 
 ### TestReport
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-report"`.
@@ -1940,16 +1962,19 @@ the `dataKind` field contains `"test-report"`.
 ## TaskStartData kinds
 
 ### CompileTask
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"compile-task"`.
 
 ### TestStart
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-start"`.
 
 ### TestTask
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-task"`.

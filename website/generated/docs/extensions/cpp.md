@@ -1,4 +1,14 @@
+---
+id: cpp
+title: C++ Extension
+sidebar_label: cpp
+---
+
+The following section contains C++-specific extensions to the build server
+protocol.
+
 ## BSP version
+
 `2.1.0`
 
 ## BSP Server remote interface
@@ -15,7 +25,6 @@ targets.
 
 #### CppOptionsParams
 
-
 ```ts
 export interface CppOptionsParams {
   /** The targets for which the options are requested. */
@@ -25,7 +34,6 @@ export interface CppOptionsParams {
 
 #### CppOptionsResult
 
-
 ```ts
 export interface CppOptionsResult {
   /** The list of options for each target. */
@@ -34,7 +42,6 @@ export interface CppOptionsResult {
 ```
 
 #### CppOptionsItem
-
 
 ```ts
 export interface CppOptionsItem {
@@ -64,6 +71,7 @@ export interface CppOptionsItem {
 ## BuildTargetData kinds
 
 ### CppBuildTarget
+
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"cpp"`.

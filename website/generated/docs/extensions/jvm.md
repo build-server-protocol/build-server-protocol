@@ -1,4 +1,14 @@
+---
+id: jvm
+title: JVM Extension
+sidebar_label: JVM
+---
+
+The following section contains JVM-specific extensions to the build server
+protocol.
+
 ## BSP version
+
 `2.1.0`
 
 ## BSP Server remote interface
@@ -20,7 +30,6 @@ after all the targets are compiled.
 
 #### JvmTestEnvironmentParams
 
-
 ```ts
 export interface JvmTestEnvironmentParams {
   targets: BuildTargetIdentifier[];
@@ -31,7 +40,6 @@ export interface JvmTestEnvironmentParams {
 
 #### JvmTestEnvironmentResult
 
-
 ```ts
 export interface JvmTestEnvironmentResult {
   items: JvmEnvironmentItem[];
@@ -39,7 +47,6 @@ export interface JvmTestEnvironmentResult {
 ```
 
 #### JvmEnvironmentItem
-
 
 ```ts
 export interface JvmEnvironmentItem {
@@ -58,7 +65,6 @@ export interface JvmEnvironmentItem {
 ```
 
 #### JvmMainClass
-
 
 ```ts
 export interface JvmMainClass {
@@ -79,7 +85,6 @@ that should be used for regular exection of main classes, not for testing
 
 #### JvmRunEnvironmentParams
 
-
 ```ts
 export interface JvmRunEnvironmentParams {
   targets: BuildTargetIdentifier[];
@@ -90,7 +95,6 @@ export interface JvmRunEnvironmentParams {
 
 #### JvmRunEnvironmentResult
 
-
 ```ts
 export interface JvmRunEnvironmentResult {
   items: JvmEnvironmentItem[];
@@ -100,6 +104,7 @@ export interface JvmRunEnvironmentResult {
 ## BuildTargetData kinds
 
 ### JvmBuildTarget
+
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"jvm"`.

@@ -327,6 +327,7 @@ object DebugSessionParams {
 }
 
 object DebugSessionParamsDataKind {
+  val ScalaAttachRemote = "scala-attach-remote"
   val ScalaMainClass = "scala-main-class"
   val ScalaTestSuites = "scala-test-suites"
   val ScalaTestSuitesSelection = "scala-test-suites-selection"
@@ -923,6 +924,14 @@ final case class ScalaAction(
 
 object ScalaAction {
   implicit val codec: JsonValueCodec[ScalaAction] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ScalaAttachRemote(
+)
+
+object ScalaAttachRemote {
+  implicit val codec: JsonValueCodec[ScalaAttachRemote] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class ScalaBuildTarget(
