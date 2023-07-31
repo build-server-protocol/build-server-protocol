@@ -35,7 +35,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderVersion(): CodegenFile = {
     val contents = lines(
-      "package ch.epfl.scala.bsp4j;",
+      s"package $basepkg;",
       newline,
       block("public class Bsp4j")(
         s"""public static final String PROTOCOL_VERSION = new String("$version");"""
