@@ -228,7 +228,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
           s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
         (ev: EnumValue[String]) =>
-          s"""case object ${ev.name} extends ${toUpperCamelCase(shapeId.getName)}("${ev.value}")"""
+          s"""case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}("${ev.value}")"""
     }
   }
 
