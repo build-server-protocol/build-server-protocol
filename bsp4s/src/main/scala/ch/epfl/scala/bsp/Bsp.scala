@@ -113,6 +113,7 @@ object BuildTargetDataKind {
   val Cpp = "cpp"
   val Jvm = "jvm"
   val Python = "python"
+  val Rust = "rust"
   val Sbt = "sbt"
   val Scala = "scala"
 }
@@ -860,6 +861,246 @@ final case class RunResult(
 
 object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustBuildTarget(
+    name: String,
+    crateRootUrl: String,
+    packageRootUrl: String,
+    kind: RustTargetKind,
+    crateTypes: Option[List[RustCrateType]],
+    edition: Int,
+    doctest: Boolean,
+    requiredFeatures: Option[List[String]]
+)
+
+object RustBuildTarget {
+  implicit val codec: JsonValueCodec[RustBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustCfgOptions(
+    keyValueOptions: Option[Map[String, List[String]]],
+    nameOptions: Option[List[String]]
+)
+
+object RustCfgOptions {
+  implicit val codec: JsonValueCodec[RustCfgOptions] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+sealed abstract class RustCrateType(val value: Int)
+object RustCrateType {
+  case object Bin extends RustCrateType(1)
+  case object Lib extends RustCrateType(2)
+  case object Rlib extends RustCrateType(3)
+  case object Dylib extends RustCrateType(4)
+  case object Cdylib extends RustCrateType(5)
+  case object Staticlib extends RustCrateType(6)
+  case object ProcMacro extends RustCrateType(7)
+
+  implicit val codec: JsonValueCodec[RustCrateType] = new JsonValueCodec[RustCrateType] {
+    def nullValue: RustCrateType = null
+    def encodeValue(msg: RustCrateType, out: JsonWriter): Unit = out.writeVal(msg.value)
+    def decodeValue(in: JsonReader, default: RustCrateType): RustCrateType = {
+      in.readInt() match {
+        case 1 => Bin
+        case 2 => Lib
+        case 3 => Rlib
+        case 4 => Dylib
+        case 5 => Cdylib
+        case 6 => Staticlib
+        case 7 => ProcMacro
+        case n => in.decodeError(s"Unknown message type id for $n")
+      }
+    }
+  }
+}
+sealed abstract class RustDepKind(val value: Int)
+object RustDepKind {
+  case object Unclassified extends RustDepKind(1)
+  case object Normal extends RustDepKind(2)
+  case object Dev extends RustDepKind(3)
+  case object Build extends RustDepKind(4)
+
+  implicit val codec: JsonValueCodec[RustDepKind] = new JsonValueCodec[RustDepKind] {
+    def nullValue: RustDepKind = null
+    def encodeValue(msg: RustDepKind, out: JsonWriter): Unit = out.writeVal(msg.value)
+    def decodeValue(in: JsonReader, default: RustDepKind): RustDepKind = {
+      in.readInt() match {
+        case 1 => Unclassified
+        case 2 => Normal
+        case 3 => Dev
+        case 4 => Build
+        case n => in.decodeError(s"Unknown message type id for $n")
+      }
+    }
+  }
+}
+final case class RustDepKindInfo(
+    kind: RustDepKind,
+    target: Option[String]
+)
+
+object RustDepKindInfo {
+  implicit val codec: JsonValueCodec[RustDepKindInfo] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustDependency(
+    pkg: String,
+    name: Option[String],
+    depKinds: Option[List[RustDepKindInfo]]
+)
+
+object RustDependency {
+  implicit val codec: JsonValueCodec[RustDependency] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object RustEdition {
+  val Edition2015 = 2015
+  val Edition2018 = 2018
+  val Edition2021 = 2021
+}
+
+final case class RustFeature(
+    name: String,
+    dependencies: List[String]
+)
+
+object RustFeature {
+  implicit val codec: JsonValueCodec[RustFeature] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustPackage(
+    id: String,
+    version: String,
+    origin: String,
+    edition: Int,
+    source: Option[String],
+    targets: List[RustBuildTarget],
+    allTargets: List[RustBuildTarget],
+    features: List[RustFeature],
+    enabledFeatures: List[String],
+    cfgOptions: Option[RustCfgOptions],
+    env: Option[Map[String, String]],
+    outDirUrl: Option[String],
+    procMacroArtifact: Option[Uri]
+)
+
+object RustPackage {
+  implicit val codec: JsonValueCodec[RustPackage] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object RustPackageOrigin {
+  val Dependency = "dependency"
+  val Stdlib = "stdlib"
+  val StdlibDependency = "stdlib-dependency"
+  val Workspace = "workspace"
+}
+
+final case class RustRawDependency(
+    name: String,
+    rename: Option[String],
+    kind: Option[String],
+    target: Option[String],
+    optional: Boolean,
+    usesDefaultFeatures: Boolean,
+    features: List[String]
+)
+
+object RustRawDependency {
+  implicit val codec: JsonValueCodec[RustRawDependency] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+sealed abstract class RustTargetKind(val value: Int)
+object RustTargetKind {
+  case object Lib extends RustTargetKind(1)
+  case object Bin extends RustTargetKind(2)
+  case object Test extends RustTargetKind(3)
+  case object Example extends RustTargetKind(4)
+  case object Bench extends RustTargetKind(5)
+  case object Custombuild extends RustTargetKind(6)
+  case object Unknown extends RustTargetKind(7)
+
+  implicit val codec: JsonValueCodec[RustTargetKind] = new JsonValueCodec[RustTargetKind] {
+    def nullValue: RustTargetKind = null
+    def encodeValue(msg: RustTargetKind, out: JsonWriter): Unit = out.writeVal(msg.value)
+    def decodeValue(in: JsonReader, default: RustTargetKind): RustTargetKind = {
+      in.readInt() match {
+        case 1 => Lib
+        case 2 => Bin
+        case 3 => Test
+        case 4 => Example
+        case 5 => Bench
+        case 6 => Custombuild
+        case 7 => Unknown
+        case n => in.decodeError(s"Unknown message type id for $n")
+      }
+    }
+  }
+}
+final case class RustToolchainItem(
+    rustStdLib: Option[RustcInfo],
+    cargoBinPath: Uri,
+    procMacroSrvPath: Uri
+)
+
+object RustToolchainItem {
+  implicit val codec: JsonValueCodec[RustToolchainItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustToolchainParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object RustToolchainParams {
+  implicit val codec: JsonValueCodec[RustToolchainParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustToolchainResult(
+    toolchains: List[RustToolchainItem]
+)
+
+object RustToolchainResult {
+  implicit val codec: JsonValueCodec[RustToolchainResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustWorkspaceParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object RustWorkspaceParams {
+  implicit val codec: JsonValueCodec[RustWorkspaceParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustWorkspaceResult(
+    packages: List[RustPackage],
+    rawDependencies: Map[String, RustRawDependency],
+    dependencies: Map[String, RustDependency],
+    resolvedTargets: List[BuildTargetIdentifier]
+)
+
+object RustWorkspaceResult {
+  implicit val codec: JsonValueCodec[RustWorkspaceResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustcInfo(
+    sysrootPath: Uri,
+    srcSysrootPath: Uri,
+    version: String,
+    host: String
+)
+
+object RustcInfo {
+  implicit val codec: JsonValueCodec[RustcInfo] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class SbtBuildTarget(
