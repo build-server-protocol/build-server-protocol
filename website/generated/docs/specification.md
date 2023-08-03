@@ -297,7 +297,7 @@ export namespace BuildTargetDataKind {
 
   /** `data` field must contain a RustBuildTarget object. */
   export const Rust = "rust";
-  
+
   /** `data` field must contain a SbtBuildTarget object. */
   export const Sbt = "sbt";
 

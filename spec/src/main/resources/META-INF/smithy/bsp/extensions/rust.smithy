@@ -73,6 +73,9 @@ structure RustPackage {
     /// The package’s unique identifier
     @required
     id: String
+    /// The name of the package.
+    @required
+    name: String
     /// The version of the package.
     @required
     version: String
@@ -168,6 +171,7 @@ intEnum RustCrateType {
     CDYLIB = 5
     STATICLIB = 6
     PROC_MACRO = 7
+    UNKNOWN = 8
 }
 
 @enumKind("closed")
@@ -239,7 +243,11 @@ map RustEnvironmentVariables {
 map RustRawDependencies {
     /// Package id
     key: String
-    value: RustRawDependency
+    value: RustRawDependenciesInfo
+}
+
+list RustRawDependenciesInfo {
+    member: RustRawDependency
 }
 
 structure RustRawDependency {
@@ -270,7 +278,11 @@ list RustRawDependencyFeatures {
 map RustDependencies {
     /// Package id
     key: String
-    value: RustDependency
+    value: RustDependenciesInfo
+}
+
+list RustDependenciesInfo {
+    member: RustDependency
 }
 
 structure RustDependency {

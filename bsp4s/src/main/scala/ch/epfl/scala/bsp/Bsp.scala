@@ -898,6 +898,7 @@ object RustCrateType {
   case object Cdylib extends RustCrateType(5)
   case object Staticlib extends RustCrateType(6)
   case object ProcMacro extends RustCrateType(7)
+  case object Unknown extends RustCrateType(8)
 
   implicit val codec: JsonValueCodec[RustCrateType] = new JsonValueCodec[RustCrateType] {
     def nullValue: RustCrateType = null
@@ -911,6 +912,7 @@ object RustCrateType {
         case 5 => Cdylib
         case 6 => Staticlib
         case 7 => ProcMacro
+        case 8 => Unknown
         case n => in.decodeError(s"Unknown message type id for $n")
       }
     }
@@ -975,6 +977,7 @@ object RustFeature {
 
 final case class RustPackage(
     id: String,
+    name: String,
     version: String,
     origin: String,
     edition: Int,
@@ -1082,8 +1085,8 @@ object RustWorkspaceParams {
 
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
-    rawDependencies: Map[String, RustRawDependency],
-    dependencies: Map[String, RustDependency],
+    rawDependencies: Map[String, List[RustRawDependency]],
+    dependencies: Map[String, List[RustDependency]],
     resolvedTargets: List[BuildTargetIdentifier]
 )
 

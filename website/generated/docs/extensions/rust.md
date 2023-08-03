@@ -8,6 +8,7 @@ The following section contains Rust-specific extensions to the build server
 protocol.
 
 ## BSP version
+
 `2.1.0`
 
 ## BSP Server remote interface
@@ -28,7 +29,6 @@ The request may take a long time, as it may require building a project to some e
 
 #### RustWorkspaceParams
 
-
 ```ts
 export interface RustWorkspaceParams {
   /** A sequence of build targets for workspace resolution. */
@@ -38,7 +38,6 @@ export interface RustWorkspaceParams {
 
 #### RustWorkspaceResult
 
-
 ```ts
 export interface RustWorkspaceResult {
   /** Packages of given targets. */
@@ -46,10 +45,10 @@ export interface RustWorkspaceResult {
 
   /** Dependencies as listed in the package `Cargo.toml`,
    * without package resolution or any additional data. */
-  rawDependencies: Map<string, RustRawDependency>;
+  rawDependencies: Map<string, RustRawDependency[]>;
 
   /** Resolved dependencies of the package. Handles renamed dependencies. */
-  dependencies: Map<string, RustDependency>;
+  dependencies: Map<string, RustDependency[]>;
 
   /** A sequence of build targets taken into consideration during build process. */
   resolvedTargets: BuildTargetIdentifier[];
@@ -75,6 +74,9 @@ However, it must contain at least one crate, whether that’s a library or binar
 export interface RustPackage {
   /** The package’s unique identifier */
   id: string;
+
+  /** The name of the package. */
+  name: string;
 
   /** The version of the package. */
   version: string;
@@ -124,7 +126,6 @@ export interface RustPackage {
 
 #### RustPackageOrigin
 
-
 ```ts
 export type RustPackageOrigin = string;
 
@@ -144,7 +145,6 @@ export namespace RustPackageOrigin {
 ```
 
 #### RustEdition
-
 
 ```ts
 export type RustEdition = number;
@@ -195,7 +195,6 @@ export interface RustBuildTarget {
 
 #### RustTargetKind
 
-
 ```ts
 export enum RustTargetKind {
   /** For lib targets. */
@@ -241,11 +240,12 @@ export enum RustCrateType {
   Staticlib = 6,
 
   ProcMacro = 7,
+
+  Unknown = 8,
 }
 ```
 
 #### RustFeature
-
 
 ```ts
 export interface RustFeature {
@@ -258,7 +258,6 @@ export interface RustFeature {
 ```
 
 #### RustCfgOptions
-
 
 ```ts
 export interface RustCfgOptions {
@@ -273,7 +272,6 @@ export interface RustCfgOptions {
 ```
 
 #### RustRawDependency
-
 
 ```ts
 export interface RustRawDependency {
@@ -302,7 +300,6 @@ export interface RustRawDependency {
 
 #### RustDependency
 
-
 ```ts
 export interface RustDependency {
   /** The Package ID of the dependency. */
@@ -319,7 +316,6 @@ export interface RustDependency {
 
 #### RustDepKindInfo
 
-
 ```ts
 export interface RustDepKindInfo {
   /** The dependency kind. */
@@ -331,7 +327,6 @@ export interface RustDepKindInfo {
 ```
 
 #### RustDepKind
-
 
 ```ts
 export enum RustDepKind {
@@ -362,7 +357,6 @@ The request is essential to connect and work with `intellij-rust` plugin.
 
 #### RustToolchainParams
 
-
 ```ts
 export interface RustToolchainParams {
   /** A sequence of build targets for toolchain resolution. */
@@ -372,7 +366,6 @@ export interface RustToolchainParams {
 
 #### RustToolchainResult
 
-
 ```ts
 export interface RustToolchainResult {
   /** A sequence of Rust toolchains. */
@@ -381,7 +374,6 @@ export interface RustToolchainResult {
 ```
 
 #### RustToolchainItem
-
 
 ```ts
 export interface RustToolchainItem {
@@ -397,7 +389,6 @@ export interface RustToolchainItem {
 ```
 
 #### RustcInfo
-
 
 ```ts
 export interface RustcInfo {
@@ -419,7 +410,7 @@ export interface RustcInfo {
 ## BuildTargetData kinds
 
 ### RustBuildTarget
+
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"rust"`.
-

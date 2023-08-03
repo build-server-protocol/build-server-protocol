@@ -12,7 +12,8 @@ public enum RustCrateType {
     DYLIB(4),
     CDYLIB(5),
     STATICLIB(6),
-    PROC_MACRO(7);
+    PROC_MACRO(7),
+    UNKNOWN(8);
 
     private final int value;
 

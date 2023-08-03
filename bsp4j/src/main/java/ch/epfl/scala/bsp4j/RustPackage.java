@@ -13,6 +13,9 @@ public class RustPackage {
   private String id;
 
   @NonNull
+  private String name;
+
+  @NonNull
   private String version;
 
   @NonNull
@@ -43,8 +46,9 @@ public class RustPackage {
 
   private String procMacroArtifact;
 
-  public RustPackage(@NonNull final String id, @NonNull final String version, @NonNull final String origin, @NonNull final Integer edition, @NonNull final List<RustBuildTarget> targets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures) {
+  public RustPackage(@NonNull final String id, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final Integer edition, @NonNull final List<RustBuildTarget> targets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures) {
     this.id = id;
+    this.name = name;
     this.version = version;
     this.origin = origin;
     this.edition = edition;
@@ -62,6 +66,16 @@ public class RustPackage {
 
   public void setId(@NonNull final String id) {
     this.id = Preconditions.checkNotNull(id, "id");
+  }
+
+  @Pure
+  @NonNull
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(@NonNull final String name) {
+    this.name = Preconditions.checkNotNull(name, "name");
   }
 
   @Pure
@@ -184,6 +198,7 @@ public class RustPackage {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
+    b.add("name", this.name);
     b.add("version", this.version);
     b.add("origin", this.origin);
     b.add("edition", this.edition);
@@ -213,6 +228,11 @@ public class RustPackage {
       if (other.id != null)
         return false;
     } else if (!this.id.equals(other.id))
+      return false;
+    if (this.name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!this.name.equals(other.name))
       return false;
     if (this.version == null) {
       if (other.version != null)
@@ -283,6 +303,7 @@ public class RustPackage {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
+    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.origin== null) ? 0 : this.origin.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());

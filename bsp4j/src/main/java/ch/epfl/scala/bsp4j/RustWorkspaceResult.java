@@ -13,15 +13,15 @@ public class RustWorkspaceResult {
   private List<RustPackage> packages;
 
   @NonNull
-  private Map<String, RustRawDependency> rawDependencies;
+  private Map<String, List<RustRawDependency>> rawDependencies;
 
   @NonNull
-  private Map<String, RustDependency> dependencies;
+  private Map<String, List<RustDependency>> dependencies;
 
   @NonNull
   private List<BuildTargetIdentifier> resolvedTargets;
 
-  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final Map<String, RustRawDependency> rawDependencies, @NonNull final Map<String, RustDependency> dependencies, @NonNull final List<BuildTargetIdentifier> resolvedTargets) {
+  public RustWorkspaceResult(@NonNull final List<RustPackage> packages, @NonNull final Map<String, List<RustRawDependency>> rawDependencies, @NonNull final Map<String, List<RustDependency>> dependencies, @NonNull final List<BuildTargetIdentifier> resolvedTargets) {
     this.packages = packages;
     this.rawDependencies = rawDependencies;
     this.dependencies = dependencies;
@@ -40,21 +40,21 @@ public class RustWorkspaceResult {
 
   @Pure
   @NonNull
-  public Map<String, RustRawDependency> getRawDependencies() {
+  public Map<String, List<RustRawDependency>> getRawDependencies() {
     return this.rawDependencies;
   }
 
-  public void setRawDependencies(@NonNull final Map<String, RustRawDependency> rawDependencies) {
+  public void setRawDependencies(@NonNull final Map<String, List<RustRawDependency>> rawDependencies) {
     this.rawDependencies = Preconditions.checkNotNull(rawDependencies, "rawDependencies");
   }
 
   @Pure
   @NonNull
-  public Map<String, RustDependency> getDependencies() {
+  public Map<String, List<RustDependency>> getDependencies() {
     return this.dependencies;
   }
 
-  public void setDependencies(@NonNull final Map<String, RustDependency> dependencies) {
+  public void setDependencies(@NonNull final Map<String, List<RustDependency>> dependencies) {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
