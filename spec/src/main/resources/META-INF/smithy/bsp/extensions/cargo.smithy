@@ -3,6 +3,7 @@ $version: "2"
 namespace bsp.cargo
 
 use bsp#BuildTargetIdentifiers
+use bsp#StatusCode
 use jsonrpc#jsonRPC
 use jsonrpc#jsonRequest
 
@@ -10,8 +11,7 @@ use jsonrpc#jsonRequest
 service CargoBuildServer {
     operations: [
         CargoFeaturesState
-        EnableCargoFeatures
-        DisableCargoFeatures
+        SetCargoFeatures
     ]
 }
 
@@ -55,34 +55,25 @@ list PackagesFeatures {
 }
 
 /// The enable cargo features request is sent from the client to the server to
-/// enable features for the specified Cargo package.
-@jsonRequest("workspace/enableCargoFeatures")
-operation EnableCargoFeatures {
-    input: EnableCargoFeaturesParams
+/// set provided features collection as a new state for
+/// the specified Cargo package.
+@jsonRequest("workspace/setCargoFeatures")
+operation SetCargoFeatures {
+    input: SetCargoFeaturesParams
+    output: SetCargoFeaturesResult
 }
 
-structure EnableCargoFeaturesParams {
-    /// Package ID to enable features for.
+structure SetCargoFeaturesParams {
+    /// Package ID for which new features state will be set.
     @required
     packageId: String
-    /// The list of features to enable.
+    /// The list of features to be set as a new state.
     @required
     features: Features
 }
 
-/// The disable cargo features request is sent from the client to the server to
-/// disable features for the specified Cargo package.
-@jsonRequest("workspace/disableCargoFeatures")
-operation DisableCargoFeatures {
-    input: DisableCargoFeaturesParams
-}
-
-
-structure DisableCargoFeaturesParams {
-    /// Package ID to disable features for.
+structure  SetCargoFeaturesResult {
+    /// The status code of the operation.
     @required
-    packageId: String
-    /// The list of features to disable.
-    @required
-    features: Features
+    statusCode: StatusCode
 }

@@ -469,26 +469,6 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class DisableCargoFeaturesParams(
-    packageId: String,
-    features: List[String]
-)
-
-object DisableCargoFeaturesParams {
-  implicit val codec: JsonValueCodec[DisableCargoFeaturesParams] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-final case class EnableCargoFeaturesParams(
-    packageId: String,
-    features: List[String]
-)
-
-object EnableCargoFeaturesParams {
-  implicit val codec: JsonValueCodec[EnableCargoFeaturesParams] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -1126,6 +1106,25 @@ final case class ScalacOptionsResult(
 
 object ScalacOptionsResult {
   implicit val codec: JsonValueCodec[ScalacOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class SetCargoFeaturesParams(
+    packageId: String,
+    features: List[String]
+)
+
+object SetCargoFeaturesParams {
+  implicit val codec: JsonValueCodec[SetCargoFeaturesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class SetCargoFeaturesResult(
+    statusCode: StatusCode
+)
+
+object SetCargoFeaturesResult {
+  implicit val codec: JsonValueCodec[SetCargoFeaturesResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

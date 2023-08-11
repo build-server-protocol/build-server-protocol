@@ -9,11 +9,8 @@ public interface CargoBuildServer {
     @JsonRequest("workspace/cargoFeaturesState")
     CompletableFuture<CargoFeaturesStateResult> cargoFeaturesState();
 
-    @JsonRequest("workspace/enableCargoFeatures")
-    CompletableFuture<Object> enableCargoFeatures(EnableCargoFeaturesParams params);
-
-    @JsonRequest("workspace/disableCargoFeatures")
-    CompletableFuture<Object> disableCargoFeatures(DisableCargoFeaturesParams params);
+    @JsonRequest("workspace/setCargoFeatures")
+    CompletableFuture<SetCargoFeaturesResult> setCargoFeatures(SetCargoFeaturesParams params);
 
 
 }

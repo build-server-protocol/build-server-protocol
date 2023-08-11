@@ -71,10 +71,8 @@ trait Workspace {
   object reload extends Endpoint[Unit, Unit]("workspace/reload")
   object cargoFeaturesState
       extends Endpoint[Unit, CargoFeaturesStateResult]("workspace/cargoFeaturesState")
-  object enableCargoFeatures
-      extends Endpoint[EnableCargoFeaturesParams, Unit]("workspace/enableCargoFeatures")
-  object disableCargoFeatures
-      extends Endpoint[DisableCargoFeaturesParams, Unit]("workspace/disableCargoFeatures")
+  object setCargoFeatures
+      extends Endpoint[SetCargoFeaturesParams, SetCargoFeaturesResult]("workspace/setCargoFeatures")
 }
 object DebugSession extends DebugSession
 trait DebugSession {

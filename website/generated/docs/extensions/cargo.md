@@ -50,42 +50,33 @@ export interface PackageFeatures {
 }
 ```
 
-### EnableCargoFeatures: request
+### SetCargoFeatures: request
 
 The enable cargo features request is sent from the client to the server to
-enable features for the specified Cargo package.
+set provided features collection as a new state for
+the specified Cargo package.
 
-- method: `workspace/enableCargoFeatures`
-- params: `EnableCargoFeaturesParams`
+- method: `workspace/setCargoFeatures`
+- params: `SetCargoFeaturesParams`
+- result: `SetCargoFeaturesResult`
 
-#### EnableCargoFeaturesParams
+#### SetCargoFeaturesParams
 
 ```ts
-export interface EnableCargoFeaturesParams {
-  /** Package ID to enable features for. */
+export interface SetCargoFeaturesParams {
+  /** Package ID for which new features state will be set. */
   packageId: string;
 
-  /** The list of features to enable. */
+  /** The list of features to be set as a new state. */
   features: string[];
 }
 ```
 
-### DisableCargoFeatures: request
-
-The disable cargo features request is sent from the client to the server to
-disable features for the specified Cargo package.
-
-- method: `workspace/disableCargoFeatures`
-- params: `DisableCargoFeaturesParams`
-
-#### DisableCargoFeaturesParams
+#### SetCargoFeaturesResult
 
 ```ts
-export interface DisableCargoFeaturesParams {
-  /** Package ID to disable features for. */
-  packageId: string;
-
-  /** The list of features to disable. */
-  features: string[];
+export interface SetCargoFeaturesResult {
+  /** The status code of the operation. */
+  statusCode: StatusCode;
 }
 ```

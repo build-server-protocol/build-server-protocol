@@ -7,14 +7,14 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class EnableCargoFeaturesParams {
+public class SetCargoFeaturesParams {
   @NonNull
   private String packageId;
 
   @NonNull
   private List<String> features;
 
-  public EnableCargoFeaturesParams(@NonNull final String packageId, @NonNull final List<String> features) {
+  public SetCargoFeaturesParams(@NonNull final String packageId, @NonNull final List<String> features) {
     this.packageId = packageId;
     this.features = features;
   }
@@ -57,7 +57,7 @@ public class EnableCargoFeaturesParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    EnableCargoFeaturesParams other = (EnableCargoFeaturesParams) obj;
+    SetCargoFeaturesParams other = (SetCargoFeaturesParams) obj;
     if (this.packageId == null) {
       if (other.packageId != null)
         return false;
