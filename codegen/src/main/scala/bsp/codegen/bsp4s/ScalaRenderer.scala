@@ -35,7 +35,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     })
 
     val contents = lines(
-      "package ch.epfl.scala.bsp",
+      s"package $basepkg",
       newline,
       "import java.net.{URI, URISyntaxException}",
       newline,
@@ -95,7 +95,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val renderedOperations = renderOperations(operations)
 
     val contents = lines(
-      "package ch.epfl.scala.bsp",
+      s"package $basepkg",
       "package endpoints",
       newline,
       "import jsonrpc4s.Endpoint",
@@ -228,7 +228,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
           s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
         (ev: EnumValue[String]) =>
-          s"""case object ${ev.name} extends ${toUpperCamelCase(shapeId.getName)}("${ev.value}")"""
+          s"""case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}("${ev.value}")"""
     }
   }
 

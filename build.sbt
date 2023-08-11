@@ -39,7 +39,7 @@ lazy val V = new {
   val scalaCollectionCompat = "2.11.0"
   val osLib = "0.9.1"
   val decline = "2.4.1"
-  val smithy = "1.34.0"
+  val smithy = "1.35.0"
   val diffutils = "1.3.0"
   val scalatest = "3.2.16"
   val ipcsocket = "1.0.1"
@@ -86,14 +86,13 @@ lazy val bsp4s = project
 
     }
   )
-  .dependsOn(codegen)
 
 // Bsp4j is now generated from the smithy model
 lazy val bsp4j = project
   .in(file("bsp4j"))
   .settings(
-    crossScalaVersions := V.supportedScalaVersions,
     autoScalaLibrary := false,
+    crossPaths := false,
     Compile / javacOptions ++= {
       List(
         "-Xlint:all",
@@ -113,7 +112,6 @@ lazy val bsp4j = project
       "org.eclipse.lsp4j" % "org.eclipse.lsp4j.jsonrpc" % V.lsp4j
     )
   )
-  .dependsOn(codegen)
 
 lazy val tests = project
   .in(file("tests"))

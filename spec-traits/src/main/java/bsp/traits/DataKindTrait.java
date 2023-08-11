@@ -38,7 +38,7 @@ public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilde
 		ObjectNode.Builder builder = Node.objectNodeBuilder();
 		List<Node> polymorphicDataNodes = getPolymorphicData().stream().map(ShapeId::toString).map(Node::from).collect(Collectors.toList());
 		Node extendsNode = Node.fromNodes(polymorphicDataNodes);
-		builder.withMember("extends", Node.arrayNode());
+		builder.withMember("extends", extendsNode);
 		builder.withMember("kind", getKind());
 		return builder.build();
 	}
