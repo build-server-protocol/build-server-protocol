@@ -55,7 +55,7 @@ typecheck Scala snippets and also to generate a static site via
 
 To build the site locally you'll want to follow the below steps:
 
-1. `sbt mdoc` to generate the docs
+1. `sbt generateWebsite` to generate the docs
 2. `cd website` to go into the website directory where the site is managed
 3. `yarn install` to ensure everything is installed
 4. `yarn start` to build and start the server
@@ -64,7 +64,7 @@ To build the site locally you'll want to follow the below steps:
 need to be replaced with the following 2 steps:
 
 1. `yarn build` to fully build the site
-1. `yarn serve` to serve the site
+2. `yarn serve` to serve the site
 
 ### Approval tests
 
