@@ -497,6 +497,10 @@ export interface BuildServerCapabilities {
    * debugging. */
   jvmTestEnvironmentProvider?: boolean;
 
+  /** The server can respond to `workspace/cargoFeaturesState` and
+   * `setCargoFeatures` requests. In other words, supports Cargo Features extension. */
+  cargoFeaturesProvider?: boolean;
+
   /** Reloading the build state through workspace/reload is supported */
   canReload?: boolean;
 }

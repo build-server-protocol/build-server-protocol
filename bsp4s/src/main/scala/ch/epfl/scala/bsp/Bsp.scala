@@ -73,6 +73,7 @@ final case class BuildServerCapabilities(
     buildTargetChangedProvider: Option[Boolean],
     jvmRunEnvironmentProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
+    cargoFeaturesProvider: Option[Boolean],
     canReload: Option[Boolean]
 )
 

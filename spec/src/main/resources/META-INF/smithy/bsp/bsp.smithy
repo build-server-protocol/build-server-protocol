@@ -614,6 +614,9 @@ structure BuildServerCapabilities {
     /// necessary information required to launch a Java process for testing or
     /// debugging.
     jvmTestEnvironmentProvider: Boolean = false
+    /// The server can respond to `workspace/cargoFeaturesState` and
+    /// `setCargoFeatures` requests. In other words, supports Cargo Features extension.
+    cargoFeaturesProvider: Boolean = false
     /// Reloading the build state through workspace/reload is supported
     canReload: Boolean = false
 }
