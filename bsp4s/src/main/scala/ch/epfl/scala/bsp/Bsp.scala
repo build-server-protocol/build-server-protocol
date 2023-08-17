@@ -172,7 +172,7 @@ object BuildTargetTag {
 }
 
 final case class CargoFeaturesStateResult(
-    packagesFeatures: PackageFeatures
+    packagesFeatures: List[PackageFeatures]
 )
 
 object CargoFeaturesStateResult {

@@ -28,7 +28,7 @@ between Cargo packages and build target identifiers.
 export interface CargoFeaturesStateResult {
   /** The list of Cargo packages with assigned to them target
    * identifiers and available features. */
-  packagesFeatures: PackageFeatures;
+  packagesFeatures: PackageFeatures[];
 }
 ```
 

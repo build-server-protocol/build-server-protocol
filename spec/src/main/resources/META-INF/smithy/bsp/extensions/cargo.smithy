@@ -28,7 +28,7 @@ structure CargoFeaturesStateResult {
     /// The list of Cargo packages with assigned to them target
     /// identifiers and available features.
     @required
-    packagesFeatures: PackageFeatures
+    packagesFeatures: PackagesFeatures
 }
 
 list Features {

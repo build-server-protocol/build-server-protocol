@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -8,19 +9,19 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class CargoFeaturesStateResult {
   @NonNull
-  private PackageFeatures packagesFeatures;
+  private List<PackageFeatures> packagesFeatures;
 
-  public CargoFeaturesStateResult(@NonNull final PackageFeatures packagesFeatures) {
+  public CargoFeaturesStateResult(@NonNull final List<PackageFeatures> packagesFeatures) {
     this.packagesFeatures = packagesFeatures;
   }
 
   @Pure
   @NonNull
-  public PackageFeatures getPackagesFeatures() {
+  public List<PackageFeatures> getPackagesFeatures() {
     return this.packagesFeatures;
   }
 
-  public void setPackagesFeatures(@NonNull final PackageFeatures packagesFeatures) {
+  public void setPackagesFeatures(@NonNull final List<PackageFeatures> packagesFeatures) {
     this.packagesFeatures = Preconditions.checkNotNull(packagesFeatures, "packagesFeatures");
   }
 
