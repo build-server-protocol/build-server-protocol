@@ -43,7 +43,7 @@ export interface PackageFeatures {
   targets: BuildTargetIdentifier[];
 
   /** The list of available features for the Cargo package. */
-  availableFeatures: string[];
+  availableFeatures: Map<string, string[]>;
 
   /** The list of enabled features for the Cargo package. */
   enabledFeatures: string[];
@@ -78,5 +78,50 @@ export interface SetCargoFeaturesParams {
 export interface SetCargoFeaturesResult {
   /** The status code of the operation. */
   statusCode: StatusCode;
+}
+```
+
+## BuildTargetData kinds
+
+### CargoBuildTarget
+
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"cargo"`.
+
+#### CargoBuildTarget
+
+`CargoBuildTarget` is a basic data structure that contains
+cargo-specific metadata.
+
+```ts
+export interface CargoBuildTarget {
+  edition: Edition;
+
+  required_features: string[];
+}
+```
+
+#### Edition
+
+The Rust edition.
+As of writing this comment rust editions 2024, 2027 and 2030 are not
+actually a thing yet but are parsed nonetheless for future proofing.
+
+```ts
+export type Edition = string;
+
+export namespace Edition {
+  export const E2015 = "2015";
+
+  export const E2018 = "2018";
+
+  export const E2021 = "2021";
+
+  export const E2024 = "2024";
+
+  export const E2027 = "2027";
+
+  export const E2030 = "2030";
 }
 ```

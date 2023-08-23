@@ -286,6 +286,9 @@ export interface BuildTargetCapabilities {
 export type BuildTargetDataKind = string;
 
 export namespace BuildTargetDataKind {
+  /** `data` field must contain a CargoBuildTarget object. */
+  export const Cargo = "cargo";
+
   /** `data` field must contain a CppBuildTarget object. */
   export const Cpp = "cpp";
 

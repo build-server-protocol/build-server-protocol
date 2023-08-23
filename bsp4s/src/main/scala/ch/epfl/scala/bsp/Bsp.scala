@@ -111,6 +111,7 @@ object BuildTargetCapabilities {
 }
 
 object BuildTargetDataKind {
+  val Cargo = "cargo"
   val Cpp = "cpp"
   val Jvm = "jvm"
   val Python = "python"
@@ -169,6 +170,16 @@ object BuildTargetTag {
   val Manual = "manual"
   val NoIde = "no-ide"
   val Test = "test"
+}
+
+final case class CargoBuildTarget(
+    edition: String,
+    required_features: List[String]
+)
+
+object CargoBuildTarget {
+  implicit val codec: JsonValueCodec[CargoBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class CargoFeaturesStateResult(
@@ -470,6 +481,15 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+object Edition {
+  val E2015 = "2015"
+  val E2018 = "2018"
+  val E2021 = "2021"
+  val E2024 = "2024"
+  val E2027 = "2027"
+  val E2030 = "2030"
+}
+
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -745,7 +765,7 @@ object OutputPathsResult {
 final case class PackageFeatures(
     packageId: String,
     targets: List[BuildTargetIdentifier],
-    availableFeatures: List[String],
+    availableFeatures: Map[String, List[String]],
     enabledFeatures: List[String]
 )
 

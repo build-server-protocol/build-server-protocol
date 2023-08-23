@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -15,12 +16,12 @@ public class PackageFeatures {
   private List<BuildTargetIdentifier> targets;
 
   @NonNull
-  private List<String> availableFeatures;
+  private Map<String, List<String>> availableFeatures;
 
   @NonNull
   private List<String> enabledFeatures;
 
-  public PackageFeatures(@NonNull final String packageId, @NonNull final List<BuildTargetIdentifier> targets, @NonNull final List<String> availableFeatures, @NonNull final List<String> enabledFeatures) {
+  public PackageFeatures(@NonNull final String packageId, @NonNull final List<BuildTargetIdentifier> targets, @NonNull final Map<String, List<String>> availableFeatures, @NonNull final List<String> enabledFeatures) {
     this.packageId = packageId;
     this.targets = targets;
     this.availableFeatures = availableFeatures;
@@ -49,11 +50,11 @@ public class PackageFeatures {
 
   @Pure
   @NonNull
-  public List<String> getAvailableFeatures() {
+  public Map<String, List<String>> getAvailableFeatures() {
     return this.availableFeatures;
   }
 
-  public void setAvailableFeatures(@NonNull final List<String> availableFeatures) {
+  public void setAvailableFeatures(@NonNull final Map<String, List<String>> availableFeatures) {
     this.availableFeatures = Preconditions.checkNotNull(availableFeatures, "availableFeatures");
   }
 
