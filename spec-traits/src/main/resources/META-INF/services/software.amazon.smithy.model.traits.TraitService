@@ -6,3 +6,4 @@ bsp.traits.UntaggedUnionTrait$Provider
 bsp.traits.DataKindTrait$Provider
 bsp.traits.DataTrait$Provider
 bsp.traits.DocsPriorityTrait$Provider
+bsp.traits.SetTrait$Provider
