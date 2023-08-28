@@ -38,6 +38,7 @@ service BuildServer {
         OnBuildInitialized
         BuildShutdown
         OnBuildExit
+        CancelRequest
         WorkspaceBuildTargets
         WorkspaceReload
         BuildTargetSources
@@ -266,6 +267,11 @@ operation BuildShutdown {
 operation OnBuildExit {
 }
 
+/// Like the language server protocol, a notification to ask the server to cancel a request.
+@jsonNotification("$/cancelRequest")
+operation CancelRequest {
+    input: CancelRequestParams
+}
 
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
 ///
@@ -647,6 +653,12 @@ structure DebugProvider with [LanguageProvider] {
 
 structure TestProvider with [LanguageProvider] {
 
+}
+
+structure CancelRequestParams {
+    /// The request id to cancel.
+    @required
+    id: RequestId
 }
 
 @mixin

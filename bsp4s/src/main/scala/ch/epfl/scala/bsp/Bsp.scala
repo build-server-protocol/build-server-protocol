@@ -205,6 +205,15 @@ object BuildTargetTag {
   val Test = "test"
 }
 
+final case class CancelRequestParams(
+    id: String
+)
+
+object CancelRequestParams {
+  implicit val codec: JsonValueCodec[CancelRequestParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 /** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata.
   */
 final case class CargoBuildTarget(

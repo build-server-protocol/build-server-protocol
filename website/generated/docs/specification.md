@@ -592,6 +592,22 @@ if the shutdown request has been received before; otherwise with error code 1.
 
 - method: `build/exit`
 
+### CancelRequest: notification
+
+Like the language server protocol, a notification to ask the server to cancel a request.
+
+- method: `$/cancelRequest`
+- params: `CancelRequestParams`
+
+#### CancelRequestParams
+
+```ts
+export interface CancelRequestParams {
+  /** The request id to cancel. */
+  id: string | Integer;
+}
+```
+
 ### WorkspaceBuildTargets: request
 
 The workspace build targets request is sent from the client to the server to ask

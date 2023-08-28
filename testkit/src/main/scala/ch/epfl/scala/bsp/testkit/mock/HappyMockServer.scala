@@ -283,6 +283,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     Await.ready(isShutdown.future, 1.seconds)
   }
 
+  override def cancelRequest(params: CancelRequestParams): Unit = ()
+
   override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] =
     handleRequest {
       val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)

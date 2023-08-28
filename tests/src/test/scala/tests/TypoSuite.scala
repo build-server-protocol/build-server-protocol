@@ -106,6 +106,8 @@ class TypoSuite extends AnyFunSuite {
     }
     override def onBuildExit(): Unit =
       ()
+    override def cancelRequest(params: CancelRequestParams): Unit =
+      ()
     override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = {
       CompletableFuture.completedFuture {
         val capabilities = new BuildTargetCapabilities()
