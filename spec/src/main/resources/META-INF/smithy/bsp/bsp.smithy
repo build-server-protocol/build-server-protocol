@@ -2,12 +2,12 @@ $version: "2"
 
 namespace bsp
 
-use jsonrpc#data
-use jsonrpc#dataKind
-use jsonrpc#enumKind
-use jsonrpc#jsonNotification
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#data
+use traits#dataKind
+use traits#enumKind
+use traits#jsonNotification
+use traits#jsonRPC
+use traits#jsonRequest
 
 /// An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
 integer Integer

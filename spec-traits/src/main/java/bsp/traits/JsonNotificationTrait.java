@@ -6,7 +6,7 @@ import software.amazon.smithy.model.traits.StringTrait;
 
 public final class JsonNotificationTrait extends StringTrait {
 
-	public static final ShapeId ID = ShapeId.from("jsonrpc#jsonNotification");
+	public static final ShapeId ID = ShapeId.from("traits#jsonNotification");
 
 	public JsonNotificationTrait(String value, SourceLocation sourceLocation) {
 		super(ID, value, sourceLocation);

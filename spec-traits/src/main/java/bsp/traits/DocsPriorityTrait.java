@@ -10,7 +10,7 @@ import software.amazon.smithy.utils.ToSmithyBuilder;
 
 public class DocsPriorityTrait extends AbstractTrait implements ToSmithyBuilder<DocsPriorityTrait> {
 
-    public static final ShapeId ID = ShapeId.from("docs#docsPriority");
+    public static final ShapeId ID = ShapeId.from("traits#docsPriority");
 
     private final int priority;
 

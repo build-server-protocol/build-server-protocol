@@ -8,7 +8,7 @@ import software.amazon.smithy.model.traits.AbstractTrait;
 
 public class JsonRPCTrait extends AnnotationTrait {
 
-	public static ShapeId ID = ShapeId.from("jsonrpc#jsonRPC");
+	public static ShapeId ID = ShapeId.from("traits#jsonRPC");
 
 	public JsonRPCTrait(ObjectNode node) {
 		super(ID, node);
