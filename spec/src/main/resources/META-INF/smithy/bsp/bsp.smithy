@@ -997,8 +997,8 @@ structure ResourcesResult {
 structure ResourcesItem {
     @required
     target: BuildTargetIdentifier
-    @required
     /// List of resource files.
+    @required
     resources: URIs
 }
 

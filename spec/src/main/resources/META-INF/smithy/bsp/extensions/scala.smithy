@@ -93,9 +93,9 @@ structure ScalacOptionsResult {
 structure ScalacOptionsItem {
     @required
     target: BuildTargetIdentifier
-    @required
     /// Additional arguments to the compiler.
     /// For example, -deprecation.
+    @required
     options: ScalacOptionsList
     /// The dependency classpath for this target, must be
     /// identical to what is passed as arguments to
@@ -154,8 +154,8 @@ structure ScalaTestClassesParams {
 }
 
 structure ScalaTestClassesResult {
-    @required
     /// An optional id of the request that triggered this result.
+    @required
     items: ScalaTestClassesItems
 }
 
