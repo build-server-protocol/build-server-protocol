@@ -461,6 +461,15 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+object Edition {
+  val E2015 = "2015"
+  val E2018 = "2018"
+  val E2021 = "2021"
+  val E2024 = "2024"
+  val E2027 = "2027"
+  val E2030 = "2030"
+}
+
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -865,11 +874,10 @@ object RunResult {
 
 final case class RustBuildTarget(
     name: String,
-    crateRootUrl: String,
-    packageRootUrl: String,
+    crateRootUrl: Uri,
     kind: RustTargetKind,
     crateTypes: Option[List[RustCrateType]],
-    edition: Int,
+    edition: String,
     doctest: Boolean,
     requiredFeatures: Option[List[String]]
 )
@@ -960,12 +968,6 @@ object RustDependency {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object RustEdition {
-  val Edition2015 = 2015
-  val Edition2018 = 2018
-  val Edition2021 = 2021
-}
-
 final case class RustFeature(
     name: String,
     dependencies: List[String]
@@ -977,10 +979,11 @@ object RustFeature {
 
 final case class RustPackage(
     id: String,
+    rootUrl: Uri,
     name: String,
     version: String,
     origin: String,
-    edition: Int,
+    edition: String,
     source: Option[String],
     targets: List[RustBuildTarget],
     allTargets: List[RustBuildTarget],
@@ -988,8 +991,8 @@ final case class RustPackage(
     enabledFeatures: List[String],
     cfgOptions: Option[RustCfgOptions],
     env: Option[Map[String, String]],
-    outDirUrl: Option[String],
-    procMacroArtifact: Option[Uri]
+    outDirUrl: Option[Uri],
+    procMacroArtifact: Option[String]
 )
 
 object RustPackage {

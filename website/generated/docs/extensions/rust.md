@@ -75,6 +75,9 @@ export interface RustPackage {
   /** The package’s unique identifier */
   id: string;
 
+  /** The package's root path. */
+  rootUrl: URI;
+
   /** The name of the package. */
   name: string;
 
@@ -85,7 +88,7 @@ export interface RustPackage {
   origin: RustPackageOrigin;
 
   /** Code edition of the package. */
-  edition: RustEdition;
+  edition: Edition;
 
   /** The source ID of the dependency, `null` for the root package and path dependencies. */
   source?: string;
@@ -115,12 +118,12 @@ export interface RustPackage {
 
   /** An absolute path which is used as a value of `OUT_DIR` environmental
    * variable when compiling current package. */
-  outDirUrl?: string;
+  outDirUrl?: URI;
 
   /** File path to compiled output of a procedural macro crate.
    * Procedural macros are macros that generate code at compile time.
    * Contains files with file extensions: `.dll`, `.so` or `.dylib`. */
-  procMacroArtifact?: URI;
+  procMacroArtifact?: string;
 }
 ```
 
@@ -144,17 +147,23 @@ export namespace RustPackageOrigin {
 }
 ```
 
-#### RustEdition
+#### Edition
 
 ```ts
-export type RustEdition = number;
+export type Edition = string;
 
-export namespace RustEdition {
-  export const Edition2015 = 2015;
+export namespace Edition {
+  export const E2015 = "2015";
 
-  export const Edition2018 = 2018;
+  export const E2018 = "2018";
 
-  export const Edition2021 = 2021;
+  export const E2021 = "2021";
+
+  export const E2024 = "2024";
+
+  export const E2027 = "2027";
+
+  export const E2030 = "2030";
 }
 ```
 
@@ -169,10 +178,7 @@ export interface RustBuildTarget {
   name: string;
 
   /** Path to the root module of the crate. */
-  crateRootUrl: string;
-
-  /** Url of the root of the target's package. */
-  packageRootUrl: string;
+  crateRootUrl: URI;
 
   /** A target's kind. */
   kind: RustTargetKind;
@@ -182,7 +188,7 @@ export interface RustBuildTarget {
   crateTypes?: RustCrateType[];
 
   /** The Rust edition of the target. */
-  edition: RustEdition;
+  edition: Edition;
 
   /** Whether or not this target has doc tests enabled, and
    * the target is compatible with doc testing. */

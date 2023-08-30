@@ -15,25 +15,21 @@ public class RustBuildTarget {
   private String crateRootUrl;
 
   @NonNull
-  private String packageRootUrl;
-
-  @NonNull
   private RustTargetKind kind;
 
   private List<RustCrateType> crateTypes;
 
   @NonNull
-  private Integer edition;
+  private String edition;
 
   @NonNull
   private Boolean doctest;
 
   private List<String> requiredFeatures;
 
-  public RustBuildTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final String packageRootUrl, @NonNull final RustTargetKind kind, @NonNull final Integer edition, @NonNull final Boolean doctest) {
+  public RustBuildTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final RustTargetKind kind, @NonNull final String edition, @NonNull final Boolean doctest) {
     this.name = name;
     this.crateRootUrl = crateRootUrl;
-    this.packageRootUrl = packageRootUrl;
     this.kind = kind;
     this.edition = edition;
     this.doctest = doctest;
@@ -61,16 +57,6 @@ public class RustBuildTarget {
 
   @Pure
   @NonNull
-  public String getPackageRootUrl() {
-    return this.packageRootUrl;
-  }
-
-  public void setPackageRootUrl(@NonNull final String packageRootUrl) {
-    this.packageRootUrl = Preconditions.checkNotNull(packageRootUrl, "packageRootUrl");
-  }
-
-  @Pure
-  @NonNull
   public RustTargetKind getKind() {
     return this.kind;
   }
@@ -90,11 +76,11 @@ public class RustBuildTarget {
 
   @Pure
   @NonNull
-  public Integer getEdition() {
+  public String getEdition() {
     return this.edition;
   }
 
-  public void setEdition(@NonNull final Integer edition) {
+  public void setEdition(@NonNull final String edition) {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
@@ -123,7 +109,6 @@ public class RustBuildTarget {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
     b.add("crateRootUrl", this.crateRootUrl);
-    b.add("packageRootUrl", this.packageRootUrl);
     b.add("kind", this.kind);
     b.add("crateTypes", this.crateTypes);
     b.add("edition", this.edition);
@@ -151,11 +136,6 @@ public class RustBuildTarget {
       if (other.crateRootUrl != null)
         return false;
     } else if (!this.crateRootUrl.equals(other.crateRootUrl))
-      return false;
-    if (this.packageRootUrl == null) {
-      if (other.packageRootUrl != null)
-        return false;
-    } else if (!this.packageRootUrl.equals(other.packageRootUrl))
       return false;
     if (this.kind == null) {
       if (other.kind != null)
@@ -192,7 +172,6 @@ public class RustBuildTarget {
     int result = 1;
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     result = prime * result + ((this.crateRootUrl== null) ? 0 : this.crateRootUrl.hashCode());
-    result = prime * result + ((this.packageRootUrl== null) ? 0 : this.packageRootUrl.hashCode());
     result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
     result = prime * result + ((this.crateTypes== null) ? 0 : this.crateTypes.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());

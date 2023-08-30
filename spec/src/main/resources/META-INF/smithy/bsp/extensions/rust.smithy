@@ -87,7 +87,7 @@ structure RustPackage {
     origin: RustPackageOrigin
     /// Code edition of the package.
     @required
-    edition: RustEdition
+    edition: Edition
     /// The source ID of the dependency, `null` for the root package and path dependencies.
     source: String
     /// Correspond to source files which can be compiled into a crate from this package.
@@ -146,7 +146,7 @@ structure RustBuildTarget {
     crateTypes: RustCrateTypes
     /// The Rust edition of the target.
     @required
-    edition: RustEdition
+    edition: Edition
     /// Whether or not this target has doc tests enabled, and
     /// the target is compatible with doc testing.
     @required

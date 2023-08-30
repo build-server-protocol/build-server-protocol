@@ -13,6 +13,9 @@ public class RustPackage {
   private String id;
 
   @NonNull
+  private String rootUrl;
+
+  @NonNull
   private String name;
 
   @NonNull
@@ -22,7 +25,7 @@ public class RustPackage {
   private String origin;
 
   @NonNull
-  private Integer edition;
+  private String edition;
 
   private String source;
 
@@ -46,8 +49,9 @@ public class RustPackage {
 
   private String procMacroArtifact;
 
-  public RustPackage(@NonNull final String id, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final Integer edition, @NonNull final List<RustBuildTarget> targets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures) {
+  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustBuildTarget> targets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures) {
     this.id = id;
+    this.rootUrl = rootUrl;
     this.name = name;
     this.version = version;
     this.origin = origin;
@@ -66,6 +70,16 @@ public class RustPackage {
 
   public void setId(@NonNull final String id) {
     this.id = Preconditions.checkNotNull(id, "id");
+  }
+
+  @Pure
+  @NonNull
+  public String getRootUrl() {
+    return this.rootUrl;
+  }
+
+  public void setRootUrl(@NonNull final String rootUrl) {
+    this.rootUrl = Preconditions.checkNotNull(rootUrl, "rootUrl");
   }
 
   @Pure
@@ -100,11 +114,11 @@ public class RustPackage {
 
   @Pure
   @NonNull
-  public Integer getEdition() {
+  public String getEdition() {
     return this.edition;
   }
 
-  public void setEdition(@NonNull final Integer edition) {
+  public void setEdition(@NonNull final String edition) {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
@@ -198,6 +212,7 @@ public class RustPackage {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
+    b.add("rootUrl", this.rootUrl);
     b.add("name", this.name);
     b.add("version", this.version);
     b.add("origin", this.origin);
@@ -228,6 +243,11 @@ public class RustPackage {
       if (other.id != null)
         return false;
     } else if (!this.id.equals(other.id))
+      return false;
+    if (this.rootUrl == null) {
+      if (other.rootUrl != null)
+        return false;
+    } else if (!this.rootUrl.equals(other.rootUrl))
       return false;
     if (this.name == null) {
       if (other.name != null)
@@ -303,6 +323,7 @@ public class RustPackage {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
+    result = prime * result + ((this.rootUrl== null) ? 0 : this.rootUrl.hashCode());
     result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
     result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
     result = prime * result + ((this.origin== null) ? 0 : this.origin.hashCode());
