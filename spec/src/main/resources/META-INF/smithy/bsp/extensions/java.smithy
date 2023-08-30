@@ -5,8 +5,8 @@ namespace bsp.java
 use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp.jvm#Classpath
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service JavaBuildServer {

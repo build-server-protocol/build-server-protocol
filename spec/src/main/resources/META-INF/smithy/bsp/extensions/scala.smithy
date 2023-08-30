@@ -15,10 +15,10 @@ use bsp#URIs
 use bsp.jvm#Classpath
 use bsp.jvm#JvmBuildTarget
 use bsp.jvm#JvmOptions
-use jsonrpc#dataKind
-use jsonrpc#enumKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#dataKind
+use traits#enumKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service ScalaBuildServer {

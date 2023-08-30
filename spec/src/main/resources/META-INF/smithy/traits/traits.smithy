@@ -1,6 +1,11 @@
 $version: "2"
 
-namespace jsonrpc
+namespace traits
+
+/// Higher priority documents are shown first in the documentation.
+@trait()
+@default(0)
+integer docsPriority
 
 /// the JSON-RPC protocol,
 /// see https:/// www.jsonrpc.org/specification

@@ -21,7 +21,7 @@ public class EnumKindTrait extends AbstractTrait implements ToSmithyBuilder<Enum
 		}
 	}
 
-	public static final ShapeId ID = ShapeId.from("jsonrpc#enumKind");
+	public static final ShapeId ID = ShapeId.from("traits#enumKind");
 
 	private final EnumKind enumKind;
 

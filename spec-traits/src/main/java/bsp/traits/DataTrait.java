@@ -8,7 +8,7 @@ import software.amazon.smithy.model.traits.AnnotationTrait;
 
 public class DataTrait extends AnnotationTrait {
 
-    public static ShapeId ID = ShapeId.from("jsonrpc#data");
+    public static ShapeId ID = ShapeId.from("traits#data");
 
     public DataTrait(ObjectNode node) {
         super(ID, node);
