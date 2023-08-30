@@ -45,11 +45,11 @@ export interface ScalacOptionsResult {
 export interface ScalacOptionsItem {
   target: BuildTargetIdentifier;
 
+  /** Additional arguments to the compiler.
+   * For example, -deprecation. */
   options: string[];
 
-  /** Additional arguments to the compiler.
-   * For example, -deprecation.
-   * The dependency classpath for this target, must be
+  /** The dependency classpath for this target, must be
    * identical to what is passed as arguments to
    * the -classpath flag in the command line interface
    * of scalac. */
@@ -107,6 +107,7 @@ export interface ScalaTestClassesParams {
 
 ```ts
 export interface ScalaTestClassesResult {
+  /** An optional id of the request that triggered this result. */
   items: ScalaTestClassesItem[];
 }
 ```

@@ -27,5 +27,3 @@ apply StatusCode @docsPriority(7)
 apply BuildTargetCapabilities @tags(["basic"])
 
 apply BuildTargetTag @tags(["basic"])
-
-
