@@ -43,11 +43,17 @@ export interface PackageFeatures {
   targets: BuildTargetIdentifier[];
 
   /** The list of available features for the Cargo package. */
-  availableFeatures: Map<string, string[]>;
+  availableFeatures: Map<Feature, Feature[]>;
 
   /** The list of enabled features for the Cargo package. */
-  enabledFeatures: string[];
+  enabledFeatures: Feature[];
 }
+```
+
+#### Feature
+
+```ts
+export type Feature = string;
 ```
 
 ### SetCargoFeatures: request
@@ -68,7 +74,7 @@ export interface SetCargoFeaturesParams {
   packageId: string;
 
   /** The list of features to be set as a new state. */
-  features: string[];
+  features: Feature[];
 }
 ```
 
@@ -98,15 +104,13 @@ cargo-specific metadata.
 export interface CargoBuildTarget {
   edition: Edition;
 
-  required_features: string[];
+  required_features: Feature[];
 }
 ```
 
 #### Edition
 
 The Rust edition.
-As of writing this comment rust editions 2024, 2027 and 2030 are not
-actually a thing yet but are parsed nonetheless for future proofing.
 
 ```ts
 export type Edition = string;
@@ -117,11 +121,5 @@ export namespace Edition {
   export const E2018 = "2018";
 
   export const E2021 = "2021";
-
-  export const E2024 = "2024";
-
-  export const E2027 = "2027";
-
-  export const E2030 = "2030";
 }
 ```

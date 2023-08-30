@@ -28,17 +28,18 @@ structure CargoBuildTarget {
     required_features: Features
 }
 
+string Feature
+
+list Features {
+    member: Feature
+}
+
 /// The Rust edition.
-/// As of writing this comment rust editions 2024, 2027 and 2030 are not
-/// actually a thing yet but are parsed nonetheless for future proofing.
 @enumKind("open")
 enum Edition {
     E2015 = "2015"
     E2018 = "2018"
     E2021 = "2021"
-    _E2024 = "2024"
-    _E2027 = "2027"
-    _E2030 = "2030"
 }
 
 /// The cargo features state request is sent from the client to the server to
@@ -56,14 +57,10 @@ structure CargoFeaturesStateResult {
     packagesFeatures: PackagesFeatures
 }
 
-list Features {
-    member: String
-}
-
 /// The feature dependency graph is a mapping between
 /// feature and the features it turns on
 map FeatureDependencyGraph {
-    key: String,
+    key: Feature,
     value: Features
 }
 
