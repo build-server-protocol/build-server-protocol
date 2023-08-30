@@ -73,6 +73,9 @@ structure RustPackage {
     /// The package’s unique identifier
     @required
     id: String
+    /// The package's root path.
+    @required
+    rootUrl: URI
     /// The name of the package.
     @required
     name: String
@@ -110,11 +113,11 @@ structure RustPackage {
     env: RustEnvironmentVariables
     /// An absolute path which is used as a value of `OUT_DIR` environmental
     /// variable when compiling current package.
-    outDirUrl: String
+    outDirUrl: URI
     /// File path to compiled output of a procedural macro crate.
     /// Procedural macros are macros that generate code at compile time.
     /// Contains files with file extensions: `.dll`, `.so` or `.dylib`.
-    procMacroArtifact: URI
+    procMacroArtifact: String
 }
 
 list RustPackageEnabledFeatures {
@@ -134,11 +137,7 @@ structure RustBuildTarget {
     name: String
     /// Path to the root module of the crate.
     @required
-    crateRootUrl: String
-    // TODO move this field to RustPackage
-    /// Url of the root of the target's package.
-    @required
-    packageRootUrl: String
+    crateRootUrl: URI
     /// A target's kind.
     @required
     kind: RustTargetKind
@@ -320,11 +319,15 @@ intEnum RustDepKind {
     BUILD = 4
 }
 
+// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
 @enumKind("open")
-intEnum RustEdition {
-    EDITION_2015 = 2015
-    EDITION_2018 = 2018
-    EDITION_2021 = 2021
+enum Edition {
+    E2015 = "2015"
+    E2018 = "2018"
+    E2021 = "2021"
+    _E2024 = "2024"
+    _E2027 = "2027"
+    _E2030 = "2030"
 }
 
 @enumKind("open")
