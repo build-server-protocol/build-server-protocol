@@ -48,11 +48,11 @@ class TestBuildClient extends BuildClient {
     taskFinishes += params
 
     params.getDataKind match {
-      case TaskDataKind.COMPILE_REPORT =>
+      case TaskFinishDataKind.COMPILE_REPORT =>
         val json = params.getData.asInstanceOf[JsonElement]
         val report = gson.fromJson[CompileReport](json, classOf[CompileReport])
         compileReports += report
-      case TaskDataKind.TEST_REPORT =>
+      case TaskFinishDataKind.TEST_REPORT =>
         val json = params.getData.asInstanceOf[JsonElement]
         val report = gson.fromJson[TestReport](json, classOf[TestReport])
         testReports += report
