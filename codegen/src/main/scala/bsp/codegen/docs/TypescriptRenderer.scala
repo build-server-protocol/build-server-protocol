@@ -137,6 +137,7 @@ class TypescriptRenderer {
 
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"${renderType(member)}[]"
+    case TSet(member)         => s"Set<${renderType(member)}>"
     case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")
   }
 

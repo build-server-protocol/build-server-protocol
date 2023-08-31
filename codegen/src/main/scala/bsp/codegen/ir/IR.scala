@@ -118,6 +118,10 @@ object Type {
     override def members(): List[ShapeId] = member.members()
   }
 
+  case class TSet(member: Type) extends Type {
+    override def members(): List[ShapeId] = member.members()
+  }
+
   case class TMap(key: Type, value: Type) extends Type {
     override def members(): List[ShapeId] = key.members() ++ value.members()
   }
