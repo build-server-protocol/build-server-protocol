@@ -4,7 +4,7 @@ namespace bsp.maven
 
 use bsp#DependencyModuleData
 use bsp#URI
-use jsonrpc#dataKind
+use traits#dataKind
 
 /// `MavenDependencyModule` is a basic data structure that contains maven-like
 /// metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
