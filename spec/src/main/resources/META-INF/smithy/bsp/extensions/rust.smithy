@@ -5,10 +5,10 @@ namespace bsp.rust
 use bsp#BuildTargetData
 use bsp#BuildTargetIdentifiers
 use bsp#URI
-use jsonrpc#enumKind
-use jsonrpc#dataKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#enumKind
+use traits#dataKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service RustBuildServer {
