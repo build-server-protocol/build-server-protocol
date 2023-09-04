@@ -87,7 +87,7 @@ structure RustPackage {
     origin: RustPackageOrigin
     /// Code edition of the package.
     @required
-    edition: Edition
+    edition: RustEdition
     /// The source ID of the dependency, `null` for the root package and path dependencies.
     source: String
     /// Correspond to source files which can be compiled into a crate from this package.
@@ -146,7 +146,7 @@ structure RustBuildTarget {
     crateTypes: RustCrateTypes
     /// The Rust edition of the target.
     @required
-    edition: Edition
+    edition: RustEdition
     /// Whether or not this target has doc tests enabled, and
     /// the target is compatible with doc testing.
     @required
@@ -321,13 +321,10 @@ intEnum RustDepKind {
 
 // TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
 @enumKind("open")
-enum Edition {
+enum RustEdition {
     E2015 = "2015"
     E2018 = "2018"
     E2021 = "2021"
-    _E2024 = "2024"
-    _E2027 = "2027"
-    _E2030 = "2030"
 }
 
 @enumKind("open")

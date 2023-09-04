@@ -88,7 +88,7 @@ export interface RustPackage {
   origin: RustPackageOrigin;
 
   /** Code edition of the package. */
-  edition: Edition;
+  edition: RustEdition;
 
   /** The source ID of the dependency, `null` for the root package and path dependencies. */
   source?: string;
@@ -147,23 +147,17 @@ export namespace RustPackageOrigin {
 }
 ```
 
-#### Edition
+#### RustEdition
 
 ```ts
-export type Edition = string;
+export type RustEdition = string;
 
-export namespace Edition {
+export namespace RustEdition {
   export const E2015 = "2015";
 
   export const E2018 = "2018";
 
   export const E2021 = "2021";
-
-  export const E2024 = "2024";
-
-  export const E2027 = "2027";
-
-  export const E2030 = "2030";
 }
 ```
 
@@ -188,7 +182,7 @@ export interface RustBuildTarget {
   crateTypes?: RustCrateType[];
 
   /** The Rust edition of the target. */
-  edition: Edition;
+  edition: RustEdition;
 
   /** Whether or not this target has doc tests enabled, and
    * the target is compatible with doc testing. */

@@ -461,15 +461,6 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object Edition {
-  val E2015 = "2015"
-  val E2018 = "2018"
-  val E2021 = "2021"
-  val E2024 = "2024"
-  val E2027 = "2027"
-  val E2030 = "2030"
-}
-
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -966,6 +957,12 @@ final case class RustDependency(
 object RustDependency {
   implicit val codec: JsonValueCodec[RustDependency] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object RustEdition {
+  val E2015 = "2015"
+  val E2018 = "2018"
+  val E2021 = "2021"
 }
 
 final case class RustFeature(
