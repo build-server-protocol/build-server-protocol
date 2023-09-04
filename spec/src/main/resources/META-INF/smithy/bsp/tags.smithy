@@ -2,7 +2,7 @@ $version: "2"
 
 namespace bsp
 
-use docs#docsPriority
+use traits#docsPriority
 
 // Applying the tags a-posteriori to avoid hurting the readability of the spec
 
@@ -27,5 +27,3 @@ apply StatusCode @docsPriority(7)
 apply BuildTargetCapabilities @tags(["basic"])
 
 apply BuildTargetTag @tags(["basic"])
-
-

@@ -15,10 +15,10 @@ use bsp#URIs
 use bsp.jvm#Classpath
 use bsp.jvm#JvmBuildTarget
 use bsp.jvm#JvmOptions
-use jsonrpc#dataKind
-use jsonrpc#enumKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#dataKind
+use traits#enumKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service ScalaBuildServer {
@@ -93,9 +93,9 @@ structure ScalacOptionsResult {
 structure ScalacOptionsItem {
     @required
     target: BuildTargetIdentifier
-    @required
     /// Additional arguments to the compiler.
     /// For example, -deprecation.
+    @required
     options: ScalacOptionsList
     /// The dependency classpath for this target, must be
     /// identical to what is passed as arguments to
@@ -154,8 +154,8 @@ structure ScalaTestClassesParams {
 }
 
 structure ScalaTestClassesResult {
-    @required
     /// An optional id of the request that triggered this result.
+    @required
     items: ScalaTestClassesItems
 }
 

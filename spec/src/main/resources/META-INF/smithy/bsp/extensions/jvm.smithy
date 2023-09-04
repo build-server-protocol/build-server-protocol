@@ -8,9 +8,9 @@ use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp#Identifier
 use bsp#URI
-use jsonrpc#dataKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#dataKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service JvmBuildServer {

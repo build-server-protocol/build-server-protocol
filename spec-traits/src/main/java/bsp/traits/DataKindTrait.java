@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public final class DataKindTrait extends AbstractTrait implements ToSmithyBuilder<DataKindTrait> {
 
-	public static final ShapeId ID = ShapeId.from("jsonrpc#dataKind");
+	public static final ShapeId ID = ShapeId.from("traits#dataKind");
 
 	private final String kind;
 	private final List<ShapeId> polymorphicData;

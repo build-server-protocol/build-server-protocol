@@ -6,9 +6,9 @@ use bsp#BuildTargetData
 use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp#URI
-use jsonrpc#dataKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#dataKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service PythonBuildServer {

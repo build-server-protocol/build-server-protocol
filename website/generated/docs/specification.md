@@ -874,6 +874,7 @@ export interface ResourcesResult {
 export interface ResourcesItem {
   target: BuildTargetIdentifier;
 
+  /** List of resource files. */
   resources: URI[];
 }
 ```

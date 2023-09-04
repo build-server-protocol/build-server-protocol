@@ -6,7 +6,7 @@ use bsp#BuildTargetData
 use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp.scala#ScalaBuildTarget
-use jsonrpc#dataKind
+use traits#dataKind
 
 /// `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
 /// for providing editor support for sbt build files.

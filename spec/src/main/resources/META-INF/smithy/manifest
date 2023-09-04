@@ -8,5 +8,4 @@ bsp/extensions/maven.smithy
 bsp/extensions/python.smithy
 bsp/extensions/sbt.smithy
 bsp/extensions/scala.smithy
-docs/docs.smithy
-jsonrpc/jsonrpc.smithy
+traits/traits.smithy

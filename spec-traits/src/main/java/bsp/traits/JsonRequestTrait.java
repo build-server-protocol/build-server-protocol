@@ -6,7 +6,7 @@ import software.amazon.smithy.model.traits.StringTrait;
 
 public final class JsonRequestTrait extends StringTrait {
 
-	public static final ShapeId ID = ShapeId.from("jsonrpc#jsonRequest");
+	public static final ShapeId ID = ShapeId.from("traits#jsonRequest");
 
 	public JsonRequestTrait(String value, SourceLocation sourceLocation) {
 		super(ID, value, sourceLocation);
