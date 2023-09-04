@@ -117,7 +117,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def compileStart(taskId: TaskId, message: String, target: BuildTargetIdentifier): Unit = {
     val data = new CompileTask(target)
-    taskStart(taskId, message, Some(TaskDataKind.COMPILE_TASK), Some(data))
+    taskStart(taskId, message, Some(TaskStartDataKind.COMPILE_TASK), Some(data))
   }
 
   def compileReport(
@@ -136,6 +136,6 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     origin.foreach(data.setOriginId)
     data.setTime(time)
 
-    taskFinish(taskId, message, status, Some(TaskDataKind.COMPILE_REPORT), Some(data))
+    taskFinish(taskId, message, status, Some(TaskFinishDataKind.COMPILE_REPORT), Some(data))
   }
 }
