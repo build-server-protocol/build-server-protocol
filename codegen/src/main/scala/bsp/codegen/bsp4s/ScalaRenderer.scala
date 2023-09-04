@@ -257,6 +257,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TPrimitive(prim, shapeId) => renderPrimitive(prim, shapeId)
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
     case TCollection(member)       => s"List[${renderType(member)}]"
+    case TSet(member)              => s"Set[${renderType(member)}]"
     case TUntaggedUnion(tpes)      => renderType(tpes.head) // Todo what does bsp4j do ?
   }
 
