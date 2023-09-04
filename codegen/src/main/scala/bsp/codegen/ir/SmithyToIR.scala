@@ -310,7 +310,13 @@ class SmithyToIR(model: Model) {
     def structureShape(shape: StructureShape): Option[Type] = Some(TRef(shape.getId))
 
     def listShape(shape: ListShape): Option[Type] =
-      model.expectShape(shape.getMember.getTarget).accept(this).map(TCollection)
+      model
+        .expectShape(shape.getMember.getTarget)
+        .accept(this)
+        .map(memberType =>
+          if (shape.hasTrait(classOf[SetTrait])) TSet(memberType)
+          else TCollection(memberType)
+        )
 
     def mapShape(shape: MapShape): Option[Type] = for {
       k <- shape.getKey.accept(this)

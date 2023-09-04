@@ -39,6 +39,11 @@ enum enumKind {
     CLOSED = "closed"
 }
 
+/// Represents lists which are meant to be treated as sets
+@trait(selector: "list")
+structure set {
+}
+
 /// Trait used to mark the "base type" of a polymorphic data type
 @trait()
 structure data {
