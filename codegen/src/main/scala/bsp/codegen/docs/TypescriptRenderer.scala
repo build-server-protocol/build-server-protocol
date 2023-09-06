@@ -25,6 +25,8 @@ class TypescriptRenderer {
       case OpenEnum(shapeId, enumType, values, hints) =>
         Some(renderOpenEnum(shapeId, enumType, values))
       case Service(shapeId, operations, hints) => None
+      case UntaggedUnion(shapeId, tpes, _) =>
+        Some(renderUntaggedUnion(shapeId, tpes))
     }
   }
 
@@ -43,6 +45,13 @@ class TypescriptRenderer {
       block(s"export interface ${shapeId.getName()}")(
         lines(fields.map(f => renderTSField(f)).intercalate(newline))
       )
+    )
+  }
+
+  def renderUntaggedUnion(shapeId: ShapeId, tpes: List[Type]): Lines = {
+    val tpe = shapeId.getName()
+    lines(
+      s"export type $tpe = ${tpes.map(renderType).mkString("|")}"
     )
   }
 
@@ -132,10 +141,9 @@ class TypescriptRenderer {
         shapeId.getName
       }
 
-    case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
-    case TCollection(member)  => s"${renderType(member)}[]"
-    case TSet(member)         => s"Set<${renderType(member)}>"
-    case TUntaggedUnion(tpes) => tpes.map(renderType).mkString("|")
+    case TMap(key, value)    => s"Map<${renderType(key)}, ${renderType(value)}>"
+    case TCollection(member) => s"${renderType(member)}[]"
+    case TSet(member)        => s"Set<${renderType(member)}>"
   }
 
   def renderPrimitive(prim: Primitive) = prim match {

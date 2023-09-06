@@ -12,7 +12,7 @@ public class ShowMessageParams {
 
   private TaskId task;
 
-  private String originId;
+  private RequestId originId;
 
   @NonNull
   private String message;
@@ -42,11 +42,11 @@ public class ShowMessageParams {
   }
 
   @Pure
-  public String getOriginId() {
+  public RequestId getOriginId() {
     return this.originId;
   }
 
-  public void setOriginId(final String originId) {
+  public void setOriginId(final RequestId originId) {
     this.originId = originId;
   }
 

@@ -8,6 +8,7 @@ use traits#enumKind
 use traits#jsonNotification
 use traits#jsonRPC
 use traits#jsonRequest
+use traits#untaggedUnion
 
 /// An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
 integer Integer
@@ -508,7 +509,11 @@ operation BuildTargetCleanCache {
 
 
 /// Represents the identifier of a BSP request.
-string RequestId
+@untaggedUnion
+union RequestId {
+    integer: Integer
+    string: String
+}
 
 
 list BuildTargetIdentifiers {

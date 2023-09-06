@@ -55,6 +55,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       case OpenEnum(shapeId, enumType, values, hints) =>
         Some(renderOpenEnum(shapeId, enumType, values, hints))
       case Service(shapeId, operations, _) => Some(renderService(shapeId, operations))
+      case UntaggedUnion(shapeId, tpes, _) => Some(renderUntaggedUnion(shapeId, tpes))
     }
   }
 
@@ -177,6 +178,20 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     CodegenFile(baseRelPath / fileName, allLines.render)
   }
 
+  def renderUntaggedUnion(shapeId: ShapeId, tpes: List[Type]): CodegenFile = {
+    val tpe = shapeId.getName()
+    val allLines = lines(
+      renderPkg(shapeId).map(_ + ";"),
+      newline,
+      block(s"public class $tpe") {
+        tpes.map(_ => newline) // TODO: render proper untaggedUnion types
+      },
+      newline
+    )
+    val fileName = shapeId.getName() + ".java"
+    CodegenFile(baseRelPath / fileName, allLines.render)
+  }
+
   def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
@@ -259,8 +274,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       lines(s"import java.util.List") ++ renderImportFromType(member)
     case TSet(member) =>
       lines(s"import java.util.Set") ++ renderImportFromType(member)
-    case TUntaggedUnion(tpes) => tpes.foldMap(renderImportFromType)
-    case TPrimitive(prim, _)  => empty
+    case TPrimitive(prim, _) => empty
   }
 
   def renderImport(field: Field): Lines = {
@@ -318,12 +332,11 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
   }
 
   def renderType(tpe: Type): String = tpe match {
-    case TRef(shapeId)        => shapeId.getName()
-    case TPrimitive(prim, _)  => renderPrimitive(prim)
-    case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
-    case TCollection(member)  => s"List<${renderType(member)}>"
-    case TSet(member)         => s"Set<${renderType(member)}>"
-    case TUntaggedUnion(tpes) => renderType(tpes.head) // Todo what does bsp4j do ?
+    case TRef(shapeId)       => shapeId.getName()
+    case TPrimitive(prim, _) => renderPrimitive(prim)
+    case TMap(key, value)    => s"Map<${renderType(key)}, ${renderType(value)}>"
+    case TCollection(member) => s"List<${renderType(member)}>"
+    case TSet(member)        => s"Set<${renderType(member)}>"
   }
 
   def renderPrimitive(prim: Primitive): String = prim match {

@@ -1,6 +1,7 @@
 package bsp.codegen.ir
 
 import bsp.codegen.docs._
+import bsp.codegen.ir.Def.UntaggedUnion
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.traits.EnumKindTrait.EnumKind.{CLOSED, OPEN}
@@ -250,6 +251,15 @@ class SmithyToIR(model: Model) {
       }
     }
 
+    override def unionShape(shape: UnionShape): List[Def] = {
+      val hints = getHints(shape)
+      if (shape.hasTrait(classOf[UntaggedUnionTrait])) {
+        val memberTypes =
+          shape.getAllMembers.asScala.values.map(it => getType(it.getTarget)).toList.flatten
+        List(UntaggedUnion(shape.getId, memberTypes, hints))
+      } else List.empty
+    }
+
     def aliasShape(shape: Shape): List[Def] = {
       val hints = getHints(shape)
       shape
@@ -316,9 +326,8 @@ class SmithyToIR(model: Model) {
 
     def unionShape(shape: UnionShape): Option[Type] = Some {
       if (shape.hasTrait(classOf[UntaggedUnionTrait])) {
-        val memberTypes = shape.getAllMembers.asScala.values.map(_.accept(this)).toList.flatten
-        TUntaggedUnion(memberTypes)
-      } else TRef(shape.getId)
+        TRef(shape.getId)
+      } else null
     }
 
     override def enumShape(shape: EnumShape): Option[Type] = {

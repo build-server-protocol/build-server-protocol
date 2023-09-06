@@ -312,6 +312,14 @@ export namespace BuildTargetDataKind {
 export type BuildTargetData = any;
 ```
 
+#### RequestId
+
+Represents the identifier of a BSP request.
+
+```ts
+export type RequestId = Integer | string;
+```
+
 #### TaskId
 
 The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
@@ -1352,14 +1360,6 @@ export enum MessageType {
   /** A log message. */
   Log = 4,
 }
-```
-
-#### RequestId
-
-Represents the identifier of a BSP request.
-
-```ts
-export type RequestId = string;
 ```
 
 ### OnBuildLogMessage: notification

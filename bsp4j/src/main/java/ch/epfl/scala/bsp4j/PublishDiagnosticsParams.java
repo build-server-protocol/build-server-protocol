@@ -14,7 +14,7 @@ public class PublishDiagnosticsParams {
   @NonNull
   private BuildTargetIdentifier buildTarget;
 
-  private String originId;
+  private RequestId originId;
 
   @NonNull
   private List<Diagnostic> diagnostics;
@@ -50,11 +50,11 @@ public class PublishDiagnosticsParams {
   }
 
   @Pure
-  public String getOriginId() {
+  public RequestId getOriginId() {
     return this.originId;
   }
 
-  public void setOriginId(final String originId) {
+  public void setOriginId(final RequestId originId) {
     this.originId = originId;
   }
 

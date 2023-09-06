@@ -31,7 +31,8 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
         renderClosedEnum(shapeId, enumType, values, hints)
       case OpenEnum(shapeId, enumType, values, hints) =>
         renderOpenEnum(shapeId, enumType, values, hints)
-      case Service(_, _, _) => Lines.empty
+      case Service(_, _, _)                => Lines.empty
+      case UntaggedUnion(shapeId, tpes, _) => renderUntaggedUnion(shapeId, tpes)
     })
 
     val contents = lines(
@@ -174,6 +175,16 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
+  def renderUntaggedUnion(shapeId: ShapeId, tpes: List[Type]): Lines = {
+    val tpe = shapeId.getName()
+    lines(
+      paren(s"case class $tpe") {
+        tpes.map(_ => newline) // TODO: render proper untaggedUnion types
+      },
+      newline
+    )
+  }
+
   def renderOperations(operations: List[Operation]): Lines = {
     val groupedByTargetName = operations.groupBy(_.jsonRPCMethod.split("/")(0))
     lines(
@@ -290,7 +301,6 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
     case TCollection(member)       => s"List[${renderType(member)}]"
     case TSet(member)              => s"Set[${renderType(member)}]"
-    case TUntaggedUnion(tpes)      => renderType(tpes.head) // Todo what does bsp4j do ?
   }
 
   def renderPrimitive(prim: Primitive, shapeId: ShapeId): String = {
