@@ -14,9 +14,7 @@ sealed trait Def {
 }
 
 object Def {
-  final case class PrimitiveAlias(shapeId: ShapeId, prim: Primitive, hints: List[Hint]) extends Def
-
-  final case class ListDef(shapeId: ShapeId, elementType: Type, hints: List[Hint]) extends Def
+  final case class Alias(shapeId: ShapeId, aliasedType: Type, hints: List[Hint]) extends Def
 
   final case class Structure(
       shapeId: ShapeId,
@@ -145,6 +143,10 @@ object Type {
   val TString = TPrimitive(Primitive.PString, ShapeId.from("smithy.api#String"))
   val TInt = TPrimitive(Primitive.PInt, ShapeId.from("smithy.api#Integer"))
   val TLong = TPrimitive(Primitive.PLong, ShapeId.from("smithy.api#Long"))
+  val TFloat = TPrimitive(Primitive.PFloat, ShapeId.from("smithy.api#Float"))
+  val TDouble = TPrimitive(Primitive.PDouble, ShapeId.from("smithy.api#Double"))
+  val TDocument = TPrimitive(Primitive.PDocument, ShapeId.from("smithy.api#Document"))
+  val TTimestamp = TPrimitive(Primitive.PTimestamp, ShapeId.from("smithy.api#Timestamp"))
 }
 
 sealed trait Hint
