@@ -25,13 +25,12 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val filePath = baseRelPath / "Bsp.scala"
 
     val renderedDefinitions = lines(definitions.map {
-      case PrimitiveAlias(_, _, _)          => Lines.empty
+      case Alias(_, _, _)                   => Lines.empty
       case Structure(shapeId, fields, _, _) => renderStructure(shapeId, fields)
       case ClosedEnum(shapeId, enumType, values, _) =>
         renderClosedEnum(shapeId, enumType, values)
       case OpenEnum(shapeId, enumType, values, _) => renderOpenEnum(shapeId, enumType, values)
       case Service(_, _, _)                       => Lines.empty
-      case ListDef(_, _, _)                       => Lines.empty
     })
 
     val contents = lines(

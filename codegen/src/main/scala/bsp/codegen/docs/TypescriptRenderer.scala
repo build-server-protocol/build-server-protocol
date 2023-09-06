@@ -16,28 +16,25 @@ class TypescriptRenderer {
 
   def render(definition: Def): Option[Lines] = {
     definition match {
-      case PrimitiveAlias(shapeId, primitiveType, hints) =>
-        Some(renderPrimitiveAlias(shapeId, primitiveType))
+      case Alias(shapeId, primitiveType, hints) =>
+        Some(renderAlias(shapeId, primitiveType))
       case Structure(shapeId, fields, hints, associatedDataKinds) =>
         Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, hints) =>
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, hints) =>
         Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations, hints)  => None
-      case ListDef(shapeId, elementType, hints) => Some(renderListDef(shapeId, elementType))
+      case Service(shapeId, operations, hints) => None
     }
   }
 
-  def renderListDef(shapeId: ShapeId, elementType: Type): Lines = {
+  def renderAlias(id: ShapeId, aliased: Type): Lines = {
+    val tpe = aliased match {
+      case TPrimitive(prim, _) => renderPrimitive(prim)
+      case _                   => renderType(aliased)
+    }
     lines(
-      s"export type ${shapeId.getName()} = ${renderType(elementType)}[];"
-    )
-  }
-
-  def renderPrimitiveAlias(id: ShapeId, primitive: Primitive): Lines = {
-    lines(
-      s"export type ${id.getName()} = ${renderPrimitive(primitive)};"
+      s"export type ${id.getName()} = $tpe;"
     )
   }
 
