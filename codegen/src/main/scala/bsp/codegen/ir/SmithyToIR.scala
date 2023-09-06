@@ -200,12 +200,6 @@ class SmithyToIR(model: Model) {
       List(Def.Structure(shape.getId, updatedFields, getHints(shape), associatedDataKinds))
     }
 
-    override def listShape(shape: ListShape): List[Def] = {
-      val memberType = getType(shape.getMember.getId).get
-      val hints = getHints(shape)
-      List(Def.ListDef(shape.getId, memberType, hints))
-    }
-
     override def intEnumShape(shape: IntEnumShape): List[Def] = {
       val enumValues = shape.getEnumValues.asScala.map { case (name, value) =>
         val valueHints = getHints(shape.getAllMembers.get(name))
@@ -249,41 +243,38 @@ class SmithyToIR(model: Model) {
         }
 
         val dataKindDef = Def.OpenEnum(openEnumId, EnumType.StringEnum, values, hints)
-        val dataDef = Def.PrimitiveAlias(id, Primitive.PDocument, hints)
+        val dataDef = Def.Alias(id, Type.TDocument, hints)
         List(dataKindDef, dataDef)
       } else {
-        primitiveShape(shape)
+        aliasShape(shape)
       }
     }
 
-    def primitiveShape(shape: Shape): List[Def] = {
+    def aliasShape(shape: Shape): List[Def] = {
       val hints = getHints(shape)
-      shape match {
-        case shape: BooleanShape => List(Def.PrimitiveAlias(shape.getId, Primitive.PBool, hints))
-        case shape: IntegerShape => List(Def.PrimitiveAlias(shape.getId, Primitive.PInt, hints))
-        case shape: LongShape    => List(Def.PrimitiveAlias(shape.getId, Primitive.PLong, hints))
-        case shape: FloatShape   => List(Def.PrimitiveAlias(shape.getId, Primitive.PFloat, hints))
-        case shape: DoubleShape  => List(Def.PrimitiveAlias(shape.getId, Primitive.PDouble, hints))
-        case shape: StringShape  => List(Def.PrimitiveAlias(shape.getId, Primitive.PString, hints))
-        case shape: TimestampShape =>
-          List(Def.PrimitiveAlias(shape.getId, Primitive.PTimestamp, hints))
-        case _ => List.empty
-      }
+      shape
+        .accept(ToTypeVisitor)
+        .map(it => List(Def.Alias(shape.getId, it, hints)))
+        .getOrElse(List.empty)
     }
 
-    override def booleanShape(shape: BooleanShape): List[Def] = primitiveShape(shape)
+    override def booleanShape(shape: BooleanShape): List[Def] = aliasShape(shape)
 
-    override def integerShape(shape: IntegerShape): List[Def] = primitiveShape(shape)
+    override def integerShape(shape: IntegerShape): List[Def] = aliasShape(shape)
 
-    override def longShape(shape: LongShape): List[Def] = primitiveShape(shape)
+    override def longShape(shape: LongShape): List[Def] = aliasShape(shape)
 
-    override def floatShape(shape: FloatShape): List[Def] = primitiveShape(shape)
+    override def floatShape(shape: FloatShape): List[Def] = aliasShape(shape)
 
-    override def doubleShape(shape: DoubleShape): List[Def] = primitiveShape(shape)
+    override def doubleShape(shape: DoubleShape): List[Def] = aliasShape(shape)
 
-    override def stringShape(shape: StringShape): List[Def] = primitiveShape(shape)
+    override def stringShape(shape: StringShape): List[Def] = aliasShape(shape)
 
-    override def timestampShape(shape: TimestampShape): List[Def] = primitiveShape(shape)
+    override def timestampShape(shape: TimestampShape): List[Def] = aliasShape(shape)
+
+    override def listShape(shape: ListShape): List[Def] = aliasShape(shape)
+
+    override def mapShape(shape: MapShape): List[Def] = aliasShape(shape)
   }
 
   object ToTypeVisitor extends ShapeVisitor[Option[Type]] {
