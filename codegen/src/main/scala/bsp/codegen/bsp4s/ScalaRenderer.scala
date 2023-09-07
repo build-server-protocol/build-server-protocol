@@ -25,13 +25,12 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val filePath = baseRelPath / "Bsp.scala"
 
     val renderedDefinitions = lines(definitions.map {
-      case PrimitiveAlias(_, _, _)          => Lines.empty
+      case Alias(_, _, _)                   => Lines.empty
       case Structure(shapeId, fields, _, _) => renderStructure(shapeId, fields)
       case ClosedEnum(shapeId, enumType, values, _) =>
         renderClosedEnum(shapeId, enumType, values)
       case OpenEnum(shapeId, enumType, values, _) => renderOpenEnum(shapeId, enumType, values)
       case Service(_, _, _)                       => Lines.empty
-      case ListDef(_, _, _)                       => Lines.empty
     })
 
     val contents = lines(
@@ -257,6 +256,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TPrimitive(prim, shapeId) => renderPrimitive(prim, shapeId)
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
     case TCollection(member)       => s"List[${renderType(member)}]"
+    case TSet(member)              => s"Set[${renderType(member)}]"
     case TUntaggedUnion(tpes)      => renderType(tpes.head) // Todo what does bsp4j do ?
   }
 

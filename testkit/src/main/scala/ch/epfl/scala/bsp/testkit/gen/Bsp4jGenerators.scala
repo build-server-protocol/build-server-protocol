@@ -539,13 +539,20 @@ trait Bsp4jGenerators {
 
   lazy val genStatusCode: Gen[StatusCode] = Gen.oneOf(StatusCode.values)
 
-  lazy val genTaskDataKind: Gen[String] = Gen.oneOf(
-    TaskDataKind.COMPILE_REPORT,
-    TaskDataKind.COMPILE_TASK,
-    TaskDataKind.TEST_FINISH,
-    TaskDataKind.TEST_REPORT,
-    TaskDataKind.TEST_START,
-    TaskDataKind.TEST_TASK
+  lazy val genTaskFinishDataKind: Gen[String] = Gen.oneOf(
+    TaskFinishDataKind.COMPILE_REPORT,
+    TaskFinishDataKind.TEST_FINISH,
+    TaskFinishDataKind.TEST_REPORT
+  )
+  lazy val genTaskProgressDataKind: Gen[String] = Gen.oneOf(
+    "unknown1",
+    "unknown2",
+    "unknown3"
+  )
+  lazy val genTaskStartDataKind: Gen[String] = Gen.oneOf(
+    TaskStartDataKind.COMPILE_TASK,
+    TaskStartDataKind.TEST_START,
+    TaskStartDataKind.TEST_TASK
   )
 
   lazy val genTaskFinishParams: Gen[TaskFinishParams] = for {
@@ -553,7 +560,7 @@ trait Bsp4jGenerators {
     status <- genStatusCode
     eventTime <- BoxedGen.long.nullable
     message <- arbitrary[String].nullable
-    dataKind <- genTaskDataKind.nullable
+    dataKind <- genTaskFinishDataKind.nullable
   } yield {
     val params = new TaskFinishParams(taskId, status)
     params.setEventTime(eventTime)
@@ -579,7 +586,7 @@ trait Bsp4jGenerators {
     progress <- BoxedGen.long.nullable
     total <- BoxedGen.long.nullable
     unit <- arbitrary[String]
-    dataKind <- genTaskDataKind.nullable
+    dataKind <- genTaskProgressDataKind.nullable
   } yield {
     val params = new TaskProgressParams(taskId)
     params.setEventTime(eventTime)
@@ -596,7 +603,7 @@ trait Bsp4jGenerators {
     taskId <- genTaskId
     eventTime <- BoxedGen.long.nullable
     message <- arbitrary[String].nullable
-    dataKind <- genTaskDataKind.nullable
+    dataKind <- genTaskStartDataKind.nullable
   } yield {
     val params = new TaskStartParams(taskId)
     params.setEventTime(eventTime)

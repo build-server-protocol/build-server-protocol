@@ -48,13 +48,12 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderDef(definition: Def): Option[CodegenFile] = {
     definition match {
-      case PrimitiveAlias(shapeId, tpe, _)  => None
+      case Alias(shapeId, tpe, _)           => None
       case Structure(shapeId, fields, _, _) => Some(renderStructure(shapeId, fields))
       case ClosedEnum(shapeId, enumType, values, _) =>
         Some(renderClosedEnum(shapeId, enumType, values))
       case OpenEnum(shapeId, enumType, values, _) => Some(renderOpenEnum(shapeId, enumType, values))
       case Service(shapeId, operations, _)        => Some(renderService(shapeId, operations))
-      case ListDef(_, _, _)                       => None
     }
   }
 
@@ -226,6 +225,8 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       lines(s"import java.util.Map") ++ renderImportFromType(key) ++ renderImportFromType(value)
     case TCollection(member) =>
       lines(s"import java.util.List") ++ renderImportFromType(member)
+    case TSet(member) =>
+      lines(s"import java.util.Set") ++ renderImportFromType(member)
     case TUntaggedUnion(tpes) => tpes.foldMap(renderImportFromType)
     case TPrimitive(prim, _)  => empty
   }
@@ -289,6 +290,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TPrimitive(prim, _)  => renderPrimitive(prim)
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"List<${renderType(member)}>"
+    case TSet(member)         => s"Set<${renderType(member)}>"
     case TUntaggedUnion(tpes) => renderType(tpes.head) // Todo what does bsp4j do ?
   }
 
