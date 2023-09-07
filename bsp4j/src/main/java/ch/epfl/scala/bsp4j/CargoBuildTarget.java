@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import java.util.List;
+import java.util.Set;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -12,9 +12,9 @@ public class CargoBuildTarget {
   private String edition;
 
   @NonNull
-  private List<String> required_features;
+  private Set<String> required_features;
 
-  public CargoBuildTarget(@NonNull final String edition, @NonNull final List<String> required_features) {
+  public CargoBuildTarget(@NonNull final String edition, @NonNull final Set<String> required_features) {
     this.edition = edition;
     this.required_features = required_features;
   }
@@ -31,11 +31,11 @@ public class CargoBuildTarget {
 
   @Pure
   @NonNull
-  public List<String> getRequired_features() {
+  public Set<String> getRequired_features() {
     return this.required_features;
   }
 
-  public void setRequired_features(@NonNull final List<String> required_features) {
+  public void setRequired_features(@NonNull final Set<String> required_features) {
     this.required_features = Preconditions.checkNotNull(required_features, "required_features");
   }
 

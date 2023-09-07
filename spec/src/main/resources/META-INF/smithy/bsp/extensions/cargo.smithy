@@ -5,10 +5,11 @@ namespace bsp.cargo
 use bsp#BuildTargetData
 use bsp#BuildTargetIdentifiers
 use bsp#StatusCode
-use jsonrpc#dataKind
-use jsonrpc#enumKind
-use jsonrpc#jsonRPC
-use jsonrpc#jsonRequest
+use traits#dataKind
+use traits#set
+use traits#enumKind
+use traits#jsonRPC
+use traits#jsonRequest
 
 @jsonRPC
 service CargoBuildServer {
@@ -23,20 +24,21 @@ service CargoBuildServer {
 @dataKind(kind: "cargo", extends: [BuildTargetData])
 structure CargoBuildTarget {
     @required
-    edition: Edition
+    edition: RustEdition
     @required
     required_features: Features
 }
 
 string Feature
 
+@set
 list Features {
     member: Feature
 }
 
 /// The Rust edition.
 @enumKind("open")
-enum Edition {
+enum RustEdition {
     E2015 = "2015"
     E2018 = "2018"
     E2021 = "2021"

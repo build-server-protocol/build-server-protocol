@@ -174,7 +174,7 @@ object BuildTargetTag {
 
 final case class CargoBuildTarget(
     edition: String,
-    required_features: List[String]
+    required_features: Set[String]
 )
 
 object CargoBuildTarget {
@@ -481,12 +481,6 @@ object DidChangeBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-object Edition {
-  val E2015 = "2015"
-  val E2018 = "2018"
-  val E2021 = "2021"
-}
-
 final case class InitializeBuildParams(
     displayName: String,
     version: String,
@@ -762,8 +756,8 @@ object OutputPathsResult {
 final case class PackageFeatures(
     packageId: String,
     targets: List[BuildTargetIdentifier],
-    availableFeatures: Map[String, List[String]],
-    enabledFeatures: List[String]
+    availableFeatures: Map[String, Set[String]],
+    enabledFeatures: Set[String]
 )
 
 object PackageFeatures {
@@ -899,6 +893,12 @@ final case class RunResult(
 
 object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object RustEdition {
+  val E2015 = "2015"
+  val E2018 = "2018"
+  val E2021 = "2021"
 }
 
 final case class SbtBuildTarget(
@@ -1129,7 +1129,7 @@ object ScalacOptionsResult {
 
 final case class SetCargoFeaturesParams(
     packageId: String,
-    features: List[String]
+    features: Set[String]
 )
 
 object SetCargoFeaturesParams {

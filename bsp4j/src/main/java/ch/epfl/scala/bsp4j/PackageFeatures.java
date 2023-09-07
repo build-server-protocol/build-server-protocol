@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -16,12 +17,12 @@ public class PackageFeatures {
   private List<BuildTargetIdentifier> targets;
 
   @NonNull
-  private Map<String, List<String>> availableFeatures;
+  private Map<String, Set<String>> availableFeatures;
 
   @NonNull
-  private List<String> enabledFeatures;
+  private Set<String> enabledFeatures;
 
-  public PackageFeatures(@NonNull final String packageId, @NonNull final List<BuildTargetIdentifier> targets, @NonNull final Map<String, List<String>> availableFeatures, @NonNull final List<String> enabledFeatures) {
+  public PackageFeatures(@NonNull final String packageId, @NonNull final List<BuildTargetIdentifier> targets, @NonNull final Map<String, Set<String>> availableFeatures, @NonNull final Set<String> enabledFeatures) {
     this.packageId = packageId;
     this.targets = targets;
     this.availableFeatures = availableFeatures;
@@ -50,21 +51,21 @@ public class PackageFeatures {
 
   @Pure
   @NonNull
-  public Map<String, List<String>> getAvailableFeatures() {
+  public Map<String, Set<String>> getAvailableFeatures() {
     return this.availableFeatures;
   }
 
-  public void setAvailableFeatures(@NonNull final Map<String, List<String>> availableFeatures) {
+  public void setAvailableFeatures(@NonNull final Map<String, Set<String>> availableFeatures) {
     this.availableFeatures = Preconditions.checkNotNull(availableFeatures, "availableFeatures");
   }
 
   @Pure
   @NonNull
-  public List<String> getEnabledFeatures() {
+  public Set<String> getEnabledFeatures() {
     return this.enabledFeatures;
   }
 
-  public void setEnabledFeatures(@NonNull final List<String> enabledFeatures) {
+  public void setEnabledFeatures(@NonNull final Set<String> enabledFeatures) {
     this.enabledFeatures = Preconditions.checkNotNull(enabledFeatures, "enabledFeatures");
   }
 

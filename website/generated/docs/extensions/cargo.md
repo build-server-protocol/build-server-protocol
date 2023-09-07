@@ -43,10 +43,10 @@ export interface PackageFeatures {
   targets: BuildTargetIdentifier[];
 
   /** The list of available features for the Cargo package. */
-  availableFeatures: Map<Feature, Feature[]>;
+  availableFeatures: Map<Feature, Set<Feature>>;
 
   /** The list of enabled features for the Cargo package. */
-  enabledFeatures: Feature[];
+  enabledFeatures: Set<Feature>;
 }
 ```
 
@@ -74,7 +74,7 @@ export interface SetCargoFeaturesParams {
   packageId: string;
 
   /** The list of features to be set as a new state. */
-  features: Feature[];
+  features: Set<Feature>;
 }
 ```
 
@@ -102,20 +102,20 @@ cargo-specific metadata.
 
 ```ts
 export interface CargoBuildTarget {
-  edition: Edition;
+  edition: RustEdition;
 
-  required_features: Feature[];
+  required_features: Set<Feature>;
 }
 ```
 
-#### Edition
+#### RustEdition
 
 The Rust edition.
 
 ```ts
-export type Edition = string;
+export type RustEdition = string;
 
-export namespace Edition {
+export namespace RustEdition {
   export const E2015 = "2015";
 
   export const E2018 = "2018";
