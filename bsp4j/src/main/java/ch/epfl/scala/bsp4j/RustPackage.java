@@ -2,6 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -30,18 +31,18 @@ public class RustPackage {
   private String source;
 
   @NonNull
-  private List<RustBuildTarget> targets;
+  private List<RustBuildTarget> resolvedTargets;
 
   @NonNull
   private List<RustBuildTarget> allTargets;
 
   @NonNull
-  private List<RustFeature> features;
+  private Set<RustFeature> features;
 
   @NonNull
   private List<String> enabledFeatures;
 
-  private RustCfgOptions cfgOptions;
+  private Map<String, List<String>> cfgOptions;
 
   private Map<String, String> env;
 
@@ -49,14 +50,14 @@ public class RustPackage {
 
   private String procMacroArtifact;
 
-  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustBuildTarget> targets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final List<RustFeature> features, @NonNull final List<String> enabledFeatures) {
+  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustBuildTarget> resolvedTargets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final Set<RustFeature> features, @NonNull final List<String> enabledFeatures) {
     this.id = id;
     this.rootUrl = rootUrl;
     this.name = name;
     this.version = version;
     this.origin = origin;
     this.edition = edition;
-    this.targets = targets;
+    this.resolvedTargets = resolvedTargets;
     this.allTargets = allTargets;
     this.features = features;
     this.enabledFeatures = enabledFeatures;
@@ -133,12 +134,12 @@ public class RustPackage {
 
   @Pure
   @NonNull
-  public List<RustBuildTarget> getTargets() {
-    return this.targets;
+  public List<RustBuildTarget> getResolvedTargets() {
+    return this.resolvedTargets;
   }
 
-  public void setTargets(@NonNull final List<RustBuildTarget> targets) {
-    this.targets = Preconditions.checkNotNull(targets, "targets");
+  public void setResolvedTargets(@NonNull final List<RustBuildTarget> resolvedTargets) {
+    this.resolvedTargets = Preconditions.checkNotNull(resolvedTargets, "resolvedTargets");
   }
 
   @Pure
@@ -153,11 +154,11 @@ public class RustPackage {
 
   @Pure
   @NonNull
-  public List<RustFeature> getFeatures() {
+  public Set<RustFeature> getFeatures() {
     return this.features;
   }
 
-  public void setFeatures(@NonNull final List<RustFeature> features) {
+  public void setFeatures(@NonNull final Set<RustFeature> features) {
     this.features = Preconditions.checkNotNull(features, "features");
   }
 
@@ -172,11 +173,11 @@ public class RustPackage {
   }
 
   @Pure
-  public RustCfgOptions getCfgOptions() {
+  public Map<String, List<String>> getCfgOptions() {
     return this.cfgOptions;
   }
 
-  public void setCfgOptions(final RustCfgOptions cfgOptions) {
+  public void setCfgOptions(final Map<String, List<String>> cfgOptions) {
     this.cfgOptions = cfgOptions;
   }
 
@@ -218,7 +219,7 @@ public class RustPackage {
     b.add("origin", this.origin);
     b.add("edition", this.edition);
     b.add("source", this.source);
-    b.add("targets", this.targets);
+    b.add("resolvedTargets", this.resolvedTargets);
     b.add("allTargets", this.allTargets);
     b.add("features", this.features);
     b.add("enabledFeatures", this.enabledFeatures);
@@ -274,10 +275,10 @@ public class RustPackage {
         return false;
     } else if (!this.source.equals(other.source))
       return false;
-    if (this.targets == null) {
-      if (other.targets != null)
+    if (this.resolvedTargets == null) {
+      if (other.resolvedTargets != null)
         return false;
-    } else if (!this.targets.equals(other.targets))
+    } else if (!this.resolvedTargets.equals(other.resolvedTargets))
       return false;
     if (this.allTargets == null) {
       if (other.allTargets != null)
@@ -329,7 +330,7 @@ public class RustPackage {
     result = prime * result + ((this.origin== null) ? 0 : this.origin.hashCode());
     result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
     result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
-    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.resolvedTargets== null) ? 0 : this.resolvedTargets.hashCode());
     result = prime * result + ((this.allTargets== null) ? 0 : this.allTargets.hashCode());
     result = prime * result + ((this.features== null) ? 0 : this.features.hashCode());
     result = prime * result + ((this.enabledFeatures== null) ? 0 : this.enabledFeatures.hashCode());

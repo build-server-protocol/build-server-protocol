@@ -9,6 +9,7 @@ use traits#enumKind
 use traits#dataKind
 use traits#jsonRPC
 use traits#jsonRequest
+use traits#set
 
 @jsonRPC
 service RustBuildServer {
@@ -90,10 +91,10 @@ structure RustPackage {
     edition: RustEdition
     /// The source ID of the dependency, `null` for the root package and path dependencies.
     source: String
-    /// Correspond to source files which can be compiled into a crate from this package.
+    /// Corresponds to source files which can be compiled into a crate from this package.
     /// Contains only resolved targets without conflicts.
     @required
-    targets: RustTargets
+    resolvedTargets: RustTargets
     /// Same as `targets`, but contains all targets from this package.
     /// `targets` should be the subset of `allTargets`.
     @required
@@ -108,6 +109,10 @@ structure RustPackage {
     enabledFeatures: RustPackageEnabledFeatures
     /// Conditional compilation flags that can be set based on certain conditions.
     /// They can be used to enable or disable certain sections of code during the build process.
+    /// `cfgs` in Rust can take one of two forms: "cfg1" or "cfg2=\"string\"".
+    /// The `cfg` is split by '=' delimiter and the first half becomes key and
+    /// the second is aggregated to the value in `RustCfgOptions`.
+    /// For "cfg1" the value is empty.
     cfgOptions: RustCfgOptions
     /// Environment variables for the package.
     env: RustEnvironmentVariables
@@ -195,42 +200,33 @@ list RustPackageRequiredFeatures {
     member: String
 }
 
+@set
 list RustFeatures {
     member: RustFeature
 }
 
+// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
+string Feature
+
 structure RustFeature {
     /// Name of the feature.
     @required
-    name: String
+    name: Feature
     /// Feature's dependencies.
     @required
     dependencies: RustFeatureDependencies
 }
 
 list RustFeatureDependencies {
-    member: String
+    member: Feature
 }
 
-structure RustCfgOptions {
-    /// `cfgs` in Rust can take one of two forms: "cfg1" or "cfg2=\"string\"".
-    /// The `cfg` is split by '=' delimiter and the first half becomes key and
-    /// the second is aggregated to the value in `keyValueOptions`.
-    keyValueOptions: KeyValueOptions
-    /// A sequence of first halves after splitting `cfgs` by '='.
-    nameOptions: RustCfgOptionsNames
-}
-
-list RustCfgOptionsNames {
-    member: String
-}
-
-map KeyValueOptions {
+map RustCfgOptions {
     key: String
-    value: Values
+    value: RustCfgValues
 }
 
-list Values {
+list RustCfgValues {
     member: String
 }
 
@@ -255,8 +251,8 @@ structure RustRawDependency {
     name: String
     /// Name to which this dependency is renamed when declared in Cargo.toml.
     rename: String
-    /// The dependency kind. "dev", "build", or null for a normal dependency.
-    kind: String
+    /// The dependency kind.
+    kind: RustDepKind
     /// The target platform for the dependency.
     target: String
     /// Indicates whether this is an optional dependency.
@@ -367,6 +363,7 @@ list RustToolchainItems {
 
 structure RustToolchainItem {
     /// Additional information about Rust toolchain.
+    /// Obtained from `rustc`.
     rustStdLib: RustcInfo
     /// Path to Cargo executable.
     @required
@@ -388,6 +385,7 @@ structure RustcInfo {
     @required
     version: String
     /// Target architecture and operating system of the Rust compiler.
+    /// Used by [`intellij-rust`] for checking if given toolchain is supported.
     @required
     host: String
 }

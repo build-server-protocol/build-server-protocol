@@ -93,9 +93,9 @@ export interface RustPackage {
   /** The source ID of the dependency, `null` for the root package and path dependencies. */
   source?: string;
 
-  /** Correspond to source files which can be compiled into a crate from this package.
+  /** Corresponds to source files which can be compiled into a crate from this package.
    * Contains only resolved targets without conflicts. */
-  targets: RustBuildTarget[];
+  resolvedTargets: RustBuildTarget[];
 
   /** Same as `targets`, but contains all targets from this package.
    * `targets` should be the subset of `allTargets`. */
@@ -104,14 +104,18 @@ export interface RustPackage {
   /** Set of features defined for the package.
    * Each feature maps to an array of features or dependencies it enables.
    * The entry named "default" defines which features are enabled by default. */
-  features: RustFeature[];
+  features: Set<RustFeature>;
 
   /** Array of features enabled on this package. */
   enabledFeatures: string[];
 
   /** Conditional compilation flags that can be set based on certain conditions.
-   * They can be used to enable or disable certain sections of code during the build process. */
-  cfgOptions?: RustCfgOptions;
+   * They can be used to enable or disable certain sections of code during the build process.
+   * `cfgs` in Rust can take one of two forms: "cfg1" or "cfg2=\"string\"".
+   * The `cfg` is split by '=' delimiter and the first half becomes key and
+   * the second is aggregated to the value in `RustCfgOptions`.
+   * For "cfg1" the value is empty. */
+  cfgOptions?: Map<string, string[]>;
 
   /** Environment variables for the package. */
   env?: Map<string, string>;
@@ -250,25 +254,17 @@ export enum RustCrateType {
 ```ts
 export interface RustFeature {
   /** Name of the feature. */
-  name: string;
+  name: Feature;
 
   /** Feature's dependencies. */
-  dependencies: string[];
+  dependencies: Feature[];
 }
 ```
 
-#### RustCfgOptions
+#### Feature
 
 ```ts
-export interface RustCfgOptions {
-  /** `cfgs` in Rust can take one of two forms: "cfg1" or "cfg2=\"string\"".
-   * The `cfg` is split by '=' delimiter and the first half becomes key and
-   * the second is aggregated to the value in `keyValueOptions`. */
-  keyValueOptions?: Map<string, string[]>;
-
-  /** A sequence of first halves after splitting `cfgs` by '='. */
-  nameOptions?: string[];
-}
+export type Feature = string;
 ```
 
 #### RustRawDependency
@@ -281,8 +277,8 @@ export interface RustRawDependency {
   /** Name to which this dependency is renamed when declared in Cargo.toml. */
   rename?: string;
 
-  /** The dependency kind. "dev", "build", or null for a normal dependency. */
-  kind?: string;
+  /** The dependency kind. */
+  kind?: RustDepKind;
 
   /** The target platform for the dependency. */
   target?: string;
@@ -295,6 +291,24 @@ export interface RustRawDependency {
 
   /** A sequence of enabled features. */
   features: string[];
+}
+```
+
+#### RustDepKind
+
+```ts
+export enum RustDepKind {
+  /** For old Cargo versions prior to `1.41.0`. */
+  Unclassified = 1,
+
+  /** For [dependencies]. */
+  Normal = 2,
+
+  /** For [dev-dependencies]. */
+  Dev = 3,
+
+  /** For [build-dependencies]. */
+  Build = 4,
 }
 ```
 
@@ -323,24 +337,6 @@ export interface RustDepKindInfo {
 
   /** The target platform for the dependency. */
   target?: string;
-}
-```
-
-#### RustDepKind
-
-```ts
-export enum RustDepKind {
-  /** For old Cargo versions prior to `1.41.0`. */
-  Unclassified = 1,
-
-  /** For [dependencies]. */
-  Normal = 2,
-
-  /** For [dev-dependencies]. */
-  Dev = 3,
-
-  /** For [build-dependencies]. */
-  Build = 4,
 }
 ```
 
@@ -377,7 +373,8 @@ export interface RustToolchainResult {
 
 ```ts
 export interface RustToolchainItem {
-  /** Additional information about Rust toolchain. */
+  /** Additional information about Rust toolchain.
+   * Obtained from `rustc`. */
   rustStdLib?: RustcInfo;
 
   /** Path to Cargo executable. */
@@ -402,7 +399,8 @@ export interface RustcInfo {
   /** `rustc` SemVer (Semantic Versioning) version. */
   version: string;
 
-  /** Target architecture and operating system of the Rust compiler. */
+  /** Target architecture and operating system of the Rust compiler.
+   * Used by [`intellij-rust`] for checking if given toolchain is supported. */
   host: string;
 }
 ```

@@ -878,16 +878,6 @@ object RustBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class RustCfgOptions(
-    keyValueOptions: Option[Map[String, List[String]]],
-    nameOptions: Option[List[String]]
-)
-
-object RustCfgOptions {
-  implicit val codec: JsonValueCodec[RustCfgOptions] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
 sealed abstract class RustCrateType(val value: Int)
 object RustCrateType {
   case object Bin extends RustCrateType(1)
@@ -982,11 +972,11 @@ final case class RustPackage(
     origin: String,
     edition: String,
     source: Option[String],
-    targets: List[RustBuildTarget],
+    resolvedTargets: List[RustBuildTarget],
     allTargets: List[RustBuildTarget],
-    features: List[RustFeature],
+    features: Set[RustFeature],
     enabledFeatures: List[String],
-    cfgOptions: Option[RustCfgOptions],
+    cfgOptions: Option[Map[String, List[String]]],
     env: Option[Map[String, String]],
     outDirUrl: Option[Uri],
     procMacroArtifact: Option[String]
@@ -1006,7 +996,7 @@ object RustPackageOrigin {
 final case class RustRawDependency(
     name: String,
     rename: Option[String],
-    kind: Option[String],
+    kind: Option[RustDepKind],
     target: Option[String],
     optional: Boolean,
     usesDefaultFeatures: Boolean,
