@@ -907,29 +907,15 @@ object RustCrateType {
     }
   }
 }
-sealed abstract class RustDepKind(val value: Int)
 object RustDepKind {
-  case object Unclassified extends RustDepKind(1)
-  case object Normal extends RustDepKind(2)
-  case object Dev extends RustDepKind(3)
-  case object Build extends RustDepKind(4)
-
-  implicit val codec: JsonValueCodec[RustDepKind] = new JsonValueCodec[RustDepKind] {
-    def nullValue: RustDepKind = null
-    def encodeValue(msg: RustDepKind, out: JsonWriter): Unit = out.writeVal(msg.value)
-    def decodeValue(in: JsonReader, default: RustDepKind): RustDepKind = {
-      in.readInt() match {
-        case 1 => Unclassified
-        case 2 => Normal
-        case 3 => Dev
-        case 4 => Build
-        case n => in.decodeError(s"Unknown message type id for $n")
-      }
-    }
-  }
+  val Build = "build"
+  val Dev = "dev"
+  val Normal = "normal"
+  val Unclassified = "unclassified"
 }
+
 final case class RustDepKindInfo(
-    kind: RustDepKind,
+    kind: String,
     target: Option[String]
 )
 
@@ -996,7 +982,7 @@ object RustPackageOrigin {
 final case class RustRawDependency(
     name: String,
     rename: Option[String],
-    kind: Option[RustDepKind],
+    kind: Option[String],
     target: Option[String],
     optional: Boolean,
     usesDefaultFeatures: Boolean,

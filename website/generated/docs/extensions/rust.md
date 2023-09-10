@@ -297,18 +297,20 @@ export interface RustRawDependency {
 #### RustDepKind
 
 ```ts
-export enum RustDepKind {
-  /** For old Cargo versions prior to `1.41.0`. */
-  Unclassified = 1,
+export type RustDepKind = string;
 
-  /** For [dependencies]. */
-  Normal = 2,
+export namespace RustDepKind {
+  /** For [build-dependencies]. */
+  export const Build = "build";
 
   /** For [dev-dependencies]. */
-  Dev = 3,
+  export const Dev = "dev";
 
-  /** For [build-dependencies]. */
-  Build = 4,
+  /** For [dependencies]. */
+  export const Normal = "normal";
+
+  /** For old Cargo versions prior to `1.41.0`. */
+  export const Unclassified = "unclassified";
 }
 ```
 

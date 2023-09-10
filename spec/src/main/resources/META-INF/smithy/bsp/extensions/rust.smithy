@@ -303,16 +303,16 @@ structure RustDepKindInfo {
     target: String
 }
 
-@enumKind("closed")
-intEnum RustDepKind {
+@enumKind("open")
+enum RustDepKind {
     /// For old Cargo versions prior to `1.41.0`.
-    UNCLASSIFIED = 1
+    UNCLASSIFIED = "unclassified"
     /// For [dependencies].
-    NORMAL = 2
+    NORMAL = "normal"
     /// For [dev-dependencies].
-    DEV = 3
+    DEV = "dev"
     /// For [build-dependencies].
-    BUILD = 4
+    BUILD = "build"
 }
 
 // TODO to be deleted once "Add cargo extension" PR is merged that defines this enum

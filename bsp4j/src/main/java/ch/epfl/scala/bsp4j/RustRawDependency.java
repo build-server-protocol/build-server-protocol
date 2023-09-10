@@ -13,7 +13,7 @@ public class RustRawDependency {
 
   private String rename;
 
-  private RustDepKind kind;
+  private String kind;
 
   private String target;
 
@@ -53,11 +53,11 @@ public class RustRawDependency {
   }
 
   @Pure
-  public RustDepKind getKind() {
+  public String getKind() {
     return this.kind;
   }
 
-  public void setKind(final RustDepKind kind) {
+  public void setKind(final String kind) {
     this.kind = kind;
   }
 

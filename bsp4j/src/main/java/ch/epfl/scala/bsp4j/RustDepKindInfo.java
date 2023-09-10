@@ -8,21 +8,21 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @SuppressWarnings("all")
 public class RustDepKindInfo {
   @NonNull
-  private RustDepKind kind;
+  private String kind;
 
   private String target;
 
-  public RustDepKindInfo(@NonNull final RustDepKind kind) {
+  public RustDepKindInfo(@NonNull final String kind) {
     this.kind = kind;
   }
 
   @Pure
   @NonNull
-  public RustDepKind getKind() {
+  public String getKind() {
     return this.kind;
   }
 
-  public void setKind(@NonNull final RustDepKind kind) {
+  public void setKind(@NonNull final String kind) {
     this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
