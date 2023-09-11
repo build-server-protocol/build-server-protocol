@@ -11,7 +11,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import jsonrpc4s.RawJson
 
 object Bsp4s {
-  val ProtocolVersion: String = "2.1.0"
+  val ProtocolVersion: String = "2.1.1"
 }
 
 final case class Uri private[Uri] (val value: String) {
@@ -1182,6 +1182,7 @@ object TaskFinishDataKind {
 
 final case class TaskFinishParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     status: StatusCode,
@@ -1207,6 +1208,7 @@ object TaskProgressDataKind {}
 
 final case class TaskProgressParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     total: Option[Long],
@@ -1229,6 +1231,7 @@ object TaskStartDataKind {
 
 final case class TaskStartParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     dataKind: Option[String],

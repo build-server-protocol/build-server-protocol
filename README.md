@@ -37,3 +37,10 @@ _Past Maintainers_
 
 - Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
 - Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+
+## Protocol changelog
+
+### 2.1.1
+
+- Added an optional `originId` field to `TaskStartParams`, `TaskProgressParams` and `TaskFinishParams`
+  and deprecated it in `CompileReport` and `TestReport` to support BSP clients that need to distinguish between multiple reports for the same target.
