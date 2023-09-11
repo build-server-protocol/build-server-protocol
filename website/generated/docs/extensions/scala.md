@@ -190,7 +190,7 @@ export interface ScalaMainClass {
   className: string;
 
   /** The user arguments to the main entrypoint. */
-  arguments: string[];
+  arguments?: string[];
 
   /** The jvm options for the application. */
   jvmOptions: string[];
@@ -261,7 +261,7 @@ export interface ScalaTestSuites {
   jvmOptions: string[];
 
   /** Enviroment variables should be an array of strings in format KEY=VALUE */
-  environmentVariables: string[];
+  environmentVariables?: string[];
 }
 ```
 

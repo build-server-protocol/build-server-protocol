@@ -192,7 +192,8 @@ object CleanCacheResult {
 final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: Option[List[String]]
+    arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]]
 )
 
 object CompileParams {
@@ -741,6 +742,16 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class PrintParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object PrintParams {
+  implicit val codec: JsonValueCodec[PrintParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
@@ -833,6 +844,8 @@ final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )
@@ -919,7 +932,7 @@ object ScalaDiagnostic {
 final case class ScalaMainClass(
     @named("class")
     className: String,
-    arguments: List[String],
+    arguments: Option[List[String]],
     jvmOptions: List[String],
     environmentVariables: Option[List[String]]
 )
@@ -1031,7 +1044,7 @@ object ScalaTestSuiteSelection {
 final case class ScalaTestSuites(
     suites: List[ScalaTestSuiteSelection],
     jvmOptions: List[String],
-    environmentVariables: List[String]
+    environmentVariables: Option[List[String]]
 )
 
 object ScalaTestSuites {
@@ -1259,6 +1272,8 @@ final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )

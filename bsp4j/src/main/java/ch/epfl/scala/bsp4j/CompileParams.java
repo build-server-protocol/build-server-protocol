@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -14,6 +15,8 @@ public class CompileParams {
   private String originId;
 
   private List<String> arguments;
+
+  private Map<String, String> environmentVariables;
 
   public CompileParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
@@ -47,6 +50,15 @@ public class CompileParams {
     this.arguments = arguments;
   }
 
+  @Pure
+  public Map<String, String> getEnvironmentVariables() {
+    return this.environmentVariables;
+  }
+
+  public void setEnvironmentVariables(final Map<String, String> environmentVariables) {
+    this.environmentVariables = environmentVariables;
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -54,6 +66,7 @@ public class CompileParams {
     b.add("targets", this.targets);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
+    b.add("environmentVariables", this.environmentVariables);
     return b.toString();
   }
 
@@ -82,6 +95,11 @@ public class CompileParams {
         return false;
     } else if (!this.arguments.equals(other.arguments))
       return false;
+    if (this.environmentVariables == null) {
+      if (other.environmentVariables != null)
+        return false;
+    } else if (!this.environmentVariables.equals(other.environmentVariables))
+      return false;
     return true;
   }
 
@@ -92,6 +110,7 @@ public class CompileParams {
     int result = 1;
     result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
     result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    result = prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    return prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
   }
 }
