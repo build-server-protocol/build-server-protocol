@@ -6,6 +6,9 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * Structure describing how to start a BSP server and the capabilities it supports.
+ */
 @SuppressWarnings("all")
 public class BspConnectionDetails {
   @NonNull

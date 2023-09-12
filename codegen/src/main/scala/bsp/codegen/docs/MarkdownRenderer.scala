@@ -161,12 +161,20 @@ class MarkdownRenderer private (tree: DocTree, visited: MSet[ShapeId], protocolV
       )
     }
 
+    val maybeUnstable = hints.collectFirst { case Hint.Unstable =>
+      lines(
+        List("**Unstable** (may change in future versions)"),
+        newline
+      )
+    }
+
     val docs = hints.collect { case Documentation(string) =>
       string.split(System.lineSeparator()).toList
     }
 
     lines(
       maybeDeprecated,
+      maybeUnstable,
       docs
     )
   }

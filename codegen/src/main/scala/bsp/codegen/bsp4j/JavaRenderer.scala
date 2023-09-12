@@ -4,7 +4,7 @@ import bsp.codegen._
 import bsp.codegen.dsl.{block, empty, lines, newline}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.ir.Hint.Deprecated
+import bsp.codegen.ir.Hint._
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
@@ -48,17 +48,19 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderDef(definition: Def): Option[CodegenFile] = {
     definition match {
-      case Alias(shapeId, tpe, _)           => None
-      case Structure(shapeId, fields, _, _) => Some(renderStructure(shapeId, fields))
-      case ClosedEnum(shapeId, enumType, values, _) =>
-        Some(renderClosedEnum(shapeId, enumType, values))
-      case OpenEnum(shapeId, enumType, values, _) => Some(renderOpenEnum(shapeId, enumType, values))
-      case Service(shapeId, operations, _)        => Some(renderService(shapeId, operations))
+      case Alias(shapeId, tpe, _)               => None
+      case Structure(shapeId, fields, hints, _) => Some(renderStructure(shapeId, fields, hints))
+      case ClosedEnum(shapeId, enumType, values, hints) =>
+        Some(renderClosedEnum(shapeId, enumType, values, hints))
+      case OpenEnum(shapeId, enumType, values, hints) =>
+        Some(renderOpenEnum(shapeId, enumType, values, hints))
+      case Service(shapeId, operations, _) => Some(renderService(shapeId, operations))
     }
   }
 
-  def renderStructure(shapeId: ShapeId, fields: List[Field]): CodegenFile = {
+  def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): CodegenFile = {
     val requiredFields = fields.filter(_.required)
+    val docsLines = renderDocs(hints)
 
     val allLines = lines(
       renderPkg(shapeId),
@@ -66,6 +68,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       "import org.eclipse.lsp4j.generator.JsonRpcData",
       renderImports(fields),
       newline,
+      docsLines,
       "@JsonRpcData",
       block(s"class ${shapeId.getName()}")(
         lines(fields.map(renderJavaField)),
@@ -87,19 +90,44 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     renderedValues.init.map(_ + ",") :+ (renderedValues.last + ";")
   }
 
+  def renderDocs(hints: List[Hint]): Lines = {
+    val isUnstable = hints.contains(Unstable)
+    val unstableNote = if (isUnstable) {
+      List("**Unstable** (may change in future versions)")
+    } else {
+      List.empty
+    }
+    val docs = unstableNote ++
+      hints.collect { case Documentation(string) =>
+        string.split(System.lineSeparator()).toList
+      }.flatten
+    docs match {
+      case Nil => empty
+      case _ =>
+        lines(
+          "/**",
+          docs.map(line => s" * $line"),
+          " */"
+        )
+    }
+  }
+
   def renderClosedEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
-      values: List[EnumValue[A]]
+      values: List[EnumValue[A]],
+      hints: List[Hint]
   ): CodegenFile = {
     val evt = enumValueType(enumType)
     val tpe = shapeId.getName()
+    val docsLines = renderDocs(hints)
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
       newline,
       "import com.google.gson.annotations.JsonAdapter;",
       "import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;",
       newline,
+      docsLines,
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
@@ -131,13 +159,15 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
   def renderOpenEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
-      values: List[EnumValue[A]]
+      values: List[EnumValue[A]],
+      hints: List[Hint]
   ): CodegenFile = {
-    val _evt = enumValueType(enumType)
     val tpe = shapeId.getName()
+    val docsLines = renderDocs(hints)
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
       newline,
+      docsLines,
       block(s"public class $tpe") {
         values.map(renderStaticValue(enumType))
       },
@@ -182,8 +212,10 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       case Request      => s"""@JsonRequest("$rpcMethod")"""
     }
     val maybeDeprecated = operation.hints.collectFirst({ case Deprecated(_) => "@Deprecated" })
+    val docsLines = renderDocs(operation.hints)
     val method = operation.name.head.toLower + operation.name.tail
     lines(
+      docsLines,
       maybeDeprecated,
       rpcAnnotation,
       s"$output $method($input);",

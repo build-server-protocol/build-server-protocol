@@ -5,6 +5,13 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * A Scala action represents a change that can be performed in code.
+ * See also [LSP: Code Action Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_codeAction).
+ * 
+ * **Note**: In LSP, `CodeAction` appears only as a response to a `textDocument/codeAction` request,
+ * whereas ScalaAction is intended to be returned as `Diagnostics.data.actions`.
+ */
 @SuppressWarnings("all")
 public class ScalaAction {
   @NonNull

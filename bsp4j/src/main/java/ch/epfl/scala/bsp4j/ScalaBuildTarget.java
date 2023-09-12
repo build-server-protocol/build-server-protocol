@@ -6,6 +6,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * `ScalaBuildTarget` is a basic data structure that contains scala-specific
+ * metadata for compiling a target containing Scala sources.
+ */
 @SuppressWarnings("all")
 public class ScalaBuildTarget {
   @NonNull
