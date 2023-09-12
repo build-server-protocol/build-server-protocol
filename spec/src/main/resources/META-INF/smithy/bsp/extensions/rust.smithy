@@ -26,18 +26,21 @@ service RustBuildServer {
 ///
 /// The request may take a long time, as it may require building a project to some extent
 /// (for example with `cargo check` command).
+@unstable
 @jsonRequest("buildTarget/rustWorkspace")
 operation RustWorkspace {
     input: RustWorkspaceParams
     output: RustWorkspaceResult
 }
 
+@unstable
 structure RustWorkspaceParams {
     /// A sequence of build targets for workspace resolution.
     @required
     targets: BuildTargetIdentifiers
 }
 
+@unstable
 structure RustWorkspaceResult {
     /// Packages of given targets.
     @required
@@ -339,18 +342,21 @@ enum RustPackageOrigin {
 /// the information about project's toolchain for the given list of build targets.
 ///
 /// The request is essential to connect and work with `intellij-rust` plugin.
+@unstable
 @jsonRequest("buildTarget/rustToolchain")
 operation RustToolchain {
     input: RustToolchainParams
     output: RustToolchainResult
 }
 
+@unstable
 structure RustToolchainParams {
     /// A sequence of build targets for toolchain resolution.
     @required
     targets: BuildTargetIdentifiers
 }
 
+@unstable
 structure RustToolchainResult {
     /// A sequence of Rust toolchains.
     @required
