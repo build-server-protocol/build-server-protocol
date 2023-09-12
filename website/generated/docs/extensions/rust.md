@@ -104,10 +104,10 @@ export interface RustPackage {
   /** Set of features defined for the package.
    * Each feature maps to an array of features or dependencies it enables.
    * The entry named "default" defines which features are enabled by default. */
-  features: Set<RustFeature>;
+  features: Map<Feature, Set<Feature>>;
 
   /** Array of features enabled on this package. */
-  enabledFeatures: string[];
+  enabledFeatures: Set<Feature>;
 
   /** Conditional compilation flags that can be set based on certain conditions.
    * They can be used to enable or disable certain sections of code during the build process.
@@ -193,7 +193,7 @@ export interface RustBuildTarget {
   doctest: boolean;
 
   /** A sequence of required features. */
-  requiredFeatures?: string[];
+  requiredFeatures?: Set<Feature>;
 }
 ```
 
@@ -249,18 +249,6 @@ export enum RustCrateType {
 }
 ```
 
-#### RustFeature
-
-```ts
-export interface RustFeature {
-  /** Name of the feature. */
-  name: Feature;
-
-  /** Feature's dependencies. */
-  dependencies: Feature[];
-}
-```
-
 #### Feature
 
 ```ts
@@ -290,7 +278,7 @@ export interface RustRawDependency {
   usesDefaultFeatures: boolean;
 
   /** A sequence of enabled features. */
-  features: string[];
+  features: Set<Feature>;
 }
 ```
 

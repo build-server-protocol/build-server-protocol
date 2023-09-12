@@ -107,10 +107,10 @@ structure RustPackage {
     /// Each feature maps to an array of features or dependencies it enables.
     /// The entry named "default" defines which features are enabled by default.
     @required
-    features: RustFeatures
+    features: FeatureDependencyGraph
     /// Array of features enabled on this package.
     @required
-    enabledFeatures: RustPackageEnabledFeatures
+    enabledFeatures: Features
     /// Conditional compilation flags that can be set based on certain conditions.
     /// They can be used to enable or disable certain sections of code during the build process.
     /// `cfgs` in Rust can take one of two forms: "cfg1" or "cfg2=\"string\"".
@@ -127,10 +127,6 @@ structure RustPackage {
     /// Procedural macros are macros that generate code at compile time.
     /// Contains files with file extensions: `.dll`, `.so` or `.dylib`.
     procMacroArtifact: String
-}
-
-list RustPackageEnabledFeatures {
-    member: String
 }
 
 list RustTargets {
@@ -161,7 +157,7 @@ structure RustBuildTarget {
     @required
     doctest: Boolean
     /// A sequence of required features.
-    requiredFeatures: RustPackageRequiredFeatures
+    requiredFeatures: Features
 }
 
 list RustCrateTypes {
@@ -200,29 +196,19 @@ intEnum RustTargetKind {
     UNKNOWN = 7
 }
 
-list RustPackageRequiredFeatures {
-    member: String
-}
-
+// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
 @set
-list RustFeatures {
-    member: RustFeature
+list Features {
+    member: Feature
 }
 
 // TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
 string Feature
 
-structure RustFeature {
-    /// Name of the feature.
-    @required
-    name: Feature
-    /// Feature's dependencies.
-    @required
-    dependencies: RustFeatureDependencies
-}
-
-list RustFeatureDependencies {
-    member: Feature
+// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
+map FeatureDependencyGraph {
+    key: Feature
+    value: Features
 }
 
 map RustCfgOptions {
@@ -262,11 +248,7 @@ structure RustRawDependency {
     usesDefaultFeatures: Boolean
     /// A sequence of enabled features.
     @required
-    features: RustRawDependencyFeatures
-}
-
-list RustRawDependencyFeatures {
-    member: String
+    features: Features
 }
 
 map RustDependencies {

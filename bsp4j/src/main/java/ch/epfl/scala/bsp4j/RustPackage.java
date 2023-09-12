@@ -37,10 +37,10 @@ public class RustPackage {
   private List<RustBuildTarget> allTargets;
 
   @NonNull
-  private Set<RustFeature> features;
+  private Map<String, Set<String>> features;
 
   @NonNull
-  private List<String> enabledFeatures;
+  private Set<String> enabledFeatures;
 
   private Map<String, List<String>> cfgOptions;
 
@@ -50,7 +50,7 @@ public class RustPackage {
 
   private String procMacroArtifact;
 
-  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustBuildTarget> resolvedTargets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final Set<RustFeature> features, @NonNull final List<String> enabledFeatures) {
+  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustBuildTarget> resolvedTargets, @NonNull final List<RustBuildTarget> allTargets, @NonNull final Map<String, Set<String>> features, @NonNull final Set<String> enabledFeatures) {
     this.id = id;
     this.rootUrl = rootUrl;
     this.name = name;
@@ -154,21 +154,21 @@ public class RustPackage {
 
   @Pure
   @NonNull
-  public Set<RustFeature> getFeatures() {
+  public Map<String, Set<String>> getFeatures() {
     return this.features;
   }
 
-  public void setFeatures(@NonNull final Set<RustFeature> features) {
+  public void setFeatures(@NonNull final Map<String, Set<String>> features) {
     this.features = Preconditions.checkNotNull(features, "features");
   }
 
   @Pure
   @NonNull
-  public List<String> getEnabledFeatures() {
+  public Set<String> getEnabledFeatures() {
     return this.enabledFeatures;
   }
 
-  public void setEnabledFeatures(@NonNull final List<String> enabledFeatures) {
+  public void setEnabledFeatures(@NonNull final Set<String> enabledFeatures) {
     this.enabledFeatures = Preconditions.checkNotNull(enabledFeatures, "enabledFeatures");
   }
 

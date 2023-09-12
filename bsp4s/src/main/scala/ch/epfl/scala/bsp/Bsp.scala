@@ -870,7 +870,7 @@ final case class RustBuildTarget(
     crateTypes: Option[List[RustCrateType]],
     edition: String,
     doctest: Boolean,
-    requiredFeatures: Option[List[String]]
+    requiredFeatures: Option[Set[String]]
 )
 
 object RustBuildTarget {
@@ -941,15 +941,6 @@ object RustEdition {
   val E2021 = "2021"
 }
 
-final case class RustFeature(
-    name: String,
-    dependencies: List[String]
-)
-
-object RustFeature {
-  implicit val codec: JsonValueCodec[RustFeature] = JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
 final case class RustPackage(
     id: String,
     rootUrl: Uri,
@@ -960,8 +951,8 @@ final case class RustPackage(
     source: Option[String],
     resolvedTargets: List[RustBuildTarget],
     allTargets: List[RustBuildTarget],
-    features: Set[RustFeature],
-    enabledFeatures: List[String],
+    features: Map[String, Set[String]],
+    enabledFeatures: Set[String],
     cfgOptions: Option[Map[String, List[String]]],
     env: Option[Map[String, String]],
     outDirUrl: Option[Uri],
@@ -986,7 +977,7 @@ final case class RustRawDependency(
     target: Option[String],
     optional: Boolean,
     usesDefaultFeatures: Boolean,
-    features: List[String]
+    features: Set[String]
 )
 
 object RustRawDependency {

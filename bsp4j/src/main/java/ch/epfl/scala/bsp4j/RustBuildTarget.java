@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import java.util.Set;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -25,7 +26,7 @@ public class RustBuildTarget {
   @NonNull
   private Boolean doctest;
 
-  private List<String> requiredFeatures;
+  private Set<String> requiredFeatures;
 
   public RustBuildTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final RustTargetKind kind, @NonNull final String edition, @NonNull final Boolean doctest) {
     this.name = name;
@@ -95,11 +96,11 @@ public class RustBuildTarget {
   }
 
   @Pure
-  public List<String> getRequiredFeatures() {
+  public Set<String> getRequiredFeatures() {
     return this.requiredFeatures;
   }
 
-  public void setRequiredFeatures(final List<String> requiredFeatures) {
+  public void setRequiredFeatures(final Set<String> requiredFeatures) {
     this.requiredFeatures = requiredFeatures;
   }
 
