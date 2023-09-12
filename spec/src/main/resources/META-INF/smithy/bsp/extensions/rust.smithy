@@ -4,6 +4,7 @@ namespace bsp.rust
 
 use bsp#BuildTargetData
 use bsp#BuildTargetIdentifiers
+use bsp#EnvironmentVariables
 use bsp#URI
 use traits#enumKind
 use traits#dataKind
@@ -118,7 +119,7 @@ structure RustPackage {
     /// For "cfg1" the value is empty.
     cfgOptions: RustCfgOptions
     /// Environment variables for the package.
-    env: RustEnvironmentVariables
+    env: EnvironmentVariables
     /// An absolute path which is used as a value of `OUT_DIR` environmental
     /// variable when compiling current package.
     outDirUrl: URI
@@ -231,11 +232,6 @@ map RustCfgOptions {
 
 list RustCfgValues {
     member: String
-}
-
-map RustEnvironmentVariables {
-    key: String
-    value: String
 }
 
 map RustRawDependencies {

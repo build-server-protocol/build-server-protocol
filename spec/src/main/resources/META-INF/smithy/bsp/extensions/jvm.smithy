@@ -6,6 +6,7 @@ use bsp#Arguments
 use bsp#BuildTargetData
 use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
+use bsp#EnvironmentVariables
 use bsp#Identifier
 use bsp#URI
 use traits#dataKind
@@ -103,11 +104,6 @@ structure JvmRunEnvironmentResult {
 
 list JvmMainClasses {
     member: JvmMainClass
-}
-
-map EnvironmentVariables {
-    key: String,
-    value: String
 }
 
 list Classpath {
