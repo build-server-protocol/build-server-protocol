@@ -10,6 +10,7 @@ use bsp#DebugSessionParamsData
 use bsp#DiagnosticData
 use bsp#Range
 use bsp#RunParamsData
+use bsp#TestParams
 use bsp#TestParamsData
 use bsp#URIs
 use bsp.jvm#Classpath
@@ -255,7 +256,7 @@ list EnvironmentVariablesList {
 }
 
 /// Each element of this array is a fully qualified class name.
-@dataKind(kind: "scala-test-suites", extends: [DebugSessionParamsData])
+@dataKind(kind: "scala-test-suites", extends: [TestParamsData])
 list ScalaTestSuiteClasses {
     member: String
 }
@@ -265,7 +266,7 @@ list ScalaTestSuiteClasses {
 structure ScalaAttachRemote {
 }
 
-@dataKind(kind: "scala-test-suites-selection", extends: [DebugSessionParamsData])
+@dataKind(kind: "scala-test-suites-selection", extends: [TestParamsData])
 structure ScalaTestSuites {
     /// The fully qualified names of the test classes in this target and the tests in this test classes
     @required
