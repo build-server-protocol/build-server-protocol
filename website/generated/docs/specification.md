@@ -1126,6 +1126,12 @@ export type TestParamsDataKind = string;
 export namespace TestParamsDataKind {
   /** `data` field must contain a ScalaTestParams object. */
   export const ScalaTest = "scala-test";
+
+  /** `data` field must contain a ScalaTestSuiteClasses object. */
+  export const ScalaTestSuites = "scala-test-suites";
+
+  /** `data` field must contain a ScalaTestSuites object. */
+  export const ScalaTestSuitesSelection = "scala-test-suites-selection";
 }
 ```
 
@@ -1205,12 +1211,6 @@ export namespace DebugSessionParamsDataKind {
 
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
-
-  /** `data` field must contain a ScalaTestSuiteClasses object. */
-  export const ScalaTestSuites = "scala-test-suites";
-
-  /** `data` field must contain a ScalaTestSuites object. */
-  export const ScalaTestSuitesSelection = "scala-test-suites-selection";
 }
 ```
 
