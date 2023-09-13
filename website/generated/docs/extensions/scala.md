@@ -230,54 +230,6 @@ This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
 the `dataKind` field contains `"scala-main-class"`.
 
-### ScalaTestSuiteClasses
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-test-suites"`.
-
-#### ScalaTestSuiteClasses
-
-Each element of this array is a fully qualified class name.
-
-```ts
-export type ScalaTestSuiteClasses = string[];
-```
-
-### ScalaTestSuites
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-test-suites-selection"`.
-
-#### ScalaTestSuites
-
-```ts
-export interface ScalaTestSuites {
-  /** The fully qualified names of the test classes in this target and the tests in this test classes */
-  suites: ScalaTestSuiteSelection[];
-
-  /** Additional jvmOptions which will be passed to the forked JVM */
-  jvmOptions: string[];
-
-  /** Enviroment variables should be an array of strings in format KEY=VALUE */
-  environmentVariables: string[];
-}
-```
-
-#### ScalaTestSuiteSelection
-
-```ts
-export interface ScalaTestSuiteSelection {
-  /** Fully qualified name of the test suite class */
-  className: string;
-
-  /** List of tests which should be run within this test suite.
-   * Empty collection means that all of them are supposed to be executed. */
-  tests: string[];
-}
-```
-
 ## BuildTargetData kinds
 
 ### ScalaBuildTarget
@@ -415,5 +367,53 @@ export interface ScalaTestParams {
   /** The JVM options to run tests with. They replace any options
    * that are defined by the build server if defined. */
   jvmOptions?: string[];
+}
+```
+
+### ScalaTestSuiteClasses
+
+This structure is embedded in
+the `data?: TestParamsData` field, when
+the `dataKind` field contains `"scala-test-suites"`.
+
+#### ScalaTestSuiteClasses
+
+Each element of this array is a fully qualified class name.
+
+```ts
+export type ScalaTestSuiteClasses = string[];
+```
+
+### ScalaTestSuites
+
+This structure is embedded in
+the `data?: TestParamsData` field, when
+the `dataKind` field contains `"scala-test-suites-selection"`.
+
+#### ScalaTestSuites
+
+```ts
+export interface ScalaTestSuites {
+  /** The fully qualified names of the test classes in this target and the tests in this test classes */
+  suites: ScalaTestSuiteSelection[];
+
+  /** Additional jvmOptions which will be passed to the forked JVM */
+  jvmOptions: string[];
+
+  /** Enviroment variables should be an array of strings in format KEY=VALUE */
+  environmentVariables: string[];
+}
+```
+
+#### ScalaTestSuiteSelection
+
+```ts
+export interface ScalaTestSuiteSelection {
+  /** Fully qualified name of the test suite class */
+  className: string;
+
+  /** List of tests which should be run within this test suite.
+   * Empty collection means that all of them are supposed to be executed. */
+  tests: string[];
 }
 ```
