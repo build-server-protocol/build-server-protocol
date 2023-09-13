@@ -235,6 +235,7 @@ structure ScalaMainClass {
     @required
     jvmOptions: JvmOptions
     /// The environment variables for the application.
+    @required
     @deprecated(message: "Use `buildTarget/run` params instead", since: "2.2.0")
     environmentVariables: EnvironmentVariablesList
 }
