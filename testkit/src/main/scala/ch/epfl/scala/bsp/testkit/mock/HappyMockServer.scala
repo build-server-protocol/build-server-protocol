@@ -629,6 +629,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     }
   }
 
+  override def onRunReadStdin(params: PrintParams): Unit = {}
+
   private def handleRequest[T](
       f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
