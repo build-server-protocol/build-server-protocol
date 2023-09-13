@@ -191,7 +191,7 @@ intEnum RustTargetKind {
     /// For benchmarks.
     BENCH = 5
     /// For build scripts.
-    CUSTOMBUILD = 6
+    CUSTOM_BUILD = 6
     /// For unknown targets.
     UNKNOWN = 7
 }

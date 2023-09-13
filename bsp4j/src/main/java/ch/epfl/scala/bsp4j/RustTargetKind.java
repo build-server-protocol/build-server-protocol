@@ -11,7 +11,7 @@ public enum RustTargetKind {
     TEST(3),
     EXAMPLE(4),
     BENCH(5),
-    CUSTOMBUILD(6),
+    CUSTOM_BUILD(6),
     UNKNOWN(7);
 
     private final int value;

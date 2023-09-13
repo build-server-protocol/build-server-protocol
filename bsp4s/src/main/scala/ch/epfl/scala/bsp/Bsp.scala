@@ -990,7 +990,7 @@ object RustTargetKind {
   case object Test extends RustTargetKind(3)
   case object Example extends RustTargetKind(4)
   case object Bench extends RustTargetKind(5)
-  case object Custombuild extends RustTargetKind(6)
+  case object CustomBuild extends RustTargetKind(6)
   case object Unknown extends RustTargetKind(7)
 
   implicit val codec: JsonValueCodec[RustTargetKind] = new JsonValueCodec[RustTargetKind] {
@@ -1003,7 +1003,7 @@ object RustTargetKind {
         case 3 => Test
         case 4 => Example
         case 5 => Bench
-        case 6 => Custombuild
+        case 6 => CustomBuild
         case 7 => Unknown
         case n => in.decodeError(s"Unknown message type id for $n")
       }

@@ -217,7 +217,7 @@ export enum RustTargetKind {
   Bench = 5,
 
   /** For build scripts. */
-  Custombuild = 6,
+  CustomBuild = 6,
 
   /** For unknown targets. */
   Unknown = 7,
