@@ -27,11 +27,5 @@ public interface BuildClient {
     @JsonNotification("build/taskFinish")
     void onBuildTaskFinish(TaskFinishParams params);
 
-    @JsonNotification("run/printStdout")
-    void onRunPrintStdout(PrintParams params);
-
-    @JsonNotification("run/printStderr")
-    void onRunPrintStderr(PrintParams params);
-
 
 }

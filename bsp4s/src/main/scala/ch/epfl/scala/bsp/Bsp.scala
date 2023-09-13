@@ -740,16 +740,6 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class PrintParams(
-    originId: String,
-    task: Option[TaskId],
-    message: String
-)
-
-object PrintParams {
-  implicit val codec: JsonValueCodec[PrintParams] = JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
@@ -930,7 +920,7 @@ object ScalaDiagnostic {
 final case class ScalaMainClass(
     @named("class")
     className: String,
-    arguments: Option[List[String]],
+    arguments: List[String],
     jvmOptions: List[String],
     environmentVariables: Option[List[String]]
 )

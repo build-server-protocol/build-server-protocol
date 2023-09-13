@@ -228,6 +228,7 @@ structure ScalaMainClass {
     @jsonName("class")
     className: String
     /// The user arguments to the main entrypoint.
+    @required
     @deprecated(message: "Use `buildTarget/run` params instead", since: "2.2.0")
     arguments: Arguments
     /// The jvm options for the application.

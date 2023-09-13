@@ -13,6 +13,7 @@ public class ScalaMainClass {
   @NonNull
   private String className;
 
+  @NonNull
   private List<String> arguments;
 
   @NonNull
@@ -20,8 +21,9 @@ public class ScalaMainClass {
 
   private List<String> environmentVariables;
 
-  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> jvmOptions) {
+  public ScalaMainClass(@NonNull final String className, @NonNull final List<String> arguments, @NonNull final List<String> jvmOptions) {
     this.className = className;
+    this.arguments = arguments;
     this.jvmOptions = jvmOptions;
   }
 
@@ -36,12 +38,13 @@ public class ScalaMainClass {
   }
 
   @Pure
+  @NonNull
   public List<String> getArguments() {
     return this.arguments;
   }
 
-  public void setArguments(final List<String> arguments) {
-    this.arguments = arguments;
+  public void setArguments(@NonNull final List<String> arguments) {
+    this.arguments = Preconditions.checkNotNull(arguments, "arguments");
   }
 
   @Pure
