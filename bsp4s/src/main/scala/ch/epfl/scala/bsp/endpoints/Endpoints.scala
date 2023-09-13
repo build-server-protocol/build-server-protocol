@@ -3,6 +3,12 @@ package endpoints
 
 import jsonrpc4s.Endpoint
 import jsonrpc4s.Endpoint.unitCodec
+object Run extends Run
+trait Run {
+  object printStdout extends Endpoint[PrintParams, Unit]("run/printStdout")
+  object printStderr extends Endpoint[PrintParams, Unit]("run/printStderr")
+  object readStdin extends Endpoint[PrintParams, Unit]("run/readStdin")
+}
 object Build extends Build
 trait Build {
   object showMessage extends Endpoint[ShowMessageParams, Unit]("build/showMessage")

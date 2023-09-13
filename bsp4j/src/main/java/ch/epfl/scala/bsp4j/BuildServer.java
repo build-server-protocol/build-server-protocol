@@ -57,5 +57,8 @@ public interface BuildServer {
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
+    @JsonNotification("run/readStdin")
+    void onRunReadStdin(PrintParams params);
+
 
 }

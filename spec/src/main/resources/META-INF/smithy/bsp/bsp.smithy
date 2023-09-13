@@ -25,6 +25,8 @@ service BuildClient {
         OnBuildTaskStart
         OnBuildTaskProgress
         OnBuildTaskFinish
+        OnRunPrintStdout
+        OnRunPrintStderr
     ]
 }
 
@@ -48,6 +50,7 @@ service BuildServer {
         BuildTargetTest
         DebugSessionStart
         BuildTargetCleanCache
+        OnRunReadStdin
     ]
 }
 
@@ -1398,4 +1401,41 @@ structure CleanCacheResult {
     /// Indicates whether the clean cache request was performed or not.
     @required
     cleaned: Boolean
+}
+
+
+structure PrintParams {
+    /// The id of the request.
+    @required
+    originId: Identifier
+
+    /// Relevant only for test tasks.
+    /// Allows to tell the client from which task the output is coming from.
+    task: TaskId
+
+    /// Message content can contain arbitrary bytes.
+    /// They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings)
+    @required
+    message: String
+}
+
+/// Notification sent from the server to the client when the target being run prints
+/// something to stdout.
+@jsonNotification("run/printStdout")
+operation OnRunPrintStdout {
+    input: PrintParams
+}
+
+/// Notification sent from the server to the client when the target being run prints
+/// something to stderr.
+@jsonNotification("run/printStderr")
+operation OnRunPrintStderr {
+    input: PrintParams
+}
+
+/// Notification sent from the client to the server when the user wants to send
+/// input to the stdin of the running target.
+@jsonNotification("run/readStdin")
+operation OnRunReadStdin {
+    input: PrintParams
 }

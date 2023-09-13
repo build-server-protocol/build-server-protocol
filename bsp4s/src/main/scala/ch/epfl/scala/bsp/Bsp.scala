@@ -739,6 +739,16 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class PrintParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object PrintParams {
+  implicit val codec: JsonValueCodec[PrintParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
