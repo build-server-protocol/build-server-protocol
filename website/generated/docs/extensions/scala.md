@@ -401,7 +401,7 @@ export interface ScalaTestSuites {
   jvmOptions: string[];
 
   /** Enviroment variables should be an array of strings in format KEY=VALUE */
-  environmentVariables?: string[];
+  environmentVariables: string[];
 }
 ```
 

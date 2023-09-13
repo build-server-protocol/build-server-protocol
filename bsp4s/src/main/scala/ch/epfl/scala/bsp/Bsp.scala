@@ -1032,7 +1032,7 @@ object ScalaTestSuiteSelection {
 final case class ScalaTestSuites(
     suites: List[ScalaTestSuiteSelection],
     jvmOptions: List[String],
-    environmentVariables: Option[List[String]]
+    environmentVariables: List[String]
 )
 
 object ScalaTestSuites {

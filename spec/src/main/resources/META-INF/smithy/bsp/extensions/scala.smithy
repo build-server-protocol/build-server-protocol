@@ -276,6 +276,7 @@ structure ScalaTestSuites {
     @required
     jvmOptions: JvmOptions
     /// Enviroment variables should be an array of strings in format KEY=VALUE
+    @required
     @deprecated(message: "Use `buildTarget/test` params instead", since: "2.2.0")
     environmentVariables: EnvironmentVariablesList
 }

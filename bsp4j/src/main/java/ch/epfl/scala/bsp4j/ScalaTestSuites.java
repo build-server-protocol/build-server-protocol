@@ -14,11 +14,13 @@ public class ScalaTestSuites {
   @NonNull
   private List<String> jvmOptions;
 
+  @NonNull
   private List<String> environmentVariables;
 
-  public ScalaTestSuites(@NonNull final List<ScalaTestSuiteSelection> suites, @NonNull final List<String> jvmOptions) {
+  public ScalaTestSuites(@NonNull final List<ScalaTestSuiteSelection> suites, @NonNull final List<String> jvmOptions, @NonNull final List<String> environmentVariables) {
     this.suites = suites;
     this.jvmOptions = jvmOptions;
+    this.environmentVariables = environmentVariables;
   }
 
   @Pure
@@ -42,12 +44,13 @@ public class ScalaTestSuites {
   }
 
   @Pure
+  @NonNull
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
 
-  public void setEnvironmentVariables(final List<String> environmentVariables) {
-    this.environmentVariables = environmentVariables;
+  public void setEnvironmentVariables(@NonNull final List<String> environmentVariables) {
+    this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
 
   @Override
