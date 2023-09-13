@@ -341,8 +341,6 @@ object DebugSessionParams {
 object DebugSessionParamsDataKind {
   val ScalaAttachRemote = "scala-attach-remote"
   val ScalaMainClass = "scala-main-class"
-  val ScalaTestSuites = "scala-test-suites"
-  val ScalaTestSuitesSelection = "scala-test-suites-selection"
 }
 
 final case class DependencyModule(
@@ -1327,6 +1325,8 @@ object TestParams {
 
 object TestParamsDataKind {
   val ScalaTest = "scala-test"
+  val ScalaTestSuites = "scala-test-suites"
+  val ScalaTestSuitesSelection = "scala-test-suites-selection"
 }
 
 final case class TestProvider(
