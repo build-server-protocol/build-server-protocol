@@ -6,6 +6,9 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
+ */
 @SuppressWarnings("all")
 public class TaskId {
   @NonNull

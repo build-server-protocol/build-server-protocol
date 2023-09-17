@@ -5,6 +5,11 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * Represents a related message and source code location for a diagnostic.
+ * This should be used to point to code locations that cause or are related to
+ * a diagnostics, e.g when duplicating a symbol in a scope.
+ */
 @SuppressWarnings("all")
 public class DiagnosticRelatedInformation {
   @NonNull

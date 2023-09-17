@@ -5,6 +5,12 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * The beginning of a compilation unit may be signalled to the client with a
+ * `build/taskStart` notification. When the compilation unit is a build target, the
+ * notification's `dataKind` field must be "compile-task" and the `data` field must
+ * include a `CompileTask` object:
+ */
 @SuppressWarnings("all")
 public class CompileTask {
   @NonNull

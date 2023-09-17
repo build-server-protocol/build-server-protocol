@@ -3,6 +3,10 @@ package ch.epfl.scala.bsp4j;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * `JvmBuildTarget` is a basic data structure that contains jvm-specific
+ * metadata, specifically JDK reference.
+ */
 @SuppressWarnings("all")
 public class JvmBuildTarget {
   private String javaHome;
