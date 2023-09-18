@@ -1403,7 +1403,7 @@ structure CleanCacheResult {
     cleaned: Boolean
 }
 
-
+@unstable
 structure PrintParams {
     /// The id of the request.
     @required
@@ -1421,6 +1421,7 @@ structure PrintParams {
 
 /// Notification sent from the server to the client when the target being run prints
 /// something to stdout.
+@unstable
 @jsonNotification("run/printStdout")
 operation OnRunPrintStdout {
     input: PrintParams
@@ -1428,6 +1429,7 @@ operation OnRunPrintStdout {
 
 /// Notification sent from the server to the client when the target being run prints
 /// something to stderr.
+@unstable
 @jsonNotification("run/printStderr")
 operation OnRunPrintStderr {
     input: PrintParams
@@ -1435,6 +1437,7 @@ operation OnRunPrintStderr {
 
 /// Notification sent from the client to the server when the user wants to send
 /// input to the stdin of the running target.
+@unstable
 @jsonNotification("run/readStdin")
 operation OnRunReadStdin {
     input: PrintParams
