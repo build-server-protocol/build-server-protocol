@@ -5,6 +5,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+ * Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
+ */
 @SuppressWarnings("all")
 public class BuildTargetIdentifier {
   @NonNull

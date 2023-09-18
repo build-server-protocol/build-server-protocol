@@ -154,6 +154,7 @@ sealed trait Hint
 object Hint {
   case class Documentation(string: String) extends Hint
   case class Deprecated(message: String) extends Hint
+  case object Unstable extends Hint
 }
 
 case class PolymorphicDataKind(kind: String, shapeId: ShapeId)
