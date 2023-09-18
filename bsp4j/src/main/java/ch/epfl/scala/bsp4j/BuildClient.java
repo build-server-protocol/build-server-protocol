@@ -90,9 +90,17 @@ public interface BuildClient {
     @JsonNotification("build/taskFinish")
     void onBuildTaskFinish(TaskFinishParams params);
 
+    /**
+     * Notification sent from the server to the client when the target being run prints
+     * something to stdout.
+     */
     @JsonNotification("run/printStdout")
     void onRunPrintStdout(PrintParams params);
 
+    /**
+     * Notification sent from the server to the client when the target being run prints
+     * something to stderr.
+     */
     @JsonNotification("run/printStderr")
     void onRunPrintStderr(PrintParams params);
 

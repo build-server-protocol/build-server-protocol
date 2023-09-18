@@ -189,6 +189,10 @@ public interface BuildServer {
     @JsonRequest("buildTarget/cleanCache")
     CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
+    /**
+     * Notification sent from the client to the server when the user wants to send
+     * input to the stdin of the running target.
+     */
     @JsonNotification("run/readStdin")
     void onRunReadStdin(PrintParams params);
 

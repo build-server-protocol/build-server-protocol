@@ -37,3 +37,9 @@ _Past Maintainers_
 
 - Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
 - Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+
+## Protocol Changelog
+
+### Unreleased
+
+- Add unstable `run/printStdout`, `run/printStderr` and `run/readStdin` notifications
