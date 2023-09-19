@@ -217,6 +217,8 @@ object CargoBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class CargoFeaturesStateResult(
     packagesFeatures: List[PackageFeatures]
 )
@@ -1222,6 +1224,8 @@ object ScalacOptionsResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class SetCargoFeaturesParams(
     packageId: String,
     features: Set[String]
@@ -1232,6 +1236,8 @@ object SetCargoFeaturesParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class SetCargoFeaturesResult(
     statusCode: StatusCode
 )

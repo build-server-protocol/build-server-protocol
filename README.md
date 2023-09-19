@@ -42,8 +42,8 @@ _Past Maintainers_
 
 ### Unreleased
 
-- Added an optional `originId` field to `TaskStartParams`, `TaskProgressParams` and `TaskFinishParams`
-  and deprecated it in `CompileReport` and `TestReport` to support BSP clients that need to distinguish
+- Add an optional `originId` field to `TaskStartParams`, `TaskProgressParams` and `TaskFinishParams`
+  and deprecate it in `CompileReport` and `TestReport` to support BSP clients that need to distinguish
   between multiple reports for the same target.
   - Migration: Use the `originId` field in `TaskFinishParams` instead of `CompileReport`/`TestReport`
     to identify the report.
