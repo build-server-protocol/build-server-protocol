@@ -1146,9 +1146,6 @@ structure CompileParams {
 
     /// Optional arguments to the compilation process.
     arguments: Arguments
-
-    /// Optional environment variables to set before compiling.
-    environmentVariables: EnvironmentVariables
 }
 
 list Arguments {

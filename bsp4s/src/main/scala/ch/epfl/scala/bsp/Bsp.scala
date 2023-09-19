@@ -192,8 +192,7 @@ object CleanCacheResult {
 final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
-    arguments: Option[List[String]],
-    environmentVariables: Option[Map[String, String]]
+    arguments: Option[List[String]]
 )
 
 object CompileParams {

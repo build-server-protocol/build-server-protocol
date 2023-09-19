@@ -964,9 +964,6 @@ export interface CompileParams {
 
   /** Optional arguments to the compilation process. */
   arguments?: string[];
-
-  /** Optional environment variables to set before compiling. */
-  environmentVariables?: Map<string, string>;
 }
 ```
 
