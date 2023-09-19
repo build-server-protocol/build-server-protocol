@@ -6,6 +6,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * `CargoBuildTarget` is a basic data structure that contains
+ * cargo-specific metadata.
+ */
 @SuppressWarnings("all")
 public class CargoBuildTarget {
   @NonNull

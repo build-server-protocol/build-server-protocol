@@ -47,3 +47,5 @@ _Past Maintainers_
   between multiple reports for the same target.
   - Migration: Use the `originId` field in `TaskFinishParams` instead of `CompileReport`/`TestReport`
     to identify the report.
+- Add `cargo` (Rust build tool) protocol extension
+
