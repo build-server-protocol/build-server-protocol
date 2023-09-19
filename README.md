@@ -48,4 +48,3 @@ _Past Maintainers_
   - Migration: Use the `originId` field in `TaskFinishParams` instead of `CompileReport`/`TestReport`
     to identify the report.
 - Add `cargo` (Rust build tool) protocol extension
-
