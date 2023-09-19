@@ -43,3 +43,8 @@ _Past Maintainers_
 ### Unreleased
 
 - Add unstable `run/printStdout`, `run/printStderr` and `run/readStdin` notifications
+- Add an optional `originId` field to `TaskStartParams`, `TaskProgressParams` and `TaskFinishParams`
+  and deprecate it in `CompileReport` and `TestReport` to support BSP clients that need to distinguish
+  between multiple reports for the same target.
+    - Migration: Use the `originId` field in `TaskFinishParams` instead of `CompileReport`/`TestReport`
+      to identify the report.

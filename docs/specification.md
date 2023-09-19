@@ -66,7 +66,7 @@ On the server side,
 - [Bloop](https://github.com/scalacenter/bloop) was the first
   server to implement BSP
 - sbt added built-in support in [1.4.0](https://github.com/sbt/sbt/pull/5538),
-- Mill ships with [built-in BSP support](https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html#_build_server_protocol_bsp)
+- Mill ships with [built-in BSP support](https://mill-build.com/mill/Installation_IDE_Support.html#_build_server_protocol_bsp)
 - Bazel support is provided by [bazel-bsp](https://github.com/JetBrains/bazel-bsp)
 
 We're looking for third parties that implement BSP natively in other build tools
