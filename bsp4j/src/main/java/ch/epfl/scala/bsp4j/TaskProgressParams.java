@@ -12,6 +12,8 @@ public class TaskProgressParams {
   @NonNull
   private TaskId taskId;
 
+  private String originId;
+
   private Long eventTime;
 
   private String message;
@@ -39,6 +41,15 @@ public class TaskProgressParams {
 
   public void setTaskId(@NonNull final TaskId taskId) {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
+  }
+
+  @Pure
+  public String getOriginId() {
+    return this.originId;
+  }
+
+  public void setOriginId(final String originId) {
+    this.originId = originId;
   }
 
   @Pure
@@ -109,6 +120,7 @@ public class TaskProgressParams {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("taskId", this.taskId);
+    b.add("originId", this.originId);
     b.add("eventTime", this.eventTime);
     b.add("message", this.message);
     b.add("total", this.total);
@@ -133,6 +145,11 @@ public class TaskProgressParams {
       if (other.taskId != null)
         return false;
     } else if (!this.taskId.equals(other.taskId))
+      return false;
+    if (this.originId == null) {
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
       return false;
     if (this.eventTime == null) {
       if (other.eventTime != null)
@@ -178,6 +195,7 @@ public class TaskProgressParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.taskId== null) ? 0 : this.taskId.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.eventTime== null) ? 0 : this.eventTime.hashCode());
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
     result = prime * result + ((this.total== null) ? 0 : this.total.hashCode());

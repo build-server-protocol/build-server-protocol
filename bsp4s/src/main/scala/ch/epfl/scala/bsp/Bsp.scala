@@ -1282,6 +1282,7 @@ object TaskFinishDataKind {
 
 final case class TaskFinishParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     status: StatusCode,
@@ -1313,6 +1314,7 @@ object TaskProgressDataKind {}
 
 final case class TaskProgressParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     total: Option[Long],
@@ -1341,6 +1343,7 @@ object TaskStartDataKind {
 
 final case class TaskStartParams(
     taskId: TaskId,
+    originId: Option[String],
     eventTime: Option[Long],
     message: Option[String],
     dataKind: Option[String],
