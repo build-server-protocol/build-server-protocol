@@ -3,6 +3,10 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
+/**
+ * The `BuildTargetEventKind` information can be used by clients to trigger
+ * reindexing or update the user interface with the new information.
+ */
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum BuildTargetEventKind {
 

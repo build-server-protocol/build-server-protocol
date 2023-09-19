@@ -38,6 +38,8 @@ object Uri {
   }
 }
 
+/** Structure describing how to start a BSP server and the capabilities it supports.
+  */
 final case class BspConnectionDetails(
     name: String,
     argv: List[String],
@@ -60,6 +62,9 @@ object BuildClientCapabilities {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** The capabilities of the build server. Clients can use these capabilities to notify users what
+  * BSP endpoints can and cannot be used and why.
+  */
 final case class BuildServerCapabilities(
     compileProvider: Option[CompileProvider],
     testProvider: Option[TestProvider],
@@ -81,6 +86,21 @@ object BuildServerCapabilities {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Build target contains metadata about an artifact (for example library, test, or binary
+  * artifact). Using vocabulary of other build tools:
+  *
+  * * sbt: a build target is a combined project + config. Example: * a regular JVM project with main
+  * and test configurations will have 2 build targets, one for main and one for test. * a single
+  * configuration in a single project that contains both Java and Scala sources maps to one
+  * BuildTarget. * a project with crossScalaVersions 2.11 and 2.12 containing main and test
+  * configuration in each will have 4 build targets. * a Scala 2.11 and 2.12 cross-built project for
+  * Scala.js and the JVM with main and test configurations will have 8 build targets. * Pants: a
+  * pants target corresponds one-to-one with a BuildTarget * Bazel: a bazel target corresponds
+  * one-to-one with a BuildTarget
+  *
+  * The general idea is that the BuildTarget data structure should contain only information that is
+  * fast or cheap to compute.
+  */
 final case class BuildTarget(
     id: BuildTargetIdentifier,
     displayName: Option[String],
@@ -97,6 +117,9 @@ object BuildTarget {
   implicit val codec: JsonValueCodec[BuildTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Clients can use these capabilities to notify users what BSP endpoints can and cannot be used and
+  * why.
+  */
 final case class BuildTargetCapabilities(
     canCompile: Option[Boolean],
     canTest: Option[Boolean],
@@ -131,6 +154,9 @@ object BuildTargetEvent {
 
 object BuildTargetEventDataKind {}
 
+/** The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update
+  * the user interface with the new information.
+  */
 sealed abstract class BuildTargetEventKind(val value: Int)
 object BuildTargetEventKind {
   case object Created extends BuildTargetEventKind(1)
@@ -151,6 +177,11 @@ object BuildTargetEventKind {
       }
     }
 }
+
+/** A unique identifier for a target, can use any URI-compatible encoding as long as it is unique
+  * within the workspace. Clients should not infer metadata out of the URI structure such as the
+  * path or query parameters, use `BuildTarget` instead.
+  */
 final case class BuildTargetIdentifier(
     uri: Uri
 )
@@ -160,6 +191,8 @@ object BuildTargetIdentifier {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** A list of predefined tags that can be used to categorize build targets.
+  */
 object BuildTargetTag {
   val Application = "application"
   val Benchmark = "benchmark"
@@ -209,6 +242,10 @@ object CompileProvider {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** The completion of a compilation task should be signalled with a `build/taskFinish` notification.
+  * When the compilation unit is a build target, the notification's `dataKind` field must be
+  * `compile-report` and the `data` field must include a `CompileReport` object:
+  */
 final case class CompileReport(
     target: BuildTargetIdentifier,
     originId: Option[String],
@@ -237,6 +274,10 @@ object CompileResult {
 
 object CompileResultDataKind {}
 
+/** The beginning of a compilation unit may be signalled to the client with a `build/taskStart`
+  * notification. When the compilation unit is a build target, the notification's `dataKind` field
+  * must be "compile-task" and the `data` field must include a `CompileTask` object:
+  */
 final case class CompileTask(
     target: BuildTargetIdentifier
 )
@@ -245,6 +286,9 @@ object CompileTask {
   implicit val codec: JsonValueCodec[CompileTask] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `CppBuildTarget` is a basic data structure that contains c++-specific metadata, specifically
+  * compiler reference.
+  */
 final case class CppBuildTarget(
     version: Option[String],
     compiler: Option[String],
@@ -320,8 +364,6 @@ object DebugSessionParams {
 object DebugSessionParamsDataKind {
   val ScalaAttachRemote = "scala-attach-remote"
   val ScalaMainClass = "scala-main-class"
-  val ScalaTestSuites = "scala-test-suites"
-  val ScalaTestSuitesSelection = "scala-test-suites-selection"
 }
 
 final case class DependencyModule(
@@ -415,6 +457,10 @@ object DiagnosticDataKind {
   val Scala = "scala"
 }
 
+/** Represents a related message and source code location for a diagnostic. This should be used to
+  * point to code locations that cause or are related to a diagnostics, e.g when duplicating a
+  * symbol in a scope.
+  */
 final case class DiagnosticRelatedInformation(
     location: Location,
     message: String
@@ -541,6 +587,9 @@ object JavacOptionsResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `JvmBuildTarget` is a basic data structure that contains jvm-specific metadata, specifically JDK
+  * reference.
+  */
 final case class JvmBuildTarget(
     javaHome: Option[Uri],
     javaVersion: Option[String]
@@ -633,6 +682,10 @@ object LogMessageParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `MavenDependencyModule` is a basic data structure that contains maven-like metadata. This
+  * metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition,
+  * when the `dataKind` field contains "maven".
+  */
 final case class MavenDependencyModule(
     organization: String,
     name: String,
@@ -754,6 +807,9 @@ object PublishDiagnosticsParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `PythonBuildTarget` is a basic data structure that contains Python-specific metadata,
+  * specifically the interpreter reference and the Python version.
+  */
 final case class PythonBuildTarget(
     version: Option[String],
     interpreter: Option[Uri]
@@ -862,6 +918,20 @@ object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing
+  * editor support for sbt build files.
+  *
+  * For example, say we have a project in `/foo/bar` defining projects `A` and `B` and two meta
+  * builds `M1` (defined in `/foo/bar/project`) and `M2` (defined in `/foo/bar/project/project`).
+  *
+  * The sbt build target for `M1` will have `A` and `B` as the defined targets and `M2` as the
+  * parent. Similarly, the sbt build target for `M2` will have `M1` as the defined target and no
+  * parent.
+  *
+  * Clients can use this information to reconstruct the tree of sbt meta builds. The `parent`
+  * information can be defined from `children` but it's provided by the server to simplify the data
+  * processing on the client side.
+  */
 final case class SbtBuildTarget(
     sbtVersion: String,
     autoImports: List[String],
@@ -875,6 +945,12 @@ object SbtBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** A Scala action represents a change that can be performed in code. See also [LSP: Code Action
+  * Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_codeAction).
+  *
+  * **Note**: In LSP, `CodeAction` appears only as a response to a `textDocument/codeAction`
+  * request, whereas ScalaAction is intended to be returned as `Diagnostics.data.actions`.
+  */
 final case class ScalaAction(
     title: String,
     description: Option[String],
@@ -885,6 +961,9 @@ object ScalaAction {
   implicit val codec: JsonValueCodec[ScalaAction] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** The debug session will connect to a running process. The DAP client will send the port of the
+  * running process later.
+  */
 final case class ScalaAttachRemote(
 )
 
@@ -893,6 +972,9 @@ object ScalaAttachRemote {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling
+  * a target containing Scala sources.
+  */
 final case class ScalaBuildTarget(
     scalaOrganization: String,
     scalaVersion: String,
@@ -907,6 +989,9 @@ object ScalaBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `ScalaDiagnostic` is a data structure that contains Scala-specific metadata generated by Scala
+  * compilation.
+  */
 final case class ScalaDiagnostic(
     actions: Option[List[ScalaAction]]
 )
@@ -1008,6 +1093,8 @@ object ScalaTestClassesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `ScalaTestParams` contains scala-specific metadata for testing Scala targets.
+  */
 final case class ScalaTestParams(
     testClasses: Option[List[ScalaTestClassesItem]],
     jvmOptions: Option[List[String]]
@@ -1039,6 +1126,8 @@ object ScalaTestSuites {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** A textual edit applicable to a text document.
+  */
 final case class ScalaTextEdit(
     range: Range,
     newText: String
@@ -1049,6 +1138,8 @@ object ScalaTextEdit {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** A workspace edit represents changes to many resources managed in the workspace.
+  */
 final case class ScalaWorkspaceEdit(
     changes: List[ScalaTextEdit]
 )
@@ -1155,6 +1246,8 @@ object SourcesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Included in notifications of tasks or requests to signal the completion state.
+  */
 sealed abstract class StatusCode(val value: Int)
 object StatusCode {
   case object Ok extends StatusCode(1)
@@ -1174,6 +1267,13 @@ object StatusCode {
     }
   }
 }
+
+/** Task finish notifications may contain an arbitrary interface in their `data` field. The kind of
+  * interface that is contained in a notification must be specified in the `dataKind` field.
+  *
+  * There are predefined kinds of objects for compile and test tasks, as described in
+  * [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+  */
 object TaskFinishDataKind {
   val CompileReport = "compile-report"
   val TestFinish = "test-finish"
@@ -1195,6 +1295,9 @@ object TaskFinishParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent
+  * relationship with another task id.
+  */
 final case class TaskId(
     id: String,
     parents: Option[List[String]]
@@ -1204,6 +1307,9 @@ object TaskId {
   implicit val codec: JsonValueCodec[TaskId] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Task progress notifications may contain an arbitrary interface in their `data` field. The kind
+  * of interface that is contained in a notification must be specified in the `dataKind` field.
+  */
 object TaskProgressDataKind {}
 
 final case class TaskProgressParams(
@@ -1223,6 +1329,12 @@ object TaskProgressParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Task start notifications may contain an arbitrary interface in their `data` field. The kind of
+  * interface that is contained in a notification must be specified in the `dataKind` field.
+  *
+  * There are predefined kinds of objects for compile and test tasks, as described in
+  * [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
+  */
 object TaskStartDataKind {
   val CompileTask = "compile-task"
   val TestStart = "test-start"
@@ -1272,6 +1384,8 @@ object TestParams {
 
 object TestParamsDataKind {
   val ScalaTest = "scala-test"
+  val ScalaTestSuites = "scala-test-suites"
+  val ScalaTestSuitesSelection = "scala-test-suites-selection"
 }
 
 final case class TestProvider(
@@ -1342,6 +1456,11 @@ object TestStatus {
     }
   }
 }
+
+/** The beginning of a testing unit may be signalled to the client with a `build/taskStart`
+  * notification. When the testing unit is a build target, the notification's `dataKind` field must
+  * be `test-task` and the `data` field must include a `TestTask` object.
+  */
 final case class TestTask(
     target: BuildTargetIdentifier
 )
