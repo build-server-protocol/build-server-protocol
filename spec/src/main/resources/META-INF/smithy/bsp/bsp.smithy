@@ -1419,20 +1419,36 @@ structure PrintParams {
     message: String
 }
 
-/// Notification sent from the server to the client when the target being run prints
-/// something to stdout.
+/// Notification sent from the server to the client when the target being run or tested
+/// prints something to stdout.
 @unstable
 @jsonNotification("run/printStdout")
 operation OnRunPrintStdout {
     input: PrintParams
 }
 
-/// Notification sent from the server to the client when the target being run prints
-/// something to stderr.
+/// Notification sent from the server to the client when the target being run or tested
+/// prints something to stderr.
 @unstable
 @jsonNotification("run/printStderr")
 operation OnRunPrintStderr {
     input: PrintParams
+}
+
+@unstable
+structure ReadParams {
+    /// The id of the request.
+    @required
+    originId: Identifier
+
+    /// Relevant only for test tasks.
+    /// Allows to tell the client from which task the output is coming from.
+    task: TaskId
+
+    /// Message content can contain arbitrary bytes.
+    /// They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings)
+    @required
+    message: String
 }
 
 /// Notification sent from the client to the server when the user wants to send
@@ -1440,5 +1456,5 @@ operation OnRunPrintStderr {
 @unstable
 @jsonNotification("run/readStdin")
 operation OnRunReadStdin {
-    input: PrintParams
+    input: ReadParams
 }

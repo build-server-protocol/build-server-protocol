@@ -194,7 +194,7 @@ public interface BuildServer {
      * input to the stdin of the running target.
      */
     @JsonNotification("run/readStdin")
-    void onRunReadStdin(PrintParams params);
+    void onRunReadStdin(ReadParams params);
 
 
 }

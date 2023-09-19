@@ -91,15 +91,15 @@ public interface BuildClient {
     void onBuildTaskFinish(TaskFinishParams params);
 
     /**
-     * Notification sent from the server to the client when the target being run or tested prints
-     * something to stdout.
+     * Notification sent from the server to the client when the target being run or tested
+     * prints something to stdout.
      */
     @JsonNotification("run/printStdout")
     void onRunPrintStdout(PrintParams params);
 
     /**
-     * Notification sent from the server to the client when the target being run prints
-     * something to stderr.
+     * Notification sent from the server to the client when the target being run or tested
+     * prints something to stderr.
      */
     @JsonNotification("run/printStderr")
     void onRunPrintStderr(PrintParams params);

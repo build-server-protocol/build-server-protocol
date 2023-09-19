@@ -867,6 +867,16 @@ object Range {
   implicit val codec: JsonValueCodec[Range] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class ReadParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object ReadParams {
+  implicit val codec: JsonValueCodec[ReadParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class ResourcesItem(
     target: BuildTargetIdentifier,
     resources: List[Uri]
