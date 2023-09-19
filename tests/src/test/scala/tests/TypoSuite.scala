@@ -223,7 +223,7 @@ class TypoSuite extends AnyFunSuite {
       }
     }
 
-    override def onRunReadStdin(params: PrintParams): Unit = ()
+    override def onRunReadStdin(params: ReadParams): Unit = ()
   }
 
   // extension methods to abstract over lsp4s service creation.
