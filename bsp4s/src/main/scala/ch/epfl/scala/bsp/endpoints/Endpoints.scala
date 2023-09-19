@@ -6,18 +6,18 @@ import jsonrpc4s.Endpoint.unitCodec
 object Run extends Run
 trait Run {
 
-  /** Notification sent from the server to the client when the target being run or tested prints
-    * something to stdout.
+  /** **Unstable** (may change in future versions) Notification sent from the server to the client
+    * when the target being run or tested prints something to stdout.
     */
   object printStdout extends Endpoint[PrintParams, Unit]("run/printStdout")
 
-  /** Notification sent from the server to the client when the target being run or tested prints
-    * something to stderr.
+  /** **Unstable** (may change in future versions) Notification sent from the server to the client
+    * when the target being run or tested prints something to stderr.
     */
   object printStderr extends Endpoint[PrintParams, Unit]("run/printStderr")
 
-  /** Notification sent from the client to the server when the user wants to send input to the stdin
-    * of the running target.
+  /** **Unstable** (may change in future versions) Notification sent from the client to the server
+    * when the user wants to send input to the stdin of the running target.
     */
   object readStdin extends Endpoint[ReadParams, Unit]("run/readStdin")
 }

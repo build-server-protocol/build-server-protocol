@@ -794,6 +794,8 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class PrintParams(
     originId: String,
     task: Option[TaskId],
@@ -867,6 +869,8 @@ object Range {
   implicit val codec: JsonValueCodec[Range] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class ReadParams(
     originId: String,
     task: Option[TaskId],

@@ -1259,6 +1259,8 @@ export interface CleanCacheResult {
 
 ### OnRunReadStdin: notification
 
+**Unstable** (may change in future versions)
+
 Notification sent from the client to the server when the user wants to send
 input to the stdin of the running target.
 
@@ -1266,6 +1268,8 @@ input to the stdin of the running target.
 - params: `ReadParams`
 
 #### ReadParams
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface ReadParams {
@@ -1980,6 +1984,8 @@ export interface TestReport {
 
 ### OnRunPrintStdout: notification
 
+**Unstable** (may change in future versions)
+
 Notification sent from the server to the client when the target being run or tested
 prints something to stdout.
 
@@ -1987,6 +1993,8 @@ prints something to stdout.
 - params: `PrintParams`
 
 #### PrintParams
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface PrintParams {
@@ -2004,6 +2012,8 @@ export interface PrintParams {
 ```
 
 ### OnRunPrintStderr: notification
+
+**Unstable** (may change in future versions)
 
 Notification sent from the server to the client when the target being run or tested
 prints something to stderr.
