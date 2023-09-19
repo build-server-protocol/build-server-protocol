@@ -3,6 +3,10 @@ package ch.epfl.scala.bsp4j;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * Clients can use these capabilities to notify users what BSP endpoints can and
+ * cannot be used and why.
+ */
 @SuppressWarnings("all")
 public class BuildTargetCapabilities {
   private Boolean canCompile;

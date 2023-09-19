@@ -6,6 +6,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * `MavenDependencyModule` is a basic data structure that contains maven-like
+ * metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
+ */
 @SuppressWarnings("all")
 public class MavenDependencyModule {
   @NonNull

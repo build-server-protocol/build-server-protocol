@@ -25,6 +25,7 @@ class SerializationSuite extends AnyFunSuite {
     val report = bsp4s.CompileReport(target, Some("origin"), 13, 12, Some(77), None)
     val bsp4sValue = bsp4s.TaskFinishParams(
       id,
+      Some("asd"),
       Some(12345),
       Some("message"),
       bsp4s.StatusCode.Ok,
@@ -41,6 +42,7 @@ class SerializationSuite extends AnyFunSuite {
       gson.fromJson(bsp4jValue.getData.asInstanceOf[JsonElement], classOf[bsp4j.CompileReport])
 
     assert(bsp4jValue.getTaskId.getId == bsp4sValue.taskId.id)
+    assert(bsp4jValue.getOriginId == bsp4sValue.originId.get)
     assert(bsp4jValue.getTaskId.getParents.asScala == bsp4sValue.taskId.parents.get)
     assert(bsp4jValue.getEventTime == bsp4sValue.eventTime.get)
     assert(bsp4jValue.getDataKind == bsp4sValue.dataKind.get)
