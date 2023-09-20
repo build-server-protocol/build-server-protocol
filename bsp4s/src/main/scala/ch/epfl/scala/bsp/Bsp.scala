@@ -794,6 +794,18 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
+final case class PrintParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object PrintParams {
+  implicit val codec: JsonValueCodec[PrintParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
@@ -855,6 +867,18 @@ final case class Range(
 
 object Range {
   implicit val codec: JsonValueCodec[Range] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class ReadParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object ReadParams {
+  implicit val codec: JsonValueCodec[ReadParams] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class ResourcesItem(

@@ -1257,6 +1257,35 @@ export interface CleanCacheResult {
 }
 ```
 
+### OnRunReadStdin: notification
+
+**Unstable** (may change in future versions)
+
+Notification sent from the client to the server when the user wants to send
+input to the stdin of the running target.
+
+- method: `run/readStdin`
+- params: `ReadParams`
+
+#### ReadParams
+
+**Unstable** (may change in future versions)
+
+```ts
+export interface ReadParams {
+  /** The id of the request. */
+  originId: Identifier;
+
+  /** Relevant only for test tasks.
+   * Allows to tell the client from which task the output is coming from. */
+  task?: TaskId;
+
+  /** Message content can contain arbitrary bytes.
+   * They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings) */
+  message: string;
+}
+```
+
 ## BSP Client remote interface
 
 ### OnBuildShowMessage: notification
@@ -1952,6 +1981,45 @@ export interface TestReport {
   time?: Long;
 }
 ```
+
+### OnRunPrintStdout: notification
+
+**Unstable** (may change in future versions)
+
+Notification sent from the server to the client when the target being run or tested
+prints something to stdout.
+
+- method: `run/printStdout`
+- params: `PrintParams`
+
+#### PrintParams
+
+**Unstable** (may change in future versions)
+
+```ts
+export interface PrintParams {
+  /** The id of the request. */
+  originId: Identifier;
+
+  /** Relevant only for test tasks.
+   * Allows to tell the client from which task the output is coming from. */
+  task?: TaskId;
+
+  /** Message content can contain arbitrary bytes.
+   * They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings) */
+  message: string;
+}
+```
+
+### OnRunPrintStderr: notification
+
+**Unstable** (may change in future versions)
+
+Notification sent from the server to the client when the target being run or tested
+prints something to stderr.
+
+- method: `run/printStderr`
+- params: `PrintParams`
 
 ## TaskFinishData kinds
 
