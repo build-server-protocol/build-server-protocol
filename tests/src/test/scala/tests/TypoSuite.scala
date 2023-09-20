@@ -68,6 +68,10 @@ class TypoSuite extends AnyFunSuite {
       ()
     override def onBuildTaskFinish(params: TaskFinishParams): Unit =
       ()
+    override def onRunPrintStdout(params: PrintParams): Unit =
+      ()
+    override def onRunPrintStderr(params: PrintParams): Unit =
+      ()
   }
 
   // Java build server that responds with hardcoded constants
@@ -218,6 +222,8 @@ class TypoSuite extends AnyFunSuite {
         new DependencyModulesResult(List(item).asJava)
       }
     }
+
+    override def onRunReadStdin(params: ReadParams): Unit = ()
   }
 
   // extension methods to abstract over lsp4s service creation.

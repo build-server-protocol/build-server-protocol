@@ -3,6 +3,10 @@ package ch.epfl.scala.bsp4j;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * `PythonBuildTarget` is a basic data structure that contains Python-specific
+ * metadata, specifically the interpreter reference and the Python version.
+ */
 @SuppressWarnings("all")
 public class PythonBuildTarget {
   private String version;

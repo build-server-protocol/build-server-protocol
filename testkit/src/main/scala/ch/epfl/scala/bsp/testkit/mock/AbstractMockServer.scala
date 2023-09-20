@@ -63,6 +63,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def taskStart(
       taskId: TaskId,
+      originId: Option[String],
       message: String,
       dataKind: Option[String],
       data: Option[AnyRef]
@@ -71,6 +72,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     val params = new TaskStartParams(taskId)
     params.setEventTime(time)
     params.setMessage(message)
+    originId.foreach(params.setOriginId)
     dataKind.foreach(params.setDataKind)
     data.foreach(d => params.setData(gson.toJsonTree(d)))
 
@@ -79,6 +81,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def taskProgress(
       taskId: TaskId,
+      originId: Option[String],
       message: String,
       total: Long,
       progress: Long,
@@ -87,6 +90,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
   ): Unit = {
     val time = System.currentTimeMillis()
     val params = new TaskProgressParams(taskId)
+    originId.foreach(params.setOriginId)
     params.setEventTime(time)
     params.setMessage(message)
     params.setTotal(total)
@@ -99,6 +103,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
 
   def taskFinish(
       taskId: TaskId,
+      originId: Option[String],
       message: String,
       statusCode: StatusCode,
       dataKind: Option[String],
@@ -106,6 +111,7 @@ abstract class AbstractMockServer extends AbstractBuildServer {
   ): Unit = {
     val time = System.currentTimeMillis()
     val params = new TaskFinishParams(taskId, statusCode)
+    originId.foreach(params.setOriginId)
     params.setEventTime(time)
     params.setMessage(message)
     params.setStatus(statusCode)
@@ -115,27 +121,38 @@ abstract class AbstractMockServer extends AbstractBuildServer {
     client.onBuildTaskFinish(params)
   }
 
-  def compileStart(taskId: TaskId, message: String, target: BuildTargetIdentifier): Unit = {
+  def compileStart(
+      taskId: TaskId,
+      originId: Option[String],
+      message: String,
+      target: BuildTargetIdentifier
+  ): Unit = {
     val data = new CompileTask(target)
-    taskStart(taskId, message, Some(TaskStartDataKind.COMPILE_TASK), Some(data))
+    taskStart(taskId, originId, message, Some(TaskStartDataKind.COMPILE_TASK), Some(data))
   }
 
   def compileReport(
       taskId: TaskId,
+      originId: Option[String],
       message: String,
       target: BuildTargetIdentifier,
       status: StatusCode,
       time: Long = System.currentTimeMillis
   ): Unit = {
-    val origin = taskId.getParents.asScala.headOption
     val data = status match {
       case StatusCode.OK        => new CompileReport(target, 0, 0)
       case StatusCode.ERROR     => new CompileReport(target, 1, 0)
       case StatusCode.CANCELLED => new CompileReport(target, 0, 1)
     }
-    origin.foreach(data.setOriginId)
     data.setTime(time)
 
-    taskFinish(taskId, message, status, Some(TaskFinishDataKind.COMPILE_REPORT), Some(data))
+    taskFinish(
+      taskId,
+      originId,
+      message,
+      status,
+      Some(TaskFinishDataKind.COMPILE_REPORT),
+      Some(data)
+    )
   }
 }

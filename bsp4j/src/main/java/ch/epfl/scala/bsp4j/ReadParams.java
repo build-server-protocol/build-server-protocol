@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
  * **Unstable** (may change in future versions)
  */
 @SuppressWarnings("all")
-public class PrintParams {
+public class ReadParams {
   @NonNull
   private String originId;
 
@@ -18,7 +18,7 @@ public class PrintParams {
   @NonNull
   private String message;
 
-  public PrintParams(@NonNull final String originId, @NonNull final String message) {
+  public ReadParams(@NonNull final String originId, @NonNull final String message) {
     this.originId = originId;
     this.message = message;
   }
@@ -71,7 +71,7 @@ public class PrintParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    PrintParams other = (PrintParams) obj;
+    ReadParams other = (ReadParams) obj;
     if (this.originId == null) {
       if (other.originId != null)
         return false;

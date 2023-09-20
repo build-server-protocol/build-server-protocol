@@ -1,16 +1,16 @@
 package tests
 
-import java.io.File
-import java.nio.file.{Files, Paths}
-import java.util
-import java.util.Collections
-import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp.testkit.mock.MockServer
+import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.funsuite.AnyFunSuite
 
+import java.io.File
+import java.nio.file.{Files, Paths}
+import java.util
+import java.util.Collections
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
@@ -250,6 +250,7 @@ class HappyMockSuite extends AnyFunSuite {
   def assertCompile(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new CompileParams(getBuildTargetIds(server))
+    params.setOriginId("origin")
     val compileResult = server.buildTargetCompile(params).get()
     assert(compileResult.getOriginId == params.getOriginId)
 
@@ -257,9 +258,11 @@ class HappyMockSuite extends AnyFunSuite {
     assert(client.logMessages.nonEmpty)
     assert(client.showMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
-    assert(client.taskStarts.exists { p => p.getTaskId.getId == "subtask1id" })
+    assert(client.taskStarts.exists { p =>
+      p.getTaskId.getId == "subtask1id" && p.getOriginId == params.getOriginId
+    })
     assert(client.taskFinishes.exists { p =>
-      p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK
+      p.getTaskId.getId == "subtask1id" && p.getStatus == StatusCode.OK && p.getOriginId == params.getOriginId
     })
     assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)

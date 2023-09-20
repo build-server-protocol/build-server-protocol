@@ -16,7 +16,7 @@ Add the following snippet to your build to add dependency on `bsp4j`.
 ### Gradle
 
 ```groovy
-compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6.alpha'
+compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6'
 ```
 
 ### Maven
@@ -25,14 +25,14 @@ compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.1.0-M6.alpha'
 <dependency>
     <groupId>ch.epfl.scala</groupId>
     <artifactId>bsp4j</artifactId>
-    <version>2.1.0-M6.alpha</version>
+    <version>2.1.0-M6</version>
 </dependency>
 ```
 
 ### sbt
 
 ```scala
-libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.1.0-M6.alpha"
+libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.1.0-M6"
 ```
 
 ## Examples
@@ -63,6 +63,8 @@ class MyClient extends BuildClient {
   def onBuildTaskFinish(params: TaskFinishParams): Unit = ???
   def onBuildTaskProgress(params: TaskProgressParams): Unit = ???
   def onBuildTaskStart(params: TaskStartParams): Unit = ???
+  def onRunPrintStdout(params: PrintParams): Unit = ???
+  def onRunPrintStderr(params: PrintParams): Unit = ???
 }
 val localClient = new MyClient()
 ```
@@ -165,6 +167,7 @@ class MyBuildServer extends BuildServer {
   def onBuildInitialized(): Unit = ???
   def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = ???
   def workspaceReload(): CompletableFuture[Object] = ???
+  def onRunReadStdin(params: ReadParams): Unit = ???
 }
 val localServer = new MyBuildServer()
 ```
