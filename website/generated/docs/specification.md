@@ -1893,8 +1893,8 @@ export interface CompileReport {
   /** The build target that was compiled. */
   target: BuildTargetIdentifier;
 
-  /** An optional request id to know the origin of this report.
-   * Deprecated: use the field in TaskFinishParams instead. */
+  /** An optional request id to know the origin of this report. */
+  /** @deprecated Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The total number of reported errors compiling this target. */
@@ -1975,7 +1975,7 @@ export type TestFinishData = any;
 
 ```ts
 export interface TestReport {
-  /** Deprecated: use the field in TaskFinishParams instead. */
+  /** @deprecated Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The build target that was compiled. */

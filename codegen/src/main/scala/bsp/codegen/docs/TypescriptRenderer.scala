@@ -4,7 +4,7 @@ import bsp.codegen._
 import bsp.codegen.dsl._
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.ir.Hint.Documentation
+import bsp.codegen.ir.Hint.{Deprecated, Documentation}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
@@ -150,18 +150,23 @@ class TypescriptRenderer {
     case PTimestamp => "number"
   }
 
-  def renderDocumentation(hints: List[Hint]): Lines = hints
-    .collectFold { case Documentation(string) =>
-      val lines = string.split(System.lineSeparator())
-      if (lines.nonEmpty) {
-        lines(0) = "/** " + lines(0)
-        val lastIndex = lines.length - 1
-        for (i <- 1 to lastIndex) {
-          lines(i) = " * " + lines(i)
-        }
-        lines(lastIndex) = lines(lastIndex) + " */"
+  def renderComments(string: String): Lines = {
+    val lines = string.split(System.lineSeparator())
+    if (lines.nonEmpty) {
+      lines(0) = "/** " + lines(0)
+      val lastIndex = lines.length - 1
+      for (i <- 1 to lastIndex) {
+        lines(i) = " * " + lines(i)
       }
-      Lines(lines.toList)
+      lines(lastIndex) = lines(lastIndex) + " */"
+    }
+    Lines(lines.toList)
+  }
+
+  def renderDocumentation(hints: List[Hint]): Lines = hints
+    .collectFold {
+      case Documentation(string) => renderComments(string)
+      case Deprecated(message)   => renderComments(s"@deprecated $message")
     }
 
 }
