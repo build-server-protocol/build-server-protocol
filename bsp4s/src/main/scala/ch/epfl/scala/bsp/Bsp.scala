@@ -78,6 +78,7 @@ final case class BuildServerCapabilities(
     buildTargetChangedProvider: Option[Boolean],
     jvmRunEnvironmentProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
+    cargoFeaturesProvider: Option[Boolean],
     canReload: Option[Boolean]
 )
 
@@ -133,6 +134,7 @@ object BuildTargetCapabilities {
 }
 
 object BuildTargetDataKind {
+  val Cargo = "cargo"
   val Cpp = "cpp"
   val Jvm = "jvm"
   val Python = "python"
@@ -201,6 +203,29 @@ object BuildTargetTag {
   val Manual = "manual"
   val NoIde = "no-ide"
   val Test = "test"
+}
+
+/** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata.
+  */
+final case class CargoBuildTarget(
+    edition: String,
+    required_features: Set[String]
+)
+
+object CargoBuildTarget {
+  implicit val codec: JsonValueCodec[CargoBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class CargoFeaturesStateResult(
+    packagesFeatures: List[PackageFeatures]
+)
+
+object CargoFeaturesStateResult {
+  implicit val codec: JsonValueCodec[CargoFeaturesStateResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 final case class CleanCacheParams(
@@ -785,6 +810,18 @@ object OutputPathsResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+final case class PackageFeatures(
+    packageId: String,
+    targets: List[BuildTargetIdentifier],
+    availableFeatures: Map[String, Set[String]],
+    enabledFeatures: Set[String]
+)
+
+object PackageFeatures {
+  implicit val codec: JsonValueCodec[PackageFeatures] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class Position(
     line: Int,
     character: Int
@@ -942,6 +979,14 @@ final case class RunResult(
 
 object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** The Rust edition.
+  */
+object RustEdition {
+  val E2015 = "2015"
+  val E2018 = "2018"
+  val E2021 = "2021"
 }
 
 /** `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing
@@ -1202,6 +1247,29 @@ final case class ScalacOptionsResult(
 
 object ScalacOptionsResult {
   implicit val codec: JsonValueCodec[ScalacOptionsResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class SetCargoFeaturesParams(
+    packageId: String,
+    features: Set[String]
+)
+
+object SetCargoFeaturesParams {
+  implicit val codec: JsonValueCodec[SetCargoFeaturesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class SetCargoFeaturesResult(
+    statusCode: StatusCode
+)
+
+object SetCargoFeaturesResult {
+  implicit val codec: JsonValueCodec[SetCargoFeaturesResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

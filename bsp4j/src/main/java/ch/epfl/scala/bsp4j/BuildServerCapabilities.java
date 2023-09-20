@@ -34,6 +34,8 @@ public class BuildServerCapabilities {
 
   private Boolean jvmTestEnvironmentProvider;
 
+  private Boolean cargoFeaturesProvider;
+
   private Boolean canReload;
 
   public BuildServerCapabilities() {
@@ -148,6 +150,15 @@ public class BuildServerCapabilities {
   }
 
   @Pure
+  public Boolean getCargoFeaturesProvider() {
+    return this.cargoFeaturesProvider;
+  }
+
+  public void setCargoFeaturesProvider(final Boolean cargoFeaturesProvider) {
+    this.cargoFeaturesProvider = cargoFeaturesProvider;
+  }
+
+  @Pure
   public Boolean getCanReload() {
     return this.canReload;
   }
@@ -172,6 +183,7 @@ public class BuildServerCapabilities {
     b.add("buildTargetChangedProvider", this.buildTargetChangedProvider);
     b.add("jvmRunEnvironmentProvider", this.jvmRunEnvironmentProvider);
     b.add("jvmTestEnvironmentProvider", this.jvmTestEnvironmentProvider);
+    b.add("cargoFeaturesProvider", this.cargoFeaturesProvider);
     b.add("canReload", this.canReload);
     return b.toString();
   }
@@ -246,6 +258,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.jvmTestEnvironmentProvider.equals(other.jvmTestEnvironmentProvider))
       return false;
+    if (this.cargoFeaturesProvider == null) {
+      if (other.cargoFeaturesProvider != null)
+        return false;
+    } else if (!this.cargoFeaturesProvider.equals(other.cargoFeaturesProvider))
+      return false;
     if (this.canReload == null) {
       if (other.canReload != null)
         return false;
@@ -271,6 +288,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
     result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
     result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
+    result = prime * result + ((this.cargoFeaturesProvider== null) ? 0 : this.cargoFeaturesProvider.hashCode());
     return prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
   }
 }

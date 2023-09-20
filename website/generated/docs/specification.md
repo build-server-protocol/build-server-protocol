@@ -286,6 +286,9 @@ export interface BuildTargetCapabilities {
 export type BuildTargetDataKind = string;
 
 export namespace BuildTargetDataKind {
+  /** `data` field must contain a CargoBuildTarget object. */
+  export const Cargo = "cargo";
+
   /** `data` field must contain a CppBuildTarget object. */
   export const Cpp = "cpp";
 
@@ -498,6 +501,10 @@ export interface BuildServerCapabilities {
    * necessary information required to launch a Java process for testing or
    * debugging. */
   jvmTestEnvironmentProvider?: boolean;
+
+  /** The server can respond to `workspace/cargoFeaturesState` and
+   * `setCargoFeatures` requests. In other words, supports Cargo Features extension. */
+  cargoFeaturesProvider?: boolean;
 
   /** Reloading the build state through workspace/reload is supported */
   canReload?: boolean;
