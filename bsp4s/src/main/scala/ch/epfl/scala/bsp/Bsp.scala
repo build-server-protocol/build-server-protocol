@@ -831,6 +831,18 @@ object Position {
   implicit val codec: JsonValueCodec[Position] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
+final case class PrintParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object PrintParams {
+  implicit val codec: JsonValueCodec[PrintParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
@@ -894,6 +906,18 @@ object Range {
   implicit val codec: JsonValueCodec[Range] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
+final case class ReadParams(
+    originId: String,
+    task: Option[TaskId],
+    message: String
+)
+
+object ReadParams {
+  implicit val codec: JsonValueCodec[ReadParams] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class ResourcesItem(
     target: BuildTargetIdentifier,
     resources: List[Uri]
@@ -926,6 +950,8 @@ final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )
@@ -1442,6 +1468,8 @@ final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )

@@ -25,6 +25,8 @@ service BuildClient {
         OnBuildTaskStart
         OnBuildTaskProgress
         OnBuildTaskFinish
+        OnRunPrintStdout
+        OnRunPrintStderr
     ]
 }
 
@@ -48,6 +50,7 @@ service BuildServer {
         BuildTargetTest
         DebugSessionStart
         BuildTargetCleanCache
+        OnRunReadStdin
     ]
 }
 
@@ -197,10 +200,6 @@ list URIs {
     member: URI
 }
 
-list Argv {
-    member: String
-}
-
 list Languages {
     member: String
 }
@@ -213,7 +212,7 @@ structure BspConnectionDetails {
 
     /// Arguments to pass to the BSP server.
     @required
-    argv: Argv
+    argv: Arguments
 
     /// The version of the BSP server.
     @required
@@ -1170,6 +1169,11 @@ list Arguments {
     member: String
 }
 
+map EnvironmentVariables {
+    key: String
+    value: String
+}
+
 @data
 document CompileResultData
 
@@ -1242,6 +1246,12 @@ structure TestParams {
 
     /// Optional arguments to the test execution engine.
     arguments: Arguments
+
+    /// Optional environment variables to set before running the tests.
+    environmentVariables: EnvironmentVariables
+
+    /// Optional working directory
+    workingDirectory: URI
 
     /// Language-specific metadata about for this test execution.
     /// See ScalaTestParams as an example.
@@ -1371,6 +1381,12 @@ structure RunParams {
     /// Optional arguments to the executed application.
     arguments: Arguments
 
+    /// Optional environment variables to set before running the application.
+    environmentVariables: EnvironmentVariables
+
+    /// Optional working directory
+    workingDirectory: URI
+
     /// Language-specific metadata for this execution.
     /// See ScalaMainClass as an example.
     data: RunParamsData
@@ -1416,4 +1432,60 @@ structure CleanCacheResult {
     /// Indicates whether the clean cache request was performed or not.
     @required
     cleaned: Boolean
+}
+
+@unstable
+structure PrintParams {
+    /// The id of the request.
+    @required
+    originId: Identifier
+
+    /// Relevant only for test tasks.
+    /// Allows to tell the client from which task the output is coming from.
+    task: TaskId
+
+    /// Message content can contain arbitrary bytes.
+    /// They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings)
+    @required
+    message: String
+}
+
+/// Notification sent from the server to the client when the target being run or tested
+/// prints something to stdout.
+@unstable
+@jsonNotification("run/printStdout")
+operation OnRunPrintStdout {
+    input: PrintParams
+}
+
+/// Notification sent from the server to the client when the target being run or tested
+/// prints something to stderr.
+@unstable
+@jsonNotification("run/printStderr")
+operation OnRunPrintStderr {
+    input: PrintParams
+}
+
+@unstable
+structure ReadParams {
+    /// The id of the request.
+    @required
+    originId: Identifier
+
+    /// Relevant only for test tasks.
+    /// Allows to tell the client from which task the output is coming from.
+    task: TaskId
+
+    /// Message content can contain arbitrary bytes.
+    /// They should be escaped as per [javascript encoding](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#using_special_characters_in_strings)
+    @required
+    message: String
+}
+
+/// Notification sent from the client to the server when the user wants to send
+/// input to the stdin of the running target.
+@unstable
+@jsonNotification("run/readStdin")
+operation OnRunReadStdin {
+    input: ReadParams
 }

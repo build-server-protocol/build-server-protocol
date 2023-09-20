@@ -40,10 +40,10 @@ libraryDependencies += "ch.epfl.scala" % "bsp4j" % "@LIBRARY_VERSION@"
 ```scala mdoc:invisible
 import java.io.OutputStream
 import java.io.InputStream
-def buildInputStream(): InputStream =  new InputStream {
+def buildInputStream(): InputStream = new InputStream {
   def read(): Int = -1
 }
-def buildOutputStream(): OutputStream =  new OutputStream {
+def buildOutputStream(): OutputStream = new OutputStream {
   def write(x: Int): Unit = ()
 }
 ```
@@ -74,6 +74,8 @@ class MyClient extends BuildClient {
   def onBuildTaskFinish(params: TaskFinishParams): Unit = ???
   def onBuildTaskProgress(params: TaskProgressParams): Unit = ???
   def onBuildTaskStart(params: TaskStartParams): Unit = ???
+  def onRunPrintStdout(params: PrintParams): Unit = ???
+  def onRunPrintStderr(params: PrintParams): Unit = ???
 }
 val localClient = new MyClient()
 ```
@@ -180,6 +182,7 @@ class MyBuildServer extends BuildServer {
   def onBuildInitialized(): Unit = ???
   def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = ???
   def workspaceReload(): CompletableFuture[Object] = ???
+  def onRunReadStdin(params: ReadParams): Unit = ???
 }
 val localServer = new MyBuildServer()
 ```

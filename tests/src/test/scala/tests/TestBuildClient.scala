@@ -15,12 +15,20 @@ class TestBuildClient extends BuildClient {
   val taskStarts: ListBuffer[TaskStartParams] = ListBuffer.empty
   val taskProgresses: ListBuffer[TaskProgressParams] = ListBuffer.empty
   val taskFinishes: ListBuffer[TaskFinishParams] = ListBuffer.empty
+  val stdOut: ListBuffer[PrintParams] = ListBuffer.empty
+  val stdErr: ListBuffer[PrintParams] = ListBuffer.empty
 
   def reset(): Unit = {
     showMessages.clear()
     logMessages.clear()
     diagnostics.clear()
     compileReports.clear()
+    testReports.clear()
+    taskStarts.clear()
+    taskProgresses.clear()
+    taskFinishes.clear()
+    stdOut.clear()
+    stdErr.clear()
   }
   override def onBuildShowMessage(params: ShowMessageParams): Unit = {
     showMessages += params
@@ -59,4 +67,10 @@ class TestBuildClient extends BuildClient {
       case _ =>
     }
   }
+
+  override def onRunPrintStdout(params: PrintParams): Unit =
+    stdOut += params
+
+  override def onRunPrintStderr(params: PrintParams): Unit =
+    stdErr += params
 }
