@@ -48,3 +48,7 @@ _Past Maintainers_
   between multiple reports for the same target.
   - Migration: Use the `originId` field in `TaskFinishParams` instead of `CompileReport`/`TestReport`
     to identify the report.
+- Add optional support for environment variables and working directory parameters in `buildTarget/run`
+  and `buildTarget/test` requests.
+  Mark arguments and environment variables lists in ScalaMainClass and ScalaTestSuites deprecated as
+  they are replaced by the parameters in the base request.

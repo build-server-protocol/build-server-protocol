@@ -40,10 +40,10 @@ libraryDependencies += "ch.epfl.scala" % "bsp4j" % "@LIBRARY_VERSION@"
 ```scala mdoc:invisible
 import java.io.OutputStream
 import java.io.InputStream
-def buildInputStream(): InputStream =  new InputStream {
+def buildInputStream(): InputStream = new InputStream {
   def read(): Int = -1
 }
-def buildOutputStream(): OutputStream =  new OutputStream {
+def buildOutputStream(): OutputStream = new OutputStream {
   def write(x: Int): Unit = ()
 }
 ```

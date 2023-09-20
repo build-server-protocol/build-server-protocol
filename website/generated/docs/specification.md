@@ -1037,6 +1037,12 @@ export interface RunParams {
   /** Optional arguments to the executed application. */
   arguments?: string[];
 
+  /** Optional environment variables to set before running the application. */
+  environmentVariables?: Map<string, string>;
+
+  /** Optional working directory */
+  workingDirectory?: URI;
+
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
   dataKind?: RunParamsDataKind;
 
@@ -1098,6 +1104,12 @@ export interface TestParams {
 
   /** Optional arguments to the test execution engine. */
   arguments?: string[];
+
+  /** Optional environment variables to set before running the tests. */
+  environmentVariables?: Map<string, string>;
+
+  /** Optional working directory */
+  workingDirectory?: URI;
 
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
   dataKind?: TestParamsDataKind;

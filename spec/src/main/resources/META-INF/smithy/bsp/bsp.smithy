@@ -200,10 +200,6 @@ list URIs {
     member: URI
 }
 
-list Argv {
-    member: String
-}
-
 list Languages {
     member: String
 }
@@ -216,7 +212,7 @@ structure BspConnectionDetails {
 
     /// Arguments to pass to the BSP server.
     @required
-    argv: Argv
+    argv: Arguments
 
     /// The version of the BSP server.
     @required
@@ -1170,6 +1166,11 @@ list Arguments {
     member: String
 }
 
+map EnvironmentVariables {
+    key: String
+    value: String
+}
+
 @data
 document CompileResultData
 
@@ -1242,6 +1243,12 @@ structure TestParams {
 
     /// Optional arguments to the test execution engine.
     arguments: Arguments
+
+    /// Optional environment variables to set before running the tests.
+    environmentVariables: EnvironmentVariables
+
+    /// Optional working directory
+    workingDirectory: URI
 
     /// Language-specific metadata about for this test execution.
     /// See ScalaTestParams as an example.
@@ -1370,6 +1377,12 @@ structure RunParams {
 
     /// Optional arguments to the executed application.
     arguments: Arguments
+
+    /// Optional environment variables to set before running the application.
+    environmentVariables: EnvironmentVariables
+
+    /// Optional working directory
+    workingDirectory: URI
 
     /// Language-specific metadata for this execution.
     /// See ScalaMainClass as an example.

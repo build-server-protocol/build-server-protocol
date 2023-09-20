@@ -913,6 +913,8 @@ final case class RunParams(
     target: BuildTargetIdentifier,
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )
@@ -1398,6 +1400,8 @@ final case class TestParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    environmentVariables: Option[Map[String, String]],
+    workingDirectory: Option[Uri],
     dataKind: Option[String],
     data: Option[RawJson]
 )
