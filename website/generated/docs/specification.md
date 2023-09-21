@@ -1893,8 +1893,8 @@ export interface CompileReport {
   /** The build target that was compiled. */
   target: BuildTargetIdentifier;
 
-  /** An optional request id to know the origin of this report. */
-  /** @deprecated Use the field in TaskFinishParams instead */
+  /** An optional request id to know the origin of this report.
+   * @deprecated Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The total number of reported errors compiling this target. */

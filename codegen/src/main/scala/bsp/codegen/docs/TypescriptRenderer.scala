@@ -1,7 +1,7 @@
 package bsp.codegen.docs
 
 import bsp.codegen._
-import bsp.codegen.dsl._
+import bsp.codegen.dsl.{lines, _}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Hint.{Deprecated, Documentation}
@@ -150,8 +150,13 @@ class TypescriptRenderer {
     case PTimestamp => "number"
   }
 
-  def renderComments(string: String): Lines = {
-    val lines = string.split(System.lineSeparator())
+  def renderDocumentation(hints: List[Hint]): Lines = {
+    val lines = hints.flatMap {
+      case Documentation(string) => string.split(System.lineSeparator())
+      case Deprecated(message)   => Array(s"@deprecated $message")
+      case _                     => Array.empty[String]
+    }.toArray
+
     if (lines.nonEmpty) {
       lines(0) = "/** " + lines(0)
       val lastIndex = lines.length - 1
@@ -162,11 +167,4 @@ class TypescriptRenderer {
     }
     Lines(lines.toList)
   }
-
-  def renderDocumentation(hints: List[Hint]): Lines = hints
-    .collectFold {
-      case Documentation(string) => renderComments(string)
-      case Deprecated(message)   => renderComments(s"@deprecated $message")
-    }
-
 }
