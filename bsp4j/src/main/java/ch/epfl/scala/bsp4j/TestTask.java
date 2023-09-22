@@ -5,6 +5,12 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * The beginning of a testing unit may be signalled to the client with a
+ * `build/taskStart` notification. When the testing unit is a build target, the
+ * notification's `dataKind` field must be `test-task` and the `data` field must
+ * include a `TestTask` object.
+ */
 @SuppressWarnings("all")
 public class TestTask {
   @NonNull

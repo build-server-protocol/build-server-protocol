@@ -3,6 +3,9 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
+/**
+ * Included in notifications of tasks or requests to signal the completion state.
+ */
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum StatusCode {
 

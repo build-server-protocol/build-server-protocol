@@ -8,6 +8,19 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
+ * 
+ * * sbt: a build target is a combined project + config. Example:
+ * * a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
+ * * a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
+ * * a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+ * * a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
+ * * Pants: a pants target corresponds one-to-one with a BuildTarget
+ * * Bazel: a bazel target corresponds one-to-one with a BuildTarget
+ * 
+ * The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
+ */
 @SuppressWarnings("all")
 public class BuildTarget {
   @NonNull

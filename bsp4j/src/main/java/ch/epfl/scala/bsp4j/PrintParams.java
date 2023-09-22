@@ -6,31 +6,40 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * Represents a related message and source code location for a diagnostic.
- * This should be used to point to code locations that cause or are related to
- * a diagnostics, e.g when duplicating a symbol in a scope.
+ * **Unstable** (may change in future versions)
  */
 @SuppressWarnings("all")
-public class DiagnosticRelatedInformation {
+public class PrintParams {
   @NonNull
-  private Location location;
+  private String originId;
+
+  private TaskId task;
 
   @NonNull
   private String message;
 
-  public DiagnosticRelatedInformation(@NonNull final Location location, @NonNull final String message) {
-    this.location = location;
+  public PrintParams(@NonNull final String originId, @NonNull final String message) {
+    this.originId = originId;
     this.message = message;
   }
 
   @Pure
   @NonNull
-  public Location getLocation() {
-    return this.location;
+  public String getOriginId() {
+    return this.originId;
   }
 
-  public void setLocation(@NonNull final Location location) {
-    this.location = Preconditions.checkNotNull(location, "location");
+  public void setOriginId(@NonNull final String originId) {
+    this.originId = Preconditions.checkNotNull(originId, "originId");
+  }
+
+  @Pure
+  public TaskId getTask() {
+    return this.task;
+  }
+
+  public void setTask(final TaskId task) {
+    this.task = task;
   }
 
   @Pure
@@ -47,7 +56,8 @@ public class DiagnosticRelatedInformation {
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
-    b.add("location", this.location);
+    b.add("originId", this.originId);
+    b.add("task", this.task);
     b.add("message", this.message);
     return b.toString();
   }
@@ -61,11 +71,16 @@ public class DiagnosticRelatedInformation {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    DiagnosticRelatedInformation other = (DiagnosticRelatedInformation) obj;
-    if (this.location == null) {
-      if (other.location != null)
+    PrintParams other = (PrintParams) obj;
+    if (this.originId == null) {
+      if (other.originId != null)
         return false;
-    } else if (!this.location.equals(other.location))
+    } else if (!this.originId.equals(other.originId))
+      return false;
+    if (this.task == null) {
+      if (other.task != null)
+        return false;
+    } else if (!this.task.equals(other.task))
       return false;
     if (this.message == null) {
       if (other.message != null)
@@ -80,7 +95,8 @@ public class DiagnosticRelatedInformation {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.location== null) ? 0 : this.location.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.task== null) ? 0 : this.task.hashCode());
     return prime * result + ((this.message== null) ? 0 : this.message.hashCode());
   }
 }

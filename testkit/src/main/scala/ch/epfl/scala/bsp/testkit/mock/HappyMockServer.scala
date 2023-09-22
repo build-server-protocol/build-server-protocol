@@ -449,11 +449,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           )
         )
       else {
-        val origin = List(params.getOriginId).asJava
+        val origin = params.getOriginId
         val compile1Id = new TaskId("compile1id")
-        compile1Id.setParents(origin)
 
-        compileStart(compile1Id, "compile started: " + targetId1.getUri, targetId1)
+        compileStart(compile1Id, Some(origin), "compile started: " + targetId1.getUri, targetId1)
 
         val subtaskParents = List(compile1Id.getId).asJava
         logMessage("spawning subtasks", task = Some(compile1Id), origin = Some(params.getOriginId))
@@ -463,9 +462,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         subtask2Id.setParents(subtaskParents)
         val subtask3Id = new TaskId("subtask3id")
         subtask3Id.setParents(subtaskParents)
-        taskStart(subtask1Id, "resolving widgets", None, None)
-        taskStart(subtask2Id, "memoizing datapoints", None, None)
-        taskStart(subtask3Id, "unionizing beams", None, None)
+        taskStart(subtask1Id, Some(origin), "resolving widgets", None, None)
+        taskStart(subtask2Id, Some(origin), "memoizing datapoints", None, None)
+        taskStart(subtask3Id, Some(origin), "unionizing beams", None, None)
 
         val compileme = new URI(targetId1.getUri).resolve("compileme.scala")
         val doc = new TextDocumentIdentifier(compileme.toString)
@@ -497,19 +496,25 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         )
         publishDiagnostics(doc, targetId1, List(infoMessage), Option(params.getOriginId))
 
-        taskFinish(subtask1Id, "targets resolved", StatusCode.OK, None, None)
-        taskFinish(subtask2Id, "datapoints forgotten", StatusCode.ERROR, None, None)
-        taskFinish(subtask3Id, "beams are classless", StatusCode.CANCELLED, None, None)
+        taskFinish(subtask1Id, Some(origin), "targets resolved", StatusCode.OK, None, None)
+        taskFinish(subtask2Id, Some(origin), "datapoints forgotten", StatusCode.ERROR, None, None)
+        taskFinish(
+          subtask3Id,
+          Some(origin),
+          "beams are classless",
+          StatusCode.CANCELLED,
+          None,
+          None
+        )
         showMessage("subtasks done", task = Some(compile1Id), origin = Option(params.getOriginId))
 
-        compileReport(compile1Id, "compile failed", targetId1, StatusCode.ERROR)
+        compileReport(compile1Id, Some(origin), "compile failed", targetId1, StatusCode.ERROR)
 
         params.getTargets.asScala.foreach { target =>
           val compileId = new TaskId(UUID.randomUUID().toString)
-          compileId.setParents(origin)
-          compileStart(compileId, "compile started: " + target.getUri, target)
-          taskProgress(compileId, "compiling some files", 100, 23, None, None)
-          compileReport(compileId, "compile complete", target, StatusCode.OK)
+          compileStart(compileId, Some(origin), "compile started: " + target.getUri, target)
+          taskProgress(compileId, Some(origin), "compiling some files", 100, 23, None, None)
+          compileReport(compileId, Some(origin), "compile complete", target, StatusCode.OK)
         }
 
         val result = new CompileResult(StatusCode.OK)
@@ -628,6 +633,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
+
+  override def onRunReadStdin(params: ReadParams): Unit = {}
 
   private def handleRequest[T](
       f: => Either[ResponseError, T]

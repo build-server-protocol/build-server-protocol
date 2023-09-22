@@ -6,6 +6,9 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * A workspace edit represents changes to many resources managed in the workspace.
+ */
 @SuppressWarnings("all")
 public class ScalaWorkspaceEdit {
   @NonNull

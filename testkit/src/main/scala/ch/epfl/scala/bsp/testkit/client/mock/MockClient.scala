@@ -23,6 +23,10 @@ class MockClient extends BuildClient {
   def getPublishDiagnostics: List[PublishDiagnosticsParams] = publishDiagnostics.toList
   private val didChangeBuildTarget = new mutable.ListBuffer[DidChangeBuildTarget]
   def getDidChangeBuildTarget: List[DidChangeBuildTarget] = didChangeBuildTarget.toList
+  private val stdOut = new mutable.ListBuffer[PrintParams]
+  def getStdOut: List[PrintParams] = stdOut.toList
+  private val stdErr = new mutable.ListBuffer[PrintParams]
+  def getStdErr: List[PrintParams] = stdErr.toList
 
   private val interval = 15.milliseconds
 
@@ -41,6 +45,12 @@ class MockClient extends BuildClient {
 
   override def onBuildTargetDidChange(params: DidChangeBuildTarget): Unit =
     didChangeBuildTarget += params
+
+  override def onRunPrintStdout(params: PrintParams): Unit =
+    stdOut += params
+
+  override def onRunPrintStderr(params: PrintParams): Unit =
+    stdErr += params
 
   def poll[T](notifications: List[T], duration: Duration, condition: T => Boolean): Future[T] = {
     val promise = Promise[T]()
