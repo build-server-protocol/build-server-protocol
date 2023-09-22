@@ -4,7 +4,7 @@ import bsp.codegen._
 import bsp.codegen.dsl.{lines, _}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.ir.Hint.{Deprecated, Documentation}
+import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
@@ -153,8 +153,8 @@ class TypescriptRenderer {
   def renderDocumentation(hints: List[Hint]): Lines = {
     val lines = hints.flatMap {
       case Documentation(string) => string.split(System.lineSeparator())
-      case Deprecated(message)   => Array(s"@deprecated $message")
-      case _                     => Array.empty[String]
+      case Deprecated(message)   => Array(s"Deprecated: $message")
+      case Unstable              => Array("Unstable: may change in the future")
     }.toArray
 
     if (lines.nonEmpty) {

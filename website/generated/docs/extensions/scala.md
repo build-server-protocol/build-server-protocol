@@ -190,14 +190,14 @@ export interface ScalaMainClass {
   className: string;
 
   /** The user arguments to the main entrypoint.
-   * @deprecated Use `buildTarget/run` params instead */
+   * Deprecated: Use `buildTarget/run` params instead */
   arguments: string[];
 
   /** The jvm options for the application. */
   jvmOptions: string[];
 
   /** The environment variables for the application.
-   * @deprecated Use `buildTarget/run` params instead */
+   * Deprecated: Use `buildTarget/run` params instead */
   environmentVariables?: string[];
 }
 ```
@@ -403,7 +403,7 @@ export interface ScalaTestSuites {
   jvmOptions: string[];
 
   /** Enviroment variables should be an array of strings in format KEY=VALUE
-   * @deprecated Use `buildTarget/test` params instead */
+   * Deprecated: Use `buildTarget/test` params instead */
   environmentVariables: string[];
 }
 ```
