@@ -9,7 +9,7 @@ protocol.
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## BSP Server remote interface
 
