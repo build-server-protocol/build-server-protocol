@@ -103,7 +103,7 @@ structure RustPackage {
     /// `targets` should be the subset of `allTargets`.
     @required
     allTargets: RustTargets
-    /// Set of features defined for the package.
+    /// Set of features defined for the package (including optional dependencies).
     /// Each feature maps to an array of features or dependencies it enables.
     /// The entry named "default" defines which features are enabled by default.
     @required
@@ -196,21 +196,6 @@ intEnum RustTargetKind {
     UNKNOWN = 7
 }
 
-// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
-@set
-list Features {
-    member: Feature
-}
-
-// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
-string Feature
-
-// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
-map FeatureDependencyGraph {
-    key: Feature
-    value: Features
-}
-
 map RustCfgOptions {
     key: String
     value: RustCfgValues
@@ -218,6 +203,28 @@ map RustCfgOptions {
 
 list RustCfgValues {
     member: String
+}
+
+string Feature
+
+@set
+list Features {
+    member: Feature
+}
+
+/// The feature dependency graph is a mapping between
+/// feature and the features it turns on
+map FeatureDependencyGraph {
+    key: Feature
+    value: Features
+}
+
+/// The Rust edition.
+@enumKind("open")
+enum RustEdition {
+    E2015 = "2015"
+    E2018 = "2018"
+    E2021 = "2021"
 }
 
 map RustRawDependencies {
@@ -294,14 +301,6 @@ enum RustDepKind {
     DEV = "dev"
     /// For [build-dependencies].
     BUILD = "build"
-}
-
-// TODO to be deleted once "Add cargo extension" PR is merged that defines this enum
-@enumKind("open")
-enum RustEdition {
-    E2015 = "2015"
-    E2018 = "2018"
-    E2021 = "2021"
 }
 
 @enumKind("open")

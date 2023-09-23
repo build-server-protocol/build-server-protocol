@@ -982,6 +982,9 @@ object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** This structure is embedded in the `data?: BuildTargetData` field, when the `dataKind` field
+  * contains "rust".
+  */
 final case class RustBuildTarget(
     name: String,
     crateRootUrl: Uri,
@@ -997,6 +1000,9 @@ object RustBuildTarget {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for `lib` and `example`
+  * target kinds. For other target kinds `bin` crate type is listed.
+  */
 sealed abstract class RustCrateType(val value: Int)
 object RustCrateType {
   case object Bin extends RustCrateType(1)
@@ -1062,6 +1068,18 @@ object RustEdition {
   val E2021 = "2021"
 }
 
+/** A `crate` is the smallest amount of code that the Rust compiler considers at a time. It can come
+  * in one of two forms: a binary crate or a library crate. `Binary crates` are programs you can
+  * compile to an executable that you can run, such as a command-line program or a server. Each must
+  * have a function called main that defines what happens when the executable runs. `Library crates`
+  * don’t have a main function, and they don’t compile to an executable. Instead, they define
+  * functionality intended to be shared with multiple projects.
+  *
+  * A `package` is a bundle of one or more crates that provides a set of functionality. It contains
+  * a Cargo.toml file that describes how to build those crates. A package can contain many binary
+  * crates, but at most only one library crate. However, it must contain at least one crate, whether
+  * that’s a library or binary crate.
+  */
 final case class RustPackage(
     id: String,
     rootUrl: Uri,
@@ -1144,6 +1162,8 @@ object RustToolchainItem {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class RustToolchainParams(
     targets: List[BuildTargetIdentifier]
 )
@@ -1153,6 +1173,8 @@ object RustToolchainParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class RustToolchainResult(
     toolchains: List[RustToolchainItem]
 )
@@ -1162,6 +1184,8 @@ object RustToolchainResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class RustWorkspaceParams(
     targets: List[BuildTargetIdentifier]
 )
@@ -1171,6 +1195,8 @@ object RustWorkspaceParams {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** **Unstable** (may change in future versions)
+  */
 final case class RustWorkspaceResult(
     packages: List[RustPackage],
     rawDependencies: Map[String, List[RustRawDependency]],

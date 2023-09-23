@@ -7,6 +7,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * This structure is embedded in the `data?: BuildTargetData` field, when the
+ * `dataKind` field contains "rust".
+ */
 @SuppressWarnings("all")
 public class RustBuildTarget {
   @NonNull

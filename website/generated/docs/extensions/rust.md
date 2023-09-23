@@ -15,6 +15,8 @@ protocol.
 
 ### RustWorkspace: request
 
+**Unstable** (may change in future versions)
+
 The Rust workspace request is sent from the client to the server to query for
 the information about project's workspace for the given list of build targets.
 
@@ -29,6 +31,8 @@ The request may take a long time, as it may require building a project to some e
 
 #### RustWorkspaceParams
 
+**Unstable** (may change in future versions)
+
 ```ts
 export interface RustWorkspaceParams {
   /** A sequence of build targets for workspace resolution. */
@@ -37,6 +41,8 @@ export interface RustWorkspaceParams {
 ```
 
 #### RustWorkspaceResult
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface RustWorkspaceResult {
@@ -101,7 +107,7 @@ export interface RustPackage {
    * `targets` should be the subset of `allTargets`. */
   allTargets: RustBuildTarget[];
 
-  /** Set of features defined for the package.
+  /** Set of features defined for the package (including optional dependencies).
    * Each feature maps to an array of features or dependencies it enables.
    * The entry named "default" defines which features are enabled by default. */
   features: Map<Feature, Set<Feature>>;
@@ -152,6 +158,8 @@ export namespace RustPackageOrigin {
 ```
 
 #### RustEdition
+
+The Rust edition.
 
 ```ts
 export type RustEdition = string;
@@ -332,6 +340,8 @@ export interface RustDepKindInfo {
 
 ### RustToolchain: request
 
+**Unstable** (may change in future versions)
+
 The Rust toolchain request is sent from the client to the server to query for
 the information about project's toolchain for the given list of build targets.
 
@@ -343,6 +353,8 @@ The request is essential to connect and work with `intellij-rust` plugin.
 
 #### RustToolchainParams
 
+**Unstable** (may change in future versions)
+
 ```ts
 export interface RustToolchainParams {
   /** A sequence of build targets for toolchain resolution. */
@@ -351,6 +363,8 @@ export interface RustToolchainParams {
 ```
 
 #### RustToolchainResult
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface RustToolchainResult {

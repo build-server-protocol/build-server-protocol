@@ -3,6 +3,10 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
+/**
+ * Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for
+ * `lib` and `example` target kinds. For other target kinds `bin` crate type is listed.
+ */
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum RustCrateType {
 
