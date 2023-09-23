@@ -49,11 +49,13 @@ export interface RustWorkspaceResult {
   /** Packages of given targets. */
   packages: RustPackage[];
 
-  /** Dependencies as listed in the package `Cargo.toml`,
+  /** Dependencies in `cargo metadata` as listed in the package `Cargo.toml`,
    * without package resolution or any additional data. */
   rawDependencies: Map<string, RustRawDependency[]>;
 
-  /** Resolved dependencies of the package. Handles renamed dependencies. */
+  /** Resolved dependencies of the package. Handles renamed dependencies.
+   * Correspond to dependencies from resolved dependency graph from `cargo metadata` that shows
+   * the actual dependencies that are being used in the build. */
   dependencies: Map<string, RustDependency[]>;
 
   /** A sequence of build targets taken into consideration during build process. */
@@ -96,7 +98,8 @@ export interface RustPackage {
   /** Code edition of the package. */
   edition: RustEdition;
 
-  /** The source ID of the dependency, `null` for the root package and path dependencies. */
+  /** The source ID of the dependency, for example: "registry+https://github.com/rust-lang/crates.io-index".
+   * `null` for the root package and path dependencies. */
   source?: string;
 
   /** Corresponds to source files which can be compiled into a crate from this package.
@@ -133,7 +136,7 @@ export interface RustPackage {
   /** File path to compiled output of a procedural macro crate.
    * Procedural macros are macros that generate code at compile time.
    * Contains files with file extensions: `.dll`, `.so` or `.dylib`. */
-  procMacroArtifact?: string;
+  procMacroArtifact?: URI;
 }
 ```
 
@@ -175,8 +178,8 @@ export namespace RustEdition {
 
 #### RustBuildTarget
 
-This structure is embedded in the `data?: BuildTargetData` field, when the
-`dataKind` field contains "rust".
+`RustBuildTarget` is a basic data structure that contains rust-specific
+metadata for compiling a target containing Rust sources.
 
 ```ts
 export interface RustBuildTarget {
@@ -270,7 +273,10 @@ export interface RustRawDependency {
   /** The name of the dependency. */
   name: string;
 
-  /** Name to which this dependency is renamed when declared in Cargo.toml. */
+  /** Name to which this dependency is renamed when declared in Cargo.toml.
+   * This field allows to specify an alternative name for a dependency to use in a code,
+   * regardless of how it’s published (helpful for example if multiple dependencies
+   * have conflicting names). */
   rename?: string;
 
   /** The dependency kind. */

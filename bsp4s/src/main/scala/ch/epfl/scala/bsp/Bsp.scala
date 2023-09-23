@@ -982,8 +982,8 @@ object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-/** This structure is embedded in the `data?: BuildTargetData` field, when the `dataKind` field
-  * contains "rust".
+/** `RustBuildTarget` is a basic data structure that contains rust-specific metadata for compiling a
+  * target containing Rust sources.
   */
 final case class RustBuildTarget(
     name: String,
@@ -1095,7 +1095,7 @@ final case class RustPackage(
     cfgOptions: Option[Map[String, List[String]]],
     env: Option[Map[String, String]],
     outDirUrl: Option[Uri],
-    procMacroArtifact: Option[String]
+    procMacroArtifact: Option[Uri]
 )
 
 object RustPackage {

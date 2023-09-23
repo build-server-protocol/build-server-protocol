@@ -8,8 +8,8 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * This structure is embedded in the `data?: BuildTargetData` field, when the
- * `dataKind` field contains "rust".
+ * `RustBuildTarget` is a basic data structure that contains rust-specific
+ * metadata for compiling a target containing Rust sources.
  */
 @SuppressWarnings("all")
 public class RustBuildTarget {

@@ -46,11 +46,13 @@ structure RustWorkspaceResult {
     /// Packages of given targets.
     @required
     packages: RustPackages
-    /// Dependencies as listed in the package `Cargo.toml`,
+    /// Dependencies in `cargo metadata` as listed in the package `Cargo.toml`,
     /// without package resolution or any additional data.
     @required
     rawDependencies: RustRawDependencies
     /// Resolved dependencies of the package. Handles renamed dependencies.
+    /// Correspond to dependencies from resolved dependency graph from `cargo metadata` that shows
+    /// the actual dependencies that are being used in the build.
     @required
     dependencies: RustDependencies
     /// A sequence of build targets taken into consideration during build process.
@@ -93,7 +95,9 @@ structure RustPackage {
     /// Code edition of the package.
     @required
     edition: RustEdition
-    /// The source ID of the dependency, `null` for the root package and path dependencies.
+    /// The source ID of the dependency, for example:
+    /// "registry+https://github.com/rust-lang/crates.io-index".
+    /// `null` for the root package and path dependencies.
     source: String
     /// Corresponds to source files which can be compiled into a crate from this package.
     /// Contains only resolved targets without conflicts.
@@ -126,15 +130,15 @@ structure RustPackage {
     /// File path to compiled output of a procedural macro crate.
     /// Procedural macros are macros that generate code at compile time.
     /// Contains files with file extensions: `.dll`, `.so` or `.dylib`.
-    procMacroArtifact: String
+    procMacroArtifact: URI
 }
 
 list RustTargets {
     member: RustBuildTarget
 }
 
-/// This structure is embedded in the `data?: BuildTargetData` field, when the
-/// `dataKind` field contains "rust".
+/// `RustBuildTarget` is a basic data structure that contains rust-specific
+/// metadata for compiling a target containing Rust sources.
 @dataKind(kind: "rust", extends: [BuildTargetData])
 structure RustBuildTarget {
     /// The name of the target.
@@ -242,6 +246,9 @@ structure RustRawDependency {
     @required
     name: String
     /// Name to which this dependency is renamed when declared in Cargo.toml.
+    /// This field allows to specify an alternative name for a dependency to use in a code,
+    /// regardless of how it’s published (helpful for example if multiple dependencies
+    /// have conflicting names).
     rename: String
     /// The dependency kind.
     kind: RustDepKind
