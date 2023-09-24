@@ -230,8 +230,9 @@ enum RustEdition {
     E2021 = "2021"
 }
 
+/// The RustRawDependencies is a mapping between
+/// package id and the package's raw dependencies info.
 map RustRawDependencies {
-    /// Package id
     key: String
     value: RustRawDependenciesInfo
 }
@@ -264,8 +265,10 @@ structure RustRawDependency {
     features: Features
 }
 
+
+/// The RustDependencies is a mapping between
+/// package id and the package's dependencies info.
 map RustDependencies {
-    /// Package id
     key: String
     value: RustDependenciesInfo
 }
