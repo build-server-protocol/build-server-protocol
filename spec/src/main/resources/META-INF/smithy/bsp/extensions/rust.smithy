@@ -16,7 +16,6 @@ use traits#set
 service RustBuildServer {
     operations: [
         RustWorkspace
-        RustToolchain
     ]
 }
 
@@ -320,62 +319,4 @@ enum RustPackageOrigin {
     DEPENDENCY = "dependency"
     /// External dependency of [STDLIB] or other [STDLIB_DEPENDENCY] package.
     STDLIB_DEPENDENCY = "stdlib-dependency"
-}
-
-/// The Rust toolchain request is sent from the client to the server to query for
-/// the information about project's toolchain for the given list of build targets.
-///
-/// The request is essential to connect and work with `intellij-rust` plugin.
-@unstable
-@jsonRequest("buildTarget/rustToolchain")
-operation RustToolchain {
-    input: RustToolchainParams
-    output: RustToolchainResult
-}
-
-@unstable
-structure RustToolchainParams {
-    /// A sequence of build targets for toolchain resolution.
-    @required
-    targets: BuildTargetIdentifiers
-}
-
-@unstable
-structure RustToolchainResult {
-    /// A sequence of Rust toolchains.
-    @required
-    toolchains: RustToolchainItems
-}
-
-list RustToolchainItems {
-    member: RustToolchainItem
-}
-
-structure RustToolchainItem {
-    /// Additional information about Rust toolchain.
-    /// Obtained from `rustc`.
-    rustStdLib: RustcInfo
-    /// Path to Cargo executable.
-    @required
-    cargoBinPath: URI
-    /// Location of the source code of procedural macros in the Rust toolchain.
-    @required
-    procMacroSrvPath: URI
-}
-
-structure RustcInfo {
-    /// Root directory where the Rust compiler looks for standard libraries and other
-    /// essential components when building Rust projects.
-    @required
-    sysrootPath: URI
-    /// Source code for the Rust standard library.
-    @required
-    srcSysrootPath: URI
-    /// `rustc` SemVer (Semantic Versioning) version.
-    @required
-    version: String
-    /// Target architecture and operating system of the Rust compiler.
-    /// Used by [`intellij-rust`] for checking if given toolchain is supported.
-    @required
-    host: String
 }

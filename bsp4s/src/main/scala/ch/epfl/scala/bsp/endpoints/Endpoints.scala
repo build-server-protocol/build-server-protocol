@@ -293,15 +293,6 @@ trait BuildTarget {
   object rustWorkspace
       extends Endpoint[RustWorkspaceParams, RustWorkspaceResult]("buildTarget/rustWorkspace")
 
-  /** **Unstable** (may change in future versions) The Rust toolchain request is sent from the
-    * client to the server to query for the information about project's toolchain for the given list
-    * of build targets.
-    *
-    * The request is essential to connect and work with `intellij-rust` plugin.
-    */
-  object rustToolchain
-      extends Endpoint[RustToolchainParams, RustToolchainResult]("buildTarget/rustToolchain")
-
   /** The build target scalac options request is sent from the client to the server to query for the
     * list of compiler options necessary to compile in a given list of targets.
     */

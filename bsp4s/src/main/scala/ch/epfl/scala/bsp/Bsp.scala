@@ -1151,38 +1151,6 @@ object RustTargetKind {
     }
   }
 }
-final case class RustToolchainItem(
-    rustStdLib: Option[RustcInfo],
-    cargoBinPath: Uri,
-    procMacroSrvPath: Uri
-)
-
-object RustToolchainItem {
-  implicit val codec: JsonValueCodec[RustToolchainItem] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-/** **Unstable** (may change in future versions)
-  */
-final case class RustToolchainParams(
-    targets: List[BuildTargetIdentifier]
-)
-
-object RustToolchainParams {
-  implicit val codec: JsonValueCodec[RustToolchainParams] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-/** **Unstable** (may change in future versions)
-  */
-final case class RustToolchainResult(
-    toolchains: List[RustToolchainItem]
-)
-
-object RustToolchainResult {
-  implicit val codec: JsonValueCodec[RustToolchainResult] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
 
 /** **Unstable** (may change in future versions)
   */
@@ -1207,17 +1175,6 @@ final case class RustWorkspaceResult(
 object RustWorkspaceResult {
   implicit val codec: JsonValueCodec[RustWorkspaceResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-final case class RustcInfo(
-    sysrootPath: Uri,
-    srcSysrootPath: Uri,
-    version: String,
-    host: String
-)
-
-object RustcInfo {
-  implicit val codec: JsonValueCodec[RustcInfo] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 /** `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing

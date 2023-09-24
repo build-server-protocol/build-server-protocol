@@ -98,7 +98,8 @@ export interface RustPackage {
   /** Code edition of the package. */
   edition: RustEdition;
 
-  /** The source ID of the dependency, for example: "registry+https://github.com/rust-lang/crates.io-index".
+  /** The source ID of the dependency, for example:
+   * "registry+https://github.com/rust-lang/crates.io-index".
    * `null` for the root package and path dependencies. */
   source?: string;
 
@@ -341,77 +342,6 @@ export interface RustDepKindInfo {
 
   /** The target platform for the dependency. */
   target?: string;
-}
-```
-
-### RustToolchain: request
-
-**Unstable** (may change in future versions)
-
-The Rust toolchain request is sent from the client to the server to query for
-the information about project's toolchain for the given list of build targets.
-
-The request is essential to connect and work with `intellij-rust` plugin.
-
-- method: `buildTarget/rustToolchain`
-- params: `RustToolchainParams`
-- result: `RustToolchainResult`
-
-#### RustToolchainParams
-
-**Unstable** (may change in future versions)
-
-```ts
-export interface RustToolchainParams {
-  /** A sequence of build targets for toolchain resolution. */
-  targets: BuildTargetIdentifier[];
-}
-```
-
-#### RustToolchainResult
-
-**Unstable** (may change in future versions)
-
-```ts
-export interface RustToolchainResult {
-  /** A sequence of Rust toolchains. */
-  toolchains: RustToolchainItem[];
-}
-```
-
-#### RustToolchainItem
-
-```ts
-export interface RustToolchainItem {
-  /** Additional information about Rust toolchain.
-   * Obtained from `rustc`. */
-  rustStdLib?: RustcInfo;
-
-  /** Path to Cargo executable. */
-  cargoBinPath: URI;
-
-  /** Location of the source code of procedural macros in the Rust toolchain. */
-  procMacroSrvPath: URI;
-}
-```
-
-#### RustcInfo
-
-```ts
-export interface RustcInfo {
-  /** Root directory where the Rust compiler looks for standard libraries and other
-   * essential components when building Rust projects. */
-  sysrootPath: URI;
-
-  /** Source code for the Rust standard library. */
-  srcSysrootPath: URI;
-
-  /** `rustc` SemVer (Semantic Versioning) version. */
-  version: string;
-
-  /** Target architecture and operating system of the Rust compiler.
-   * Used by [`intellij-rust`] for checking if given toolchain is supported. */
-  host: string;
 }
 ```
 
