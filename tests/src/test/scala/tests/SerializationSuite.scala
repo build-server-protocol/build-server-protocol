@@ -1,7 +1,6 @@
 package tests
 
 import java.net.URI
-
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
 import com.google.gson.{Gson, GsonBuilder, JsonElement}
 import org.scalatest.funsuite.AnyFunSuite
@@ -12,10 +11,12 @@ import com.github.plokhotnyuk.jsoniter_scala.core.WriterConfig
 
 import scala.collection.JavaConverters._
 import jsonrpc4s.RawJson
+import org.eclipse.lsp4j.jsonrpc.json.adapters.EitherTypeAdapter
 
 class SerializationSuite extends AnyFunSuite {
 
-  val gson: Gson = new GsonBuilder().create()
+  val gson: Gson =
+    new GsonBuilder().registerTypeAdapterFactory(new EitherTypeAdapter.Factory).create()
 
   test("TaskFinishParams") {
     val buildTarget = new URI("anUri")
@@ -108,7 +109,7 @@ class SerializationSuite extends AnyFunSuite {
     val bsp4sValueDecoded = readFromString[bsp4s.PublishDiagnosticsParams](bsp4jJson)
 
     assert(bsp4jValue.getBuildTarget.getUri == bsp4sValue.buildTarget.uri.value)
-    assert(bsp4jValue.getOriginId == bsp4sValue.originId.get)
+    assert(bsp4jValue.getOriginId.getLeft == bsp4sValue.originId.get)
     assert(bsp4jValue.getReset == bsp4sValue.reset)
     assert(bsp4jValue.getTextDocument.getUri == bsp4sValue.textDocument.uri.value)
     val bsp4jDiagnostic1 = bsp4jValue.getDiagnostics.get(0)

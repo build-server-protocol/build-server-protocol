@@ -42,12 +42,6 @@ object Def {
 
   final case class Service(shapeId: ShapeId, operations: List[Operation], hints: List[Hint])
       extends Def
-
-  final case class UntaggedUnion(
-      shapeId: ShapeId,
-      tpes: List[Type],
-      hints: List[Hint]
-  ) extends Def
 }
 
 sealed trait JsonRPCMethodType extends Product with Serializable
@@ -138,6 +132,10 @@ object Type {
     override def isPrimitive(primitive: Primitive): Boolean = prim == primitive
 
     override def members(): List[ShapeId] = List(shapeId)
+  }
+
+  case class TUntaggedUnion(tpes: List[Type]) extends Type {
+    override def members(): List[ShapeId] = tpes.flatMap(_.members())
   }
 
   val TUnit = TPrimitive(Primitive.PUnit, ShapeId.from("smithy.api#void"))

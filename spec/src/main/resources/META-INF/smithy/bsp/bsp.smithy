@@ -511,8 +511,8 @@ operation BuildTargetCleanCache {
 /// Represents the identifier of a BSP request.
 @untaggedUnion
 union RequestId {
-    integer: Integer
     string: String
+    integer: Integer
 }
 
 

@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -12,7 +13,7 @@ public class ShowMessageParams {
 
   private TaskId task;
 
-  private RequestId originId;
+  private Either<String, Integer> originId;
 
   @NonNull
   private String message;
@@ -42,12 +43,28 @@ public class ShowMessageParams {
   }
 
   @Pure
-  public RequestId getOriginId() {
+  public Either<String, Integer> getOriginId() {
     return this.originId;
   }
 
-  public void setOriginId(final RequestId originId) {
+  public void setOriginId(final Either<String, Integer> originId) {
     this.originId = originId;
+  }
+
+  public void setOriginId(final String originId) {
+    if (originId == null) {
+      this.originId = null;
+      return;
+    }
+    this.originId = Either.forLeft(originId);
+  }
+
+  public void setOriginId(final Integer originId) {
+    if (originId == null) {
+      this.originId = null;
+      return;
+    }
+    this.originId = Either.forRight(originId);
   }
 
   @Pure

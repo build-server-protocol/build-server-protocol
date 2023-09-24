@@ -698,7 +698,7 @@ object Location {
 final case class LogMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    originId: Option[RequestId],
+    originId: Option[String],
     message: String
 )
 
@@ -846,7 +846,7 @@ object PrintParams {
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
-    originId: Option[RequestId],
+    originId: Option[String],
     diagnostics: List[Diagnostic],
     reset: Boolean
 )
@@ -917,9 +917,6 @@ final case class ReadParams(
 object ReadParams {
   implicit val codec: JsonValueCodec[ReadParams] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
-
-case class RequestId(
-)
 
 final case class ResourcesItem(
     target: BuildTargetIdentifier,
@@ -1279,7 +1276,7 @@ object SetCargoFeaturesResult {
 final case class ShowMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    originId: Option[RequestId],
+    originId: Option[String],
     message: String
 )
 
