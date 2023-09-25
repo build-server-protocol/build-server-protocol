@@ -108,7 +108,7 @@ structure SetCargoFeaturesParams {
 }
 
 @unstable
-structure  SetCargoFeaturesResult {
+structure SetCargoFeaturesResult {
     /// The status code of the operation.
     @required
     statusCode: StatusCode
