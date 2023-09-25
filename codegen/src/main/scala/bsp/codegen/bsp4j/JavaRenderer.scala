@@ -329,7 +329,6 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TUntaggedUnion(tpes) => renderUntaggedUnion(tpes)
   }
 
-  // inspired by lsp4j
   private def renderUntaggedUnion(types: List[Type]): String = {
     if (types.size != 2)
       throw new Exception("Only unions of two types are supported")

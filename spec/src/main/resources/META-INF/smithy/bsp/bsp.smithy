@@ -505,8 +505,10 @@ operation BuildTargetCleanCache {
     output: CleanCacheResult
 }
 
-
 /// Represents the identifier of a BSP request.
+string OriginId
+
+/// Represents the identifier of a JsonRpc request id.
 @untaggedUnion
 union RequestId {
     string: String
@@ -657,7 +659,7 @@ structure MessageParams {
     /// The request id that originated this notification.
     /// The originId field helps clients know which request originated a notification in case several requests are handled by the
     /// client at the same time. It will only be populated if the client defined it in the request that triggered this notification.
-    originId: RequestId
+    originId: OriginId
     /// The actual message.
     @required
     message: String
@@ -694,7 +696,7 @@ structure PublishDiagnosticsParams {
     @required
     buildTarget: BuildTargetIdentifier
     /// The request id that originated this notification.
-    originId: RequestId
+    originId: OriginId
     /// The diagnostics to be published by the client.
     @required
     diagnostics: Diagnostics

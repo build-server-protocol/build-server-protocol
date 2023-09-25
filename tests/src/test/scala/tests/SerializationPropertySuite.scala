@@ -540,4 +540,9 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.PythonOptionsResult, bsp4s.PythonOptionsResult](a)
     }
   }
+  test("CancelRequestParams") {
+    forAll { a: bsp4j.CancelRequestParams =>
+      assertSerializationRoundtrip[bsp4j.CancelRequestParams, bsp4s.CancelRequestParams](a)
+    }
+  }
 }

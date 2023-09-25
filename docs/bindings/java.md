@@ -183,7 +183,6 @@ class MyBuildServer extends BuildServer {
   def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] = ???
   def workspaceReload(): CompletableFuture[Object] = ???
   def onRunReadStdin(params: ReadParams): Unit = ???
-  def cancelRequest(params: CancelRequestParams): Unit = ???
 }
 val localServer = new MyBuildServer()
 ```

@@ -312,14 +312,6 @@ export namespace BuildTargetDataKind {
 export type BuildTargetData = any;
 ```
 
-#### RequestId
-
-Represents the identifier of a BSP request.
-
-```ts
-export type RequestId = string | Integer;
-```
-
 #### TaskId
 
 The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
@@ -344,6 +336,14 @@ export interface TaskId {
 
 ```ts
 export type Identifier = string;
+```
+
+#### OriginId
+
+Represents the identifier of a BSP request.
+
+```ts
+export type OriginId = string;
 ```
 
 #### StatusCode
@@ -1337,7 +1337,7 @@ export interface ShowMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: string | Integer;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1384,7 +1384,7 @@ export interface LogMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: string | Integer;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1427,7 +1427,7 @@ export interface PublishDiagnosticsParams {
   buildTarget: BuildTargetIdentifier;
 
   /** The request id that originated this notification. */
-  originId?: string | Integer;
+  originId?: OriginId;
 
   /** The diagnostics to be published by the client. */
   diagnostics: Diagnostic[];
