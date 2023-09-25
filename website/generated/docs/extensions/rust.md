@@ -53,7 +53,7 @@ export interface RustWorkspaceResult {
    * without package resolution or any additional data. */
   rawDependencies: Map<string, RustRawDependency[]>;
 
-  /** Resolved dependencies of the package. Handles renamed dependencies.
+  /** Resolved dependencies of the build. Handles renamed dependencies.
    * Correspond to dependencies from resolved dependency graph from `cargo metadata` that shows
    * the actual dependencies that are being used in the build. */
   dependencies: Map<string, RustDependency[]>;
@@ -107,7 +107,7 @@ export interface RustPackage {
    * Contains only resolved targets without conflicts. */
   resolvedTargets: RustBuildTarget[];
 
-  /** Same as `targets`, but contains all targets from this package.
+  /** Same as `resolvedTargets`, but contains all targets from this package.
    * `targets` should be the subset of `allTargets`. */
   allTargets: RustBuildTarget[];
 
