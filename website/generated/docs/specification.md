@@ -360,9 +360,6 @@ export enum StatusCode {
 
 #### EnvironmentVariables
 
-Map representing the environment variables used in BSP extensions.
-Each key represents an environment variable name and each value represents the corresponding value to be set.
-
 ```ts
 export type EnvironmentVariables = Map<string, string>;
 ```

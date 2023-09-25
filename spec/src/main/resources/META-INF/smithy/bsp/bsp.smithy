@@ -204,13 +204,6 @@ list Languages {
     member: String
 }
 
-/// Map representing the environment variables used in BSP extensions.
-/// Each key represents an environment variable name and each value represents the corresponding value to be set.
-map EnvironmentVariables {
-    key: String
-    value: String
-}
-
 /// Structure describing how to start a BSP server and the capabilities it supports.
 structure BspConnectionDetails {
     /// The name of the BSP server.
