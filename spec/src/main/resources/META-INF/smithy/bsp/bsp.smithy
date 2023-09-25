@@ -132,7 +132,6 @@ enum BuildTargetTag {
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
-    ///
     MANUAL = "manual"
 }
 
@@ -776,6 +775,7 @@ intEnum DiagnosticSeverity {
     HINT = 4
 }
 
+@untaggedUnion
 union Code {
     string: String
     integer: Integer

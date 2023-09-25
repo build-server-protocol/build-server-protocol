@@ -96,7 +96,7 @@ class SerializationSuite extends AnyFunSuite {
     val bsp4sValue = bsp4s.PublishDiagnosticsParams(
       bsp4s.TextDocumentIdentifier(bsp4s.Uri(textDocument)),
       bsp4s.BuildTargetIdentifier(bsp4s.Uri(buildTarget)),
-      Some("origin"),
+      Some(Left("origin")),
       List(diagnostic1),
       reset = false
     )
@@ -109,7 +109,7 @@ class SerializationSuite extends AnyFunSuite {
     val bsp4sValueDecoded = readFromString[bsp4s.PublishDiagnosticsParams](bsp4jJson)
 
     assert(bsp4jValue.getBuildTarget.getUri == bsp4sValue.buildTarget.uri.value)
-    assert(bsp4jValue.getOriginId.getLeft == bsp4sValue.originId.get)
+    assert(bsp4jValue.getOriginId.getLeft == bsp4sValue.originId.get.swap.getOrElse(""))
     assert(bsp4jValue.getReset == bsp4sValue.reset)
     assert(bsp4jValue.getTextDocument.getUri == bsp4sValue.textDocument.uri.value)
     val bsp4jDiagnostic1 = bsp4jValue.getDiagnostics.get(0)
