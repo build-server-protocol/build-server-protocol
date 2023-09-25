@@ -47,12 +47,6 @@ public interface BuildServer {
     void onBuildExit();
 
     /**
-     * Like the language server protocol, a notification to ask the server to cancel a request.
-     */
-    @JsonNotification("$/cancelRequest")
-    void cancelRequest(CancelRequestParams params);
-
-    /**
      * The workspace build targets request is sent from the client to the server to ask
      * for the list of all available build targets in the workspace.
      */
