@@ -37,6 +37,8 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val contents = lines(
       s"package $basepkg",
       newline,
+      "import ch.epfl.scala.utils.CustomCodec",
+      newline,
       "import java.net.{URI, URISyntaxException}",
       newline,
       "import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec",
@@ -117,7 +119,10 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
       newline,
       block(s"object ${shapeId.getName()}")(
         lines(
-          s"implicit val codec: JsonValueCodec[${shapeId.getName()}] = JsonCodecMaker.makeWithRequiredCollectionFields"
+          s"implicit val codec: JsonValueCodec[${shapeId.getName()}] = JsonCodecMaker.makeWithRequiredCollectionFields",
+          if (fields.exists(_.tpe.isInstanceOf[TUntaggedUnion]))
+            s"implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt"
+          else Lines.empty
         )
       ),
       newline
@@ -290,14 +295,15 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
     case TCollection(member)       => s"List[${renderType(member)}]"
     case TSet(member)              => s"Set[${renderType(member)}]"
-    case TUntaggedUnion(tpes) =>
-      renderType(tpes.head) // TODO: find a way to handle all of the types (notes below)
+    case TUntaggedUnion(tpes)      => renderUntaggedUnion(tpes)
   }
 
-  // notes for handling UntaggedUnion:
-  // - scala `Either` serialize improperly
-  // - can't really use lsp4j `Either` type as `jsoniter_scala` doesn't support it
-  // - jsonrpc4s `RequestId` can be an inspiration, but can be hard to implement
+  private def renderUntaggedUnion(types: List[Type]): String = {
+    if (types.size != 2)
+      throw new Exception("Only unions of two types are supported")
+
+    s"Either[${types.map(renderType).mkString(", ")}]"
+  }
 
   def renderPrimitive(prim: Primitive, shapeId: ShapeId): String = {
     // Special handling for URI

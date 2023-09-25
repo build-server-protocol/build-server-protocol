@@ -1,5 +1,7 @@
 package ch.epfl.scala.bsp
 
+import ch.epfl.scala.utils.CustomCodec
+
 import java.net.{URI, URISyntaxException}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
@@ -698,13 +700,14 @@ object Location {
 final case class LogMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    originId: Option[String],
+    originId: Option[Either[String, Int]],
     message: String
 )
 
 object LogMessageParams {
   implicit val codec: JsonValueCodec[LogMessageParams] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 /** `MavenDependencyModule` is a basic data structure that contains maven-like metadata. This
@@ -846,7 +849,7 @@ object PrintParams {
 final case class PublishDiagnosticsParams(
     textDocument: TextDocumentIdentifier,
     buildTarget: BuildTargetIdentifier,
-    originId: Option[String],
+    originId: Option[Either[String, Int]],
     diagnostics: List[Diagnostic],
     reset: Boolean
 )
@@ -854,6 +857,7 @@ final case class PublishDiagnosticsParams(
 object PublishDiagnosticsParams {
   implicit val codec: JsonValueCodec[PublishDiagnosticsParams] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 /** `PythonBuildTarget` is a basic data structure that contains Python-specific metadata,
@@ -1276,13 +1280,14 @@ object SetCargoFeaturesResult {
 final case class ShowMessageParams(
     `type`: MessageType,
     task: Option[TaskId],
-    originId: Option[String],
+    originId: Option[Either[String, Int]],
     message: String
 )
 
 object ShowMessageParams {
   implicit val codec: JsonValueCodec[ShowMessageParams] =
     JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 final case class SourceItem(

@@ -777,6 +777,7 @@ intEnum DiagnosticSeverity {
     HINT = 4
 }
 
+@untaggedUnion
 union Code {
     string: String
     integer: Integer
