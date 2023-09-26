@@ -2,9 +2,9 @@ $version: "2"
 
 namespace bsp.cancel
 
-use bsp#RequestId
 use traits#jsonNotification
 use traits#jsonRPC
+use traits#untaggedUnion
 
 @jsonRPC
 service CancelExtension {
@@ -23,4 +23,11 @@ structure CancelRequestParams {
     /// The request id to cancel.
     @required
     id: RequestId
+}
+
+/// Represents the identifier of a JsonRpc request id.
+@untaggedUnion
+union RequestId {
+    string: String
+    integer: Integer
 }

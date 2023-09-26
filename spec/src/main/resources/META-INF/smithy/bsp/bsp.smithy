@@ -508,14 +508,6 @@ operation BuildTargetCleanCache {
 /// Represents the identifier of a BSP request.
 string OriginId
 
-/// Represents the identifier of a JsonRpc request id.
-@untaggedUnion
-union RequestId {
-    string: String
-    integer: Integer
-}
-
-
 list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
 }
