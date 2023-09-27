@@ -1,23 +1,19 @@
 {
   "scripts": {
-    "start": "docusaurus start",
-    "build": "docusaurus build",
-    "publish-gh-pages": "docusaurus deploy",
-    "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version",
-    "swizzle": "docusaurus swizzle",
-    "docusaurus": "docusaurus",
-    "serve": "docusaurus serve",
+    "start": "bazel run //website:docusaurus-start",
+    "build": "bazel run //website:docusaurus-build",
+    "publish-gh-pages": "bazel run //website:docusaurus-deploy",
     "format": "prettier --write ../"
   },
   "dependencies": {
-    "@docusaurus/core": "2.4.1",
-    "@docusaurus/plugin-client-redirects": "2.4.1",
-    "@docusaurus/preset-classic": "2.4.1",
+    "@docusaurus/core": "2.4.3",
+    "@docusaurus/plugin-client-redirects": "2.4.3",
+    "@docusaurus/preset-classic": "2.4.3",
     "@easyops-cn/docusaurus-search-local": "^0.35.0",
+    "@mdx-js/react": "^1.6.22",
     "clsx": "^2.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "prettier": "^3.0.3"

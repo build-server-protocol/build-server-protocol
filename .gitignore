@@ -41,3 +41,6 @@ website/project
 
 docs-gen
 *.xtend
+
+.aspect
+bazel-*
