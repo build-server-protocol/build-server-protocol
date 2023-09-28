@@ -33,7 +33,6 @@ out/
 .bloop
 .metals/
 .vscode
-.bsp
 
 website/.docusaurus
 website/build
@@ -44,3 +43,8 @@ docs-gen
 
 .aspect
 bazel-*
+
+# bsp specific
+.bsp
+.bazelbsp
+projectview.bazelproject
