@@ -3,6 +3,9 @@ package ch.epfl.scala.bsp4j;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * The debug session will connect to a running process. The DAP client will send the port of the running process later.
+ */
 @SuppressWarnings("all")
 public class ScalaAttachRemote {
   public ScalaAttachRemote() {

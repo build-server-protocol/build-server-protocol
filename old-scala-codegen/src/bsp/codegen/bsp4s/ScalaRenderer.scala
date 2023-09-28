@@ -7,7 +7,7 @@ import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
-import bsp.codegen.ir.Hint.{Deprecated, Documentation}
+import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
 import cats.implicits.toFoldableOps
 import org.jetbrains.bsp.generators.CodegenFile
 import os.RelPath
@@ -28,12 +28,13 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val filePath = baseRelPath.resolve("Bsp.scala")
 
     val renderedDefinitions = lines(definitions.map {
-      case Alias(_, _, _)                   => Lines.empty
-      case Structure(shapeId, fields, _, _) => renderStructure(shapeId, fields)
-      case ClosedEnum(shapeId, enumType, values, _) =>
-        renderClosedEnum(shapeId, enumType, values)
-      case OpenEnum(shapeId, enumType, values, _) => renderOpenEnum(shapeId, enumType, values)
-      case Service(_, _, _)                       => Lines.empty
+      case Alias(_, _, _)                       => Lines.empty
+      case Structure(shapeId, fields, hints, _) => renderStructure(shapeId, fields, hints)
+      case ClosedEnum(shapeId, enumType, values, hints) =>
+        renderClosedEnum(shapeId, enumType, values, hints)
+      case OpenEnum(shapeId, enumType, values, hints) =>
+        renderOpenEnum(shapeId, enumType, values, hints)
+      case Service(_, _, _) => Lines.empty
     })
 
     val contents = lines(
@@ -109,8 +110,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   }
 
-  def renderStructure(shapeId: ShapeId, fields: List[Field]): Lines = {
+  def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): Lines = {
     lines(
+      renderDocs(hints),
       paren(s"final case class ${shapeId.getName()}")(
         fields.foldMap(renderScalaField)
       ),
@@ -127,11 +129,13 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   def renderClosedEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
-      values: List[EnumValue[A]]
+      values: List[EnumValue[A]],
+      hints: List[Hint]
   ): Lines = {
     val valueType = enumValueType(enumType)
     val enumName = shapeId.getName()
     lines(
+      renderDocs(hints),
       s"sealed abstract class $enumName(val value: $valueType)",
       block(s"object $enumName")(
         values.map(renderEnumValueDef(enumType, shapeId)),
@@ -157,15 +161,39 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   def renderOpenEnum[A](
       shapeId: ShapeId,
       enumType: EnumType[A],
-      values: List[EnumValue[A]]
+      values: List[EnumValue[A]],
+      hints: List[Hint]
   ): Lines = {
     val tpe = shapeId.getName()
     lines(
+      renderDocs(hints),
       block(s"object $tpe") {
         values.map(renderStaticValue(enumType))
       },
       newline
     )
+  }
+
+  def renderDocs(hints: List[Hint]): Lines = {
+    val isUnstable = hints.contains(Unstable)
+    val unstableNote = if (isUnstable) {
+      List("**Unstable** (may change in future versions)")
+    } else {
+      List.empty
+    }
+    val docs = unstableNote ++
+      hints.collect { case Documentation(string) =>
+        string.split(System.lineSeparator()).toList
+      }.flatten
+    docs match {
+      case Nil => empty
+      case _ =>
+        lines(
+          "/**",
+          docs.map(line => s" * $line"),
+          " */"
+        )
+    }
   }
 
   def renderOperations(operations: List[Operation]): Lines = {
@@ -200,6 +228,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     }
 
     lines(
+      renderDocs(operation.hints),
       maybeDeprecated,
       s"""object $name extends Endpoint[$input, $output]("${operation.jsonRPCMethod}")"""
     )

@@ -374,7 +374,9 @@ class SmithyToIR(model: Model) {
       .map(_.getMessage.orElse(""))
       .map(Hint.Deprecated)
 
-    List(documentation, deprecated).flatten
+    val unstable = if (shape.hasTrait(classOf[UnstableTrait])) Some(Hint.Unstable) else None
+
+    List(documentation, deprecated, unstable).flatten
   }
 
   class DocShapeVisitor(map: MMap[ShapeId, DocNode]) extends ShapeVisitor.Default[Unit] {

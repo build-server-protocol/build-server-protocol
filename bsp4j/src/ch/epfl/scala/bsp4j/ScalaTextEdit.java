@@ -5,6 +5,9 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * A textual edit applicable to a text document.
+ */
 @SuppressWarnings("all")
 public class ScalaTextEdit {
   @NonNull

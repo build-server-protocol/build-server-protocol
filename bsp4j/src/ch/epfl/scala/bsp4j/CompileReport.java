@@ -5,6 +5,12 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * The completion of a compilation task should be signalled with a
+ * `build/taskFinish` notification. When the compilation unit is a build target,
+ * the notification's `dataKind` field must be `compile-report` and the `data`
+ * field must include a `CompileReport` object:
+ */
 @SuppressWarnings("all")
 public class CompileReport {
   @NonNull
