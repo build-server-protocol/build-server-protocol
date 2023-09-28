@@ -143,7 +143,7 @@ The general idea is that the BuildTarget data structure should contain only info
 
 ```ts
 export interface BuildTarget {
-  /** The target’s unique identifier */
+  /** The target's unique identifier */
   id: BuildTargetIdentifier;
 
   /** A human readable name for this target.
@@ -192,7 +192,7 @@ Clients should not infer metadata out of the URI structure such as the path or q
 
 ```ts
 export interface BuildTargetIdentifier {
-  /** The target’s Uri */
+  /** The target's Uri */
   uri: URI;
 }
 ```
