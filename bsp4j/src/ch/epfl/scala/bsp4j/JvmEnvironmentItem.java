@@ -9,24 +9,24 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmEnvironmentItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<String> classpath;
+  @NonNull private List<String> classpath;
 
-  @NonNull
-  private List<String> jvmOptions;
+  @NonNull private List<String> jvmOptions;
 
-  @NonNull
-  private String workingDirectory;
+  @NonNull private String workingDirectory;
 
-  @NonNull
-  private Map<String, String> environmentVariables;
+  @NonNull private Map<String, String> environmentVariables;
 
   private List<JvmMainClass> mainClasses;
 
-  public JvmEnvironmentItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath, @NonNull final List<String> jvmOptions, @NonNull final String workingDirectory, @NonNull final Map<String, String> environmentVariables) {
+  public JvmEnvironmentItem(
+      @NonNull final BuildTargetIdentifier target,
+      @NonNull final List<String> classpath,
+      @NonNull final List<String> jvmOptions,
+      @NonNull final String workingDirectory,
+      @NonNull final Map<String, String> environmentVariables) {
     this.target = target;
     this.classpath = classpath;
     this.jvmOptions = jvmOptions;
@@ -81,7 +81,8 @@ public class JvmEnvironmentItem {
   }
 
   public void setEnvironmentVariables(@NonNull final Map<String, String> environmentVariables) {
-    this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
+    this.environmentVariables =
+        Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
 
   @Pure
@@ -109,43 +110,28 @@ public class JvmEnvironmentItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     JvmEnvironmentItem other = (JvmEnvironmentItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.classpath == null) {
-      if (other.classpath != null)
-        return false;
-    } else if (!this.classpath.equals(other.classpath))
-      return false;
+      if (other.classpath != null) return false;
+    } else if (!this.classpath.equals(other.classpath)) return false;
     if (this.jvmOptions == null) {
-      if (other.jvmOptions != null)
-        return false;
-    } else if (!this.jvmOptions.equals(other.jvmOptions))
-      return false;
+      if (other.jvmOptions != null) return false;
+    } else if (!this.jvmOptions.equals(other.jvmOptions)) return false;
     if (this.workingDirectory == null) {
-      if (other.workingDirectory != null)
-        return false;
-    } else if (!this.workingDirectory.equals(other.workingDirectory))
-      return false;
+      if (other.workingDirectory != null) return false;
+    } else if (!this.workingDirectory.equals(other.workingDirectory)) return false;
     if (this.environmentVariables == null) {
-      if (other.environmentVariables != null)
-        return false;
-    } else if (!this.environmentVariables.equals(other.environmentVariables))
-      return false;
+      if (other.environmentVariables != null) return false;
+    } else if (!this.environmentVariables.equals(other.environmentVariables)) return false;
     if (this.mainClasses == null) {
-      if (other.mainClasses != null)
-        return false;
-    } else if (!this.mainClasses.equals(other.mainClasses))
-      return false;
+      if (other.mainClasses != null) return false;
+    } else if (!this.mainClasses.equals(other.mainClasses)) return false;
     return true;
   }
 
@@ -154,11 +140,14 @@ public class JvmEnvironmentItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    result = prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
-    result = prime * result + ((this.jvmOptions== null) ? 0 : this.jvmOptions.hashCode());
-    result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
-    result = prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
-    return prime * result + ((this.mainClasses== null) ? 0 : this.mainClasses.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.classpath == null) ? 0 : this.classpath.hashCode());
+    result = prime * result + ((this.jvmOptions == null) ? 0 : this.jvmOptions.hashCode());
+    result =
+        prime * result + ((this.workingDirectory == null) ? 0 : this.workingDirectory.hashCode());
+    result =
+        prime * result
+            + ((this.environmentVariables == null) ? 0 : this.environmentVariables.hashCode());
+    return prime * result + ((this.mainClasses == null) ? 0 : this.mainClasses.hashCode());
   }
 }

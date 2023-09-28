@@ -10,8 +10,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class Diagnostic {
-  @NonNull
-  private Range range;
+  @NonNull private Range range;
 
   private DiagnosticSeverity severity;
 
@@ -19,8 +18,7 @@ public class Diagnostic {
 
   private String source;
 
-  @NonNull
-  private String message;
+  @NonNull private String message;
 
   private List<DiagnosticRelatedInformation> relatedInformation;
 
@@ -126,53 +124,34 @@ public class Diagnostic {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     Diagnostic other = (Diagnostic) obj;
     if (this.range == null) {
-      if (other.range != null)
-        return false;
-    } else if (!this.range.equals(other.range))
-      return false;
+      if (other.range != null) return false;
+    } else if (!this.range.equals(other.range)) return false;
     if (this.severity == null) {
-      if (other.severity != null)
-        return false;
-    } else if (!this.severity.equals(other.severity))
-      return false;
+      if (other.severity != null) return false;
+    } else if (!this.severity.equals(other.severity)) return false;
     if (this.code == null) {
-      if (other.code != null)
-        return false;
-    } else if (!this.code.equals(other.code))
-      return false;
+      if (other.code != null) return false;
+    } else if (!this.code.equals(other.code)) return false;
     if (this.source == null) {
-      if (other.source != null)
-        return false;
-    } else if (!this.source.equals(other.source))
-      return false;
+      if (other.source != null) return false;
+    } else if (!this.source.equals(other.source)) return false;
     if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
-      return false;
+      if (other.message != null) return false;
+    } else if (!this.message.equals(other.message)) return false;
     if (this.relatedInformation == null) {
-      if (other.relatedInformation != null)
-        return false;
-    } else if (!this.relatedInformation.equals(other.relatedInformation))
-      return false;
+      if (other.relatedInformation != null) return false;
+    } else if (!this.relatedInformation.equals(other.relatedInformation)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -181,13 +160,15 @@ public class Diagnostic {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.range== null) ? 0 : this.range.hashCode());
-    result = prime * result + ((this.severity== null) ? 0 : this.severity.hashCode());
-    result = prime * result + ((this.code== null) ? 0 : this.code.hashCode());
-    result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
-    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    result = prime * result + ((this.relatedInformation== null) ? 0 : this.relatedInformation.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.range == null) ? 0 : this.range.hashCode());
+    result = prime * result + ((this.severity == null) ? 0 : this.severity.hashCode());
+    result = prime * result + ((this.code == null) ? 0 : this.code.hashCode());
+    result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
+    result = prime * result + ((this.message == null) ? 0 : this.message.hashCode());
+    result =
+        prime * result
+            + ((this.relatedInformation == null) ? 0 : this.relatedInformation.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

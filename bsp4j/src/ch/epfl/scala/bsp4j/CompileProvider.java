@@ -8,8 +8,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CompileProvider {
-  @NonNull
-  private List<String> languageIds;
+  @NonNull private List<String> languageIds;
 
   public CompileProvider(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
@@ -36,24 +35,19 @@ public class CompileProvider {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     CompileProvider other = (CompileProvider) obj;
     if (this.languageIds == null) {
-      if (other.languageIds != null)
-        return false;
-    } else if (!this.languageIds.equals(other.languageIds))
-      return false;
+      if (other.languageIds != null) return false;
+    } else if (!this.languageIds.equals(other.languageIds)) return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
+    return 31 * 1 + ((this.languageIds == null) ? 0 : this.languageIds.hashCode());
   }
 }

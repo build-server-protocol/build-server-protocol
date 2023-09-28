@@ -15,6 +15,8 @@ protocol.
 
 ### CargoFeaturesState: request
 
+**Unstable** (may change in future versions)
+
 The cargo features state request is sent from the client to the server to
 query for the current state of the Cargo features. Provides also mapping
 between Cargo packages and build target identifiers.
@@ -23,6 +25,8 @@ between Cargo packages and build target identifiers.
 - result: `CargoFeaturesStateResult`
 
 #### CargoFeaturesStateResult
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface CargoFeaturesStateResult {
@@ -58,6 +62,8 @@ export type Feature = string;
 
 ### SetCargoFeatures: request
 
+**Unstable** (may change in future versions)
+
 The enable cargo features request is sent from the client to the server to
 set provided features collection as a new state for
 the specified Cargo package.
@@ -67,6 +73,8 @@ the specified Cargo package.
 - result: `SetCargoFeaturesResult`
 
 #### SetCargoFeaturesParams
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface SetCargoFeaturesParams {
@@ -79,6 +87,8 @@ export interface SetCargoFeaturesParams {
 ```
 
 #### SetCargoFeaturesResult
+
+**Unstable** (may change in future versions)
 
 ```ts
 export interface SetCargoFeaturesResult {

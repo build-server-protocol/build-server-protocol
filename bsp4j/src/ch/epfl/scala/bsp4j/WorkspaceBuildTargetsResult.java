@@ -8,8 +8,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class WorkspaceBuildTargetsResult {
-  @NonNull
-  private List<BuildTarget> targets;
+  @NonNull private List<BuildTarget> targets;
 
   public WorkspaceBuildTargetsResult(@NonNull final List<BuildTarget> targets) {
     this.targets = targets;
@@ -36,24 +35,19 @@ public class WorkspaceBuildTargetsResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     WorkspaceBuildTargetsResult other = (WorkspaceBuildTargetsResult) obj;
     if (this.targets == null) {
-      if (other.targets != null)
-        return false;
-    } else if (!this.targets.equals(other.targets))
-      return false;
+      if (other.targets != null) return false;
+    } else if (!this.targets.equals(other.targets)) return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.targets== null) ? 0 : this.targets.hashCode());
+    return 31 * 1 + ((this.targets == null) ? 0 : this.targets.hashCode());
   }
 }

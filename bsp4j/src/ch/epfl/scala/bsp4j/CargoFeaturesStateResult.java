@@ -6,10 +6,10 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/** **Unstable** (may change in future versions) */
 @SuppressWarnings("all")
 public class CargoFeaturesStateResult {
-  @NonNull
-  private List<PackageFeatures> packagesFeatures;
+  @NonNull private List<PackageFeatures> packagesFeatures;
 
   public CargoFeaturesStateResult(@NonNull final List<PackageFeatures> packagesFeatures) {
     this.packagesFeatures = packagesFeatures;
@@ -36,24 +36,19 @@ public class CargoFeaturesStateResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     CargoFeaturesStateResult other = (CargoFeaturesStateResult) obj;
     if (this.packagesFeatures == null) {
-      if (other.packagesFeatures != null)
-        return false;
-    } else if (!this.packagesFeatures.equals(other.packagesFeatures))
-      return false;
+      if (other.packagesFeatures != null) return false;
+    } else if (!this.packagesFeatures.equals(other.packagesFeatures)) return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.packagesFeatures== null) ? 0 : this.packagesFeatures.hashCode());
+    return 31 * 1 + ((this.packagesFeatures == null) ? 0 : this.packagesFeatures.hashCode());
   }
 }

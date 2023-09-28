@@ -6,15 +6,15 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata. */
 @SuppressWarnings("all")
 public class CargoBuildTarget {
-  @NonNull
-  private String edition;
+  @NonNull private String edition;
 
-  @NonNull
-  private Set<String> required_features;
+  @NonNull private Set<String> required_features;
 
-  public CargoBuildTarget(@NonNull final String edition, @NonNull final Set<String> required_features) {
+  public CargoBuildTarget(
+      @NonNull final String edition, @NonNull final Set<String> required_features) {
     this.edition = edition;
     this.required_features = required_features;
   }
@@ -51,23 +51,16 @@ public class CargoBuildTarget {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     CargoBuildTarget other = (CargoBuildTarget) obj;
     if (this.edition == null) {
-      if (other.edition != null)
-        return false;
-    } else if (!this.edition.equals(other.edition))
-      return false;
+      if (other.edition != null) return false;
+    } else if (!this.edition.equals(other.edition)) return false;
     if (this.required_features == null) {
-      if (other.required_features != null)
-        return false;
-    } else if (!this.required_features.equals(other.required_features))
-      return false;
+      if (other.required_features != null) return false;
+    } else if (!this.required_features.equals(other.required_features)) return false;
     return true;
   }
 
@@ -76,7 +69,8 @@ public class CargoBuildTarget {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
-    return prime * result + ((this.required_features== null) ? 0 : this.required_features.hashCode());
+    result = prime * result + ((this.edition == null) ? 0 : this.edition.hashCode());
+    return prime * result
+        + ((this.required_features == null) ? 0 : this.required_features.hashCode());
   }
 }
