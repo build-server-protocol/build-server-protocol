@@ -8,11 +8,10 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * `RustBuildTarget` is a basic data structure that contains rust-specific
- * metadata for compiling a target containing Rust sources.
+ * `RustTarget` contains data of the target as defined in Cargo metadata.
  */
 @SuppressWarnings("all")
-public class RustBuildTarget {
+public class RustTarget {
   @NonNull
   private String name;
 
@@ -32,7 +31,7 @@ public class RustBuildTarget {
 
   private Set<String> requiredFeatures;
 
-  public RustBuildTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final RustTargetKind kind, @NonNull final String edition, @NonNull final Boolean doctest) {
+  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final RustTargetKind kind, @NonNull final String edition, @NonNull final Boolean doctest) {
     this.name = name;
     this.crateRootUrl = crateRootUrl;
     this.kind = kind;
@@ -131,7 +130,7 @@ public class RustBuildTarget {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    RustBuildTarget other = (RustBuildTarget) obj;
+    RustTarget other = (RustTarget) obj;
     if (this.name == null) {
       if (other.name != null)
         return false;

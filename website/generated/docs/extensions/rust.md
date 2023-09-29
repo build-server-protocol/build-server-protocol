@@ -105,11 +105,11 @@ export interface RustPackage {
 
   /** Corresponds to source files which can be compiled into a crate from this package.
    * Contains only resolved targets without conflicts. */
-  resolvedTargets: RustBuildTarget[];
+  resolvedTargets: RustTarget[];
 
   /** Same as `resolvedTargets`, but contains all targets from this package.
    * `targets` should be the subset of `allTargets`. */
-  allTargets: RustBuildTarget[];
+  allTargets: RustTarget[];
 
   /** Set of features defined for the package (including optional dependencies).
    * Each feature maps to an array of features or dependencies it enables.
@@ -177,13 +177,12 @@ export namespace RustEdition {
 }
 ```
 
-#### RustBuildTarget
+#### RustTarget
 
-`RustBuildTarget` is a basic data structure that contains rust-specific
-metadata for compiling a target containing Rust sources.
+`RustTarget` contains data of the target as defined in Cargo metadata.
 
 ```ts
-export interface RustBuildTarget {
+export interface RustTarget {
   /** The name of the target. */
   name: string;
 
@@ -344,11 +343,3 @@ export interface RustDepKindInfo {
   target?: string;
 }
 ```
-
-## BuildTargetData kinds
-
-### RustBuildTarget
-
-This structure is embedded in
-the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"rust"`.

@@ -133,13 +133,11 @@ structure RustPackage {
 }
 
 list RustTargets {
-    member: RustBuildTarget
+    member: RustTarget
 }
 
-/// `RustBuildTarget` is a basic data structure that contains rust-specific
-/// metadata for compiling a target containing Rust sources.
-@dataKind(kind: "rust", extends: [BuildTargetData])
-structure RustBuildTarget {
+/// `RustTarget` contains data of the target as defined in Cargo metadata.
+structure RustTarget {
     /// The name of the target.
     @required
     name: String
