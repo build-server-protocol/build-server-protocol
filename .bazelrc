@@ -1,1 +1,0 @@
-common --jvmopt=-Djava.security.manager=allow

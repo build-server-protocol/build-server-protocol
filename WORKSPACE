@@ -71,6 +71,11 @@ scalatest_repositories()
 
 scalatest_toolchain()
 
+# Remove once bazel-super-formatter supports scalafmt
+#scalafmt_repositories()
+
+#scalafmt_default_config()
+
 rules_kotlin_version = "1.8"
 
 rules_kotlin_sha = "01293740a16e474669aba5b5a1fe3d368de5832442f164e4fbfc566815a8bc3a"
