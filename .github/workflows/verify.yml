@@ -24,7 +24,7 @@ jobs:
           key: bazel
 
       - name: Generate
-        run: bazel run :generate
+        run: bazel run //:generate
 
       - name: Build
         run: bazel build //...
@@ -49,5 +49,5 @@ jobs:
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           echo "Detected changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
-          echo "Make sure to run 'bazel run :generate' before pushing."
+          echo "Make sure to run 'bazel run //:generate' before pushing."
           exit 1

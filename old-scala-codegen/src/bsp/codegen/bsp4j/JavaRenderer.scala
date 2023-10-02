@@ -210,7 +210,9 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     }
     val maybeDeprecated = operation.hints.collectFirst({ case Deprecated(_) => "@Deprecated" })
     val method = operation.name.head.toLower + operation.name.tail
+    val docs = renderDocs(operation.hints)
     lines(
+      docs,
       maybeDeprecated,
       rpcAnnotation,
       s"$output $method($input);",
