@@ -94,10 +94,16 @@ lazy val bsp4j = project
     autoScalaLibrary := false,
     crossPaths := false,
     Compile / javacOptions ++= {
+      val specifyRelease =
+        if (sys.props("java.version").startsWith("1.8"))
+          List.empty
+        else
+          List("--release", "8")
+
       List(
         "-Xlint:all",
         "-Werror"
-      )
+      ) ++ specifyRelease
     },
     Compile / doc / javacOptions := List("-Xdoclint:none"),
     TaskKey[Unit]("codegen") := {
