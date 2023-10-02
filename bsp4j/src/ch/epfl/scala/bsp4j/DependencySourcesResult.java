@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencySourcesResult {
-  @NonNull private List<DependencySourcesItem> items;
+  @NonNull
+  private List<DependencySourcesItem> items;
 
   public DependencySourcesResult(@NonNull final List<DependencySourcesItem> items) {
     this.items = items;
@@ -35,19 +36,24 @@ public class DependencySourcesResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     DependencySourcesResult other = (DependencySourcesResult) obj;
     if (this.items == null) {
-      if (other.items != null) return false;
-    } else if (!this.items.equals(other.items)) return false;
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.items == null) ? 0 : this.items.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

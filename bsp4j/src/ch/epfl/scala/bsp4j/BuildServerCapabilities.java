@@ -4,8 +4,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * The capabilities of the build server. Clients can use these capabilities to notify users what BSP
- * endpoints can and cannot be used and why.
+ * The capabilities of the build server.
+ * Clients can use these capabilities to notify users what BSP endpoints can and
+ * cannot be used and why.
  */
 @SuppressWarnings("all")
 public class BuildServerCapabilities {
@@ -37,7 +38,8 @@ public class BuildServerCapabilities {
 
   private Boolean canReload;
 
-  public BuildServerCapabilities() {}
+  public BuildServerCapabilities() {
+  }
 
   @Pure
   public CompileProvider getCompileProvider() {
@@ -189,57 +191,83 @@ public class BuildServerCapabilities {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BuildServerCapabilities other = (BuildServerCapabilities) obj;
     if (this.compileProvider == null) {
-      if (other.compileProvider != null) return false;
-    } else if (!this.compileProvider.equals(other.compileProvider)) return false;
+      if (other.compileProvider != null)
+        return false;
+    } else if (!this.compileProvider.equals(other.compileProvider))
+      return false;
     if (this.testProvider == null) {
-      if (other.testProvider != null) return false;
-    } else if (!this.testProvider.equals(other.testProvider)) return false;
+      if (other.testProvider != null)
+        return false;
+    } else if (!this.testProvider.equals(other.testProvider))
+      return false;
     if (this.runProvider == null) {
-      if (other.runProvider != null) return false;
-    } else if (!this.runProvider.equals(other.runProvider)) return false;
+      if (other.runProvider != null)
+        return false;
+    } else if (!this.runProvider.equals(other.runProvider))
+      return false;
     if (this.debugProvider == null) {
-      if (other.debugProvider != null) return false;
-    } else if (!this.debugProvider.equals(other.debugProvider)) return false;
+      if (other.debugProvider != null)
+        return false;
+    } else if (!this.debugProvider.equals(other.debugProvider))
+      return false;
     if (this.inverseSourcesProvider == null) {
-      if (other.inverseSourcesProvider != null) return false;
-    } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider)) return false;
+      if (other.inverseSourcesProvider != null)
+        return false;
+    } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider))
+      return false;
     if (this.dependencySourcesProvider == null) {
-      if (other.dependencySourcesProvider != null) return false;
+      if (other.dependencySourcesProvider != null)
+        return false;
     } else if (!this.dependencySourcesProvider.equals(other.dependencySourcesProvider))
       return false;
     if (this.dependencyModulesProvider == null) {
-      if (other.dependencyModulesProvider != null) return false;
+      if (other.dependencyModulesProvider != null)
+        return false;
     } else if (!this.dependencyModulesProvider.equals(other.dependencyModulesProvider))
       return false;
     if (this.resourcesProvider == null) {
-      if (other.resourcesProvider != null) return false;
-    } else if (!this.resourcesProvider.equals(other.resourcesProvider)) return false;
+      if (other.resourcesProvider != null)
+        return false;
+    } else if (!this.resourcesProvider.equals(other.resourcesProvider))
+      return false;
     if (this.outputPathsProvider == null) {
-      if (other.outputPathsProvider != null) return false;
-    } else if (!this.outputPathsProvider.equals(other.outputPathsProvider)) return false;
+      if (other.outputPathsProvider != null)
+        return false;
+    } else if (!this.outputPathsProvider.equals(other.outputPathsProvider))
+      return false;
     if (this.buildTargetChangedProvider == null) {
-      if (other.buildTargetChangedProvider != null) return false;
+      if (other.buildTargetChangedProvider != null)
+        return false;
     } else if (!this.buildTargetChangedProvider.equals(other.buildTargetChangedProvider))
       return false;
     if (this.jvmRunEnvironmentProvider == null) {
-      if (other.jvmRunEnvironmentProvider != null) return false;
+      if (other.jvmRunEnvironmentProvider != null)
+        return false;
     } else if (!this.jvmRunEnvironmentProvider.equals(other.jvmRunEnvironmentProvider))
       return false;
     if (this.jvmTestEnvironmentProvider == null) {
-      if (other.jvmTestEnvironmentProvider != null) return false;
+      if (other.jvmTestEnvironmentProvider != null)
+        return false;
     } else if (!this.jvmTestEnvironmentProvider.equals(other.jvmTestEnvironmentProvider))
       return false;
     if (this.cargoFeaturesProvider == null) {
-      if (other.cargoFeaturesProvider != null) return false;
-    } else if (!this.cargoFeaturesProvider.equals(other.cargoFeaturesProvider)) return false;
+      if (other.cargoFeaturesProvider != null)
+        return false;
+    } else if (!this.cargoFeaturesProvider.equals(other.cargoFeaturesProvider))
+      return false;
     if (this.canReload == null) {
-      if (other.canReload != null) return false;
-    } else if (!this.canReload.equals(other.canReload)) return false;
+      if (other.canReload != null)
+        return false;
+    } else if (!this.canReload.equals(other.canReload))
+      return false;
     return true;
   }
 
@@ -248,47 +276,19 @@ public class BuildServerCapabilities {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result =
-        prime * result + ((this.compileProvider == null) ? 0 : this.compileProvider.hashCode());
-    result = prime * result + ((this.testProvider == null) ? 0 : this.testProvider.hashCode());
-    result = prime * result + ((this.runProvider == null) ? 0 : this.runProvider.hashCode());
-    result = prime * result + ((this.debugProvider == null) ? 0 : this.debugProvider.hashCode());
-    result =
-        prime * result
-            + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
-    result =
-        prime * result
-            + ((this.dependencySourcesProvider == null)
-                ? 0
-                : this.dependencySourcesProvider.hashCode());
-    result =
-        prime * result
-            + ((this.dependencyModulesProvider == null)
-                ? 0
-                : this.dependencyModulesProvider.hashCode());
-    result =
-        prime * result + ((this.resourcesProvider == null) ? 0 : this.resourcesProvider.hashCode());
-    result =
-        prime * result
-            + ((this.outputPathsProvider == null) ? 0 : this.outputPathsProvider.hashCode());
-    result =
-        prime * result
-            + ((this.buildTargetChangedProvider == null)
-                ? 0
-                : this.buildTargetChangedProvider.hashCode());
-    result =
-        prime * result
-            + ((this.jvmRunEnvironmentProvider == null)
-                ? 0
-                : this.jvmRunEnvironmentProvider.hashCode());
-    result =
-        prime * result
-            + ((this.jvmTestEnvironmentProvider == null)
-                ? 0
-                : this.jvmTestEnvironmentProvider.hashCode());
-    result =
-        prime * result
-            + ((this.cargoFeaturesProvider == null) ? 0 : this.cargoFeaturesProvider.hashCode());
-    return prime * result + ((this.canReload == null) ? 0 : this.canReload.hashCode());
+    result = prime * result + ((this.compileProvider== null) ? 0 : this.compileProvider.hashCode());
+    result = prime * result + ((this.testProvider== null) ? 0 : this.testProvider.hashCode());
+    result = prime * result + ((this.runProvider== null) ? 0 : this.runProvider.hashCode());
+    result = prime * result + ((this.debugProvider== null) ? 0 : this.debugProvider.hashCode());
+    result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
+    result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
+    result = prime * result + ((this.dependencyModulesProvider== null) ? 0 : this.dependencyModulesProvider.hashCode());
+    result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
+    result = prime * result + ((this.outputPathsProvider== null) ? 0 : this.outputPathsProvider.hashCode());
+    result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
+    result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
+    result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
+    result = prime * result + ((this.cargoFeaturesProvider== null) ? 0 : this.cargoFeaturesProvider.hashCode());
+    return prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
   }
 }

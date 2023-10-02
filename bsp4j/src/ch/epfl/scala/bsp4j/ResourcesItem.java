@@ -8,12 +8,13 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ResourcesItem {
-  @NonNull private BuildTargetIdentifier target;
+  @NonNull
+  private BuildTargetIdentifier target;
 
-  @NonNull private List<String> resources;
+  @NonNull
+  private List<String> resources;
 
-  public ResourcesItem(
-      @NonNull final BuildTargetIdentifier target, @NonNull final List<String> resources) {
+  public ResourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> resources) {
     this.target = target;
     this.resources = resources;
   }
@@ -50,16 +51,23 @@ public class ResourcesItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ResourcesItem other = (ResourcesItem) obj;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     if (this.resources == null) {
-      if (other.resources != null) return false;
-    } else if (!this.resources.equals(other.resources)) return false;
+      if (other.resources != null)
+        return false;
+    } else if (!this.resources.equals(other.resources))
+      return false;
     return true;
   }
 
@@ -68,7 +76,7 @@ public class ResourcesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.resources == null) ? 0 : this.resources.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.resources== null) ? 0 : this.resources.hashCode());
   }
 }

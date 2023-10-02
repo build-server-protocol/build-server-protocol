@@ -7,27 +7,26 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * `MavenDependencyModule` is a basic data structure that contains maven-like metadata. This
- * metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when
- * the `dataKind` field contains "maven".
+ * `MavenDependencyModule` is a basic data structure that contains maven-like
+ * metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
  */
 @SuppressWarnings("all")
 public class MavenDependencyModule {
-  @NonNull private String organization;
+  @NonNull
+  private String organization;
 
-  @NonNull private String name;
+  @NonNull
+  private String name;
 
-  @NonNull private String version;
+  @NonNull
+  private String version;
 
-  @NonNull private List<MavenDependencyModuleArtifact> artifacts;
+  @NonNull
+  private List<MavenDependencyModuleArtifact> artifacts;
 
   private String scope;
 
-  public MavenDependencyModule(
-      @NonNull final String organization,
-      @NonNull final String name,
-      @NonNull final String version,
-      @NonNull final List<MavenDependencyModuleArtifact> artifacts) {
+  public MavenDependencyModule(@NonNull final String organization, @NonNull final String name, @NonNull final String version, @NonNull final List<MavenDependencyModuleArtifact> artifacts) {
     this.organization = organization;
     this.name = name;
     this.version = version;
@@ -98,25 +97,38 @@ public class MavenDependencyModule {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     MavenDependencyModule other = (MavenDependencyModule) obj;
     if (this.organization == null) {
-      if (other.organization != null) return false;
-    } else if (!this.organization.equals(other.organization)) return false;
+      if (other.organization != null)
+        return false;
+    } else if (!this.organization.equals(other.organization))
+      return false;
     if (this.name == null) {
-      if (other.name != null) return false;
-    } else if (!this.name.equals(other.name)) return false;
+      if (other.name != null)
+        return false;
+    } else if (!this.name.equals(other.name))
+      return false;
     if (this.version == null) {
-      if (other.version != null) return false;
-    } else if (!this.version.equals(other.version)) return false;
+      if (other.version != null)
+        return false;
+    } else if (!this.version.equals(other.version))
+      return false;
     if (this.artifacts == null) {
-      if (other.artifacts != null) return false;
-    } else if (!this.artifacts.equals(other.artifacts)) return false;
+      if (other.artifacts != null)
+        return false;
+    } else if (!this.artifacts.equals(other.artifacts))
+      return false;
     if (this.scope == null) {
-      if (other.scope != null) return false;
-    } else if (!this.scope.equals(other.scope)) return false;
+      if (other.scope != null)
+        return false;
+    } else if (!this.scope.equals(other.scope))
+      return false;
     return true;
   }
 
@@ -125,10 +137,10 @@ public class MavenDependencyModule {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.organization == null) ? 0 : this.organization.hashCode());
-    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.artifacts == null) ? 0 : this.artifacts.hashCode());
-    return prime * result + ((this.scope == null) ? 0 : this.scope.hashCode());
+    result = prime * result + ((this.organization== null) ? 0 : this.organization.hashCode());
+    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.artifacts== null) ? 0 : this.artifacts.hashCode());
+    return prime * result + ((this.scope== null) ? 0 : this.scope.hashCode());
   }
 }

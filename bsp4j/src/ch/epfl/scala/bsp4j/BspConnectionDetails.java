@@ -6,25 +6,27 @@ import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
-/** Structure describing how to start a BSP server and the capabilities it supports. */
+/**
+ * Structure describing how to start a BSP server and the capabilities it supports.
+ */
 @SuppressWarnings("all")
 public class BspConnectionDetails {
-  @NonNull private String name;
+  @NonNull
+  private String name;
 
-  @NonNull private List<String> argv;
+  @NonNull
+  private List<String> argv;
 
-  @NonNull private String version;
+  @NonNull
+  private String version;
 
-  @NonNull private String bspVersion;
+  @NonNull
+  private String bspVersion;
 
-  @NonNull private List<String> languages;
+  @NonNull
+  private List<String> languages;
 
-  public BspConnectionDetails(
-      @NonNull final String name,
-      @NonNull final List<String> argv,
-      @NonNull final String version,
-      @NonNull final String bspVersion,
-      @NonNull final List<String> languages) {
+  public BspConnectionDetails(@NonNull final String name, @NonNull final List<String> argv, @NonNull final String version, @NonNull final String bspVersion, @NonNull final List<String> languages) {
     this.name = name;
     this.argv = argv;
     this.version = version;
@@ -97,25 +99,38 @@ public class BspConnectionDetails {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BspConnectionDetails other = (BspConnectionDetails) obj;
     if (this.name == null) {
-      if (other.name != null) return false;
-    } else if (!this.name.equals(other.name)) return false;
+      if (other.name != null)
+        return false;
+    } else if (!this.name.equals(other.name))
+      return false;
     if (this.argv == null) {
-      if (other.argv != null) return false;
-    } else if (!this.argv.equals(other.argv)) return false;
+      if (other.argv != null)
+        return false;
+    } else if (!this.argv.equals(other.argv))
+      return false;
     if (this.version == null) {
-      if (other.version != null) return false;
-    } else if (!this.version.equals(other.version)) return false;
+      if (other.version != null)
+        return false;
+    } else if (!this.version.equals(other.version))
+      return false;
     if (this.bspVersion == null) {
-      if (other.bspVersion != null) return false;
-    } else if (!this.bspVersion.equals(other.bspVersion)) return false;
+      if (other.bspVersion != null)
+        return false;
+    } else if (!this.bspVersion.equals(other.bspVersion))
+      return false;
     if (this.languages == null) {
-      if (other.languages != null) return false;
-    } else if (!this.languages.equals(other.languages)) return false;
+      if (other.languages != null)
+        return false;
+    } else if (!this.languages.equals(other.languages))
+      return false;
     return true;
   }
 
@@ -124,10 +139,10 @@ public class BspConnectionDetails {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.argv == null) ? 0 : this.argv.hashCode());
-    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.bspVersion == null) ? 0 : this.bspVersion.hashCode());
-    return prime * result + ((this.languages == null) ? 0 : this.languages.hashCode());
+    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.argv== null) ? 0 : this.argv.hashCode());
+    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.bspVersion== null) ? 0 : this.bspVersion.hashCode());
+    return prime * result + ((this.languages== null) ? 0 : this.languages.hashCode());
   }
 }

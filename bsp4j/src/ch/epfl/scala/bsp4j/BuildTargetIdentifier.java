@@ -6,13 +6,13 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * A unique identifier for a target, can use any URI-compatible encoding as long as it is unique
- * within the workspace. Clients should not infer metadata out of the URI structure such as the path
- * or query parameters, use `BuildTarget` instead.
+ * A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
+ * Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
  */
 @SuppressWarnings("all")
 public class BuildTargetIdentifier {
-  @NonNull private String uri;
+  @NonNull
+  private String uri;
 
   public BuildTargetIdentifier(@NonNull final String uri) {
     this.uri = uri;
@@ -39,19 +39,24 @@ public class BuildTargetIdentifier {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BuildTargetIdentifier other = (BuildTargetIdentifier) obj;
     if (this.uri == null) {
-      if (other.uri != null) return false;
-    } else if (!this.uri.equals(other.uri)) return false;
+      if (other.uri != null)
+        return false;
+    } else if (!this.uri.equals(other.uri))
+      return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.uri == null) ? 0 : this.uri.hashCode());
+    return 31 * 1 + ((this.uri== null) ? 0 : this.uri.hashCode());
   }
 }

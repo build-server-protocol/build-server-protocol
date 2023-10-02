@@ -6,28 +6,29 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * The completion of a compilation task should be signalled with a `build/taskFinish` notification.
- * When the compilation unit is a build target, the notification's `dataKind` field must be
- * `compile-report` and the `data` field must include a `CompileReport` object:
+ * The completion of a compilation task should be signalled with a
+ * `build/taskFinish` notification. When the compilation unit is a build target,
+ * the notification's `dataKind` field must be `compile-report` and the `data`
+ * field must include a `CompileReport` object:
  */
 @SuppressWarnings("all")
 public class CompileReport {
-  @NonNull private BuildTargetIdentifier target;
+  @NonNull
+  private BuildTargetIdentifier target;
 
   private String originId;
 
-  @NonNull private Integer errors;
+  @NonNull
+  private Integer errors;
 
-  @NonNull private Integer warnings;
+  @NonNull
+  private Integer warnings;
 
   private Long time;
 
   private Boolean noOp;
 
-  public CompileReport(
-      @NonNull final BuildTargetIdentifier target,
-      @NonNull final Integer errors,
-      @NonNull final Integer warnings) {
+  public CompileReport(@NonNull final BuildTargetIdentifier target, @NonNull final Integer errors, @NonNull final Integer warnings) {
     this.target = target;
     this.errors = errors;
     this.warnings = warnings;
@@ -106,28 +107,43 @@ public class CompileReport {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     CompileReport other = (CompileReport) obj;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     if (this.originId == null) {
-      if (other.originId != null) return false;
-    } else if (!this.originId.equals(other.originId)) return false;
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     if (this.errors == null) {
-      if (other.errors != null) return false;
-    } else if (!this.errors.equals(other.errors)) return false;
+      if (other.errors != null)
+        return false;
+    } else if (!this.errors.equals(other.errors))
+      return false;
     if (this.warnings == null) {
-      if (other.warnings != null) return false;
-    } else if (!this.warnings.equals(other.warnings)) return false;
+      if (other.warnings != null)
+        return false;
+    } else if (!this.warnings.equals(other.warnings))
+      return false;
     if (this.time == null) {
-      if (other.time != null) return false;
-    } else if (!this.time.equals(other.time)) return false;
+      if (other.time != null)
+        return false;
+    } else if (!this.time.equals(other.time))
+      return false;
     if (this.noOp == null) {
-      if (other.noOp != null) return false;
-    } else if (!this.noOp.equals(other.noOp)) return false;
+      if (other.noOp != null)
+        return false;
+    } else if (!this.noOp.equals(other.noOp))
+      return false;
     return true;
   }
 
@@ -136,11 +152,11 @@ public class CompileReport {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.errors == null) ? 0 : this.errors.hashCode());
-    result = prime * result + ((this.warnings == null) ? 0 : this.warnings.hashCode());
-    result = prime * result + ((this.time == null) ? 0 : this.time.hashCode());
-    return prime * result + ((this.noOp == null) ? 0 : this.noOp.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.errors== null) ? 0 : this.errors.hashCode());
+    result = prime * result + ((this.warnings== null) ? 0 : this.warnings.hashCode());
+    result = prime * result + ((this.time== null) ? 0 : this.time.hashCode());
+    return prime * result + ((this.noOp== null) ? 0 : this.noOp.hashCode());
   }
 }

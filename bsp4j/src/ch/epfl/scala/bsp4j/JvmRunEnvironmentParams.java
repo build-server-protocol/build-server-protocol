@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmRunEnvironmentParams {
-  @NonNull private List<BuildTargetIdentifier> targets;
+  @NonNull
+  private List<BuildTargetIdentifier> targets;
 
   private String originId;
 
@@ -47,16 +48,23 @@ public class JvmRunEnvironmentParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     JvmRunEnvironmentParams other = (JvmRunEnvironmentParams) obj;
     if (this.targets == null) {
-      if (other.targets != null) return false;
-    } else if (!this.targets.equals(other.targets)) return false;
+      if (other.targets != null)
+        return false;
+    } else if (!this.targets.equals(other.targets))
+      return false;
     if (this.originId == null) {
-      if (other.originId != null) return false;
-    } else if (!this.originId.equals(other.originId)) return false;
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     return true;
   }
 
@@ -65,7 +73,7 @@ public class JvmRunEnvironmentParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
-    return prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

@@ -1,2 +1,1 @@
 common --jvmopt=-Djava.security.manager=allow
-run --@aspect_rules_format//format:java_enabled

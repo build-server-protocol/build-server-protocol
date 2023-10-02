@@ -4,8 +4,8 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * Clients can use these capabilities to notify users what BSP endpoints can and cannot be used and
- * why.
+ * Clients can use these capabilities to notify users what BSP endpoints can and
+ * cannot be used and why.
  */
 @SuppressWarnings("all")
 public class BuildTargetCapabilities {
@@ -17,7 +17,8 @@ public class BuildTargetCapabilities {
 
   private Boolean canDebug;
 
-  public BuildTargetCapabilities() {}
+  public BuildTargetCapabilities() {
+  }
 
   @Pure
   public Boolean getCanCompile() {
@@ -69,22 +70,33 @@ public class BuildTargetCapabilities {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BuildTargetCapabilities other = (BuildTargetCapabilities) obj;
     if (this.canCompile == null) {
-      if (other.canCompile != null) return false;
-    } else if (!this.canCompile.equals(other.canCompile)) return false;
+      if (other.canCompile != null)
+        return false;
+    } else if (!this.canCompile.equals(other.canCompile))
+      return false;
     if (this.canTest == null) {
-      if (other.canTest != null) return false;
-    } else if (!this.canTest.equals(other.canTest)) return false;
+      if (other.canTest != null)
+        return false;
+    } else if (!this.canTest.equals(other.canTest))
+      return false;
     if (this.canRun == null) {
-      if (other.canRun != null) return false;
-    } else if (!this.canRun.equals(other.canRun)) return false;
+      if (other.canRun != null)
+        return false;
+    } else if (!this.canRun.equals(other.canRun))
+      return false;
     if (this.canDebug == null) {
-      if (other.canDebug != null) return false;
-    } else if (!this.canDebug.equals(other.canDebug)) return false;
+      if (other.canDebug != null)
+        return false;
+    } else if (!this.canDebug.equals(other.canDebug))
+      return false;
     return true;
   }
 
@@ -93,9 +105,9 @@ public class BuildTargetCapabilities {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.canCompile == null) ? 0 : this.canCompile.hashCode());
-    result = prime * result + ((this.canTest == null) ? 0 : this.canTest.hashCode());
-    result = prime * result + ((this.canRun == null) ? 0 : this.canRun.hashCode());
-    return prime * result + ((this.canDebug == null) ? 0 : this.canDebug.hashCode());
+    result = prime * result + ((this.canCompile== null) ? 0 : this.canCompile.hashCode());
+    result = prime * result + ((this.canTest== null) ? 0 : this.canTest.hashCode());
+    result = prime * result + ((this.canRun== null) ? 0 : this.canRun.hashCode());
+    return prime * result + ((this.canDebug== null) ? 0 : this.canDebug.hashCode());
   }
 }
