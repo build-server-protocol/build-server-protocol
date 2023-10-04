@@ -35,7 +35,8 @@ object Main {
     val generatorOutput = output.resolve("generator")
     val xtendOutput = output.resolve("xtend")
 
-    new FilesGenerator(name, generatorOutput, generatorScript, codegenFiles, additionalCommands).generateFiles()
+    new FilesGenerator(name, generatorOutput, generatorScript, codegenFiles, additionalCommands)
+      .generateFiles()
 
     val injector = XtendInjectorSingleton.INJECTOR
     val compiler: XtendBatchCompiler = injector.getInstance(classOf[XtendBatchCompiler])
@@ -62,7 +63,12 @@ object Main {
       new CodegenFile(pathAfterXtend, contentAfterXtend)
     }.asJava
 
-    new FilesGenerator(name, xtendOutput, generatorScript, codegenFilesAfterXtend, additionalCommands).writeScript()
+    new FilesGenerator(
+      name,
+      xtendOutput,
+      generatorScript,
+      codegenFilesAfterXtend,
+      additionalCommands
+    ).writeScript()
   }
 }
-

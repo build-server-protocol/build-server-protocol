@@ -7,7 +7,16 @@ import traits.EnumKindTrait.EnumKind.{CLOSED, OPEN}
 import software.amazon.smithy.model.Model
 import software.amazon.smithy.model.shapes._
 import software.amazon.smithy.model.traits._
-import traits.{DataKindTrait, DataTrait, DocsPriorityTrait, EnumKindTrait, JsonNotificationTrait, JsonRequestTrait, SetTrait, UntaggedUnionTrait}
+import traits.{
+  DataKindTrait,
+  DataTrait,
+  DocsPriorityTrait,
+  EnumKindTrait,
+  JsonNotificationTrait,
+  JsonRequestTrait,
+  SetTrait,
+  UntaggedUnionTrait
+}
 
 import java.util.Optional
 import scala.collection.mutable.{Map => MMap}
