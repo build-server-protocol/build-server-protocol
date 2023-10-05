@@ -139,9 +139,6 @@ maven_install(
         "org.typelevel:cats-core_2.13:2.9.0",
         "org.typelevel:cats-kernel_2.13:2.9.0",
 
-        # scala formatting
-        "org.scalameta:scalafmt-cli_2.13:3.7.14",
-
         # scala runtime libs
         "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-core_2.13:2.23.2",
         "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-macros_2.13:2.23.2",
@@ -231,7 +228,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "aspect_rules_format",
-    commit = "d436a0690967dd6eba4f136550fc1609ca50e4e3",
+    commit = "a416c6b3744ce9f9f4307a2a9b135328eb009de9",
     remote = "https://github.com/agluszak/bazel-super-formatter.git",
 )
 
@@ -242,6 +239,10 @@ rules_format_dependencies()
 load("@aspect_rules_format//format:dependencies.bzl", "parse_dependencies")
 
 parse_dependencies()
+
+load("@aspect_rules_format//format:dependencies.bzl", "rules_format_setup")
+
+rules_format_setup()
 
 # Installs toolchains for running programs under Node, Python, etc.
 # Be sure to register your own toolchains before this.
