@@ -1,50 +1,47 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-bazel_skylib_version = "1.4.1"
+BAZEL_SKYLIB_VERSION = "1.4.2"
 
-bazel_skylib_sha = "b8a1527901774180afc798aeb28c4634bdccf19c4d98e7bdd1ce79d1fe9aaad7"
+BAZEL_SKYLIB_SHA = "66ffd9315665bfaafc96b52278f57c7e2dd09f5ede279ea6d39b2be471e7e3aa"
 
 http_archive(
     name = "bazel_skylib",
-    sha256 = bazel_skylib_sha,
+    sha256 = BAZEL_SKYLIB_SHA,
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (bazel_skylib_version, bazel_skylib_version),
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (bazel_skylib_version, bazel_skylib_version),
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (BAZEL_SKYLIB_VERSION, BAZEL_SKYLIB_VERSION),
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (BAZEL_SKYLIB_VERSION, BAZEL_SKYLIB_VERSION),
     ],
 )
 
+RULES_PYTHON_VERSION = "0.26.0"
+
+RULES_PYTHON_SHA = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b"
+
 http_archive(
     name = "rules_python",
-    sha256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036",
-    strip_prefix = "rules_python-0.25.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.25.0/rules_python-0.25.0.tar.gz",
+    sha256 = RULES_PYTHON_SHA,
+    strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
+    url = "https://github.com/bazelbuild/rules_python/releases/download/%s/rules_python-%s.tar.gz" % (RULES_PYTHON_VERSION, RULES_PYTHON_VERSION),
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories")
 
 py_repositories()
 
-rules_scala_version = "6.1.0"
+RULES_SCALA_VERSION = "6.2.0"
 
-rules_scala_sha = "cc590e644b2d5c6a87344af5e2c683017fdc85516d9d64b37f15d33badf2e84c"
+RULES_SCALA_SHA = "ae4e74b6c696f40544cafb06b26bf4e601f83a0f29fb6500f0275c988f8cfe40"
 
 http_archive(
     name = "io_bazel_rules_scala",
-    sha256 = rules_scala_sha,
-    strip_prefix = "rules_scala-%s" % rules_scala_version,
-    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (rules_scala_version, rules_scala_version),
+    sha256 = RULES_SCALA_SHA,
+    strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
+    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
 )
 
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
 
-# Stores Scala version and other configuration
-# 2.12 is a default version, other versions can be use by passing them explicitly:
-# scala_config(scala_version = "2.11.12")
-# Scala 3 requires extras...
-#   3.2 should be supported on master. Please note that Scala artifacts for version (3.2.2) are not defined in
-#   Rules Scala, they need to be provided by your WORKSPACE. You can use external loader like
-#   https://github.com/bazelbuild/rules_jvm_external
-scala_config(scala_version = "2.13.6")
+scala_config(scala_version = "2.13.12")
 
 load("@io_bazel_rules_scala//scala:scala.bzl", "rules_scala_setup", "rules_scala_toolchain_deps_repositories")
 
@@ -71,19 +68,14 @@ scalatest_repositories()
 
 scalatest_toolchain()
 
-# Remove once bazel-super-formatter supports scalafmt
-#scalafmt_repositories()
+RULES_KOTLIN_VERSION = "1.8.1"
 
-#scalafmt_default_config()
-
-rules_kotlin_version = "1.8"
-
-rules_kotlin_sha = "01293740a16e474669aba5b5a1fe3d368de5832442f164e4fbfc566815a8bc3a"
+RULES_KOTLIN_SHA = "a630cda9fdb4f56cf2dc20a4bf873765c41cf00e9379e8d59cd07b24730f4fde"
 
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = rules_kotlin_sha,
-    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+    sha256 = RULES_KOTLIN_SHA,
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % RULES_KOTLIN_VERSION],
 )
 
 load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
@@ -94,15 +86,15 @@ load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 
 kt_register_toolchains()  # to use the default toolchain, otherwise see toolchains below
 
-RULES_JVM_EXTERNAL_TAG = "5.3"
+RULES_JVM_EXTERNAL_VERSION = "5.3"
 
 RULES_JVM_EXTERNAL_SHA = "d31e369b854322ca5098ea12c69d7175ded971435e55c18dd9dd5f29cc5249ac"
 
 http_archive(
     name = "rules_jvm_external",
     sha256 = RULES_JVM_EXTERNAL_SHA,
-    strip_prefix = "rules_jvm_external-{}".format(RULES_JVM_EXTERNAL_TAG),
-    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
+    strip_prefix = "rules_jvm_external-{}".format(RULES_JVM_EXTERNAL_VERSION),
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_VERSION, RULES_JVM_EXTERNAL_VERSION),
 )
 
 load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
@@ -185,11 +177,15 @@ maven_install(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+RULES_JS_VERSION = "1.32.2"
+
+RULES_JS_SHA = "77c4ea46c27f96e4aadcc580cd608369208422cf774988594ae8a01df6642c82"
+
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "77c4ea46c27f96e4aadcc580cd608369208422cf774988594ae8a01df6642c82",
-    strip_prefix = "rules_js-1.32.2",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v1.32.2/rules_js-v1.32.2.tar.gz",
+    sha256 = RULES_JS_SHA,
+    strip_prefix = "rules_js-%s" % RULES_JS_VERSION,
+    url = "https://github.com/aspect-build/rules_js/releases/download/%s/rules_js-%s.tar.gz" % (RULES_JS_VERSION, RULES_JS_VERSION),
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -217,11 +213,15 @@ load("@npm//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
 
+RULES_MULTIRUN_VERSION = "0.6.1"
+
+RULES_MULTIRUN_SHA = "9cd384e42b2da00104f0e18f25e66285aa21f64b573c667638a7a213206885ab"
+
 http_archive(
     name = "rules_multirun",
-    sha256 = "9cd384e42b2da00104f0e18f25e66285aa21f64b573c667638a7a213206885ab",
-    strip_prefix = "rules_multirun-0.6.1",
-    url = "https://github.com/keith/rules_multirun/archive/refs/tags/0.6.1.tar.gz",
+    sha256 = RULES_MULTIRUN_SHA,
+    strip_prefix = "rules_multirun-%s" % RULES_MULTIRUN_VERSION,
+    url = "https://github.com/keith/rules_multirun/archive/refs/tags/v%s.tar.gz" % RULES_MULTIRUN_VERSION,
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
