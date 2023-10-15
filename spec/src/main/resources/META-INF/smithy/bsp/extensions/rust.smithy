@@ -110,7 +110,7 @@ structure RustPackage {
     /// Each feature maps to an array of features or dependencies it enables.
     /// The entry named "default" defines which features are enabled by default.
     @required
-    features: FeatureDependencyGraph
+    features: FeaturesDependencyGraph
     /// Array of features enabled on this package.
     @required
     enabledFeatures: Features
@@ -215,7 +215,7 @@ list Features {
 
 /// The feature dependency graph is a mapping between
 /// feature and the features it turns on
-map FeatureDependencyGraph {
+map FeaturesDependencyGraph {
     key: Feature
     value: Features
 }
