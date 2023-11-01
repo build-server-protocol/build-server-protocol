@@ -29,7 +29,7 @@ inThisBuild(
 
 lazy val V = new {
   val scala212 = "2.12.18"
-  val scala213 = "2.13.11"
+  val scala213 = "2.13.12"
   val supportedScalaVersions = List(scala212, scala213)
   val cats = "2.9.0"
   val jsoniter = "2.23.5"
