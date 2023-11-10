@@ -9,6 +9,8 @@ import org.scalatest.funsuite.AnyFunSuite
 import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
+import org.eclipse.lsp4j.jsonrpc.json.adapters.EitherTypeAdapter
+
 import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
@@ -16,7 +18,10 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChecks {
 
-  implicit val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
+  implicit val gson: Gson = new GsonBuilder()
+    .registerTypeAdapterFactory(new EitherTypeAdapter.Factory)
+    .setPrettyPrinting()
+    .create()
 
   def assertSerializationRoundtrip[T4j, T4s](
       bsp4jValue: T4j
@@ -533,6 +538,11 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
   test("PythonOptionsResult") {
     forAll { a: bsp4j.PythonOptionsResult =>
       assertSerializationRoundtrip[bsp4j.PythonOptionsResult, bsp4s.PythonOptionsResult](a)
+    }
+  }
+  test("CancelRequestParams") {
+    forAll { a: bsp4j.CancelRequestParams =>
+      assertSerializationRoundtrip[bsp4j.CancelRequestParams, bsp4s.CancelRequestParams](a)
     }
   }
 }
