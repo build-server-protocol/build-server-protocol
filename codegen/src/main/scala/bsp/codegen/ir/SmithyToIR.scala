@@ -258,6 +258,8 @@ class SmithyToIR(model: Model) {
         .getOrElse(List.empty)
     }
 
+    override def unionShape(shape: UnionShape): List[Def] = aliasShape(shape)
+
     override def booleanShape(shape: BooleanShape): List[Def] = aliasShape(shape)
 
     override def integerShape(shape: IntegerShape): List[Def] = aliasShape(shape)
