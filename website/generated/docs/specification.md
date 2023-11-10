@@ -338,6 +338,14 @@ export interface TaskId {
 export type Identifier = string;
 ```
 
+#### OriginId
+
+Represents the identifier of a BSP request.
+
+```ts
+export type OriginId = string;
+```
+
 #### StatusCode
 
 Included in notifications of tasks or requests to signal the completion state.
@@ -1329,7 +1337,7 @@ export interface ShowMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1354,14 +1362,6 @@ export enum MessageType {
 }
 ```
 
-#### RequestId
-
-Represents the identifier of a BSP request.
-
-```ts
-export type RequestId = string;
-```
-
 ### OnBuildLogMessage: notification
 
 The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
@@ -1384,7 +1384,7 @@ export interface LogMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1427,7 +1427,7 @@ export interface PublishDiagnosticsParams {
   buildTarget: BuildTargetIdentifier;
 
   /** The request id that originated this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The diagnostics to be published by the client. */
   diagnostics: Diagnostic[];

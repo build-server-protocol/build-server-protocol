@@ -8,6 +8,7 @@ use traits#enumKind
 use traits#jsonNotification
 use traits#jsonRPC
 use traits#jsonRequest
+use traits#untaggedUnion
 
 /// An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
 integer Integer
@@ -131,7 +132,6 @@ enum BuildTargetTag {
     /// The original motivation to add the "manual" tag comes from a similar functionality
     /// that exists in Bazel, where targets with this tag have to be specified explicitly
     /// on the command line.
-    ///
     MANUAL = "manual"
 }
 
@@ -264,7 +264,6 @@ operation BuildShutdown {
 @jsonNotification("build/exit")
 operation OnBuildExit {
 }
-
 
 /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
 ///
@@ -506,10 +505,8 @@ operation BuildTargetCleanCache {
     output: CleanCacheResult
 }
 
-
 /// Represents the identifier of a BSP request.
-string RequestId
-
+string OriginId
 
 list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
@@ -654,7 +651,7 @@ structure MessageParams {
     /// The request id that originated this notification.
     /// The originId field helps clients know which request originated a notification in case several requests are handled by the
     /// client at the same time. It will only be populated if the client defined it in the request that triggered this notification.
-    originId: RequestId
+    originId: OriginId
     /// The actual message.
     @required
     message: String
@@ -691,7 +688,7 @@ structure PublishDiagnosticsParams {
     @required
     buildTarget: BuildTargetIdentifier
     /// The request id that originated this notification.
-    originId: RequestId
+    originId: OriginId
     /// The diagnostics to be published by the client.
     @required
     diagnostics: Diagnostics
@@ -772,6 +769,7 @@ intEnum DiagnosticSeverity {
     HINT = 4
 }
 
+@untaggedUnion
 union Code {
     string: String
     integer: Integer
