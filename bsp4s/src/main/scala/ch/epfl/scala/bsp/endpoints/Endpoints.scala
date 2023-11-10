@@ -367,3 +367,10 @@ trait DebugSession {
     */
   object start extends Endpoint[DebugSessionParams, DebugSessionAddress]("debugSession/start")
 }
+object $ extends $
+trait $ {
+
+  /** Like the language server protocol, a notification to ask the server to cancel a request.
+    */
+  object cancelRequest extends Endpoint[CancelRequestParams, Unit]("$/cancelRequest")
+}

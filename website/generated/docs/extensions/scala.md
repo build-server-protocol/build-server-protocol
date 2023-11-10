@@ -9,7 +9,7 @@ protocol.
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## BSP Server remote interface
 
@@ -189,13 +189,15 @@ export interface ScalaMainClass {
   /** The main class to run. */
   className: string;
 
-  /** The user arguments to the main entrypoint. */
+  /** The user arguments to the main entrypoint.
+   * Deprecated: Use `buildTarget/run` params instead */
   arguments: string[];
 
   /** The jvm options for the application. */
   jvmOptions: string[];
 
-  /** The environment variables for the application. */
+  /** The environment variables for the application.
+   * Deprecated: Use `buildTarget/run` params instead */
   environmentVariables?: string[];
 }
 ```
@@ -400,7 +402,8 @@ export interface ScalaTestSuites {
   /** Additional jvmOptions which will be passed to the forked JVM */
   jvmOptions: string[];
 
-  /** Enviroment variables should be an array of strings in format KEY=VALUE */
+  /** Enviroment variables should be an array of strings in format KEY=VALUE
+   * Deprecated: Use `buildTarget/test` params instead */
   environmentVariables: string[];
 }
 ```

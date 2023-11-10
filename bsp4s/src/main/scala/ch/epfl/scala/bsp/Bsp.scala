@@ -1,5 +1,7 @@
 package ch.epfl.scala.bsp
 
+import ch.epfl.scala.utils.CustomCodec
+
 import java.net.{URI, URISyntaxException}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
@@ -11,7 +13,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import jsonrpc4s.RawJson
 
 object Bsp4s {
-  val ProtocolVersion: String = "2.1.0"
+  val ProtocolVersion: String = "2.2.0"
 }
 
 final case class Uri private[Uri] (val value: String) {
@@ -203,6 +205,16 @@ object BuildTargetTag {
   val Manual = "manual"
   val NoIde = "no-ide"
   val Test = "test"
+}
+
+final case class CancelRequestParams(
+    id: Either[String, Int]
+)
+
+object CancelRequestParams {
+  implicit val codec: JsonValueCodec[CancelRequestParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 /** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata.
