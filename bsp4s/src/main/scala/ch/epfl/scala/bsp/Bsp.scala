@@ -11,7 +11,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import jsonrpc4s.RawJson
 
 object Bsp4s {
-  val ProtocolVersion: String = "2.1.0"
+  val ProtocolVersion: String = "2.2.0"
 }
 
 final case class Uri private[Uri] (val value: String) {
