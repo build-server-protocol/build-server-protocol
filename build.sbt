@@ -29,19 +29,19 @@ inThisBuild(
 
 lazy val V = new {
   val scala212 = "2.12.18"
-  val scala213 = "2.13.11"
+  val scala213 = "2.13.12"
   val supportedScalaVersions = List(scala212, scala213)
-  val cats = "2.9.0"
-  val jsoniter = "2.23.2"
+  val cats = "2.10.0"
+  val jsoniter = "2.23.5"
   val java8Compat = "1.0.2"
   val lsp4j = "0.20.1"
   val scalacheck = "1.17.0"
   val scalaCollectionCompat = "2.11.0"
   val osLib = "0.9.1"
   val decline = "2.4.1"
-  val smithy = "1.35.0"
+  val smithy = "1.40.0"
   val diffutils = "1.3.0"
-  val scalatest = "3.2.16"
+  val scalatest = "3.2.17"
   val ipcsocket = "1.0.1"
   val scalatestScalacheck = "3.2.14.0"
   val jsonrpc4s = "0.1.0"
@@ -193,14 +193,6 @@ lazy val codegen = project
     )
   )
 
-// Remove whatever comes after the + sign in the version
-def cleanLibraryVersion(version: String): String = {
-  println(s"Cleaning version $version")
-  val idx = version.indexOf('+')
-  if (idx < 0) version
-  else version.substring(0, idx)
-}
-
 lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j, codegen)
@@ -209,7 +201,7 @@ lazy val docs = project
     publish / skip := true,
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "generated" / "docs",
     mdocVariables := Map(
-      "LIBRARY_VERSION" -> cleanLibraryVersion(version.value)
+      "LIBRARY_VERSION" -> "2.1.0"
     ),
     TaskKey[Unit]("format") := {
       "yarn --cwd website install" #&&

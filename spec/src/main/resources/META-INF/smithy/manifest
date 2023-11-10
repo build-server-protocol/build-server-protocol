@@ -1,5 +1,6 @@
 bsp/bsp.smithy
 bsp/tags.smithy
+bsp/extensions/cancel.smithy
 bsp/extensions/cargo.smithy
 bsp/extensions/cpp.smithy
 bsp/extensions/java.smithy

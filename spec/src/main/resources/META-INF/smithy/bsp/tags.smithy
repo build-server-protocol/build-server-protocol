@@ -21,6 +21,9 @@ apply BuildTargetIdentifier @docsPriority(9)
 apply TaskId @tags(["basic"])
 apply TaskId @docsPriority(8)
 
+apply OriginId @tags(["basic"])
+apply OriginId @docsPriority(8)
+
 apply StatusCode @tags(["basic"])
 apply StatusCode @docsPriority(7)
 

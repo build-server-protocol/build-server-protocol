@@ -40,7 +40,7 @@ _Past Maintainers_
 
 ## Protocol Changelog
 
-### Unreleased
+### 2.2.0 (Unreleased)
 
 - Add unstable `run/printStdout`, `run/printStderr` and `run/readStdin` notifications
 - Add an optional `originId` field to `TaskStartParams`, `TaskProgressParams` and `TaskFinishParams`
