@@ -107,7 +107,7 @@ server like Dotty IDE). It is up to the client to decide when to start
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## Common shapes
 
@@ -336,6 +336,14 @@ export interface TaskId {
 
 ```ts
 export type Identifier = string;
+```
+
+#### OriginId
+
+Represents the identifier of a BSP request.
+
+```ts
+export type OriginId = string;
 ```
 
 #### StatusCode
@@ -1329,7 +1337,7 @@ export interface ShowMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1354,14 +1362,6 @@ export enum MessageType {
 }
 ```
 
-#### RequestId
-
-Represents the identifier of a BSP request.
-
-```ts
-export type RequestId = string;
-```
-
 ### OnBuildLogMessage: notification
 
 The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
@@ -1384,7 +1384,7 @@ export interface LogMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1427,7 +1427,7 @@ export interface PublishDiagnosticsParams {
   buildTarget: BuildTargetIdentifier;
 
   /** The request id that originated this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The diagnostics to be published by the client. */
   diagnostics: Diagnostic[];
@@ -1894,7 +1894,7 @@ export interface CompileReport {
   target: BuildTargetIdentifier;
 
   /** An optional request id to know the origin of this report.
-   * Deprecated: use the field in TaskFinishParams instead. */
+   * Deprecated: Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The total number of reported errors compiling this target. */
@@ -1975,7 +1975,7 @@ export type TestFinishData = any;
 
 ```ts
 export interface TestReport {
-  /** Deprecated: use the field in TaskFinishParams instead. */
+  /** Deprecated: Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The build target that was compiled. */
