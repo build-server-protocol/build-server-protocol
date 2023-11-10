@@ -107,7 +107,7 @@ server like Dotty IDE). It is up to the client to decide when to start
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## Common shapes
 
