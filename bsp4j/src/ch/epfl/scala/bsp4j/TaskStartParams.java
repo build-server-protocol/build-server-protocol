@@ -9,8 +9,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TaskStartParams {
-  @NonNull
-  private TaskId taskId;
+  @NonNull private TaskId taskId;
 
   private String originId;
 
@@ -98,43 +97,28 @@ public class TaskStartParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     TaskStartParams other = (TaskStartParams) obj;
     if (this.taskId == null) {
-      if (other.taskId != null)
-        return false;
-    } else if (!this.taskId.equals(other.taskId))
-      return false;
+      if (other.taskId != null) return false;
+    } else if (!this.taskId.equals(other.taskId)) return false;
     if (this.originId == null) {
-      if (other.originId != null)
-        return false;
-    } else if (!this.originId.equals(other.originId))
-      return false;
+      if (other.originId != null) return false;
+    } else if (!this.originId.equals(other.originId)) return false;
     if (this.eventTime == null) {
-      if (other.eventTime != null)
-        return false;
-    } else if (!this.eventTime.equals(other.eventTime))
-      return false;
+      if (other.eventTime != null) return false;
+    } else if (!this.eventTime.equals(other.eventTime)) return false;
     if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
-      return false;
+      if (other.message != null) return false;
+    } else if (!this.message.equals(other.message)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -143,11 +127,11 @@ public class TaskStartParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.taskId== null) ? 0 : this.taskId.hashCode());
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.eventTime== null) ? 0 : this.eventTime.hashCode());
-    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.taskId == null) ? 0 : this.taskId.hashCode());
+    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.eventTime == null) ? 0 : this.eventTime.hashCode());
+    result = prime * result + ((this.message == null) ? 0 : this.message.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencyModulesItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<DependencyModule> modules;
+  @NonNull private List<DependencyModule> modules;
 
-  public DependencyModulesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<DependencyModule> modules) {
+  public DependencyModulesItem(
+      @NonNull final BuildTargetIdentifier target, @NonNull final List<DependencyModule> modules) {
     this.target = target;
     this.modules = modules;
   }
@@ -51,23 +50,16 @@ public class DependencyModulesItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DependencyModulesItem other = (DependencyModulesItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.modules == null) {
-      if (other.modules != null)
-        return false;
-    } else if (!this.modules.equals(other.modules))
-      return false;
+      if (other.modules != null) return false;
+    } else if (!this.modules.equals(other.modules)) return false;
     return true;
   }
 
@@ -76,7 +68,7 @@ public class DependencyModulesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.modules== null) ? 0 : this.modules.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.modules == null) ? 0 : this.modules.hashCode());
   }
 }

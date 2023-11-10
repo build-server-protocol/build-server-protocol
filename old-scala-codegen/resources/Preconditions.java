@@ -11,13 +11,10 @@
  ******************************************************************************/
 package org.eclipse.lsp4j.util;
 
-/**
- * Utilities for checking method and constructor arguments.
- */
+/** Utilities for checking method and constructor arguments. */
 public final class Preconditions {
 
-  private Preconditions() {
-  }
+  private Preconditions() {}
 
   private static boolean nullChecks = true;
 
@@ -31,5 +28,4 @@ public final class Preconditions {
     }
     return object;
   }
-
 }

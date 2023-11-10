@@ -48,3 +48,6 @@ bazel-*
 .bsp
 .bazelbsp
 projectview.bazelproject
+
+__pycache__/
+project

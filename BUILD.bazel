@@ -32,7 +32,7 @@ command(
 
 command(
     name = "format_all_command",
-    command = "@aspect_rules_format//format",
+    command = "//tools:format",
 )
 
 filegroup(

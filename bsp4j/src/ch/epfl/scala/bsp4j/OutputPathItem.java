@@ -7,11 +7,9 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class OutputPathItem {
-  @NonNull
-  private String uri;
+  @NonNull private String uri;
 
-  @NonNull
-  private OutputPathItemKind kind;
+  @NonNull private OutputPathItemKind kind;
 
   public OutputPathItem(@NonNull final String uri, @NonNull final OutputPathItemKind kind) {
     this.uri = uri;
@@ -50,23 +48,16 @@ public class OutputPathItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     OutputPathItem other = (OutputPathItem) obj;
     if (this.uri == null) {
-      if (other.uri != null)
-        return false;
-    } else if (!this.uri.equals(other.uri))
-      return false;
+      if (other.uri != null) return false;
+    } else if (!this.uri.equals(other.uri)) return false;
     if (this.kind == null) {
-      if (other.kind != null)
-        return false;
-    } else if (!this.kind.equals(other.kind))
-      return false;
+      if (other.kind != null) return false;
+    } else if (!this.kind.equals(other.kind)) return false;
     return true;
   }
 
@@ -75,7 +66,7 @@ public class OutputPathItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
-    return prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
+    return prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
   }
 }

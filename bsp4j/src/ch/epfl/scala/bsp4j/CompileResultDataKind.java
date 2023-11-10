@@ -1,4 +1,3 @@
 package ch.epfl.scala.bsp4j;
 
-public class CompileResultDataKind {
-}
+public class CompileResultDataKind {}

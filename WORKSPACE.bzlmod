@@ -1,0 +1,50 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+RULES_SCALA_VERSION = "6.2.0"
+
+RULES_SCALA_SHA = "ae4e74b6c696f40544cafb06b26bf4e601f83a0f29fb6500f0275c988f8cfe40"
+
+http_archive(
+    name = "io_bazel_rules_scala",
+    sha256 = RULES_SCALA_SHA,
+    strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
+    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+)
+
+load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
+
+scala_config(scala_version = "2.13.12")
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "rules_scala_setup", "rules_scala_toolchain_deps_repositories")
+
+# loads other rules Rules Scala depends on
+rules_scala_setup()
+
+# Loads Maven deps like Scala compiler and standard libs. On production projects you should consider
+# defining a custom deps toolchains to use your project libs instead
+rules_scala_toolchain_deps_repositories(fetch_sources = True)
+
+load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+
+scala_register_toolchains()
+
+load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "scalatest_toolchain")
+
+scalatest_repositories()
+
+scalatest_toolchain()
+
+
+load(
+    "@aspect_rules_lint//format:repositories.bzl",
+    "fetch_java_format",
+    "fetch_jsonnet",
+    "fetch_ktfmt",
+    "fetch_pmd",
+    "fetch_swiftformat",
+    "fetch_terraform",
+)
+
+fetch_java_format()
+
+fetch_ktfmt()

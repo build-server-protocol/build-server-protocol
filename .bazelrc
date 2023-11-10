@@ -1,1 +1,1 @@
-run --@aspect_rules_format//format:scala_enabled
+common --enable_bzlmod

@@ -11,8 +11,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class TestResult {
   private String originId;
 
-  @NonNull
-  private StatusCode statusCode;
+  @NonNull private StatusCode statusCode;
 
   private String dataKind;
 
@@ -74,33 +73,22 @@ public class TestResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     TestResult other = (TestResult) obj;
     if (this.originId == null) {
-      if (other.originId != null)
-        return false;
-    } else if (!this.originId.equals(other.originId))
-      return false;
+      if (other.originId != null) return false;
+    } else if (!this.originId.equals(other.originId)) return false;
     if (this.statusCode == null) {
-      if (other.statusCode != null)
-        return false;
-    } else if (!this.statusCode.equals(other.statusCode))
-      return false;
+      if (other.statusCode != null) return false;
+    } else if (!this.statusCode.equals(other.statusCode)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -109,9 +97,9 @@ public class TestResult {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.statusCode== null) ? 0 : this.statusCode.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.statusCode == null) ? 0 : this.statusCode.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }
