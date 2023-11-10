@@ -193,14 +193,6 @@ lazy val codegen = project
     )
   )
 
-// Remove whatever comes after the + sign in the version
-def cleanLibraryVersion(version: String): String = {
-  println(s"Cleaning version $version")
-  val idx = version.indexOf('+')
-  if (idx < 0) version
-  else version.substring(0, idx)
-}
-
 lazy val docs = project
   .in(file("bsp-docs"))
   .dependsOn(bsp4j, codegen)
@@ -209,7 +201,7 @@ lazy val docs = project
     publish / skip := true,
     mdocOut := (ThisBuild / baseDirectory).value / "website" / "generated" / "docs",
     mdocVariables := Map(
-      "LIBRARY_VERSION" -> cleanLibraryVersion(version.value)
+      "LIBRARY_VERSION" -> "2.1.0"
     ),
     TaskKey[Unit]("format") := {
       "yarn --cwd website install" #&&
