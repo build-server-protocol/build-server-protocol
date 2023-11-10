@@ -502,7 +502,7 @@ operation BuildTargetCleanCache {
 }
 
 /// Represents the identifier of a BSP request.
-string RequestId
+string OriginId
 
 list BuildTargetIdentifiers {
     member: BuildTargetIdentifier
@@ -647,7 +647,7 @@ structure MessageParams {
     /// The request id that originated this notification.
     /// The originId field helps clients know which request originated a notification in case several requests are handled by the
     /// client at the same time. It will only be populated if the client defined it in the request that triggered this notification.
-    originId: RequestId
+    originId: OriginId
     /// The actual message.
     @required
     message: String
@@ -684,7 +684,7 @@ structure PublishDiagnosticsParams {
     @required
     buildTarget: BuildTargetIdentifier
     /// The request id that originated this notification.
-    originId: RequestId
+    originId: OriginId
     /// The diagnostics to be published by the client.
     @required
     diagnostics: Diagnostics
@@ -1214,8 +1214,7 @@ structure CompileReport {
     target: BuildTargetIdentifier
 
     /// An optional request id to know the origin of this report.
-    /// Deprecated: use the field in TaskFinishParams instead.
-    @deprecated
+    @deprecated(message: "Use the field in TaskFinishParams instead")
     originId: Identifier
 
     /// The total number of reported errors compiling this target.
@@ -1287,8 +1286,7 @@ structure TestTask {
 
 @dataKind(kind: "test-report", extends: [TaskFinishData])
 structure TestReport {
-    /// Deprecated: use the field in TaskFinishParams instead.
-    @deprecated
+    @deprecated(message: "Use the field in TaskFinishParams instead")
     originId: Identifier
     /// The build target that was compiled.
     @required

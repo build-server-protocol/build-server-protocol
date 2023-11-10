@@ -3,6 +3,7 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -18,7 +19,7 @@ public class Diagnostic {
 
   private DiagnosticSeverity severity;
 
-  private String code;
+  private Either<String, Integer> code;
 
   private CodeDescription codeDescription;
 
@@ -61,12 +62,28 @@ public class Diagnostic {
   }
 
   @Pure
-  public String getCode() {
+  public Either<String, Integer> getCode() {
     return this.code;
   }
 
-  public void setCode(final String code) {
+  public void setCode(final Either<String, Integer> code) {
     this.code = code;
+  }
+
+  public void setCode(final String code) {
+    if (code == null) {
+      this.code = null;
+      return;
+    }
+    this.code = Either.forLeft(code);
+  }
+
+  public void setCode(final Integer code) {
+    if (code == null) {
+      this.code = null;
+      return;
+    }
+    this.code = Either.forRight(code);
   }
 
   @Pure
