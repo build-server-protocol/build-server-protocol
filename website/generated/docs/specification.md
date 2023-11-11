@@ -363,6 +363,12 @@ export enum StatusCode {
 }
 ```
 
+#### EnvironmentVariables
+
+```ts
+export type EnvironmentVariables = Map<string, string>;
+```
+
 ## BSP Server remote interface
 
 ### BuildInitialize: request
