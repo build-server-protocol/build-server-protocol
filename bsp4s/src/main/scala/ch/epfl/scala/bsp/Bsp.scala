@@ -259,6 +259,17 @@ object CleanCacheResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Structure to capture a description for an error code.
+  */
+final case class CodeDescription(
+    href: Uri
+)
+
+object CodeDescription {
+  implicit val codec: JsonValueCodec[CodeDescription] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String],
@@ -475,12 +486,16 @@ object DependencySourcesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Diagnostic is defined as it is in the LSP.
+  */
 final case class Diagnostic(
     range: Range,
     severity: Option[DiagnosticSeverity],
-    code: Option[String],
+    code: Option[Either[String, Int]],
+    codeDescription: Option[CodeDescription],
     source: Option[String],
     message: String,
+    tags: Option[List[Int]],
     relatedInformation: Option[List[DiagnosticRelatedInformation]],
     dataKind: Option[String],
     data: Option[RawJson]
@@ -488,6 +503,7 @@ final case class Diagnostic(
 
 object Diagnostic {
   implicit val codec: JsonValueCodec[Diagnostic] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 object DiagnosticDataKind {

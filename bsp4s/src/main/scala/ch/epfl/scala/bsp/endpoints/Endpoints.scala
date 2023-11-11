@@ -43,8 +43,6 @@ trait Build {
   /** The Diagnostics notification are sent from the server to the client to signal results of
     * validation runs.
     *
-    * Diagnostic is defined as it is in the LSP.
-    *
     * When reset is true, the client must clean all previous diagnostics associated with the same
     * textDocument and buildTarget and set instead the diagnostics in the request. This is the same
     * behaviour as PublishDiagnosticsParams in the LSP. When reset is false, the diagnostics are
