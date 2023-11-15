@@ -13,6 +13,7 @@ title: Implementations
 | sbt        | [sbt](https://www.scala-sbt.org/)                          | Scala                   | [Since 1.4.0](https://github.com/sbt/sbt/releases/tag/v1.4.0) |
 | scala-cli  | [scala-cli](https://scala-cli.virtuslab.org/)              | Scala                   | Supports Scala and Java.                                      |
 | Cargo      | [cargo-bsp](https://github.com/cargo-bsp/cargo-bsp)        | Rust                    | (Work in progress) Supports Rust.                             |
+| Gradle     | [build-server-for-gradle](https://github.com/microsoft/build-server-for-gradle) | Java | Supports Java.                                              |
 
 ## Build Clients
 
@@ -22,3 +23,4 @@ title: Implementations
 | IntelliJ-BSP    | [JetBrains/intellij-bsp](https://github.com/JetBrains/intellij-bsp)     | Kotlin                  | New implementation with broader language support. |
 | Metals          | [scalameta/metals](https://github.com/scalameta/metals)                 | Scala                   | LSP language server.                              |
 | scala-cli       | [scala-cli](https://scala-cli.virtuslab.org/)                           | Scala                   | Act as BSP client towards Bloop.                  |
+| Gradle for Java | [Microsoft/vscode-gradle](https://github.com/microsoft/vscode-gradle)   | Java and TypeScript     | Act as BSP client towards Build Server for Gradle.|
