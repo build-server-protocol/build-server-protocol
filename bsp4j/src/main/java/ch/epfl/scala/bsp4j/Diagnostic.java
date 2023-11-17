@@ -3,11 +3,15 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+/**
+ * Diagnostic is defined as it is in the LSP.
+ */
 @SuppressWarnings("all")
 public class Diagnostic {
   @NonNull
@@ -15,12 +19,16 @@ public class Diagnostic {
 
   private DiagnosticSeverity severity;
 
-  private String code;
+  private Either<String, Integer> code;
+
+  private CodeDescription codeDescription;
 
   private String source;
 
   @NonNull
   private String message;
+
+  private List<Integer> tags;
 
   private List<DiagnosticRelatedInformation> relatedInformation;
 
@@ -54,12 +62,37 @@ public class Diagnostic {
   }
 
   @Pure
-  public String getCode() {
+  public Either<String, Integer> getCode() {
     return this.code;
   }
 
-  public void setCode(final String code) {
+  public void setCode(final Either<String, Integer> code) {
     this.code = code;
+  }
+
+  public void setCode(final String code) {
+    if (code == null) {
+      this.code = null;
+      return;
+    }
+    this.code = Either.forLeft(code);
+  }
+
+  public void setCode(final Integer code) {
+    if (code == null) {
+      this.code = null;
+      return;
+    }
+    this.code = Either.forRight(code);
+  }
+
+  @Pure
+  public CodeDescription getCodeDescription() {
+    return this.codeDescription;
+  }
+
+  public void setCodeDescription(final CodeDescription codeDescription) {
+    this.codeDescription = codeDescription;
   }
 
   @Pure
@@ -79,6 +112,15 @@ public class Diagnostic {
 
   public void setMessage(@NonNull final String message) {
     this.message = Preconditions.checkNotNull(message, "message");
+  }
+
+  @Pure
+  public List<Integer> getTags() {
+    return this.tags;
+  }
+
+  public void setTags(final List<Integer> tags) {
+    this.tags = tags;
   }
 
   @Pure
@@ -115,8 +157,10 @@ public class Diagnostic {
     b.add("range", this.range);
     b.add("severity", this.severity);
     b.add("code", this.code);
+    b.add("codeDescription", this.codeDescription);
     b.add("source", this.source);
     b.add("message", this.message);
+    b.add("tags", this.tags);
     b.add("relatedInformation", this.relatedInformation);
     b.add("dataKind", this.dataKind);
     b.add("data", this.data);
@@ -148,6 +192,11 @@ public class Diagnostic {
         return false;
     } else if (!this.code.equals(other.code))
       return false;
+    if (this.codeDescription == null) {
+      if (other.codeDescription != null)
+        return false;
+    } else if (!this.codeDescription.equals(other.codeDescription))
+      return false;
     if (this.source == null) {
       if (other.source != null)
         return false;
@@ -157,6 +206,11 @@ public class Diagnostic {
       if (other.message != null)
         return false;
     } else if (!this.message.equals(other.message))
+      return false;
+    if (this.tags == null) {
+      if (other.tags != null)
+        return false;
+    } else if (!this.tags.equals(other.tags))
       return false;
     if (this.relatedInformation == null) {
       if (other.relatedInformation != null)
@@ -184,8 +238,10 @@ public class Diagnostic {
     result = prime * result + ((this.range== null) ? 0 : this.range.hashCode());
     result = prime * result + ((this.severity== null) ? 0 : this.severity.hashCode());
     result = prime * result + ((this.code== null) ? 0 : this.code.hashCode());
+    result = prime * result + ((this.codeDescription== null) ? 0 : this.codeDescription.hashCode());
     result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
     result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
+    result = prime * result + ((this.tags== null) ? 0 : this.tags.hashCode());
     result = prime * result + ((this.relatedInformation== null) ? 0 : this.relatedInformation.hashCode());
     result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
     return prime * result + ((this.data== null) ? 0 : this.data.hashCode());

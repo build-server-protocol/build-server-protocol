@@ -54,12 +54,6 @@ export interface PackageFeatures {
 }
 ```
 
-#### Feature
-
-```ts
-export type Feature = string;
-```
-
 ### SetCargoFeatures: request
 
 **Unstable** (may change in future versions)
@@ -114,22 +108,6 @@ cargo-specific metadata.
 export interface CargoBuildTarget {
   edition: RustEdition;
 
-  required_features: Set<Feature>;
-}
-```
-
-#### RustEdition
-
-The Rust edition.
-
-```ts
-export type RustEdition = string;
-
-export namespace RustEdition {
-  export const E2015 = "2015";
-
-  export const E2018 = "2018";
-
-  export const E2021 = "2021";
+  requiredFeatures: Set<Feature>;
 }
 ```
