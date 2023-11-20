@@ -51,7 +51,7 @@ website(
         "//codegen:codegen.jar",
         "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc",
         "@maven//:com_google_code_gson_gson",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@com_github_jetbrains_kotlin//:lib/kotlin-stdlib.jar",
         "@maven//:software_amazon_smithy_smithy_model",
         "@maven//:software_amazon_smithy_smithy_utils",
         "//spec-traits:spec-traits.jar",

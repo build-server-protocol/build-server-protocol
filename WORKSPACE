@@ -1,8 +1,8 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-BAZEL_SKYLIB_VERSION = "1.4.2"
+BAZEL_SKYLIB_VERSION = "1.5.0"
 
-BAZEL_SKYLIB_SHA = "66ffd9315665bfaafc96b52278f57c7e2dd09f5ede279ea6d39b2be471e7e3aa"
+BAZEL_SKYLIB_SHA = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94"
 
 http_archive(
     name = "bazel_skylib",
@@ -13,9 +13,9 @@ http_archive(
     ],
 )
 
-RULES_PYTHON_VERSION = "0.26.0"
+RULES_PYTHON_VERSION = "0.27.0"
 
-RULES_PYTHON_SHA = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b"
+RULES_PYTHON_SHA = "9acc0944c94adb23fba1c9988b48768b1bacc6583b52a2586895c5b7491e2e31"
 
 http_archive(
     name = "rules_python",
@@ -68,9 +68,9 @@ scalatest_repositories()
 
 scalatest_toolchain()
 
-RULES_KOTLIN_VERSION = "1.8.1"
+RULES_KOTLIN_VERSION = "1.9.0"
 
-RULES_KOTLIN_SHA = "a630cda9fdb4f56cf2dc20a4bf873765c41cf00e9379e8d59cd07b24730f4fde"
+RULES_KOTLIN_SHA = "5766f1e599acf551aa56f49dab9ab9108269b03c557496c54acaf41f98e2b8d6"
 
 http_archive(
     name = "io_bazel_rules_kotlin",
@@ -177,9 +177,9 @@ maven_install(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JS_VERSION = "1.32.2"
+RULES_JS_VERSION = "1.34.0"
 
-RULES_JS_SHA = "77c4ea46c27f96e4aadcc580cd608369208422cf774988594ae8a01df6642c82"
+RULES_JS_SHA = "d9ceb89e97bb5ad53b278148e01a77a3e9100db272ce4ebdcd59889d26b9076e"
 
 http_archive(
     name = "aspect_rules_js",
