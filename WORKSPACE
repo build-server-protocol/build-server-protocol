@@ -185,7 +185,7 @@ http_archive(
     name = "aspect_rules_js",
     sha256 = RULES_JS_SHA,
     strip_prefix = "rules_js-%s" % RULES_JS_VERSION,
-    url = "https://github.com/aspect-build/rules_js/releases/download/%s/rules_js-%s.tar.gz" % (RULES_JS_VERSION, RULES_JS_VERSION),
+    url = "https://github.com/aspect-build/rules_js/releases/download/v%s/rules_js-v%s.tar.gz" % (RULES_JS_VERSION, RULES_JS_VERSION),
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -221,7 +221,7 @@ http_archive(
     name = "rules_multirun",
     sha256 = RULES_MULTIRUN_SHA,
     strip_prefix = "rules_multirun-%s" % RULES_MULTIRUN_VERSION,
-    url = "https://github.com/keith/rules_multirun/archive/refs/tags/v%s.tar.gz" % RULES_MULTIRUN_VERSION,
+    url = "https://github.com/keith/rules_multirun/archive/refs/tags/%s.tar.gz" % RULES_MULTIRUN_VERSION,
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
