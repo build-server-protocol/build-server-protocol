@@ -291,18 +291,6 @@ trait BuildTarget {
   object rustWorkspace
       extends Endpoint[RustWorkspaceParams, RustWorkspaceResult]("buildTarget/rustWorkspace")
 
-  /** **Unstable** (may change in future versions) The Rust workspace request is sent from the
-    * client to the server to query for the information about project's workspace for the given list
-    * of build targets.
-    *
-    * The request is essential to connect and work with `intellij-rust` plugin.
-    *
-    * The request may take a long time, as it may require building a project to some extent (for
-    * example with `cargo check` command).
-    */
-  object rustWorkspace
-      extends Endpoint[RustWorkspaceParams, RustWorkspaceResult]("buildTarget/rustWorkspace")
-
   /** The build target scalac options request is sent from the client to the server to query for the
     * list of compiler options necessary to compile in a given list of targets.
     */
@@ -338,12 +326,13 @@ trait BuildTarget {
 
   /** The build target main classes request is sent from the client to the server to query for the
     * list of main classes that can be fed as arguments to `buildTarget/run`. This method can be
-    * used for the same use cases than the [Scala Test Classes Request](#scala-test-classes-request)
-    * enables. This request may trigger a compilation on the selected build targets. The server is
-    * free to send any number of `build/taskStart`, `build/taskProgress`, `build/taskFinish`,
-    * `build/publishDiagnostics` and `build/logMessage` notifications during compilation before
-    * completing the response. The client will get a `originId` field in `ScalaMainClassesResult` if
-    * the `originId` field in the `ScalaMainClassesParams` is defined.
+    * used for the same use cases than the [Scala Test Classes
+    * Request](#buildtargetscalatestclasses-request) enables. This request may trigger a compilation
+    * on the selected build targets. The server is free to send any number of `build/taskStart`,
+    * `build/taskProgress`, `build/taskFinish`, `build/publishDiagnostics` and `build/logMessage`
+    * notifications during compilation before completing the response. The client will get a
+    * `originId` field in `ScalaMainClassesResult` if the `originId` field in the
+    * `ScalaMainClassesParams` is defined.
     */
   @deprecated("Use buildTarget/jvmRunEnvironment instead")
   object scalaMainClasses
