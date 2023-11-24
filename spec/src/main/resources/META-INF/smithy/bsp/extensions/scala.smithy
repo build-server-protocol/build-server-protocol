@@ -10,7 +10,6 @@ use bsp#DebugSessionParamsData
 use bsp#DiagnosticData
 use bsp#Range
 use bsp#RunParamsData
-use bsp#TestParams
 use bsp#TestParamsData
 use bsp#URIs
 use bsp.jvm#Classpath

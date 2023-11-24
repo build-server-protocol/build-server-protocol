@@ -4,7 +4,7 @@ import bsp.codegen.Lines
 import bsp.codegen.dsl.{block, empty, lines, newline}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
+import bsp.codegen.ir.Hint.{Deprecated, Unstable, Documentation}
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.Primitive._
 import bsp.codegen.ir.Type._
@@ -60,14 +60,15 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): CodegenFile = {
     val requiredFields = fields.filter(_.required)
+    val docsLines = renderDocs(hints)
 
     val allLines = lines(
       renderPkg(shapeId),
       newline,
       "import org.eclipse.lsp4j.generator.JsonRpcData",
       renderImports(fields),
-      renderDocs(hints),
       newline,
+      docsLines,
       "@JsonRpcData",
       block(s"class ${shapeId.getName}")(
         lines(fields.map(renderJavaField)),
@@ -119,13 +120,14 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
   ): CodegenFile = {
     val evt = enumValueType(enumType)
     val tpe = shapeId.getName()
+    val docsLines = renderDocs(hints)
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
       newline,
       "import com.google.gson.annotations.JsonAdapter;",
       "import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;",
       newline,
-      renderDocs(hints),
+      docsLines,
       "@JsonAdapter(EnumTypeAdapter.Factory.class)",
       block(s"public enum $tpe")(
         newline,
@@ -161,10 +163,11 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       hints: List[Hint]
   ): CodegenFile = {
     val tpe = shapeId.getName()
+    val docsLines = renderDocs(hints)
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
       newline,
-      renderDocs(hints),
+      docsLines,
       block(s"public class $tpe") {
         values.map(renderStaticValue(enumType))
       },
@@ -209,10 +212,10 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       case Request      => s"""@JsonRequest("$rpcMethod")"""
     }
     val maybeDeprecated = operation.hints.collectFirst({ case Deprecated(_) => "@Deprecated" })
+    val docsLines = renderDocs(operation.hints)
     val method = operation.name.head.toLower + operation.name.tail
-    val docs = renderDocs(operation.hints)
     lines(
-      docs,
+      docsLines,
       maybeDeprecated,
       rpcAnnotation,
       s"$output $method($input);",
@@ -256,8 +259,11 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
       lines(s"import java.util.List") ++ renderImportFromType(member)
     case TSet(member) =>
       lines(s"import java.util.Set") ++ renderImportFromType(member)
-    case TUntaggedUnion(tpes) => tpes.foldMap(renderImportFromType)
-    case TPrimitive(prim, _)  => empty
+    case TUntaggedUnion(tpes) =>
+      lines(s"import org.eclipse.lsp4j.jsonrpc.messages.Either") ++ tpes.foldMap(
+        renderImportFromType
+      )
+    case TPrimitive(prim, _) => empty
   }
 
   def renderImport(field: Field): Lines = {
@@ -320,7 +326,14 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
     case TCollection(member)  => s"List<${renderType(member)}>"
     case TSet(member)         => s"Set<${renderType(member)}>"
-    case TUntaggedUnion(tpes) => renderType(tpes.head) // Todo what does bsp4j do ?
+    case TUntaggedUnion(tpes) => renderUntaggedUnion(tpes)
+  }
+
+  private def renderUntaggedUnion(types: List[Type]): String = {
+    if (types.size != 2)
+      throw new Exception("Only unions of two types are supported")
+
+    s"Either<${types.map(renderType).mkString(", ")}>"
   }
 
   def renderPrimitive(prim: Primitive): String = prim match {

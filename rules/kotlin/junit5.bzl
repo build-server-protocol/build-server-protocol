@@ -1,4 +1,4 @@
-load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_test")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_test")
 
 def kt_test(name, src, classname = "", deps = [], runtime_deps = [], **kwargs):
     if type(src) != "string":

@@ -170,8 +170,9 @@ class DslTest {
                 -input
             }
         }
+
         val actual = code {
-            lines(els.map {render(it).toString()}, join = ";")
+            lines(els.map { render(it).toString() }, join = ";")
         }
 
         val expected = """

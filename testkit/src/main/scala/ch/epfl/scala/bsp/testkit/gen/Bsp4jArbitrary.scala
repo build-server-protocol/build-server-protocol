@@ -190,6 +190,9 @@ trait Bsp4jArbitrary {
   implicit val arbPythonOptionsResult: Arbitrary[PythonOptionsResult] = Arbitrary(
     genPythonOptionsResult
   )
+  implicit val arbCancelRequestParams: Arbitrary[CancelRequestParams] = Arbitrary(
+    genCancelRequestParams
+  )
 }
 
 object Bsp4jArbitrary extends Bsp4jArbitrary

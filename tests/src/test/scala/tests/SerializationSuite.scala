@@ -86,7 +86,9 @@ class SerializationSuite extends AnyFunSuite {
         Some(bsp4s.DiagnosticSeverity.Error),
         None,
         None,
+        None,
         "message",
+        None,
         Some(List(relatedInformation)),
         dataKind = Some("scala"),
         data = Some(dataJson)

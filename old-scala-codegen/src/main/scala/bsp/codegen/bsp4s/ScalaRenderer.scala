@@ -9,8 +9,7 @@ import bsp.codegen.ir.Type._
 import bsp.codegen.ir._
 import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
 import cats.implicits.toFoldableOps
-import org.jetbrains.bsp.generators.CodegenFile
-import os.RelPath
+import org.jetbrains.bsp.generators.{CodegenFile, Loader}
 import software.amazon.smithy.model.shapes.ShapeId
 
 import java.nio.file.Path
@@ -21,7 +20,13 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   val baseRelPath: Path = Path.of(basepkg.replace(".", "/"))
 
   def render(): List[CodegenFile] = {
-    List(renderEndpoints(), renderDefinitions())
+    List(renderEndpoints(), renderDefinitions(), copyCustomCodec())
+  }
+
+  private def copyCustomCodec(): CodegenFile = {
+    val contents = Loader.INSTANCE.readResource("CustomCodec.scala")
+    val path = Path.of("org", "jetbrains", "bsp", "util", "CustomCodec.scala")
+    new CodegenFile(path, contents)
   }
 
   def renderDefinitions(): CodegenFile = {
@@ -39,6 +44,8 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
     val contents = lines(
       s"package $basepkg",
+      newline,
+      "import org.jetbrains.bsp.util.CustomCodec",
       newline,
       "import java.net.{URI, URISyntaxException}",
       newline,
@@ -111,15 +118,19 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   }
 
   def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): Lines = {
+    val docsLines = renderDocs(hints)
     lines(
-      renderDocs(hints),
+      docsLines,
       paren(s"final case class ${shapeId.getName()}")(
         fields.foldMap(renderScalaField)
       ),
       newline,
       block(s"object ${shapeId.getName()}")(
         lines(
-          s"implicit val codec: JsonValueCodec[${shapeId.getName()}] = JsonCodecMaker.makeWithRequiredCollectionFields"
+          s"implicit val codec: JsonValueCodec[${shapeId.getName()}] = JsonCodecMaker.makeWithRequiredCollectionFields",
+          if (fields.exists(_.tpe.isInstanceOf[TUntaggedUnion]))
+            s"implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt"
+          else Lines.empty
         )
       ),
       newline
@@ -134,8 +145,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
   ): Lines = {
     val valueType = enumValueType(enumType)
     val enumName = shapeId.getName()
+    val docsLines = renderDocs(hints)
     lines(
-      renderDocs(hints),
+      docsLines,
       s"sealed abstract class $enumName(val value: $valueType)",
       block(s"object $enumName")(
         values.map(renderEnumValueDef(enumType, shapeId)),
@@ -165,8 +177,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
       hints: List[Hint]
   ): Lines = {
     val tpe = shapeId.getName()
+    val docsLines = renderDocs(hints)
     lines(
-      renderDocs(hints),
+      docsLines,
       block(s"object $tpe") {
         values.map(renderStaticValue(enumType))
       },
@@ -226,9 +239,10 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     val maybeDeprecated = operation.hints.collectFirst { case Hint.Deprecated(message) =>
       if (message.isEmpty) "@deprecated" else s"""@deprecated("$message")"""
     }
+    val docsLines = renderDocs(operation.hints)
 
     lines(
-      renderDocs(operation.hints),
+      docsLines,
       maybeDeprecated,
       s"""object $name extends Endpoint[$input, $output]("${operation.jsonRPCMethod}")"""
     )
@@ -289,7 +303,15 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
     case TCollection(member)       => s"List[${renderType(member)}]"
     case TSet(member)              => s"Set[${renderType(member)}]"
-    case TUntaggedUnion(tpes)      => renderType(tpes.head) // Todo what does bsp4j do ?
+    case TUntaggedUnion(tpes)      => renderUntaggedUnion(tpes)
+  }
+
+  private def renderUntaggedUnion(types: List[Type]): String = {
+    val primitiveTypes = types.collect { case TPrimitive(prim, _) => prim }
+    if (types.size != 2 || !(primitiveTypes == List(Primitive.PString, Primitive.PInt)))
+      throw new Exception("Only unions with String and Int are supported (order matters)")
+
+    s"Either[${types.map(renderType).mkString(", ")}]"
   }
 
   def renderPrimitive(prim: Primitive, shapeId: ShapeId): String = {

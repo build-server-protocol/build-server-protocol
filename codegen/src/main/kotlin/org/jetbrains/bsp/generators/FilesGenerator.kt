@@ -11,7 +11,7 @@ class FilesGenerator(
     private val codegenFiles: List<CodegenFile>,
     private val languageSpecificActions: List<String> = emptyList()
 ) {
-    
+
     fun generateFiles() {
         if (codegenFiles.isEmpty()) {
             throw RuntimeException("No files to generate")
@@ -23,7 +23,7 @@ class FilesGenerator(
             fullPath.toFile().writeText(it.contents)
         }
     }
-    
+
     fun writeScript() {
         val updateScript = FileWriter(generatorScript)
         updateScript.use { writer ->

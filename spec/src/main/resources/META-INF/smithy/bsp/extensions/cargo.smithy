@@ -5,9 +5,10 @@ namespace bsp.cargo
 use bsp#BuildTargetData
 use bsp#BuildTargetIdentifiers
 use bsp#StatusCode
+use bsp.rust#FeaturesDependencyGraph
+use bsp.rust#Features
+use bsp.rust#RustEdition
 use traits#dataKind
-use traits#set
-use traits#enumKind
 use traits#jsonRPC
 use traits#jsonRequest
 
@@ -26,22 +27,7 @@ structure CargoBuildTarget {
     @required
     edition: RustEdition
     @required
-    required_features: Features
-}
-
-string Feature
-
-@set
-list Features {
-    member: Feature
-}
-
-/// The Rust edition.
-@enumKind("open")
-enum RustEdition {
-    E2015 = "2015"
-    E2018 = "2018"
-    E2021 = "2021"
+    requiredFeatures: Features
 }
 
 /// The cargo features state request is sent from the client to the server to
@@ -61,13 +47,6 @@ structure CargoFeaturesStateResult {
     packagesFeatures: PackagesFeatures
 }
 
-/// The feature dependency graph is a mapping between
-/// feature and the features it turns on
-map FeatureDependencyGraph {
-    key: Feature,
-    value: Features
-}
-
 structure PackageFeatures {
     /// The Cargo package identifier.
     @required
@@ -77,7 +56,7 @@ structure PackageFeatures {
     targets: BuildTargetIdentifiers
     /// The list of available features for the Cargo package.
     @required
-    availableFeatures: FeatureDependencyGraph
+    availableFeatures: FeaturesDependencyGraph
     /// The list of enabled features for the Cargo package.
     @required
     enabledFeatures: Features
@@ -108,7 +87,7 @@ structure SetCargoFeaturesParams {
 }
 
 @unstable
-structure  SetCargoFeaturesResult {
+structure SetCargoFeaturesResult {
     /// The status code of the operation.
     @required
     statusCode: StatusCode
