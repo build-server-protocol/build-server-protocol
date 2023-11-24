@@ -9,7 +9,7 @@ protocol.
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## BSP Server remote interface
 
@@ -52,12 +52,6 @@ export interface PackageFeatures {
   /** The list of enabled features for the Cargo package. */
   enabledFeatures: Set<Feature>;
 }
-```
-
-#### Feature
-
-```ts
-export type Feature = string;
 ```
 
 ### SetCargoFeatures: request
@@ -114,22 +108,6 @@ cargo-specific metadata.
 export interface CargoBuildTarget {
   edition: RustEdition;
 
-  required_features: Set<Feature>;
-}
-```
-
-#### RustEdition
-
-The Rust edition.
-
-```ts
-export type RustEdition = string;
-
-export namespace RustEdition {
-  export const E2015 = "2015";
-
-  export const E2018 = "2018";
-
-  export const E2021 = "2021";
+  requiredFeatures: Set<Feature>;
 }
 ```

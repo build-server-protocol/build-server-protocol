@@ -1,10 +1,10 @@
 package ch.epfl.scala.bsp.testkit.gen
 
 import java.{lang, util}
-
 import UtilGenerators._
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
+import org.eclipse.lsp4j.jsonrpc.messages.Either.forLeft
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck._
 
@@ -815,6 +815,10 @@ trait Bsp4jGenerators {
   lazy val genPythonOptionsResult: Gen[PythonOptionsResult] = for {
     items <- genPythonOptionsItem.list
   } yield new PythonOptionsResult(items)
+
+  lazy val genCancelRequestParams: Gen[CancelRequestParams] = for {
+    id <- arbitrary[String]
+  } yield new CancelRequestParams(forLeft(id))
 
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)

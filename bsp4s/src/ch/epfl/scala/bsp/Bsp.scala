@@ -1,5 +1,7 @@
 package ch.epfl.scala.bsp
 
+import org.jetbrains.bsp.util.CustomCodec
+
 import java.net.{URI, URISyntaxException}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
@@ -11,7 +13,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import jsonrpc4s.RawJson
 
 object Bsp4s {
-  val ProtocolVersion: String = "2.1.0"
+  val ProtocolVersion: String = "2.2.0"
 }
 
 final case class Uri private[Uri] (val value: String) {
@@ -205,11 +207,21 @@ object BuildTargetTag {
   val Test = "test"
 }
 
+final case class CancelRequestParams(
+    id: Either[String, Int]
+)
+
+object CancelRequestParams {
+  implicit val codec: JsonValueCodec[CancelRequestParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
+}
+
 /** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata.
   */
 final case class CargoBuildTarget(
     edition: String,
-    required_features: Set[String]
+    requiredFeatures: Set[String]
 )
 
 object CargoBuildTarget {
@@ -244,6 +256,17 @@ final case class CleanCacheResult(
 
 object CleanCacheResult {
   implicit val codec: JsonValueCodec[CleanCacheResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** Structure to capture a description for an error code.
+  */
+final case class CodeDescription(
+    href: Uri
+)
+
+object CodeDescription {
+  implicit val codec: JsonValueCodec[CodeDescription] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
@@ -463,12 +486,16 @@ object DependencySourcesResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Diagnostic is defined as it is in the LSP.
+  */
 final case class Diagnostic(
     range: Range,
     severity: Option[DiagnosticSeverity],
-    code: Option[String],
+    code: Option[Either[String, Int]],
+    codeDescription: Option[CodeDescription],
     source: Option[String],
     message: String,
+    tags: Option[List[Int]],
     relatedInformation: Option[List[DiagnosticRelatedInformation]],
     dataKind: Option[String],
     data: Option[RawJson]
@@ -476,6 +503,7 @@ final case class Diagnostic(
 
 object Diagnostic {
   implicit val codec: JsonValueCodec[Diagnostic] = JsonCodecMaker.makeWithRequiredCollectionFields
+  implicit val codecForEither: JsonValueCodec[Either[String, Int]] = CustomCodec.forEitherStringInt
 }
 
 object DiagnosticDataKind {
@@ -981,12 +1009,197 @@ object RunResult {
   implicit val codec: JsonValueCodec[RunResult] = JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for `lib` and `example`
+  * target kinds. For other target kinds `bin` crate type is listed.
+  */
+sealed abstract class RustCrateType(val value: Int)
+object RustCrateType {
+  case object Bin extends RustCrateType(1)
+  case object Lib extends RustCrateType(2)
+  case object Rlib extends RustCrateType(3)
+  case object Dylib extends RustCrateType(4)
+  case object Cdylib extends RustCrateType(5)
+  case object Staticlib extends RustCrateType(6)
+  case object ProcMacro extends RustCrateType(7)
+  case object Unknown extends RustCrateType(8)
+
+  implicit val codec: JsonValueCodec[RustCrateType] = new JsonValueCodec[RustCrateType] {
+    def nullValue: RustCrateType = null
+    def encodeValue(msg: RustCrateType, out: JsonWriter): Unit = out.writeVal(msg.value)
+    def decodeValue(in: JsonReader, default: RustCrateType): RustCrateType = {
+      in.readInt() match {
+        case 1 => Bin
+        case 2 => Lib
+        case 3 => Rlib
+        case 4 => Dylib
+        case 5 => Cdylib
+        case 6 => Staticlib
+        case 7 => ProcMacro
+        case 8 => Unknown
+        case n => in.decodeError(s"Unknown message type id for $n")
+      }
+    }
+  }
+}
+object RustDepKind {
+  val Build = "build"
+  val Dev = "dev"
+  val Normal = "normal"
+  val Unclassified = "unclassified"
+}
+
+final case class RustDepKindInfo(
+    kind: String,
+    target: Option[String]
+)
+
+object RustDepKindInfo {
+  implicit val codec: JsonValueCodec[RustDepKindInfo] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class RustDependency(
+    pkg: String,
+    name: Option[String],
+    depKinds: Option[List[RustDepKindInfo]]
+)
+
+object RustDependency {
+  implicit val codec: JsonValueCodec[RustDependency] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 /** The Rust edition.
   */
 object RustEdition {
   val E2015 = "2015"
   val E2018 = "2018"
   val E2021 = "2021"
+}
+
+/** A `crate` is the smallest amount of code that the Rust compiler considers at a time. It can come
+  * in one of two forms: a binary crate or a library crate. `Binary crates` are programs you can
+  * compile to an executable that you can run, such as a command-line program or a server. Each must
+  * have a function called main that defines what happens when the executable runs. `Library crates`
+  * don't have a main function, and they don't compile to an executable. Instead, they define
+  * functionality intended to be shared with multiple projects.
+  *
+  * A `package` is a bundle of one or more crates that provides a set of functionality. It contains
+  * a Cargo.toml file that describes how to build those crates. A package can contain many binary
+  * crates, but at most only one library crate. However, it must contain at least one crate, whether
+  * that's a library or binary crate.
+  */
+final case class RustPackage(
+    id: String,
+    rootUrl: Uri,
+    name: String,
+    version: String,
+    origin: String,
+    edition: String,
+    source: Option[String],
+    resolvedTargets: List[RustTarget],
+    allTargets: List[RustTarget],
+    features: Map[String, Set[String]],
+    enabledFeatures: Set[String],
+    cfgOptions: Option[Map[String, List[String]]],
+    env: Option[Map[String, String]],
+    outDirUrl: Option[Uri],
+    procMacroArtifact: Option[Uri]
+)
+
+object RustPackage {
+  implicit val codec: JsonValueCodec[RustPackage] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object RustPackageOrigin {
+  val Dependency = "dependency"
+  val Stdlib = "stdlib"
+  val StdlibDependency = "stdlib-dependency"
+  val Workspace = "workspace"
+}
+
+final case class RustRawDependency(
+    name: String,
+    rename: Option[String],
+    kind: Option[String],
+    target: Option[String],
+    optional: Boolean,
+    usesDefaultFeatures: Boolean,
+    features: Set[String]
+)
+
+object RustRawDependency {
+  implicit val codec: JsonValueCodec[RustRawDependency] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** `RustTarget` contains data of the target as defined in Cargo metadata.
+  */
+final case class RustTarget(
+    name: String,
+    crateRootUrl: Uri,
+    kind: RustTargetKind,
+    crateTypes: Option[List[RustCrateType]],
+    edition: String,
+    doctest: Boolean,
+    requiredFeatures: Option[Set[String]]
+)
+
+object RustTarget {
+  implicit val codec: JsonValueCodec[RustTarget] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+sealed abstract class RustTargetKind(val value: Int)
+object RustTargetKind {
+  case object Lib extends RustTargetKind(1)
+  case object Bin extends RustTargetKind(2)
+  case object Test extends RustTargetKind(3)
+  case object Example extends RustTargetKind(4)
+  case object Bench extends RustTargetKind(5)
+  case object CustomBuild extends RustTargetKind(6)
+  case object Unknown extends RustTargetKind(7)
+
+  implicit val codec: JsonValueCodec[RustTargetKind] = new JsonValueCodec[RustTargetKind] {
+    def nullValue: RustTargetKind = null
+    def encodeValue(msg: RustTargetKind, out: JsonWriter): Unit = out.writeVal(msg.value)
+    def decodeValue(in: JsonReader, default: RustTargetKind): RustTargetKind = {
+      in.readInt() match {
+        case 1 => Lib
+        case 2 => Bin
+        case 3 => Test
+        case 4 => Example
+        case 5 => Bench
+        case 6 => CustomBuild
+        case 7 => Unknown
+        case n => in.decodeError(s"Unknown message type id for $n")
+      }
+    }
+  }
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class RustWorkspaceParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object RustWorkspaceParams {
+  implicit val codec: JsonValueCodec[RustWorkspaceParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+/** **Unstable** (may change in future versions)
+  */
+final case class RustWorkspaceResult(
+    packages: List[RustPackage],
+    rawDependencies: Map[String, List[RustRawDependency]],
+    dependencies: Map[String, List[RustDependency]],
+    resolvedTargets: List[BuildTargetIdentifier]
+)
+
+object RustWorkspaceResult {
+  implicit val codec: JsonValueCodec[RustWorkspaceResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
 /** `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata for providing

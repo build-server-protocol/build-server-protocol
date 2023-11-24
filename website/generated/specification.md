@@ -107,7 +107,7 @@ server like Dotty IDE). It is up to the client to decide when to start
 
 ## BSP version
 
-`2.1.0`
+`2.2.0`
 
 ## Common shapes
 
@@ -338,6 +338,14 @@ export interface TaskId {
 export type Identifier = string;
 ```
 
+#### OriginId
+
+Represents the identifier of a BSP request.
+
+```ts
+export type OriginId = string;
+```
+
 #### StatusCode
 
 Included in notifications of tasks or requests to signal the completion state.
@@ -353,6 +361,12 @@ export enum StatusCode {
   /** Execution was cancelled. */
   Cancelled = 3,
 }
+```
+
+#### EnvironmentVariables
+
+```ts
+export type EnvironmentVariables = Map<string, string>;
 ```
 
 ## BSP Server remote interface
@@ -1329,7 +1343,7 @@ export interface ShowMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1354,14 +1368,6 @@ export enum MessageType {
 }
 ```
 
-#### RequestId
-
-Represents the identifier of a BSP request.
-
-```ts
-export type RequestId = string;
-```
-
 ### OnBuildLogMessage: notification
 
 The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
@@ -1384,7 +1390,7 @@ export interface LogMessageParams {
   /** The request id that originated this notification.
    * The originId field helps clients know which request originated a notification in case several requests are handled by the
    * client at the same time. It will only be populated if the client defined it in the request that triggered this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The actual message. */
   message: string;
@@ -1394,8 +1400,6 @@ export interface LogMessageParams {
 ### OnBuildPublishDiagnostics: notification
 
 The Diagnostics notification are sent from the server to the client to signal results of validation runs.
-
-Diagnostic is defined as it is in the LSP.
 
 When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
@@ -1427,7 +1431,7 @@ export interface PublishDiagnosticsParams {
   buildTarget: BuildTargetIdentifier;
 
   /** The request id that originated this notification. */
-  originId?: RequestId;
+  originId?: OriginId;
 
   /** The diagnostics to be published by the client. */
   diagnostics: Diagnostic[];
@@ -1440,6 +1444,8 @@ export interface PublishDiagnosticsParams {
 
 #### Diagnostic
 
+Diagnostic is defined as it is in the LSP.
+
 ```ts
 export interface Diagnostic {
   /** The range at which the message applies. */
@@ -1450,7 +1456,10 @@ export interface Diagnostic {
   severity?: DiagnosticSeverity;
 
   /** The diagnostic's code, which might appear in the user interface. */
-  code?: string;
+  code?: string | Integer;
+
+  /** An optional property to describe the error code. */
+  codeDescription?: CodeDescription;
 
   /** A human-readable string describing the source of this
    * diagnostic, e.g. 'typescript' or 'super lint'. */
@@ -1459,6 +1468,9 @@ export interface Diagnostic {
   /** The diagnostic's message. */
   message: string;
 
+  /** Additional metadata about the diagnostic. */
+  tags?: DiagnosticTag[];
+
   /** An array of related diagnostic information, e.g. when symbol-names within
    * a scope collide all definitions can be marked via this property. */
   relatedInformation?: DiagnosticRelatedInformation[];
@@ -1466,8 +1478,9 @@ export interface Diagnostic {
   /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
   dataKind?: DiagnosticDataKind;
 
-  /** A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
-   * and a `textDocument/codeAction` request. */
+  /** A data entry field that is preserved between a
+   * `textDocument/publishDiagnostics` notification and
+   * `textDocument/codeAction` request. */
   data?: DiagnosticData;
 }
 ```
@@ -1476,8 +1489,10 @@ export interface Diagnostic {
 
 ```ts
 export interface Range {
+  /** The range's start position. */
   start: Position;
 
+  /** The range's end position. */
   end: Position;
 }
 ```
@@ -1486,10 +1501,13 @@ export interface Range {
 
 ```ts
 export interface Position {
-  /** Line position within a file. First line of a file is 0. */
+  /** Line position in a document (zero-based). */
   line: Integer;
 
-  /** Character position within a line. First character of a line is 0. */
+  /** Character offset on a line in a document (zero-based)
+   *
+   * If the character value is greater than the line length it defaults back
+   * to the line length. */
   character: Integer;
 }
 ```
@@ -1498,13 +1516,47 @@ export interface Position {
 
 ```ts
 export enum DiagnosticSeverity {
+  /** Reports an error. */
   Error = 1,
 
+  /** Reports a warning. */
   Warning = 2,
 
+  /** Reports an information. */
   Information = 3,
 
+  /** Reports a hint. */
   Hint = 4,
+}
+```
+
+#### CodeDescription
+
+Structure to capture a description for an error code.
+
+```ts
+export interface CodeDescription {
+  /** An URI to open with more information about the diagnostic error. */
+  href: URI;
+}
+```
+
+#### DiagnosticTag
+
+```ts
+export type DiagnosticTag = number;
+
+export namespace DiagnosticTag {
+  /** Unused or unnecessary code.
+   *
+   * Clients are allowed to render diagnostics with this tag faded out
+   * instead of having an error squiggle. */
+  export const Unnecessary = 1;
+
+  /** Deprecated or obsolete code.
+   *
+   * Clients are allowed to rendered diagnostics with this tag strike through. */
+  export const Deprecated = 2;
 }
 ```
 
@@ -1894,7 +1946,7 @@ export interface CompileReport {
   target: BuildTargetIdentifier;
 
   /** An optional request id to know the origin of this report.
-   * Deprecated: use the field in TaskFinishParams instead. */
+   * Deprecated: Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The total number of reported errors compiling this target. */
@@ -1975,7 +2027,7 @@ export type TestFinishData = any;
 
 ```ts
 export interface TestReport {
-  /** Deprecated: use the field in TaskFinishParams instead. */
+  /** Deprecated: Use the field in TaskFinishParams instead */
   originId?: Identifier;
 
   /** The build target that was compiled. */
