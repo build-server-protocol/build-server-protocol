@@ -47,6 +47,8 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
       newline,
       "import org.jetbrains.bsp.util.CustomCodec",
       newline,
+      "import ch.epfl.scala.utils.CustomCodec",
+      newline,
       "import java.net.{URI, URISyntaxException}",
       newline,
       "import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec",

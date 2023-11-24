@@ -1,7 +1,7 @@
 package bsp.codegen.docs
 
 import bsp.codegen.Lines
-import bsp.codegen.dsl._
+import bsp.codegen.dsl.{lines, _}
 import bsp.codegen.ir.Def._
 import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}

@@ -10,4 +10,5 @@ bsp/extensions/python.smithy
 bsp/extensions/rust.smithy
 bsp/extensions/sbt.smithy
 bsp/extensions/scala.smithy
+bsp/extensions/rust.smithy
 traits/traits.smithy
