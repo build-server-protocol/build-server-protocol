@@ -4,5 +4,5 @@ addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.16")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 
 libraryDependencies ++= Seq(
-  "org.eclipse.xtend" % "org.eclipse.xtend.core" % "2.32.0"
+  "org.eclipse.xtend" % "org.eclipse.xtend.core" % "2.33.0"
 )
