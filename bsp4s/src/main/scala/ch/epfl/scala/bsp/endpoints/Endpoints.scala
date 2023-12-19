@@ -211,21 +211,34 @@ trait BuildTarget {
   /** The run request is sent from the client to the server to run a build target. The server
     * communicates during the initialize handshake whether this method is supported or not.
     *
+    * Note that a run request containing only the target id is valid. If no further parameters are
+    * provided, the server should use the default ones.
+    *
+    * Implementation notes:
+    *
     * This request may trigger a compilation on the selected build targets. The server is free to
     * send any number of `build/task*`, `build/publishDiagnostics` and `build/logMessage`
     * notifications during compilation before completing the response.
     *
-    * The client will get a `originId` field in `RunResult` if the `originId` field in the
-    * `RunParams` is defined.
+    * The client will get a `originId` field in `RunResult` if and only if the `originId` field in
+    * the `RunParams` is defined.
     *
-    * Note that an empty run request is valid. Run will be executed in the target as specified in
-    * the build tool.
+    * Cancelling this request must kill the running process.
+    *
+    * If the BSP server wishes to forward the stdout and stderr streams of the running process to
+    * the client, it can do so by sending `run/printStdout` and `run/printStderr` notifications.
+    *
+    * If the client wishes to send input to the running process, it can do so by sending
+    * `run/readStdin` notifications to the server.
     */
   object run extends Endpoint[RunParams, RunResult]("buildTarget/run")
 
   /** The test build target request is sent from the client to the server to test the given list of
     * build targets. The server communicates during the initialize handshake whether this method is
     * supported or not.
+    *
+    * The "Implementation notes" section of the `buildTarget/run` request applies to this request as
+    * well.
     */
   object test extends Endpoint[TestParams, TestResult]("buildTarget/test")
 
