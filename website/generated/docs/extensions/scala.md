@@ -52,7 +52,8 @@ export interface ScalacOptionsItem {
   /** The dependency classpath for this target, must be
    * identical to what is passed as arguments to
    * the -classpath flag in the command line interface
-   * of scalac. */
+   * of scalac.
+   * Deprecated: This might be empty, use the buildTarget/jvmCompileClasspath endpoint */
   classpath: string[];
 
   /** The output directory for classfiles produced by this target */

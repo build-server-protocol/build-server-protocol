@@ -50,6 +50,7 @@ structure JavacOptionsItem {
     /// the -classpath flag in the command line interface
     /// of javac.
     @required
+    @deprecated(message: "This might be empty, use the buildTarget/jvmCompileClasspath endpoint")
     classpath: Classpath
     /// The output directory for classfiles produced by this target
     @required

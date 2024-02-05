@@ -38,6 +38,8 @@ public class BuildServerCapabilities {
 
   private Boolean canReload;
 
+  private Boolean jvmCompileClasspathProvider;
+
   public BuildServerCapabilities() {
   }
 
@@ -167,6 +169,15 @@ public class BuildServerCapabilities {
     this.canReload = canReload;
   }
 
+  @Pure
+  public Boolean getJvmCompileClasspathProvider() {
+    return this.jvmCompileClasspathProvider;
+  }
+
+  public void setJvmCompileClasspathProvider(final Boolean jvmCompileClasspathProvider) {
+    this.jvmCompileClasspathProvider = jvmCompileClasspathProvider;
+  }
+
   @Override
   @Pure
   public String toString() {
@@ -185,6 +196,7 @@ public class BuildServerCapabilities {
     b.add("jvmTestEnvironmentProvider", this.jvmTestEnvironmentProvider);
     b.add("cargoFeaturesProvider", this.cargoFeaturesProvider);
     b.add("canReload", this.canReload);
+    b.add("jvmCompileClasspathProvider", this.jvmCompileClasspathProvider);
     return b.toString();
   }
 
@@ -268,6 +280,11 @@ public class BuildServerCapabilities {
         return false;
     } else if (!this.canReload.equals(other.canReload))
       return false;
+    if (this.jvmCompileClasspathProvider == null) {
+      if (other.jvmCompileClasspathProvider != null)
+        return false;
+    } else if (!this.jvmCompileClasspathProvider.equals(other.jvmCompileClasspathProvider))
+      return false;
     return true;
   }
 
@@ -289,6 +306,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
     result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
     result = prime * result + ((this.cargoFeaturesProvider== null) ? 0 : this.cargoFeaturesProvider.hashCode());
-    return prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
+    result = prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
+    return prime * result + ((this.jvmCompileClasspathProvider== null) ? 0 : this.jvmCompileClasspathProvider.hashCode());
   }
 }

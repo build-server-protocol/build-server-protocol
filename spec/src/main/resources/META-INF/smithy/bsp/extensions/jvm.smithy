@@ -115,4 +115,38 @@ list JvmOptions {
 }
 
 
+/// The build target classpath request is sent from the client to the server to
+/// query the target for its compile classpath.
+@jsonRequest("buildTarget/jvmCompileClasspath")
+operation BuildTargetClasspath {
+    input: ClasspathParams
+    output: ClasspathResult
+}
+
+
+structure ClasspathParams {
+    @required
+    targets: BuildTargetIdentifiers
+}
+
+structure ClasspathResult {
+    @required
+    items: ClasspathItems
+}
+
+structure ClasspathItem {
+    @required
+    target: BuildTargetIdentifier
+    /// The dependency classpath for this target, must be
+    /// identical to what is passed as arguments to
+    /// the -classpath flag in the command line interface
+    /// of scalac.
+    @required
+    classpath: Classpath
+}
+
+list ClasspathItems {
+    member: ClasspathItem
+}
+
 

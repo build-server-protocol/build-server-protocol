@@ -81,7 +81,8 @@ final case class BuildServerCapabilities(
     jvmRunEnvironmentProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
     cargoFeaturesProvider: Option[Boolean],
-    canReload: Option[Boolean]
+    canReload: Option[Boolean],
+    jvmCompileClasspathProvider: Option[Boolean]
 )
 
 object BuildServerCapabilities {
@@ -237,6 +238,34 @@ final case class CargoFeaturesStateResult(
 
 object CargoFeaturesStateResult {
   implicit val codec: JsonValueCodec[CargoFeaturesStateResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ClasspathItem(
+    target: BuildTargetIdentifier,
+    classpath: List[String]
+)
+
+object ClasspathItem {
+  implicit val codec: JsonValueCodec[ClasspathItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ClasspathParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object ClasspathParams {
+  implicit val codec: JsonValueCodec[ClasspathParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class ClasspathResult(
+    items: List[ClasspathItem]
+)
+
+object ClasspathResult {
+  implicit val codec: JsonValueCodec[ClasspathResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
