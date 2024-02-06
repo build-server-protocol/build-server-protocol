@@ -53,7 +53,7 @@ export interface JavacOptionsItem {
    * identical to what is passed as arguments to
    * the -classpath flag in the command line interface
    * of javac.
-   * Deprecated: This might be empty, use the buildTarget/jvmCompileClasspath endpoint */
+   * Deprecated: When the jvmCompileClasspath capability is supported, this might be empty and the buildTarget/jvmCompileClasspath endpoint should be used instead. */
   classpath: string[];
 
   /** The output directory for classfiles produced by this target */
