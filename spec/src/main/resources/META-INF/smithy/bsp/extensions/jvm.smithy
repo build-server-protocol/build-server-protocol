@@ -118,23 +118,23 @@ list JvmOptions {
 /// The build target classpath request is sent from the client to the server to
 /// query the target for its compile classpath.
 @jsonRequest("buildTarget/jvmCompileClasspath")
-operation BuildTargetClasspath {
-    input: ClasspathParams
-    output: ClasspathResult
+operation BuildTargetJvmCompileClasspath {
+    input: JvmCompileClasspathParams
+    output: JvmCompileClasspathResult
 }
 
 
-structure ClasspathParams {
+structure JvmCompileClasspathParams {
     @required
     targets: BuildTargetIdentifiers
 }
 
-structure ClasspathResult {
+structure JvmCompileClasspathResult {
     @required
-    items: ClasspathItems
+    items: JvmCompileClasspathItems
 }
 
-structure ClasspathItem {
+structure JvmCompileClasspathItem {
     @required
     target: BuildTargetIdentifier
     /// The dependency classpath for this target, must be
@@ -145,8 +145,8 @@ structure ClasspathItem {
     classpath: Classpath
 }
 
-list ClasspathItems {
-    member: ClasspathItem
+list JvmCompileClasspathItems {
+    member: JvmCompileClasspathItem
 }
 
 

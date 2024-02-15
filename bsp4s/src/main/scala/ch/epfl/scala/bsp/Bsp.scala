@@ -241,34 +241,6 @@ object CargoFeaturesStateResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-final case class ClasspathItem(
-    target: BuildTargetIdentifier,
-    classpath: List[String]
-)
-
-object ClasspathItem {
-  implicit val codec: JsonValueCodec[ClasspathItem] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-final case class ClasspathParams(
-    targets: List[BuildTargetIdentifier]
-)
-
-object ClasspathParams {
-  implicit val codec: JsonValueCodec[ClasspathParams] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
-final case class ClasspathResult(
-    items: List[ClasspathItem]
-)
-
-object ClasspathResult {
-  implicit val codec: JsonValueCodec[ClasspathResult] =
-    JsonCodecMaker.makeWithRequiredCollectionFields
-}
-
 final case class CleanCacheParams(
     targets: List[BuildTargetIdentifier]
 )
@@ -679,6 +651,34 @@ final case class JvmBuildTarget(
 
 object JvmBuildTarget {
   implicit val codec: JsonValueCodec[JvmBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathItem(
+    target: BuildTargetIdentifier,
+    classpath: List[String]
+)
+
+object JvmCompileClasspathItem {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object JvmCompileClasspathParams {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathResult(
+    items: List[JvmCompileClasspathItem]
+)
+
+object JvmCompileClasspathResult {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

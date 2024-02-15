@@ -7,11 +7,11 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ClasspathParams {
+public class JvmCompileClasspathParams {
   @NonNull
   private List<BuildTargetIdentifier> targets;
 
-  public ClasspathParams(@NonNull final List<BuildTargetIdentifier> targets) {
+  public JvmCompileClasspathParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
 
@@ -42,7 +42,7 @@ public class ClasspathParams {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ClasspathParams other = (ClasspathParams) obj;
+    JvmCompileClasspathParams other = (JvmCompileClasspathParams) obj;
     if (this.targets == null) {
       if (other.targets != null)
         return false;

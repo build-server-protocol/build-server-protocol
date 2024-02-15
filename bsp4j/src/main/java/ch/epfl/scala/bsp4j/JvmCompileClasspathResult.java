@@ -7,21 +7,21 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ClasspathResult {
+public class JvmCompileClasspathResult {
   @NonNull
-  private List<ClasspathItem> items;
+  private List<JvmCompileClasspathItem> items;
 
-  public ClasspathResult(@NonNull final List<ClasspathItem> items) {
+  public JvmCompileClasspathResult(@NonNull final List<JvmCompileClasspathItem> items) {
     this.items = items;
   }
 
   @Pure
   @NonNull
-  public List<ClasspathItem> getItems() {
+  public List<JvmCompileClasspathItem> getItems() {
     return this.items;
   }
 
-  public void setItems(@NonNull final List<ClasspathItem> items) {
+  public void setItems(@NonNull final List<JvmCompileClasspathItem> items) {
     this.items = Preconditions.checkNotNull(items, "items");
   }
 
@@ -42,7 +42,7 @@ public class ClasspathResult {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ClasspathResult other = (ClasspathResult) obj;
+    JvmCompileClasspathResult other = (JvmCompileClasspathResult) obj;
     if (this.items == null) {
       if (other.items != null)
         return false;

@@ -7,14 +7,14 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
-public class ClasspathItem {
+public class JvmCompileClasspathItem {
   @NonNull
   private BuildTargetIdentifier target;
 
   @NonNull
   private List<String> classpath;
 
-  public ClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath) {
+  public JvmCompileClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath) {
     this.target = target;
     this.classpath = classpath;
   }
@@ -57,7 +57,7 @@ public class ClasspathItem {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ClasspathItem other = (ClasspathItem) obj;
+    JvmCompileClasspathItem other = (JvmCompileClasspathItem) obj;
     if (this.target == null) {
       if (other.target != null)
         return false;

@@ -103,7 +103,7 @@ structure ScalacOptionsItem {
     /// the -classpath flag in the command line interface
     /// of scalac.
     @required
-    @deprecated(message: "This might be empty, use the buildTarget/jvmCompileClasspath endpoint")
+    @deprecated(message: "When the jvmCompileClasspath capability is supported, this might be empty and the buildTarget/jvmCompileClasspath endpoint should be used instead.")
     classpath: Classpath
     /// The output directory for classfiles produced by this target
     @required
