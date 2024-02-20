@@ -422,6 +422,11 @@ export interface BuildClientCapabilities {
    * The server must never respond with build targets for other
    * languages than those that appear in this list. */
   languageIds: LanguageId[];
+
+  /** Mirror capability to BuildServerCapabilities.jvmCompileClasspathProvider
+   * The client will request classpath via `buildTarget/jvmCompileClasspath` so
+   * it's safe to return classpath in ScalacOptionsItem empty. */
+  jvmCompileClasspathReceiver?: boolean;
 }
 ```
 

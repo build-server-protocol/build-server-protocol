@@ -11,6 +11,8 @@ public class BuildClientCapabilities {
   @NonNull
   private List<String> languageIds;
 
+  private Boolean jvmCompileClasspathReceiver;
+
   public BuildClientCapabilities(@NonNull final List<String> languageIds) {
     this.languageIds = languageIds;
   }
@@ -25,11 +27,21 @@ public class BuildClientCapabilities {
     this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
 
+  @Pure
+  public Boolean getJvmCompileClasspathReceiver() {
+    return this.jvmCompileClasspathReceiver;
+  }
+
+  public void setJvmCompileClasspathReceiver(final Boolean jvmCompileClasspathReceiver) {
+    this.jvmCompileClasspathReceiver = jvmCompileClasspathReceiver;
+  }
+
   @Override
   @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("languageIds", this.languageIds);
+    b.add("jvmCompileClasspathReceiver", this.jvmCompileClasspathReceiver);
     return b.toString();
   }
 
@@ -48,12 +60,20 @@ public class BuildClientCapabilities {
         return false;
     } else if (!this.languageIds.equals(other.languageIds))
       return false;
+    if (this.jvmCompileClasspathReceiver == null) {
+      if (other.jvmCompileClasspathReceiver != null)
+        return false;
+    } else if (!this.jvmCompileClasspathReceiver.equals(other.jvmCompileClasspathReceiver))
+      return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
+    return prime * result + ((this.jvmCompileClasspathReceiver== null) ? 0 : this.jvmCompileClasspathReceiver.hashCode());
   }
 }

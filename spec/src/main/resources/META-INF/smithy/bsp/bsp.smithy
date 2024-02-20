@@ -554,7 +554,11 @@ structure BuildClientCapabilities {
     /// The server must never respond with build targets for other
     /// languages than those that appear in this list.
     @required
-    languageIds: LanguageIds
+    languageIds: LanguageIds    
+    /// Mirror capability to BuildServerCapabilities.jvmCompileClasspathProvider
+    /// The client will request classpath via `buildTarget/jvmCompileClasspath` so
+    /// it's safe to return classpath in ScalacOptionsItem empty.
+    jvmCompileClasspathReceiver: Boolean = false
 }
 
 /// Language IDs are defined here

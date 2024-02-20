@@ -56,7 +56,8 @@ object BspConnectionDetails {
 }
 
 final case class BuildClientCapabilities(
-    languageIds: List[String]
+    languageIds: List[String],
+    jvmCompileClasspathReceiver: Option[Boolean]
 )
 
 object BuildClientCapabilities {
