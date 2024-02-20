@@ -627,6 +627,9 @@ structure BuildServerCapabilities {
     cargoFeaturesProvider: Boolean = false
     /// Reloading the build state through workspace/reload is supported
     canReload: Boolean = false
+    /// The server can respond to `buildTarget/jvmCompileClasspath` requests with the
+    /// necessary information about the target's classpath.
+    jvmCompileClasspathProvider: Boolean = false
 }
 
 @mixin

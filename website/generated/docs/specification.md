@@ -522,6 +522,10 @@ export interface BuildServerCapabilities {
 
   /** Reloading the build state through workspace/reload is supported */
   canReload?: boolean;
+
+  /** The server can respond to `buildTarget/jvmCompileClasspath` requests with the
+   * necessary information about the target's classpath. */
+  jvmCompileClasspathProvider?: boolean;
 }
 ```
 
