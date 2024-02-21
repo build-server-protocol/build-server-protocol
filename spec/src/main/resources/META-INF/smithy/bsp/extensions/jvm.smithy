@@ -17,7 +17,8 @@ use traits#jsonRequest
 service JvmBuildServer {
     operations: [
         BuildTargetJvmTestEnvironment,
-        BuildTargetJvmRunEnvironment
+        BuildTargetJvmRunEnvironment,
+        BuildTargetJvmCompileClasspath
     ]
 }
 
