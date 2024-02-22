@@ -286,6 +286,14 @@ trait BuildTarget {
         "buildTarget/jvmRunEnvironment"
       )
 
+  /** The build target classpath request is sent from the client to the server to query the target
+    * for its compile classpath.
+    */
+  object jvmCompileClasspath
+      extends Endpoint[JvmCompileClasspathParams, JvmCompileClasspathResult](
+        "buildTarget/jvmCompileClasspath"
+      )
+
   /** The Python Options Request is sent from the client to the server to query for the list of the
     * interpreter flags used to run a given list of targets.
     */

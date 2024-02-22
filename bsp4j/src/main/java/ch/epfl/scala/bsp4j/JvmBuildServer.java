@@ -26,5 +26,12 @@ public interface JvmBuildServer {
     @JsonRequest("buildTarget/jvmRunEnvironment")
     CompletableFuture<JvmRunEnvironmentResult> buildTargetJvmRunEnvironment(JvmRunEnvironmentParams params);
 
+    /**
+     * The build target classpath request is sent from the client to the server to
+     * query the target for its compile classpath.
+     */
+    @JsonRequest("buildTarget/jvmCompileClasspath")
+    CompletableFuture<JvmCompileClasspathResult> buildTargetJvmCompileClasspath(JvmCompileClasspathParams params);
+
 
 }
