@@ -56,7 +56,8 @@ object BspConnectionDetails {
 }
 
 final case class BuildClientCapabilities(
-    languageIds: List[String]
+    languageIds: List[String],
+    jvmCompileClasspathReceiver: Option[Boolean]
 )
 
 object BuildClientCapabilities {
@@ -81,7 +82,8 @@ final case class BuildServerCapabilities(
     jvmRunEnvironmentProvider: Option[Boolean],
     jvmTestEnvironmentProvider: Option[Boolean],
     cargoFeaturesProvider: Option[Boolean],
-    canReload: Option[Boolean]
+    canReload: Option[Boolean],
+    jvmCompileClasspathProvider: Option[Boolean]
 )
 
 object BuildServerCapabilities {
@@ -650,6 +652,34 @@ final case class JvmBuildTarget(
 
 object JvmBuildTarget {
   implicit val codec: JsonValueCodec[JvmBuildTarget] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathItem(
+    target: BuildTargetIdentifier,
+    classpath: List[String]
+)
+
+object JvmCompileClasspathItem {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object JvmCompileClasspathParams {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class JvmCompileClasspathResult(
+    items: List[JvmCompileClasspathItem]
+)
+
+object JvmCompileClasspathResult {
+  implicit val codec: JsonValueCodec[JvmCompileClasspathResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

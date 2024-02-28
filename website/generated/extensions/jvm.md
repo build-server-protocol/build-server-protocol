@@ -101,6 +101,45 @@ export interface JvmRunEnvironmentResult {
 }
 ```
 
+### BuildTargetJvmCompileClasspath: request
+
+The build target classpath request is sent from the client to the server to
+query the target for its compile classpath.
+
+- method: `buildTarget/jvmCompileClasspath`
+- params: `JvmCompileClasspathParams`
+- result: `JvmCompileClasspathResult`
+
+#### JvmCompileClasspathParams
+
+```ts
+export interface JvmCompileClasspathParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+#### JvmCompileClasspathResult
+
+```ts
+export interface JvmCompileClasspathResult {
+  items: JvmCompileClasspathItem[];
+}
+```
+
+#### JvmCompileClasspathItem
+
+```ts
+export interface JvmCompileClasspathItem {
+  target: BuildTargetIdentifier;
+
+  /** The dependency classpath for this target, must be
+   * identical to what is passed as arguments to
+   * the -classpath flag in the command line interface
+   * of scalac. */
+  classpath: string[];
+}
+```
+
 ## BuildTargetData kinds
 
 ### JvmBuildTarget
@@ -120,7 +159,7 @@ export interface JvmBuildTarget {
    * For example: file:///usr/lib/jvm/java-8-openjdk-amd64 */
   javaHome?: URI;
 
-  /** The java version this target is supposed to use.
+  /** The java version this target is supposed to use (can be set using javac `-target` flag).
    * For example: 1.8 */
   javaVersion?: string;
 }
