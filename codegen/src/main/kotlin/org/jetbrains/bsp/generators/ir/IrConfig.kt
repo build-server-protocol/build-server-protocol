@@ -1,5 +1,4 @@
 package org.jetbrains.bsp.generators.ir
-
 /**
  * This configuration allows to specify preferences for how the smithy model is represented
  * internally. This enhances generating libraries that fully utilize the particular language's
@@ -14,6 +13,7 @@ package org.jetbrains.bsp.generators.ir
  * ```
  */
 class IrConfig(
+    // ktfmt: off
     /**
      * - Smithy: ``` string TypeName ```
      * - Pure: ``` Def.Structure( shapeId = bsp#StructName, fields =
@@ -23,7 +23,9 @@ class IrConfig(
      *   [ Field( name = "value", type = Type.Ref(shapeId=bsp#TypeName), required = false, hints = []
      *   ) ], hints = [] ) ```
      */
+    // ktfmt: on
     val strings: TypeAliasing,
+    // ktfmt: off
     /**
      * - Smithy: ``` map TypeName { key: Int value: String } ```
      * - Pure: ``` Def.Structure( shapeId = bsp#StructName, fields =
@@ -34,7 +36,9 @@ class IrConfig(
      *   [ Field( name = "value", type = Type.Ref(shapeId=bsp#TypeName), required = false, hints = []
      *   ) ], hints = [] ) ```
      */
+    // ktfmt: on
     val maps: TypeAliasing,
+    // ktfmt: off
     /**
      * - Smithy: ```
      *
@@ -51,7 +55,9 @@ class IrConfig(
      *   [ Field( name = "value", type = Type.Ref(shapeId=bsp#TypeName), required = false, hints = []
      *   ) ], hints = [] ) ```
      */
+    // ktfmt: on
     val dataWithKind: AbstractionLevel,
+    // ktfmt: off
     /**
      * - Smithy: ``` @enumKind("open") intEnum TypeName { OPTION = 1 } ```
      * - Both: ``` Def.OpenEnum( shapeId = bsp#TypeName, enumType = EnumType.IntEnum, values =
@@ -62,7 +68,9 @@ class IrConfig(
      *   [ Field( name = "value", type = Type.Ref(shapeId=bsp#TypeName), required = false, hints = []
      *   ) ], hints = [] ) ```
      */
+    // ktfmt: on
     val openEnums: AbstractionLevel,
+    // ktfmt: off
     /**
      * - Smithy: ``` @untaggedUnion union TypeName { string: String integer: Integer } ```
      * - AsType: ``` Def.Structure( shapeId = bsp#StructName, fields =
@@ -73,9 +81,11 @@ class IrConfig(
      *   [ Field( name = "value", type = Type.Ref(shapeId=bsp#TypeName), required = false, hints = []
      *   ) ], hints = [] ) ```
      */
+    // ktfmt: on
     val untaggedUnions: AbstractionLevel,
 )
 
+// ktfmt: off
 /**
  * It specifies how to represent a particular type, if it should be aliased or not.
  *
@@ -83,11 +93,13 @@ class IrConfig(
  * - Pure: ``` val field: String ```
  * - Aliased: ``` typealias AliasedStringName = String ``` ``` val field: AliasedStringName ```
  */
+// ktfmt: on
 enum class TypeAliasing {
   Pure,
   Aliased,
 }
 
+// ktfmt: off
 /**
  * It specifies if we would like to treat a particular shape as a type or as a top level definition.
  *
@@ -96,6 +108,7 @@ enum class TypeAliasing {
  * - AsDef: (rust) ``` pub enum EitherTypeName { String(String), I32(i32), } ``` ``` val field:
  *   EitherTypeName ```
  */
+// ktfmt: on
 enum class AbstractionLevel {
   AsDef,
   AsType,
