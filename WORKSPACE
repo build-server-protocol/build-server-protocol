@@ -1,37 +1,20 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-BAZEL_SKYLIB_VERSION = "1.5.0"
-
-BAZEL_SKYLIB_SHA = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94"
-
-http_archive(
-    name = "bazel_skylib",
-    sha256 = BAZEL_SKYLIB_SHA,
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (BAZEL_SKYLIB_VERSION, BAZEL_SKYLIB_VERSION),
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/%s/bazel-skylib-%s.tar.gz" % (BAZEL_SKYLIB_VERSION, BAZEL_SKYLIB_VERSION),
-    ],
+# Needed until Bazel 7 allows MODULE.bazel to directly call repository rules
+load(
+    "@aspect_rules_lint//format:repositories.bzl",
+    "fetch_java_format",
+    "fetch_ktfmt",
 )
 
-RULES_PYTHON_VERSION = "0.27.0"
+fetch_java_format()
 
-RULES_PYTHON_SHA = "9acc0944c94adb23fba1c9988b48768b1bacc6583b52a2586895c5b7491e2e31"
+fetch_ktfmt()
 
-http_archive(
-    name = "rules_python",
-    sha256 = RULES_PYTHON_SHA,
-    strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
-    url = "https://github.com/bazelbuild/rules_python/releases/download/%s/rules_python-%s.tar.gz" % (RULES_PYTHON_VERSION, RULES_PYTHON_VERSION),
-)
+RULES_SCALA_VERSION = "6.4.0"
 
-load("@rules_python//python:repositories.bzl", "py_repositories")
-
-py_repositories()
-
-RULES_SCALA_VERSION = "6.2.0"
-
-RULES_SCALA_SHA = "ae4e74b6c696f40544cafb06b26bf4e601f83a0f29fb6500f0275c988f8cfe40"
+RULES_SCALA_SHA = "9a23058a36183a556a9ba7229b4f204d3e68c8c6eb7b28260521016b38ef4e00"
 
 http_archive(
     name = "io_bazel_rules_scala",
@@ -68,192 +51,3 @@ load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "
 scalatest_repositories()
 
 scalatest_toolchain()
-
-RULES_KOTLIN_VERSION = "1.9.0"
-
-RULES_KOTLIN_SHA = "5766f1e599acf551aa56f49dab9ab9108269b03c557496c54acaf41f98e2b8d6"
-
-http_archive(
-    name = "rules_kotlin",
-    sha256 = RULES_KOTLIN_SHA,
-    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin-v%s.tar.gz" % (RULES_KOTLIN_VERSION, RULES_KOTLIN_VERSION)],
-)
-
-load("@rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
-
-kotlin_repositories()  # if you want the default. Otherwise see custom kotlinc distribution below
-
-load("@rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
-
-kt_register_toolchains()  # to use the default toolchain, otherwise see toolchains below
-
-# RULES_JVM_EXTERNAL_TAG = "5.3"
-#
-# RULES_JVM_EXTERNAL_SHA = "d31e369b854322ca5098ea12c69d7175ded971435e55c18dd9dd5f29cc5249ac"
-#
-# http_archive(
-#    name = "rules_jvm_external",
-#    sha256 = RULES_JVM_EXTERNAL_SHA,
-#    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-#    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
-#)
-
-# change this back to http_archive once version using rules_kotlin 1.9.0 is released
-git_repository(
-    name = "rules_jvm_external",
-    commit = "9a4aa70bed415dc7b0ab7db7f642fef801dce5cc",
-    remote = "https://github.com/bazelbuild/rules_jvm_external.git",
-)
-
-load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
-
-rules_jvm_external_deps()
-
-load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
-
-rules_jvm_external_setup()
-
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-
-maven_install(
-    artifacts = [
-        "software.amazon.smithy:smithy-model:1.34.0",
-        "software.amazon.smithy:smithy-codegen-core:1.34.0",
-        "software.amazon.smithy:smithy-utils:1.34.0",
-
-        # tests
-        "org.junit.jupiter:junit-jupiter:5.10.0",
-        "org.junit.jupiter:junit-jupiter-api:5.10.0",
-        "org.junit.jupiter:junit-jupiter-engine:5.10.0",
-        "org.junit.jupiter:junit-jupiter-params:5.10.0",
-        "org.junit.platform:junit-platform-console:1.10.0",
-
-        # docs
-        "org.scalameta:mdoc_2.13:2.3.7",
-
-        # scala
-        "org.scala-lang.modules:scala-collection-compat_2.13:2.11.0",
-        "com.lihaoyi:os-lib_2.13:0.9.1",
-        "com.lihaoyi:geny_2.13:1.0.0",
-        "com.monovore:decline_2.13:2.4.1",
-        "org.typelevel:cats-core_2.13:2.9.0",
-        "org.typelevel:cats-kernel_2.13:2.9.0",
-
-        # scala runtime libs
-        "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-core_2.13:2.23.2",
-        "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-macros_2.13:2.23.2",
-        "me.vican.jorge:jsonrpc4s_2.13:0.1.0",
-
-        # testkit
-        "org.scalacheck:scalacheck_2.13:1.17.0",
-        "de.danielbechler:java-object-diff:0.95",
-        "org.scala-lang.modules:scala-java8-compat_2.13:1.0.2",
-        "org.scala-lang.modules:scala-collection-compat_2.13:2.11.0",
-
-        # scala tests
-        "com.googlecode.java-diff-utils:diffutils:1.3.0",
-        "org.scala-sbt.ipcsocket:ipcsocket:1.0.1",
-        "org.scalatest:scalatest_2.13:3.2.16",
-        "org.scalatestplus:scalacheck-1-16_2.13:3.2.14.0",
-
-        # these must match the versions used by jsonrpc4s
-        "io.monix:monix_2.13:3.2.0",
-        "io.monix:monix-eval_2.13:3.2.0",
-        "io.monix:monix-execution_2.13:3.2.0",
-        "com.outr:scribe_2.13:3.5.5",
-
-        # lsp4j 21.1 causes "b = new (this);" bug (missing ToStringBuilder)
-        "org.eclipse.lsp4j:org.eclipse.lsp4j:0.20.1",
-        "org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.20.1",
-        "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.20.1",
-
-        # lsp4j deps versions must be aligned with lsp4j version
-        "org.eclipse.xtend:org.eclipse.xtend.core:2.28.0",
-        "org.eclipse.xtend:org.eclipse.xtend.lib:2.28.0",
-        "org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.28.0",
-        "com.google.guava:guava:30.1.1-jre",
-        "com.google.inject:guice:7.0.0",
-    ],
-    fetch_sources = True,
-    repositories = [
-        "https://maven.google.com",
-        "https://repo.maven.apache.org/maven2",
-        "https://repo1.maven.org/maven2",
-        "https://jitpack.io",
-    ],
-)
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-RULES_JS_VERSION = "1.34.0"
-
-RULES_JS_SHA = "d9ceb89e97bb5ad53b278148e01a77a3e9100db272ce4ebdcd59889d26b9076e"
-
-http_archive(
-    name = "aspect_rules_js",
-    sha256 = RULES_JS_SHA,
-    strip_prefix = "rules_js-%s" % RULES_JS_VERSION,
-    url = "https://github.com/aspect-build/rules_js/releases/download/v%s/rules_js-v%s.tar.gz" % (RULES_JS_VERSION, RULES_JS_VERSION),
-)
-
-load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
-
-rules_js_dependencies()
-
-load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = DEFAULT_NODE_VERSION,
-)
-
-load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
-
-npm_translate_lock(
-    name = "npm",
-    data = ["//website:package.json"],
-    pnpm_lock = "//website:pnpm-lock.yaml",
-    update_pnpm_lock = True,
-    verify_node_modules_ignored = "//:.bazelignore",
-)
-
-load("@npm//:repositories.bzl", "npm_repositories")
-
-npm_repositories()
-
-RULES_MULTIRUN_VERSION = "0.6.1"
-
-RULES_MULTIRUN_SHA = "9cd384e42b2da00104f0e18f25e66285aa21f64b573c667638a7a213206885ab"
-
-http_archive(
-    name = "rules_multirun",
-    sha256 = RULES_MULTIRUN_SHA,
-    strip_prefix = "rules_multirun-%s" % RULES_MULTIRUN_VERSION,
-    url = "https://github.com/keith/rules_multirun/archive/refs/tags/%s.tar.gz" % RULES_MULTIRUN_VERSION,
-)
-
-git_repository(
-    name = "aspect_rules_format",
-    commit = "a416c6b3744ce9f9f4307a2a9b135328eb009de9",
-    remote = "https://github.com/agluszak/bazel-super-formatter.git",
-)
-
-load("@aspect_rules_format//format:repositories.bzl", "rules_format_dependencies")
-
-rules_format_dependencies()
-
-load("@aspect_rules_format//format:dependencies.bzl", "parse_dependencies")
-
-parse_dependencies()
-
-load("@aspect_rules_format//format:dependencies.bzl", "rules_format_setup")
-
-rules_format_setup()
-
-# Installs toolchains for running programs under Node, Python, etc.
-# Be sure to register your own toolchains before this.
-# Most users should do this LAST in their WORKSPACE to avoid getting our versions of
-# things like the Go toolchain rather than the one you intended.
-load("@aspect_rules_format//format:toolchains.bzl", "format_register_toolchains")
-
-format_register_toolchains()

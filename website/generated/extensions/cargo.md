@@ -8,7 +8,6 @@ The following section contains Cargo-specific extensions to the build server
 protocol.
 
 ## BSP version
-
 `2.2.0`
 
 ## BSP Server remote interface
@@ -28,6 +27,7 @@ between Cargo packages and build target identifiers.
 
 **Unstable** (may change in future versions)
 
+
 ```ts
 export interface CargoFeaturesStateResult {
   /** The list of Cargo packages with assigned to them target
@@ -37,6 +37,7 @@ export interface CargoFeaturesStateResult {
 ```
 
 #### PackageFeatures
+
 
 ```ts
 export interface PackageFeatures {
@@ -70,6 +71,7 @@ the specified Cargo package.
 
 **Unstable** (may change in future versions)
 
+
 ```ts
 export interface SetCargoFeaturesParams {
   /** Package ID for which new features state will be set. */
@@ -84,6 +86,7 @@ export interface SetCargoFeaturesParams {
 
 **Unstable** (may change in future versions)
 
+
 ```ts
 export interface SetCargoFeaturesResult {
   /** The status code of the operation. */
@@ -94,7 +97,6 @@ export interface SetCargoFeaturesResult {
 ## BuildTargetData kinds
 
 ### CargoBuildTarget
-
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"cargo"`.
@@ -111,3 +113,4 @@ export interface CargoBuildTarget {
   requiredFeatures: Set<Feature>;
 }
 ```
+

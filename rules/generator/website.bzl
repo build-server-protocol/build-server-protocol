@@ -1,5 +1,5 @@
-load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
-load("@bazel_skylib//rules:copy_directory.bzl", "copy_directory")
+load("@aspect_bazel_lib//lib:run_binary.bzl", "run_binary")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_binary")
 load("@rules_multirun//:defs.bzl", "command")
 
@@ -10,13 +10,13 @@ def website(name, jars, data, library_version, **kwargs):
         main_class = "mdoc.Main",
     )
 
-    # extract jars from deps using $(location) and join them with :
+    # extract jars from deps using $(location) and join them with ':'
     classpath = ":".join(["$(location {})".format(jar) for jar in jars])
 
     run_binary(
         name = "%s_run" % name,
         tool = ":mdoc",
-        outs = ["website-generated"],
+        out_dirs = ["website-generated"],
         srcs = jars + data,
         args = [
             "--classpath",
@@ -24,23 +24,23 @@ def website(name, jars, data, library_version, **kwargs):
             "--in",
             "docs",
             "--out",
-            "$(location website-generated)",
+            "$(RULEDIR)/website-generated",
             "--site.LIBRARY_VERSION",
             library_version,
         ],
         **kwargs
     )
 
-    native.sh_binary(
+    write_source_files(
         name = name,
-        srcs = ["//rules/generator:copy_to_repo.sh"],
-        args = ["website-generated", "website/generated"],
-        data = [":website-generated"],
+        files = {
+            "generated": "%s_run" % name,
+        },
+        suggested_update_target = "%s_command" % name,
     )
 
     command(
         name = "%s_command" % name,
         command = ":%s" % name,
-        arguments = ["website-generated", "website/generated"],
-        data = [":website-generated"],
+        visibility = ["//visibility:public"],
     )

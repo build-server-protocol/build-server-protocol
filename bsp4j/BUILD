@@ -3,6 +3,7 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "bsp4j",
     srcs = glob(["src/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_google_code_gson_gson",
         "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j",
@@ -12,5 +13,4 @@ java_library(
         "@maven//:org_eclipse_xtend_org_eclipse_xtend_lib",
         "@maven//:org_eclipse_xtext_org_eclipse_xtext_xbase_lib",
     ],
-    visibility = ["//visibility:public"],
 )

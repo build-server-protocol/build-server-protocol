@@ -4,6 +4,8 @@ load("@rules_multirun//:defs.bzl", "command", "multirun")
 load("//rules/generator:generator.bzl", "library_generator")
 load("//rules/generator:website.bzl", "website")
 
+exports_files([".scalafmt.conf"])
+
 # This is a wrapper which ensures that all generators are first run in parallel and then
 #  the formatter is run sequentially, i.e. to avoid the formatter running in parallel
 #  with the generators.
@@ -20,7 +22,7 @@ multirun(
     commands = [
         "//:generate-bsp4j_command",
         "//:generate-bsp4s_command",
-        "//:generate-website_command",
+        "//website:generate-website_command",
     ],
     jobs = 0,
 )
@@ -32,34 +34,7 @@ command(
 
 command(
     name = "format_all_command",
-    command = "@aspect_rules_format//format",
-)
-
-filegroup(
-    name = "docs",
-    srcs = glob(["docs/**/*"]),
-)
-
-website(
-    name = "generate-website",
-    data = [
-        ":docs",
-    ],
-    jars = [
-        "//bsp4j",
-        "//old-scala-codegen",
-        "//codegen:codegen.jar",
-        "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc",
-        "@maven//:com_google_code_gson_gson",
-        "@rules_kotlin//kotlin/compiler:kotlin-stdlib",
-        "@maven//:software_amazon_smithy_smithy_model",
-        "@maven//:software_amazon_smithy_smithy_utils",
-        "//spec-traits:spec-traits.jar",
-        "@maven//:com_monovore_decline_2_13",
-        "@maven//:org_typelevel_cats_core_2_13",
-        "@maven//:org_typelevel_cats_kernel_2_13",
-    ],
-    library_version = "2.1.0",
+    command = "//tools/format",
 )
 
 java_binary(

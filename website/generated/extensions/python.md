@@ -8,7 +8,6 @@ The following section contains Python-specific extensions to the build server
 protocol.
 
 ## BSP version
-
 `2.2.0`
 
 ## BSP Server remote interface
@@ -25,6 +24,7 @@ targets.
 
 #### PythonOptionsParams
 
+
 ```ts
 export interface PythonOptionsParams {
   targets: BuildTargetIdentifier[];
@@ -33,6 +33,7 @@ export interface PythonOptionsParams {
 
 #### PythonOptionsResult
 
+
 ```ts
 export interface PythonOptionsResult {
   items: PythonOptionsItem[];
@@ -40,6 +41,7 @@ export interface PythonOptionsResult {
 ```
 
 #### PythonOptionsItem
+
 
 ```ts
 export interface PythonOptionsItem {
@@ -54,7 +56,6 @@ export interface PythonOptionsItem {
 ## BuildTargetData kinds
 
 ### PythonBuildTarget
-
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"python"`.
@@ -71,3 +72,4 @@ export interface PythonBuildTarget {
   interpreter?: URI;
 }
 ```
+

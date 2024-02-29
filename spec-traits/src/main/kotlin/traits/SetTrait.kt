@@ -6,9 +6,9 @@ import software.amazon.smithy.model.traits.AnnotationTrait
 
 class SetTrait(node: ObjectNode) : AnnotationTrait(ID, node) {
 
-    class Provider : AnnotationTrait.Provider<SetTrait>(ID, ::SetTrait)
+  class Provider : AnnotationTrait.Provider<SetTrait>(ID, ::SetTrait)
 
-    companion object {
-        val ID: ShapeId = ShapeId.from("traits#set")
-    }
+  companion object {
+    val ID: ShapeId = ShapeId.from("traits#set")
+  }
 }
