@@ -19,10 +19,10 @@ maven.install(
         "org.junit.platform:junit-platform-console:1.10.0",
 
         # docs
-        "org.scalameta:mdoc_2.13:2.3.7",
+        "org.scalameta:mdoc_2.13:2.5.2",
 
         # formatting
-        "org.scalameta:scalafmt-cli_2.13:3.7.14",
+        "org.scalameta:scalafmt-cli_2.13:3.8.0",
 
         # scala
         "org.scala-lang.modules:scala-collection-compat_2.13:2.11.0",
@@ -81,6 +81,7 @@ use_repo(
 )
 
 bazel_dep(name = "rules_nodejs", version = "6.0.5")
+
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(node_version = "20.11.1")
 
