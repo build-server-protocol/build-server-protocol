@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencyModule {
@@ -25,7 +24,6 @@ public class DependencyModule {
     this.version = version;
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -35,7 +33,6 @@ public class DependencyModule {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -45,7 +42,6 @@ public class DependencyModule {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -54,7 +50,6 @@ public class DependencyModule {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -64,7 +59,6 @@ public class DependencyModule {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
@@ -75,7 +69,6 @@ public class DependencyModule {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -108,7 +101,6 @@ public class DependencyModule {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

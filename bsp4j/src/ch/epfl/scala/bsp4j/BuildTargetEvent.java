@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class BuildTargetEvent {
@@ -23,7 +22,6 @@ public class BuildTargetEvent {
     this.target = target;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -33,7 +31,6 @@ public class BuildTargetEvent {
     this.target = Preconditions.checkNotNull(target, "target");
   }
 
-  @Pure
   public BuildTargetEventKind getKind() {
     return this.kind;
   }
@@ -42,7 +39,6 @@ public class BuildTargetEvent {
     this.kind = kind;
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -51,7 +47,6 @@ public class BuildTargetEvent {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -61,7 +56,6 @@ public class BuildTargetEvent {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -72,7 +66,6 @@ public class BuildTargetEvent {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -105,7 +98,6 @@ public class BuildTargetEvent {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

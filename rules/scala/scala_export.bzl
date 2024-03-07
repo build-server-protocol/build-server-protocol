@@ -3,7 +3,7 @@ load("@rules_jvm_external//:defs.bzl", "maven_export")
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library")
 
 SCALA_RULES_STDLIBS = [
-    "@io_bazel_rules_scala_scala_library//:io_bazel_rules_scala_scala_library"
+    "@io_bazel_rules_scala_scala_library//:io_bazel_rules_scala_scala_library",
 ]
 
 SCALA_MAVEN_STDLIBS = [
@@ -12,7 +12,7 @@ SCALA_MAVEN_STDLIBS = [
 
 DEFAULT_EXCLUDED_WORKSPACES = [
     "com_google_protobuf",
-    "protobuf"
+    "protobuf",
 ]
 
 def scala_export(

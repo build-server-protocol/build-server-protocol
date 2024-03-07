@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
@@ -18,7 +17,6 @@ public class BuildTargetIdentifier {
     this.uri = uri;
   }
 
-  @Pure
   @NonNull
   public String getUri() {
     return this.uri;
@@ -29,7 +27,6 @@ public class BuildTargetIdentifier {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
@@ -37,7 +34,6 @@ public class BuildTargetIdentifier {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -55,7 +51,6 @@ public class BuildTargetIdentifier {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.uri== null) ? 0 : this.uri.hashCode());
   }

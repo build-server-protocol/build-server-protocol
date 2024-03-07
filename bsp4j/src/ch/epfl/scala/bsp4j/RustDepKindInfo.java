@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustDepKindInfo {
@@ -16,7 +15,6 @@ public class RustDepKindInfo {
     this.kind = kind;
   }
 
-  @Pure
   @NonNull
   public String getKind() {
     return this.kind;
@@ -26,7 +24,6 @@ public class RustDepKindInfo {
     this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
-  @Pure
   public String getTarget() {
     return this.target;
   }
@@ -36,7 +33,6 @@ public class RustDepKindInfo {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("kind", this.kind);
@@ -45,7 +41,6 @@ public class RustDepKindInfo {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -68,7 +63,6 @@ public class RustDepKindInfo {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import java.util.Set;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `RustTarget` contains data of the target as defined in Cargo metadata.
@@ -39,7 +38,6 @@ public class RustTarget {
     this.doctest = doctest;
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -49,7 +47,6 @@ public class RustTarget {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getCrateRootUrl() {
     return this.crateRootUrl;
@@ -59,7 +56,6 @@ public class RustTarget {
     this.crateRootUrl = Preconditions.checkNotNull(crateRootUrl, "crateRootUrl");
   }
 
-  @Pure
   @NonNull
   public RustTargetKind getKind() {
     return this.kind;
@@ -69,7 +65,6 @@ public class RustTarget {
     this.kind = Preconditions.checkNotNull(kind, "kind");
   }
 
-  @Pure
   public List<RustCrateType> getCrateTypes() {
     return this.crateTypes;
   }
@@ -78,7 +73,6 @@ public class RustTarget {
     this.crateTypes = crateTypes;
   }
 
-  @Pure
   @NonNull
   public String getEdition() {
     return this.edition;
@@ -88,7 +82,6 @@ public class RustTarget {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
-  @Pure
   @NonNull
   public Boolean getDoctest() {
     return this.doctest;
@@ -98,7 +91,6 @@ public class RustTarget {
     this.doctest = Preconditions.checkNotNull(doctest, "doctest");
   }
 
-  @Pure
   public Set<String> getRequiredFeatures() {
     return this.requiredFeatures;
   }
@@ -108,7 +100,6 @@ public class RustTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
@@ -122,7 +113,6 @@ public class RustTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -170,7 +160,6 @@ public class RustTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * The debug session will connect to a running process. The DAP client will send the port of the running process later.
@@ -12,14 +11,12 @@ public class ScalaAttachRemote {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     return b.toString();
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -31,7 +28,6 @@ public class ScalaAttachRemote {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     return 1;
   }

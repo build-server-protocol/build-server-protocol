@@ -4,10 +4,9 @@ import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * Diagnostic is defined as it is in the LSP.
@@ -42,7 +41,6 @@ public class Diagnostic {
     this.message = message;
   }
 
-  @Pure
   @NonNull
   public Range getRange() {
     return this.range;
@@ -52,7 +50,6 @@ public class Diagnostic {
     this.range = Preconditions.checkNotNull(range, "range");
   }
 
-  @Pure
   public DiagnosticSeverity getSeverity() {
     return this.severity;
   }
@@ -61,7 +58,6 @@ public class Diagnostic {
     this.severity = severity;
   }
 
-  @Pure
   public Either<String, Integer> getCode() {
     return this.code;
   }
@@ -86,7 +82,6 @@ public class Diagnostic {
     this.code = Either.forRight(code);
   }
 
-  @Pure
   public CodeDescription getCodeDescription() {
     return this.codeDescription;
   }
@@ -95,7 +90,6 @@ public class Diagnostic {
     this.codeDescription = codeDescription;
   }
 
-  @Pure
   public String getSource() {
     return this.source;
   }
@@ -104,7 +98,6 @@ public class Diagnostic {
     this.source = source;
   }
 
-  @Pure
   @NonNull
   public String getMessage() {
     return this.message;
@@ -114,7 +107,6 @@ public class Diagnostic {
     this.message = Preconditions.checkNotNull(message, "message");
   }
 
-  @Pure
   public List<Integer> getTags() {
     return this.tags;
   }
@@ -123,7 +115,6 @@ public class Diagnostic {
     this.tags = tags;
   }
 
-  @Pure
   public List<DiagnosticRelatedInformation> getRelatedInformation() {
     return this.relatedInformation;
   }
@@ -132,7 +123,6 @@ public class Diagnostic {
     this.relatedInformation = relatedInformation;
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -141,7 +131,6 @@ public class Diagnostic {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -151,7 +140,6 @@ public class Diagnostic {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("range", this.range);
@@ -168,7 +156,6 @@ public class Diagnostic {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -231,7 +218,6 @@ public class Diagnostic {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

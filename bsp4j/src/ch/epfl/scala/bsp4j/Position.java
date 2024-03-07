@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class Position {
@@ -18,7 +17,6 @@ public class Position {
     this.character = character;
   }
 
-  @Pure
   @NonNull
   public Integer getLine() {
     return this.line;
@@ -28,7 +26,6 @@ public class Position {
     this.line = Preconditions.checkNotNull(line, "line");
   }
 
-  @Pure
   @NonNull
   public Integer getCharacter() {
     return this.character;
@@ -39,7 +36,6 @@ public class Position {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("line", this.line);
@@ -48,7 +44,6 @@ public class Position {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -71,7 +66,6 @@ public class Position {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

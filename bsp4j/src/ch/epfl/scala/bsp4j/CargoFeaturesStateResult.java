@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * **Unstable** (may change in future versions)
@@ -18,7 +17,6 @@ public class CargoFeaturesStateResult {
     this.packagesFeatures = packagesFeatures;
   }
 
-  @Pure
   @NonNull
   public List<PackageFeatures> getPackagesFeatures() {
     return this.packagesFeatures;
@@ -29,7 +27,6 @@ public class CargoFeaturesStateResult {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("packagesFeatures", this.packagesFeatures);
@@ -37,7 +34,6 @@ public class CargoFeaturesStateResult {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -55,7 +51,6 @@ public class CargoFeaturesStateResult {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.packagesFeatures== null) ? 0 : this.packagesFeatures.hashCode());
   }

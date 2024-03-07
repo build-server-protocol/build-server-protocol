@@ -1,8 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * `ScalaTestParams` contains scala-specific metadata for testing Scala targets.
@@ -16,7 +15,6 @@ public class ScalaTestParams {
   public ScalaTestParams() {
   }
 
-  @Pure
   public List<ScalaTestClassesItem> getTestClasses() {
     return this.testClasses;
   }
@@ -25,7 +23,6 @@ public class ScalaTestParams {
     this.testClasses = testClasses;
   }
 
-  @Pure
   public List<String> getJvmOptions() {
     return this.jvmOptions;
   }
@@ -35,7 +32,6 @@ public class ScalaTestParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("testClasses", this.testClasses);
@@ -44,7 +40,6 @@ public class ScalaTestParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -67,7 +62,6 @@ public class ScalaTestParams {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

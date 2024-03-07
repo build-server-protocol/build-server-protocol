@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * `JvmBuildTarget` is a basic data structure that contains jvm-specific
@@ -16,7 +15,6 @@ public class JvmBuildTarget {
   public JvmBuildTarget() {
   }
 
-  @Pure
   public String getJavaHome() {
     return this.javaHome;
   }
@@ -25,7 +23,6 @@ public class JvmBuildTarget {
     this.javaHome = javaHome;
   }
 
-  @Pure
   public String getJavaVersion() {
     return this.javaVersion;
   }
@@ -35,7 +32,6 @@ public class JvmBuildTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("javaHome", this.javaHome);
@@ -44,7 +40,6 @@ public class JvmBuildTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -67,7 +62,6 @@ public class JvmBuildTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import java.util.Map;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * **Unstable** (may change in future versions)
@@ -31,7 +30,6 @@ public class RustWorkspaceResult {
     this.resolvedTargets = resolvedTargets;
   }
 
-  @Pure
   @NonNull
   public List<RustPackage> getPackages() {
     return this.packages;
@@ -41,7 +39,6 @@ public class RustWorkspaceResult {
     this.packages = Preconditions.checkNotNull(packages, "packages");
   }
 
-  @Pure
   @NonNull
   public Map<String, List<RustRawDependency>> getRawDependencies() {
     return this.rawDependencies;
@@ -51,7 +48,6 @@ public class RustWorkspaceResult {
     this.rawDependencies = Preconditions.checkNotNull(rawDependencies, "rawDependencies");
   }
 
-  @Pure
   @NonNull
   public Map<String, List<RustDependency>> getDependencies() {
     return this.dependencies;
@@ -61,7 +57,6 @@ public class RustWorkspaceResult {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
-  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getResolvedTargets() {
     return this.resolvedTargets;
@@ -72,7 +67,6 @@ public class RustWorkspaceResult {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("packages", this.packages);
@@ -83,7 +77,6 @@ public class RustWorkspaceResult {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -116,7 +109,6 @@ public class RustWorkspaceResult {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

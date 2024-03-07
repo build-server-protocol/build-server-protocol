@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * Clients can use these capabilities to notify users what BSP endpoints can and
@@ -20,7 +19,6 @@ public class BuildTargetCapabilities {
   public BuildTargetCapabilities() {
   }
 
-  @Pure
   public Boolean getCanCompile() {
     return this.canCompile;
   }
@@ -29,7 +27,6 @@ public class BuildTargetCapabilities {
     this.canCompile = canCompile;
   }
 
-  @Pure
   public Boolean getCanTest() {
     return this.canTest;
   }
@@ -38,7 +35,6 @@ public class BuildTargetCapabilities {
     this.canTest = canTest;
   }
 
-  @Pure
   public Boolean getCanRun() {
     return this.canRun;
   }
@@ -47,7 +43,6 @@ public class BuildTargetCapabilities {
     this.canRun = canRun;
   }
 
-  @Pure
   public Boolean getCanDebug() {
     return this.canDebug;
   }
@@ -57,7 +52,6 @@ public class BuildTargetCapabilities {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("canCompile", this.canCompile);
@@ -68,7 +62,6 @@ public class BuildTargetCapabilities {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -101,7 +94,6 @@ public class BuildTargetCapabilities {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

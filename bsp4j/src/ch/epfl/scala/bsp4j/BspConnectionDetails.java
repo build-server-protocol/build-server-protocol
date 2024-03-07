@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * Structure describing how to start a BSP server and the capabilities it supports.
@@ -34,7 +33,6 @@ public class BspConnectionDetails {
     this.languages = languages;
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -44,7 +42,6 @@ public class BspConnectionDetails {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public List<String> getArgv() {
     return this.argv;
@@ -54,7 +51,6 @@ public class BspConnectionDetails {
     this.argv = Preconditions.checkNotNull(argv, "argv");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -64,7 +60,6 @@ public class BspConnectionDetails {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
@@ -74,7 +69,6 @@ public class BspConnectionDetails {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
 
-  @Pure
   @NonNull
   public List<String> getLanguages() {
     return this.languages;
@@ -85,7 +79,6 @@ public class BspConnectionDetails {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
@@ -97,7 +90,6 @@ public class BspConnectionDetails {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -135,7 +127,6 @@ public class BspConnectionDetails {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
