@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class Range {
@@ -17,6 +18,7 @@ public class Range {
     this.end = end;
   }
 
+  @Pure
   @NonNull
   public Position getStart() {
     return this.start;
@@ -26,6 +28,7 @@ public class Range {
     this.start = Preconditions.checkNotNull(start, "start");
   }
 
+  @Pure
   @NonNull
   public Position getEnd() {
     return this.end;
@@ -36,6 +39,7 @@ public class Range {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("start", this.start);
@@ -44,6 +48,7 @@ public class Range {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -66,6 +71,7 @@ public class Range {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

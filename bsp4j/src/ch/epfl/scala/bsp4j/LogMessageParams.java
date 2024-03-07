@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class LogMessageParams {
@@ -21,6 +22,7 @@ public class LogMessageParams {
     this.message = message;
   }
 
+  @Pure
   @NonNull
   public MessageType getType() {
     return this.type;
@@ -30,6 +32,7 @@ public class LogMessageParams {
     this.type = Preconditions.checkNotNull(type, "type");
   }
 
+  @Pure
   public TaskId getTask() {
     return this.task;
   }
@@ -38,6 +41,7 @@ public class LogMessageParams {
     this.task = task;
   }
 
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -46,6 +50,7 @@ public class LogMessageParams {
     this.originId = originId;
   }
 
+  @Pure
   @NonNull
   public String getMessage() {
     return this.message;
@@ -56,6 +61,7 @@ public class LogMessageParams {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("type", this.type);
@@ -66,6 +72,7 @@ public class LogMessageParams {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -98,6 +105,7 @@ public class LogMessageParams {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

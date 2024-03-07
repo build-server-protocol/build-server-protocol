@@ -1,6 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `CppBuildTarget` is a basic data structure that contains c++-specific
@@ -19,6 +20,7 @@ public class CppBuildTarget {
   public CppBuildTarget() {
   }
 
+  @Pure
   public String getVersion() {
     return this.version;
   }
@@ -27,6 +29,7 @@ public class CppBuildTarget {
     this.version = version;
   }
 
+  @Pure
   public String getCompiler() {
     return this.compiler;
   }
@@ -35,6 +38,7 @@ public class CppBuildTarget {
     this.compiler = compiler;
   }
 
+  @Pure
   public String getCCompiler() {
     return this.cCompiler;
   }
@@ -43,6 +47,7 @@ public class CppBuildTarget {
     this.cCompiler = cCompiler;
   }
 
+  @Pure
   public String getCppCompiler() {
     return this.cppCompiler;
   }
@@ -52,6 +57,7 @@ public class CppBuildTarget {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("version", this.version);
@@ -62,6 +68,7 @@ public class CppBuildTarget {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -94,6 +101,7 @@ public class CppBuildTarget {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

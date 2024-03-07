@@ -20,8 +20,8 @@ multirun(
 multirun(
     name = "generate_all",
     commands = [
-        "//:generate-bsp4j_command",
-        "//:generate-bsp4s_command",
+        "//bsp4j:generate-bsp4j_command",
+        "//bsp4s:generate-bsp4s_command",
         "//website:generate-website_command",
     ],
     jobs = 0,
@@ -46,13 +46,6 @@ java_binary(
     ],
 )
 
-library_generator(
-    name = "generate-bsp4j",
-    gen_tool = ":bsp4j-generator",
-    library_name = "bsp4j",
-    visibility = ["//visibility:public"],
-)
-
 java_binary(
     name = "bsp4s-generator",
     main_class = "bsp.codegen.bsp4s.Main",
@@ -62,9 +55,20 @@ java_binary(
     ],
 )
 
-library_generator(
-    name = "generate-bsp4s",
-    gen_tool = ":bsp4s-generator",
-    library_name = "bsp4s",
-    visibility = ["//visibility:public"],
+command(
+    name = "publish_bsp4j",
+    command = "//bsp4j:bsp4j.publish",
+)
+
+command(
+    name = "publish_bsp4s",
+    command = "//bsp4s:bsp4s.publish",
+)
+
+multirun(
+    name = "publish",
+    commands = [
+        ":publish_bsp4j",
+        ":publish_bsp4s",
+    ],
 )

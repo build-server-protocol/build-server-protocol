@@ -1,8 +1,17 @@
 load("//rules/scala:scala_export.bzl", "scala_export")
+load("//rules/generator:generator.bzl", "library_generator")
+
+library_generator(
+    name = "generate-bsp4s",
+    gen_tool = "//:bsp4s-generator",
+    out_dir = "src",
+    visibility = ["//visibility:public"],
+)
 
 scala_export(
     name = "bsp4s",
     srcs = glob(["src/**/*.scala"]),
+    data = [":generate-bsp4s"],
     maven_coordinates = "ch.epfl.scala:bsp4s_2.13:0.1.0",
     visibility = ["//visibility:public"],
     deps = [

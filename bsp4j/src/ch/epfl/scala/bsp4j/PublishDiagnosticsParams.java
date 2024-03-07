@@ -1,9 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class PublishDiagnosticsParams {
@@ -28,6 +29,7 @@ public class PublishDiagnosticsParams {
     this.reset = reset;
   }
 
+  @Pure
   @NonNull
   public TextDocumentIdentifier getTextDocument() {
     return this.textDocument;
@@ -37,6 +39,7 @@ public class PublishDiagnosticsParams {
     this.textDocument = Preconditions.checkNotNull(textDocument, "textDocument");
   }
 
+  @Pure
   @NonNull
   public BuildTargetIdentifier getBuildTarget() {
     return this.buildTarget;
@@ -46,6 +49,7 @@ public class PublishDiagnosticsParams {
     this.buildTarget = Preconditions.checkNotNull(buildTarget, "buildTarget");
   }
 
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -54,6 +58,7 @@ public class PublishDiagnosticsParams {
     this.originId = originId;
   }
 
+  @Pure
   @NonNull
   public List<Diagnostic> getDiagnostics() {
     return this.diagnostics;
@@ -63,6 +68,7 @@ public class PublishDiagnosticsParams {
     this.diagnostics = Preconditions.checkNotNull(diagnostics, "diagnostics");
   }
 
+  @Pure
   @NonNull
   public Boolean getReset() {
     return this.reset;
@@ -73,6 +79,7 @@ public class PublishDiagnosticsParams {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("textDocument", this.textDocument);
@@ -84,6 +91,7 @@ public class PublishDiagnosticsParams {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -121,6 +129,7 @@ public class PublishDiagnosticsParams {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

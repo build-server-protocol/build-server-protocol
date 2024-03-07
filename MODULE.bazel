@@ -55,9 +55,11 @@ maven.install(
         "io.monix:monix-eval_2.13:3.2.0",
         "io.monix:monix-execution_2.13:3.2.0",
         "com.outr:scribe_2.13:3.5.5",
-        "org.eclipse.lsp4j:org.eclipse.lsp4j:0.22.0",
-        "org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.22.0",
-        "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.22.0",
+
+        # lsp4j 21.1 causes "b = new (this);" bug (missing ToStringBuilder)
+        "org.eclipse.lsp4j:org.eclipse.lsp4j:0.20.1",
+        "org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.20.1",
+        "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.20.1",
 
         # lsp4j deps versions must be aligned with lsp4j version
         "org.eclipse.xtend:org.eclipse.xtend.core:2.28.0",

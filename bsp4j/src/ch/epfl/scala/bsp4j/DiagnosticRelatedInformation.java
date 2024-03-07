@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * Represents a related message and source code location for a diagnostic.
@@ -22,6 +23,7 @@ public class DiagnosticRelatedInformation {
     this.message = message;
   }
 
+  @Pure
   @NonNull
   public Location getLocation() {
     return this.location;
@@ -31,6 +33,7 @@ public class DiagnosticRelatedInformation {
     this.location = Preconditions.checkNotNull(location, "location");
   }
 
+  @Pure
   @NonNull
   public String getMessage() {
     return this.message;
@@ -41,6 +44,7 @@ public class DiagnosticRelatedInformation {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("location", this.location);
@@ -49,6 +53,7 @@ public class DiagnosticRelatedInformation {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -71,6 +76,7 @@ public class DiagnosticRelatedInformation {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

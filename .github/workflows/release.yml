@@ -16,12 +16,21 @@ jobs:
           distribution: "temurin"
           java-version: "11"
           cache: "sbt"
-      - name: Publish ${{ github.ref }}
-        run: sbt ci-release docs/docusaurusPublishGhpages
+      - name: Publish docs ${{ github.ref }}
+        run: bazel run //website:docusaurus-deploy
+        env:
+          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
+          GIT_USER: build-server-protocol@build-server-protocol.github.io
+      - name: Publish maven artifacts
+        run:
+          bazel run \
+          --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
+          --define gpg_sign=true \
+          //:publish
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}

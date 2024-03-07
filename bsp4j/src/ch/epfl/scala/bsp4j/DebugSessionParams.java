@@ -3,9 +3,10 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DebugSessionParams {
@@ -21,6 +22,7 @@ public class DebugSessionParams {
     this.targets = targets;
   }
 
+  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
@@ -30,6 +32,7 @@ public class DebugSessionParams {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
 
+  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -38,6 +41,7 @@ public class DebugSessionParams {
     this.dataKind = dataKind;
   }
 
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -47,6 +51,7 @@ public class DebugSessionParams {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
@@ -56,6 +61,7 @@ public class DebugSessionParams {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -83,6 +89,7 @@ public class DebugSessionParams {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -1,9 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaTestSuiteSelection {
@@ -18,6 +19,7 @@ public class ScalaTestSuiteSelection {
     this.tests = tests;
   }
 
+  @Pure
   @NonNull
   public String getClassName() {
     return this.className;
@@ -27,6 +29,7 @@ public class ScalaTestSuiteSelection {
     this.className = Preconditions.checkNotNull(className, "className");
   }
 
+  @Pure
   @NonNull
   public List<String> getTests() {
     return this.tests;
@@ -37,6 +40,7 @@ public class ScalaTestSuiteSelection {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("className", this.className);
@@ -45,6 +49,7 @@ public class ScalaTestSuiteSelection {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -67,6 +72,7 @@ public class ScalaTestSuiteSelection {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

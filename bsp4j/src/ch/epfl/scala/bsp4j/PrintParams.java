@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * **Unstable** (may change in future versions)
@@ -22,6 +23,7 @@ public class PrintParams {
     this.message = message;
   }
 
+  @Pure
   @NonNull
   public String getOriginId() {
     return this.originId;
@@ -31,6 +33,7 @@ public class PrintParams {
     this.originId = Preconditions.checkNotNull(originId, "originId");
   }
 
+  @Pure
   public TaskId getTask() {
     return this.task;
   }
@@ -39,6 +42,7 @@ public class PrintParams {
     this.task = task;
   }
 
+  @Pure
   @NonNull
   public String getMessage() {
     return this.message;
@@ -49,6 +53,7 @@ public class PrintParams {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
@@ -58,6 +63,7 @@ public class PrintParams {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -85,6 +91,7 @@ public class PrintParams {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

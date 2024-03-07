@@ -1,7 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `ScalaDiagnostic` is a data structure that contains Scala-specific
@@ -14,6 +15,7 @@ public class ScalaDiagnostic {
   public ScalaDiagnostic() {
   }
 
+  @Pure
   public List<ScalaAction> getActions() {
     return this.actions;
   }
@@ -23,6 +25,7 @@ public class ScalaDiagnostic {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("actions", this.actions);
@@ -30,6 +33,7 @@ public class ScalaDiagnostic {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -47,6 +51,7 @@ public class ScalaDiagnostic {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.actions== null) ? 0 : this.actions.hashCode());
   }

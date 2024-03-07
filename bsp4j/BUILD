@@ -1,8 +1,19 @@
 load("@rules_jvm_external//:defs.bzl", "java_export")
+load("//rules/generator:generator.bzl", "library_generator")
+
+library_generator(
+    name = "generate-bsp4j",
+    gen_tool = "//:bsp4j-generator",
+    out_dir = "src",
+    visibility = ["//visibility:public"],
+)
 
 java_export(
     name = "bsp4j",
     srcs = glob(["src/**/*.java"]),
+    data = [
+        ":generate-bsp4j",
+    ],
     maven_coordinates = "ch.epfl.scala:bsp4j:0.0.1",
     visibility = ["//visibility:public"],
     deps = [

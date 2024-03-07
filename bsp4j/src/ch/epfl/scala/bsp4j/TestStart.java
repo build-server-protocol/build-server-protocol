@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestStart {
@@ -15,6 +16,7 @@ public class TestStart {
     this.displayName = displayName;
   }
 
+  @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
@@ -24,6 +26,7 @@ public class TestStart {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
 
+  @Pure
   public Location getLocation() {
     return this.location;
   }
@@ -33,6 +36,7 @@ public class TestStart {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("displayName", this.displayName);
@@ -41,6 +45,7 @@ public class TestStart {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -63,6 +68,7 @@ public class TestStart {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

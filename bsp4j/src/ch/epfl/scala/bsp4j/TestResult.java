@@ -2,9 +2,10 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestResult {
@@ -22,6 +23,7 @@ public class TestResult {
     this.statusCode = statusCode;
   }
 
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -30,6 +32,7 @@ public class TestResult {
     this.originId = originId;
   }
 
+  @Pure
   @NonNull
   public StatusCode getStatusCode() {
     return this.statusCode;
@@ -39,6 +42,7 @@ public class TestResult {
     this.statusCode = Preconditions.checkNotNull(statusCode, "statusCode");
   }
 
+  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -47,6 +51,7 @@ public class TestResult {
     this.dataKind = dataKind;
   }
 
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -56,6 +61,7 @@ public class TestResult {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
@@ -66,6 +72,7 @@ public class TestResult {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -98,6 +105,7 @@ public class TestResult {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -2,9 +2,10 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TaskProgressParams {
@@ -32,6 +33,7 @@ public class TaskProgressParams {
     this.taskId = taskId;
   }
 
+  @Pure
   @NonNull
   public TaskId getTaskId() {
     return this.taskId;
@@ -41,6 +43,7 @@ public class TaskProgressParams {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
 
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -49,6 +52,7 @@ public class TaskProgressParams {
     this.originId = originId;
   }
 
+  @Pure
   public Long getEventTime() {
     return this.eventTime;
   }
@@ -57,6 +61,7 @@ public class TaskProgressParams {
     this.eventTime = eventTime;
   }
 
+  @Pure
   public String getMessage() {
     return this.message;
   }
@@ -65,6 +70,7 @@ public class TaskProgressParams {
     this.message = message;
   }
 
+  @Pure
   public Long getTotal() {
     return this.total;
   }
@@ -73,6 +79,7 @@ public class TaskProgressParams {
     this.total = total;
   }
 
+  @Pure
   public Long getProgress() {
     return this.progress;
   }
@@ -81,6 +88,7 @@ public class TaskProgressParams {
     this.progress = progress;
   }
 
+  @Pure
   public String getUnit() {
     return this.unit;
   }
@@ -89,6 +97,7 @@ public class TaskProgressParams {
     this.unit = unit;
   }
 
+  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -97,6 +106,7 @@ public class TaskProgressParams {
     this.dataKind = dataKind;
   }
 
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -106,6 +116,7 @@ public class TaskProgressParams {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("taskId", this.taskId);
@@ -121,6 +132,7 @@ public class TaskProgressParams {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -178,6 +190,7 @@ public class TaskProgressParams {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

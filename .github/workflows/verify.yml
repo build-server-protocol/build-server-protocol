@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Mount bazel cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '/home/runner/.cache/bazel'
           key: bazel
@@ -34,7 +34,7 @@ jobs:
         run: bazel test //...
 
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v17
+        uses: tj-actions/verify-changed-files@v19
         id: verify-changed-files
         with:
           files: |

@@ -1,9 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * A workspace edit represents changes to many resources managed in the workspace.
@@ -17,6 +18,7 @@ public class ScalaWorkspaceEdit {
     this.changes = changes;
   }
 
+  @Pure
   @NonNull
   public List<ScalaTextEdit> getChanges() {
     return this.changes;
@@ -27,6 +29,7 @@ public class ScalaWorkspaceEdit {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("changes", this.changes);
@@ -34,6 +37,7 @@ public class ScalaWorkspaceEdit {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -51,6 +55,7 @@ public class ScalaWorkspaceEdit {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.changes== null) ? 0 : this.changes.hashCode());
   }

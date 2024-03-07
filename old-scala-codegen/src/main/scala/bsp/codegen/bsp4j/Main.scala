@@ -12,8 +12,8 @@ import java.nio.file.{Files, Path}
 
 object Main {
   def main(args: Array[String]): Unit = {
-    if (args.length != 3) {
-      println("Usage: bsp4s <name> <output directory> <generator script path>")
+    if (args.length != 1) {
+      println("Usage: bsp4j <output directory>")
       return
     }
 
@@ -26,16 +26,12 @@ object Main {
 
     val codegenFiles: util.List[CodegenFile] = renderer.render().asJava
 
-    val name = args(0)
-    val output = Path.of(args(1))
-    val generatorScript = new File(args(2))
-
-    val additionalCommands = new util.ArrayList[String]()
+    val output = Path.of(args(0))
 
     val generatorOutput = output.resolve("generator")
     val xtendOutput = output.resolve("xtend")
 
-    new FilesGenerator(name, generatorOutput, generatorScript, codegenFiles, additionalCommands)
+    new FilesGenerator(generatorOutput, codegenFiles)
       .generateFiles()
 
     val injector = XtendInjectorSingleton.INJECTOR
@@ -56,19 +52,34 @@ object Main {
       }
     }
 
-    val codegenFilesAfterXtend = codegenFiles.asScala.map { file =>
-      val path = file.getPath
-      val pathAfterXtend = Path.of(path.toString.replace(".xtend", ".java"))
-      val contentAfterXtend = "" // Does not matter, we only care about the path
-      new CodegenFile(pathAfterXtend, contentAfterXtend)
-    }.asJava
+    // Remove all non-Java files from xtendOutput
+    Files.walk(xtendOutput).forEach { path =>
+      if (path.toString.endsWith("._trace")) {
+        Files.delete(path)
+      }
+    }
 
-    new FilesGenerator(
-      name,
-      xtendOutput,
-      generatorScript,
-      codegenFilesAfterXtend,
-      additionalCommands
-    ).writeScript()
+    // Delete the generatorOutput directory
+    Files
+      .walk(generatorOutput)
+      .sorted(java.util.Comparator.reverseOrder())
+      .forEach(Files.delete)
+
+    // Move contents of xtendOutput one level up
+    Files
+      .walk(xtendOutput)
+      .filter(Files.isRegularFile(_))
+      .forEach { path =>
+        val relativePath = xtendOutput.relativize(path)
+        val targetPath = output.resolve(relativePath)
+        Files.createDirectories(targetPath.getParent)
+        Files.move(path, targetPath)
+      }
+
+    // Delete the xtendOutput directory
+    Files
+      .walk(xtendOutput)
+      .sorted(java.util.Comparator.reverseOrder())
+      .forEach(Files.delete)
   }
 }

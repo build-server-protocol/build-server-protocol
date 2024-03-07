@@ -11,8 +11,8 @@ import scala.jdk.CollectionConverters._
 
 object Main {
   def main(args: Array[String]): Unit = {
-    if (args.length != 3) {
-      println("Usage: bsp4j <name> <output directory> <generator script path>")
+    if (args.length != 1) {
+      println("Usage: bsp4j <output directory>")
       return
     }
 
@@ -27,13 +27,10 @@ object Main {
 
     val codegenFiles = scalaRenderer.render().asJava
 
-    val name = args(0)
-    val output = Path.of(args(1))
-    val generatorScript = new File(args(2))
+    val output = Path.of(args(0))
 
     val generator =
-      new FilesGenerator(name, output, generatorScript, codegenFiles, new util.ArrayList[String]())
+      new FilesGenerator(output, codegenFiles)
     generator.generateFiles()
-    generator.writeScript()
   }
 }

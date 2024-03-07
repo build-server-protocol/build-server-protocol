@@ -1,9 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
@@ -44,6 +45,7 @@ public class SbtBuildTarget {
     this.children = children;
   }
 
+  @Pure
   @NonNull
   public String getSbtVersion() {
     return this.sbtVersion;
@@ -53,6 +55,7 @@ public class SbtBuildTarget {
     this.sbtVersion = Preconditions.checkNotNull(sbtVersion, "sbtVersion");
   }
 
+  @Pure
   @NonNull
   public List<String> getAutoImports() {
     return this.autoImports;
@@ -62,6 +65,7 @@ public class SbtBuildTarget {
     this.autoImports = Preconditions.checkNotNull(autoImports, "autoImports");
   }
 
+  @Pure
   @NonNull
   public ScalaBuildTarget getScalaBuildTarget() {
     return this.scalaBuildTarget;
@@ -71,6 +75,7 @@ public class SbtBuildTarget {
     this.scalaBuildTarget = Preconditions.checkNotNull(scalaBuildTarget, "scalaBuildTarget");
   }
 
+  @Pure
   public BuildTargetIdentifier getParent() {
     return this.parent;
   }
@@ -79,6 +84,7 @@ public class SbtBuildTarget {
     this.parent = parent;
   }
 
+  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getChildren() {
     return this.children;
@@ -89,6 +95,7 @@ public class SbtBuildTarget {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("sbtVersion", this.sbtVersion);
@@ -100,6 +107,7 @@ public class SbtBuildTarget {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -137,6 +145,7 @@ public class SbtBuildTarget {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

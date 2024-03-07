@@ -1,38 +1,21 @@
 load("@rules_multirun//:defs.bzl", "command")
+load("@aspect_bazel_lib//lib:run_binary.bzl", "run_binary")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
-def _impl(ctx):
-    name = ctx.label.name
-    library_name = ctx.attr.library_name
-    generator_script = ctx.actions.declare_file("%s_gen.sh" % library_name)
-    output = ctx.actions.declare_directory("%s_gen" % library_name)
-
-    ctx.actions.run(
-        outputs = [generator_script, output],
-        arguments = [library_name, output.path, generator_script.path],
-        progress_message = "Generating the %s library" % library_name,
-        executable = ctx.executable.gen_tool,
+def library_generator(name, gen_tool, out_dir, **kwargs):
+    run_binary(
+        name = "%s_run" % name,
+        tool = gen_tool,
+        out_dirs = [out_dir],
+        args = ["$(RULEDIR)/%s" % out_dir],
     )
 
-    return [DefaultInfo(executable = generator_script)]
-
-_library_generator = rule(
-    executable = True,
-    implementation = _impl,
-    attrs = {
-        "library_name": attr.string(mandatory = True),
-        "gen_tool": attr.label(
-            executable = True,
-            allow_files = True,
-            cfg = "exec",
-        ),
-    },
-)
-
-def library_generator(name, library_name, gen_tool, **kwargs):
-    _library_generator(
+    write_source_files(
         name = name,
-        library_name = library_name,
-        gen_tool = gen_tool,
+        files = {
+            out_dir: "%s_run" % name,
+        },
+        suggested_update_target = "%s_command" % name,
         **kwargs
     )
 

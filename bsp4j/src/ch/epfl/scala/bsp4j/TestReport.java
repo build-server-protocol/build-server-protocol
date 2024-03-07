@@ -1,8 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestReport {
@@ -37,6 +38,7 @@ public class TestReport {
     this.skipped = skipped;
   }
 
+  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -45,6 +47,7 @@ public class TestReport {
     this.originId = originId;
   }
 
+  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -54,6 +57,7 @@ public class TestReport {
     this.target = Preconditions.checkNotNull(target, "target");
   }
 
+  @Pure
   @NonNull
   public Integer getPassed() {
     return this.passed;
@@ -63,6 +67,7 @@ public class TestReport {
     this.passed = Preconditions.checkNotNull(passed, "passed");
   }
 
+  @Pure
   @NonNull
   public Integer getFailed() {
     return this.failed;
@@ -72,6 +77,7 @@ public class TestReport {
     this.failed = Preconditions.checkNotNull(failed, "failed");
   }
 
+  @Pure
   @NonNull
   public Integer getIgnored() {
     return this.ignored;
@@ -81,6 +87,7 @@ public class TestReport {
     this.ignored = Preconditions.checkNotNull(ignored, "ignored");
   }
 
+  @Pure
   @NonNull
   public Integer getCancelled() {
     return this.cancelled;
@@ -90,6 +97,7 @@ public class TestReport {
     this.cancelled = Preconditions.checkNotNull(cancelled, "cancelled");
   }
 
+  @Pure
   @NonNull
   public Integer getSkipped() {
     return this.skipped;
@@ -99,6 +107,7 @@ public class TestReport {
     this.skipped = Preconditions.checkNotNull(skipped, "skipped");
   }
 
+  @Pure
   public Long getTime() {
     return this.time;
   }
@@ -108,6 +117,7 @@ public class TestReport {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
@@ -122,6 +132,7 @@ public class TestReport {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -174,6 +185,7 @@ public class TestReport {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

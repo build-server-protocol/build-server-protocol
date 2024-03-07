@@ -1,9 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.Set;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustRawDependency {
@@ -32,6 +33,7 @@ public class RustRawDependency {
     this.features = features;
   }
 
+  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -41,6 +43,7 @@ public class RustRawDependency {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
+  @Pure
   public String getRename() {
     return this.rename;
   }
@@ -49,6 +52,7 @@ public class RustRawDependency {
     this.rename = rename;
   }
 
+  @Pure
   public String getKind() {
     return this.kind;
   }
@@ -57,6 +61,7 @@ public class RustRawDependency {
     this.kind = kind;
   }
 
+  @Pure
   public String getTarget() {
     return this.target;
   }
@@ -65,6 +70,7 @@ public class RustRawDependency {
     this.target = target;
   }
 
+  @Pure
   @NonNull
   public Boolean getOptional() {
     return this.optional;
@@ -74,6 +80,7 @@ public class RustRawDependency {
     this.optional = Preconditions.checkNotNull(optional, "optional");
   }
 
+  @Pure
   @NonNull
   public Boolean getUsesDefaultFeatures() {
     return this.usesDefaultFeatures;
@@ -83,6 +90,7 @@ public class RustRawDependency {
     this.usesDefaultFeatures = Preconditions.checkNotNull(usesDefaultFeatures, "usesDefaultFeatures");
   }
 
+  @Pure
   @NonNull
   public Set<String> getFeatures() {
     return this.features;
@@ -93,6 +101,7 @@ public class RustRawDependency {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
@@ -106,6 +115,7 @@ public class RustRawDependency {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -153,6 +163,7 @@ public class RustRawDependency {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

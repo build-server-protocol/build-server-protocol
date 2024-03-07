@@ -2,9 +2,10 @@ package ch.epfl.scala.bsp4j;
 
 import java.util.List;
 import java.util.Map;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmEnvironmentItem {
@@ -33,6 +34,7 @@ public class JvmEnvironmentItem {
     this.environmentVariables = environmentVariables;
   }
 
+  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -42,6 +44,7 @@ public class JvmEnvironmentItem {
     this.target = Preconditions.checkNotNull(target, "target");
   }
 
+  @Pure
   @NonNull
   public List<String> getClasspath() {
     return this.classpath;
@@ -51,6 +54,7 @@ public class JvmEnvironmentItem {
     this.classpath = Preconditions.checkNotNull(classpath, "classpath");
   }
 
+  @Pure
   @NonNull
   public List<String> getJvmOptions() {
     return this.jvmOptions;
@@ -60,6 +64,7 @@ public class JvmEnvironmentItem {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
 
+  @Pure
   @NonNull
   public String getWorkingDirectory() {
     return this.workingDirectory;
@@ -69,6 +74,7 @@ public class JvmEnvironmentItem {
     this.workingDirectory = Preconditions.checkNotNull(workingDirectory, "workingDirectory");
   }
 
+  @Pure
   @NonNull
   public Map<String, String> getEnvironmentVariables() {
     return this.environmentVariables;
@@ -78,6 +84,7 @@ public class JvmEnvironmentItem {
     this.environmentVariables = Preconditions.checkNotNull(environmentVariables, "environmentVariables");
   }
 
+  @Pure
   public List<JvmMainClass> getMainClasses() {
     return this.mainClasses;
   }
@@ -87,6 +94,7 @@ public class JvmEnvironmentItem {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -99,6 +107,7 @@ public class JvmEnvironmentItem {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -141,6 +150,7 @@ public class JvmEnvironmentItem {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

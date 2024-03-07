@@ -2,9 +2,10 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
-import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
-import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
+import org.eclipse.lsp4j.util.Preconditions;
+import org.eclipse.xtext.xbase.lib.Pure;
+import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestFinish {
@@ -28,6 +29,7 @@ public class TestFinish {
     this.status = status;
   }
 
+  @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
@@ -37,6 +39,7 @@ public class TestFinish {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
 
+  @Pure
   public String getMessage() {
     return this.message;
   }
@@ -45,6 +48,7 @@ public class TestFinish {
     this.message = message;
   }
 
+  @Pure
   @NonNull
   public TestStatus getStatus() {
     return this.status;
@@ -54,6 +58,7 @@ public class TestFinish {
     this.status = Preconditions.checkNotNull(status, "status");
   }
 
+  @Pure
   public Location getLocation() {
     return this.location;
   }
@@ -62,6 +67,7 @@ public class TestFinish {
     this.location = location;
   }
 
+  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -70,6 +76,7 @@ public class TestFinish {
     this.dataKind = dataKind;
   }
 
+  @Pure
   public Object getData() {
     return this.data;
   }
@@ -79,6 +86,7 @@ public class TestFinish {
   }
 
   @Override
+  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("displayName", this.displayName);
@@ -91,6 +99,7 @@ public class TestFinish {
   }
 
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -133,6 +142,7 @@ public class TestFinish {
   }
 
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
