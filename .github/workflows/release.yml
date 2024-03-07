@@ -25,6 +25,11 @@ jobs:
 #        env:
 #          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
 #          GIT_USER: build-server-protocol@build-server-protocol.github.io
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.PGP_SECRET }}
+          passphrase: ${{ secrets.PGP_PASSPHRASE }}
       - name: Publish maven artifacts
         run: |
           bazel run //:publish \
@@ -33,7 +38,5 @@ jobs:
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_SECRET: ${{ secrets.PGP_SECRET }}
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
