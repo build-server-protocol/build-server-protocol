@@ -1,5 +1,10 @@
 # https://docs.aspect.build/guides/bazelrc/
 
+common --java_language_version=17
+common --tool_java_language_version=17
+common --java_runtime_version=remotejdk_17
+common --tool_java_runtime_version=remotejdk_17
+
 # Do not upload locally executed action results to the remote cache.
 # This should be the default for local builds so local builds cannot poison the remote cache.
 # It should be flipped to `--remote_upload_local_results` on CI
@@ -117,14 +122,6 @@ build --incompatible_remote_results_ignore_disk
 # No longer experimental in Bazel 6: https://github.com/bazelbuild/bazel/commit/c1a95501a5611878e5cc43a3cc531f2b9e47835b
 # Docs: https://bazel.build/reference/command-line-reference#flag--reuse_sandbox_directories
 build --experimental_reuse_sandbox_directories
-
-# Do not build runfiles symlink forests for external repositories under
-# `.runfiles/wsname/external/repo` (in addition to `.runfiles/repo`). This reduces runfiles &
-# sandbox creation times & prevents accidentally depending on this feature which may flip to off by
-# default in the future. Note, some rules may fail under this flag, please file issues with the rule
-# author.
-# Docs: https://bazel.build/reference/command-line-reference#flag--legacy_external_runfiles
-build --nolegacy_external_runfiles
 
 # Speed up all builds by not checking if external repository files have been modified.
 # Docs: https://github.com/bazelbuild/bazel/blob/1af61b21df99edc2fc66939cdf14449c2661f873/src/main/java/com/google/devtools/build/lib/bazel/repository/RepositoryOptions.java#L244
