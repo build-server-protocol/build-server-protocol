@@ -15,7 +15,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-          cache: "sbt"
       - name: Publish docs ${{ github.ref }}
         run: bazel run //website:docusaurus-deploy
         env:
