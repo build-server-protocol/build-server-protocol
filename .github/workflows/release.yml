@@ -29,7 +29,7 @@ jobs:
         run:
           bazel run //:publish \
           --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
-          --define gpg_sign=true
+          --define "gpg_sign=true"
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
