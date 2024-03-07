@@ -2,6 +2,7 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//website:@docusaurus/core/package_json.bzl", docusaurus_bin = "bin")
 load("//rules/generator:website.bzl", "website")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
+load("//:version.bzl", "BSP_VERSION")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -76,5 +77,5 @@ website(
         "@maven//:org_typelevel_cats_core_2_13",
         "@maven//:org_typelevel_cats_kernel_2_13",
     ],
-    library_version = "2.1.0",
+    library_version = BSP_VERSION,
 )

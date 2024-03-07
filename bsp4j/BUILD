@@ -1,5 +1,6 @@
 load("@rules_jvm_external//:defs.bzl", "java_export")
 load("//rules/generator:generator.bzl", "library_generator")
+load("//:version.bzl", "BSP_VERSION")
 
 library_generator(
     name = "generate-bsp4j",
@@ -14,7 +15,7 @@ java_export(
     data = [
         ":generate-bsp4j",
     ],
-    maven_coordinates = "ch.epfl.scala:bsp4j:0.0.1",
+    maven_coordinates = "ch.epfl.scala:bsp4j:%s" % BSP_VERSION,
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_google_code_gson_gson",
