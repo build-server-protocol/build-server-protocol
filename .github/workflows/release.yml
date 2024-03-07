@@ -15,11 +15,16 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-      - name: Publish docs ${{ github.ref }}
-        run: bazel run //website:docusaurus-deploy
-        env:
-          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
-          GIT_USER: build-server-protocol@build-server-protocol.github.io
+      - name: Mount bazel cache
+        uses: actions/cache@v4
+        with:
+          path: '/home/runner/.cache/bazel'
+          key: bazel
+#      - name: Publish docs ${{ github.ref }}
+#        run: bazel run //website:docusaurus-deploy
+#        env:
+#          GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
+#          GIT_USER: build-server-protocol@build-server-protocol.github.io
       - name: Publish maven artifacts
         run:
           bazel run \
