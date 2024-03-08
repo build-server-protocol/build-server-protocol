@@ -39,7 +39,7 @@ jobs:
           mvn --batch-mode \
             --settings custom-settings.xml \
             -f bazel-bin/bsp4j/bsp4j-pom.xml \
-            org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8:release \
+            org.sonatype.plugins:nexus-staging-maven-plugin:1.6.13:release \
             -DnexusUrl=https://oss.sonatype.org/ \
             -DserverId=sonatype-nexus-staging \
             -DautoReleaseAfterClose=true
