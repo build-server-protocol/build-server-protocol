@@ -35,6 +35,9 @@ jobs:
           bazel run //:publish \
             --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
             --define "gpg_sign=true"
+          mvn org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8:release \
+            -DnexusUrl=https://oss.sonatype.org/ -DserverId=sonatype-nexus-staging \
+            -DautoReleaseAfterClose=true
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
