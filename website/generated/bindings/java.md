@@ -16,7 +16,7 @@ Add the following snippet to your build to add dependency on `bsp4j`.
 ### Gradle
 
 ```groovy
-compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.2.0-M2'
+compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.2.0-M3'
 ```
 
 ### Maven
@@ -25,14 +25,14 @@ compile group: 'ch.epfl.scala', name: 'bsp4j', version: '2.2.0-M2'
 <dependency>
     <groupId>ch.epfl.scala</groupId>
     <artifactId>bsp4j</artifactId>
-    <version>2.2.0-M2</version>
+    <version>2.2.0-M3</version>
 </dependency>
 ```
 
 ### sbt
 
 ```scala
-libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.2.0-M2"
+libraryDependencies += "ch.epfl.scala" % "bsp4j" % "2.2.0-M3"
 ```
 
 ## Examples
