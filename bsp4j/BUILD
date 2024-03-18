@@ -16,6 +16,7 @@ java_export(
         ":generate-bsp4j",
     ],
     maven_coordinates = "ch.epfl.scala:bsp4j:%s" % BSP_VERSION,
+    pom_template = "//tools/maven:pom.tpl",
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_google_code_gson_gson",

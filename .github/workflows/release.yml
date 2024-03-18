@@ -35,14 +35,9 @@ jobs:
           bazel run //:publish \
             --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
             --define "gpg_sign=true"
-          echo "<settings><servers><server><id>sonatype-nexus-staging</id><username>${{ secrets.SONATYPE_USERNAME }}</username><password>${{ secrets.SONATYPE_PASSWORD }}</password></server></servers></settings>" > custom-settings.xml
           mvn --batch-mode \
-            --settings custom-settings.xml \
             -f bazel-bin/bsp4j/bsp4j-pom.xml \
-            org.sonatype.plugins:nexus-staging-maven-plugin:1.6.13:release \
-            -DnexusUrl=https://oss.sonatype.org/ \
-            -DserverId=sonatype-nexus-staging \
-            -DautoReleaseAfterClose=true
+            deploy
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
