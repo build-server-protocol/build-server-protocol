@@ -11,7 +11,7 @@
 {dependencies}
     </dependencies>
 
-    <properties>
+    <build>
         <plugins>
            <plugin>
               <groupId>org.sonatype.plugins</groupId>
@@ -25,5 +25,5 @@
               </configuration>
            </plugin>
         </plugins>
-    </properties>
+    </build>
 </project>
