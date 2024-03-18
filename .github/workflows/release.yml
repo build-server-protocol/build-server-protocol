@@ -11,19 +11,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # de-base64 the PGP_SECRET and save it as an output, making sure it's not exposed in the logs
-      - id: de-base64-pgp-secret
-        name: De-base64 PGP secret
+      # the PGP_SECRET is a base64 encoded ASCII armored version of the private key
+      # we need to decode it before using it, because setup-java@v4 does not support
+      # base64 encoded secrets
+      - name: Decode GPG private key
+        id: read-gpg-private-key
         run: |
-          echo "${{ secrets.PGP_SECRET }}" | base64 -d > pgp-secret.asc
-          echo "::add-mask::$(cat pgp-secret.asc)"
-          echo "::set-output name=pgp-secret::$(cat pgp-secret.asc)"
+          DECODED_PRIVATE_KEY=$(echo "${{ secrets.MAVEN_GPG_PRIVATE_KEY }}" | base64 --decode)
+          echo "::add-mask::<<EOF${DECODED_PRIVATE_KEY}EOF"
+          echo "decoded-private-key=<<EOF${DECODED_PRIVATE_KEY}EOF" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v4
         with:
           server-id: ossrh
           server-username: MAVEN_USER
           server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ steps.de-base64-pgp-secret.outputs.pgp-secret }}
+          gpg-private-key: ${{ steps.read-gpg-private-key.outputs.decoded-private-key }}
           gpg-passphrase: GPG_PASSPHRASE
           distribution: "temurin"
           java-version: "11"
