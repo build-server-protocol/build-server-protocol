@@ -13,6 +13,7 @@ jobs:
           fetch-depth: 0
       # de-base64 the PGP_SECRET and save it as an output, making sure it's not exposed in the logs
       - id: de-base64-pgp-secret
+        name: De-base64 PGP secret
         run: |
           echo "${{ secrets.PGP_SECRET }}" | base64 -d > pgp-secret.asc
           echo "::add-mask::$(cat pgp-secret.asc)"
