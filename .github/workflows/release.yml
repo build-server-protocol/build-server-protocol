@@ -19,14 +19,12 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           server-id: ossrh
-          server-username: MAVEN_USERNAME
+          server-username: MAVEN_USER
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.PGP_SECRET }}
           gpg-passphrase: GPG_PASSPHRASE
           distribution: "temurin"
           java-version: "11"
-        env:
-          GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
       - name: Mount bazel cache
         uses: actions/cache@v4
         with:
@@ -50,3 +48,4 @@ jobs:
           GIT_USER: build-server-protocol@build-server-protocol.github.io
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
+          GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
