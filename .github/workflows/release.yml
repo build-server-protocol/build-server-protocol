@@ -38,6 +38,7 @@ jobs:
           key: bazel
       - name: Publish maven artifacts
         run: |
+          export GPG_TTY=$(tty)
           bazel run //:publish \
             --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
             --define "gpg_sign=true"
