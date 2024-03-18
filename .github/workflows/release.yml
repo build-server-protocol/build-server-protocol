@@ -17,12 +17,16 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
+      - run: gpg --list-secret-keys --keyid-format LONG
+      - run: gpg --armor --export ${{ steps.import-gpg-key.outputs.keyid }}
+      - run : gpg --list-secret-keys --keyid-format LONG
       - uses: actions/setup-java@v4
         with:
           server-id: ossrh
           server-username: MAVEN_USER
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ steps.import-gpg-key.outputs.name }}
+          gpg-passphrase: GPG_PASSPHRASE
           distribution: "temurin"
           java-version: "11"
         env:
