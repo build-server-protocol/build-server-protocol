@@ -18,14 +18,15 @@ jobs:
         id: read-gpg-private-key
         run: |
           DECODED_PRIVATE_KEY=$(echo "${{ secrets.PGP_SECRET }}" | base64 --decode)
-          echo "::add-mask::<<EOF${DECODED_PRIVATE_KEY}EOF"
-          echo "decoded-private-key=<<EOF${DECODED_PRIVATE_KEY}EOF" >> "$GITHUB_OUTPUT"
+          echo "DECODED_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
+          echo "$DECODED_PRIVATE_KEY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - uses: actions/setup-java@v4
         with:
           server-id: ossrh
           server-username: MAVEN_USER
           server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ steps.read-gpg-private-key.outputs.decoded-private-key }}
+          gpg-private-key: ${{ steps.read-gpg-private-key.outputs.DECODED_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
           distribution: "temurin"
           java-version: "11"
