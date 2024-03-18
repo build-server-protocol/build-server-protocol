@@ -57,7 +57,9 @@ jobs:
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           cat ~/.gnupg/gpg.conf
       - name: Publish to Maven Central
-        run: mvn deploy -DskipTests
+        run: mvn --batch-mode \
+          -f bazel-bin/bsp4j/bsp4j-pom.xml \
+          deploy
         env:
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
