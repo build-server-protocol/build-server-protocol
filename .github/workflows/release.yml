@@ -17,10 +17,9 @@ jobs:
       - name: Decode GPG private key
         id: read-gpg-private-key
         run: |
-          DECODED_PRIVATE_KEY=$(echo "${{ secrets.PGP_SECRET }}" | base64 --decode)
-          echo "DECODED_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
-          echo "$DECODED_PRIVATE_KEY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "DECODED_PRIVATE_KEY<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ secrets.PGP_SECRET }}" | base64 --decode >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - uses: actions/setup-java@v4
         with:
           server-id: ossrh
