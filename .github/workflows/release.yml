@@ -36,9 +36,13 @@ jobs:
         with:
           path: '/home/runner/.cache/bazel'
           key: bazel
+          save-always: true
+      - name: Prepare GPG
+        run: |
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          gpgconf --reload gpg-agent
       - name: Publish maven artifacts
         run: |
-          export GPG_TTY=$(tty)
           bazel run //:publish \
             --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
             --define "gpg_sign=true"
