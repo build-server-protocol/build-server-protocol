@@ -40,6 +40,7 @@ jobs:
       - name: Prepare GPG
         run: |
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           gpgconf --reload gpg-agent
       - name: Publish maven artifacts
         run: |
