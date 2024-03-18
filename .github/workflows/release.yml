@@ -39,7 +39,6 @@ jobs:
           save-always: true
       - name: Prepare GPG
         run: |
-          cat ~/.gnupg/gpg-agent.conf
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           cat ~/.gnupg/gpg.conf
       - name: Publish maven artifacts
