@@ -60,5 +60,3 @@ structure JavacOptionsItem {
 list JavacOptionsItems {
     member: JavacOptionsItem
 }
-
-

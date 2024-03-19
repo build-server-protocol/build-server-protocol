@@ -1,1 +1,3 @@
-website/generated/**/* linguist-generated=true
+bsp4j/src/**/*              linguist-generated=true
+bsp4s/src/**/*              linguist-generated=true
+website/generated/**/*      linguist-generated=true

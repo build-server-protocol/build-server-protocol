@@ -819,6 +819,7 @@ trait Bsp4jGenerators {
   lazy val genCancelRequestParams: Gen[CancelRequestParams] = for {
     id <- arbitrary[String]
   } yield new CancelRequestParams(forLeft(id))
+
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)
     def nullable(implicit ev: Null <:< T): Gen[T] = Gen.option(gen).map(g => g.orNull)

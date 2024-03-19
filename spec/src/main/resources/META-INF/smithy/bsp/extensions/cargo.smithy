@@ -9,8 +9,6 @@ use bsp.rust#FeaturesDependencyGraph
 use bsp.rust#Features
 use bsp.rust#RustEdition
 use traits#dataKind
-use traits#set
-use traits#enumKind
 use traits#jsonRPC
 use traits#jsonRequest
 

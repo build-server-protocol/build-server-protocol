@@ -83,8 +83,8 @@ repository. Any help on developing integrations will be much appreciated.
 ## Base protocol
 
 The base protocol is identical to the language server base protocol. See
-<https://microsoft.github.io/language-server-protocol/specification> for more
-details.
+[https://microsoft.github.io/language-server-protocol/specification](https://microsoft.github.io/language-server-protocol/specification)
+for more details.
 
 Like the language server protocol, the build server protocol defines a set of
 JSON-RPC request, response and notification messages which are exchanged using
