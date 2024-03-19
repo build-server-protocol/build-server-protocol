@@ -36,13 +36,13 @@ jobs:
           TOKEN=$(echo $MAVEN_USER:$MAVEN_PASSWORD | base64)
           echo "::add-mask::$TOKEN"
           # remember the last line of the output from curl, but print everything
-          ID=$(curl --request POST \
-            --verbose \
+          curl --request POST \
             --header 'Authorization: Bearer $TOKEN' \
             --form bundle=@central-bundle.zip \
-            https://central.sonatype.com/api/v1/publisher/upload | tail -n 1)
+            https://central.sonatype.com/api/v1/publisher/upload | tee output.txt
+          # extract the id from the output
+          ID=$(cat output.txt | tail -n 1)
           curl --request POST \
-            --verbose \
             --header 'Authorization: Bearer $TOKEN' \
             'https://central.sonatype.com/api/v1/publisher/status?id=$ID' \
             | jq
