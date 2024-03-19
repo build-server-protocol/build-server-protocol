@@ -51,6 +51,8 @@ jobs:
           distribution: "temurin"
           java-version: "11"
         env:
+          MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
           GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
       - name: Prepare GPG
         run: |
@@ -61,3 +63,4 @@ jobs:
         env:
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
+          GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
