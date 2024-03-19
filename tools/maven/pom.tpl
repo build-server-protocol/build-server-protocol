@@ -8,7 +8,7 @@
     <version>{version}</version>
 
     <packaging>jar</packaging>
-    <description>bsp4j</description>
+    <description>{artifactId}</description>
     <url>https://github.com/build-server-protocol/build-server-protocol</url>
     <licenses>
         <license>
@@ -17,7 +17,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <name>bsp4j</name>
+    <name>{artifactId}</name>
     <organization>
         <name>ch.epfl.scala</name>
         <url>https://github.com/build-server-protocol/build-server-protocol</url>
@@ -51,20 +51,4 @@
     <dependencies>
 {dependencies}
     </dependencies>
-
-    <build>
-        <plugins>
-           <plugin>
-              <groupId>org.sonatype.plugins</groupId>
-              <artifactId>nexus-staging-maven-plugin</artifactId>
-              <version>1.6.13</version>
-              <extensions>true</extensions>
-              <configuration>
-                 <serverId>ossrh</serverId>
-                 <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                 <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              </configuration>
-           </plugin>
-        </plugins>
-    </build>
 </project>

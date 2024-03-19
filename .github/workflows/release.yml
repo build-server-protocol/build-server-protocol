@@ -24,43 +24,30 @@ jobs:
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
       - name: Publish maven artifacts
         run: |
-          bazel run //:publish \
-            --define "maven_repo=file://$HOME/.m2/repository" \
+          # make a temp dir
+          DIR=$(mktemp -d)
+          bazel run //bsp4j:bsp4j.publish \
+            --define "maven_repo=file://$DIR" \
             --define "gpg_sign=true"
+          pushd $DIR
+          # zip the artifacts
+          zip -r central-bundle.zip .
+          
+          TOKEN=$(echo $MAVEN_USER:$MAVEN_PASSWORD | base64)
+          echo "::add-mask::$TOKEN"
+          # remember the last line of the output from curl, but print everything
+          ID=$(curl --request POST \
+            --verbose \
+            --header 'Authorization: Bearer $TOKEN' \
+            --form bundle=@central-bundle.zip \
+            https://central.sonatype.com/api/v1/publisher/upload | tail -n 1)
+          curl --request POST \
+            --verbose \
+            --header 'Authorization: Bearer $TOKEN' \
+            'https://central.sonatype.com/api/v1/publisher/status?id=$ID' \
+            | jq
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
-      # the PGP_SECRET is a base64 encoded ASCII armored version of the private key
-      # we need to decode it before using it, because setup-java@v4 does not support
-      # base64 encoded secrets
-      - name: Decode GPG private key
-        id: read-gpg-private-key
-        run: |
-          echo "DECODED_PRIVATE_KEY<<EOF" >> $GITHUB_OUTPUT
-          echo "${{ secrets.PGP_SECRET }}" | base64 --decode >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-      - uses: actions/setup-java@v4
-        with:
-          server-id: ossrh
-          server-username: MAVEN_USER
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ steps.read-gpg-private-key.outputs.DECODED_PRIVATE_KEY }}
-          gpg-passphrase: GPG_PASSPHRASE
-          distribution: "temurin"
-          java-version: "11"
-        env:
-          MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
-          GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-      - name: Prepare GPG
-        run: |
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-          cat ~/.gnupg/gpg.conf
-      - name: Publish to Maven Central
-        run: mvn --batch-mode -f $HOME/.m2/repository/ch/epfl/scala/bsp4j/2.2.0-M4/bsp4j-2.2.0-M4.pom deploy
-        env:
-          MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}
-          GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
