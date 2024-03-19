@@ -25,7 +25,7 @@ jobs:
       - name: Publish maven artifacts
         run: |
           bazel run //:publish \
-            --define "maven_repo=https://oss.sonatype.org/service/local/staging/deploy/maven2" \
+            --define "maven_repo=file://$HOME/.m2/repository" \
             --define "gpg_sign=true"
         env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
@@ -59,7 +59,7 @@ jobs:
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           cat ~/.gnupg/gpg.conf
       - name: Publish to Maven Central
-        run: mvn --batch-mode -f bazel-bin/bsp4j/bsp4j-pom.xml deploy
+        run: mvn --batch-mode -f $HOME/.m2/repository/ch/epfl/scala/bsp4j/2.2.0-M4/bsp4j-2.2.0-M4.pom deploy
         env:
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_USER: ${{ secrets.SONATYPE_USERNAME }}

@@ -1,1 +1,1 @@
-BSP_VERSION = "2.2.0-M3"
+BSP_VERSION = "2.2.0-M4"
