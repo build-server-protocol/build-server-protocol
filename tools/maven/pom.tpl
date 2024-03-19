@@ -20,7 +20,7 @@
               <extensions>true</extensions>
               <configuration>
                  <serverId>ossrh</serverId>
-                 <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
+                 <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                  <autoReleaseAfterClose>true</autoReleaseAfterClose>
               </configuration>
            </plugin>
