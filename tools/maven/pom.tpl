@@ -7,6 +7,47 @@
     <artifactId>{artifactId}</artifactId>
     <version>{version}</version>
 
+    <packaging>jar</packaging>
+    <description>bsp4j</description>
+    <url>https://github.com/build-server-protocol/build-server-protocol</url>
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <name>bsp4j</name>
+    <organization>
+        <name>ch.epfl.scala</name>
+        <url>https://github.com/build-server-protocol/build-server-protocol</url>
+    </organization>
+    <scm>
+        <url>https://github.com/build-server-protocol/build-server-protocol</url>
+        <connection>scm:git:https://github.com/build-server-protocol/build-server-protocol.git</connection>
+        <developerConnection>scm:git:git@github.com:build-server-protocol/build-server-protocol.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <id>ckipp01</id>
+            <name>Chris Kipp</name>
+            <url>https://github.com/ckipp01</url>
+            <email>open-source@chris-kipp.io</email>
+        </developer>
+        <developer>
+            <id>jastice</id>
+            <name>Justin Kaeser</name>
+            <url>https://github.com/jastice</url>
+            <email>justin@justinkaeser.com</email>
+        </developer>
+        <developer>
+            <id>agluszak</id>
+            <name>Andrzej Głuszak</name>
+            <url>https://github.com/agluszak</url>
+            <email>andrzej.gluszak@jetbrains.com</email>
+        </developer>
+    </developers>
+
     <dependencies>
 {dependencies}
     </dependencies>
