@@ -45,11 +45,15 @@ jobs:
           encodedGroupId=$(echo $groupId | sed 's/\./\\\//g')
           
           # Create a new staging repository
+          echo "Creating a new staging repository"
+          
           create_response=$(curl -s -u $username:$password \
             -X POST \
             -d "data={\"data\":{\"description\":\"$artifactId $version release\",\"stagedRepositoryId\":\"\"}}" \
             -H "Content-Type: application/json" \
             "$base_url/service/local/staging/profiles")
+          
+          echo $create_response
           
           stagingRepoId=$(echo $create_response | jq -r '.data.stagedRepositoryId')
           
