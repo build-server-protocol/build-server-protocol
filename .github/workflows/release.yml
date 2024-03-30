@@ -33,20 +33,91 @@ jobs:
           # zip the artifacts
           zip -r central-bundle.zip .
           
-          TOKEN=$(echo $MAVEN_USER:$MAVEN_PASSWORD | base64)
-          echo "::add-mask::$TOKEN"
-          # remember the last line of the output from curl, but print everything
-          curl --request POST \
-            --header 'Authorization: Bearer $TOKEN' \
-            --form bundle=@central-bundle.zip \
-            https://central.sonatype.com/api/v1/publisher/upload | tee output.txt
-          # extract the id from the output
-          ID=$(cat output.txt | tail -n 1)
-          curl --request POST \
-            --header 'Authorization: Bearer $TOKEN' \
-            'https://central.sonatype.com/api/v1/publisher/status?id=$ID' \
-            | jq
-        env:
+          groupId="ch.epfl.scala"
+          artifactId="bsp4j"
+          version="2.2.0-M4.TEST"
+          file="central-bundle.zip"
+          username=$MAVEN_USER
+          password=$MAVEN_PASSWORD
+          base_url="https://s01.oss.sonatype.org" # Use https://oss.sonatype.org for the old URL
+          
+          # Encode groupId
+          encodedGroupId=$(echo $groupId | sed 's/\./\\\//g')
+          
+          # Create a new staging repository
+          create_response=$(curl -s -u $username:$password \
+            -X POST \
+            -d "data={\"data\":{\"description\":\"$artifactId $version release\",\"stagedRepositoryId\":\"\"}}" \
+            -H "Content-Type: application/json" \
+            "$base_url/service/local/staging/profiles")
+          
+          stagingRepoId=$(echo $create_response | jq -r '.data.stagedRepositoryId')
+          
+          if [ -z "$stagingRepoId" ]; then
+            echo "Failed to create staging repository"
+            exit 1
+          fi
+        
+          echo "Created staging repository: $stagingRepoId"
+        
+          # Upload artifact to the staging repository
+          upload_url="$base_url/service/local/staging/deployByRepositoryId/$stagingRepoId/$encodedGroupId/$artifactId/$version/$artifactId-$version.zip"
+          
+          curl -u $username:$password --upload-file $file $upload_url
+          
+          if [ $? -ne 0 ]; then
+            echo "Upload failed"
+            exit 1
+          fi
+          
+          echo "Upload successful"
+          
+          # Close the staging repository
+          close_response=$(curl -s -u $username:$password \
+            -X POST \
+            -d "{\"data\":{\"stagedRepositoryId\":\"$stagingRepoId\",\"description\":\"Closing $artifactId $version\"}}" \
+            -H "Content-Type: application/json" \
+            "$base_url/service/local/staging/bulk/close")
+          
+          if echo $close_response | grep -q "errors"; then
+            echo "Failed to close staging repository"
+            exit 1
+          fi
+          
+          # Wait for repository to close
+          echo "Waiting for repository to close..."
+          while true; do
+            repo_status=$(curl -s -u $username:$password \
+              "$base_url/service/local/staging/repository/$stagingRepoId" | jq -r '.type')
+            if [ "$repo_status" == "closed" ]; then
+              echo "Repository $stagingRepoId successfully closed."
+              break
+            elif [ "$repo_status" == "open" ]; then
+              echo "Repository still closing, waiting..."
+              sleep 30
+            else
+              echo "Failed to close repository, status: $repo_status"
+              exit 1
+            fi
+          done
+          
+          echo "Staging repository closed"
+          
+          # Promote the staging repository
+          release_response=$(curl -s -u $username:$password \
+            -X POST \
+            -d "{\"data\":{\"stagedRepositoryId\":\"$stagingRepoId\",\"description\":\"Releasing $artifactId $version\"}}" \
+            -H "Content-Type: application/json" \
+            "$base_url/service/local/staging/bulk/promote")
+          
+          if echo $release_response | grep -q "errors"; then
+            echo "Failed to release staging repository"
+            exit 1
+          fi
+          
+          echo "Staging repository released"
+
+env:
           GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
           GIT_USER: build-server-protocol@build-server-protocol.github.io
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
