@@ -1,4 +1,4 @@
-load("@aspect_rules_lint//format:defs.bzl", "multi_formatter_binary")
+load("@aspect_rules_lint//format:defs.bzl", "format_multirun")
 load("@npm//website:prettier/package_json.bzl", prettier = "bin")
 load("@rules_java//java:defs.bzl", "java_binary")
 
@@ -34,12 +34,13 @@ java_binary(
     runtime_deps = ["@ktfmt//jar"],
 )
 
-multi_formatter_binary(
+format_multirun(
     name = "format",
     # TODO: uncomment
     # java = ":java-format",
     kotlin = ":ktfmt",
     scala = ":scalafmt",
+    javascript = ":prettier",
+    markdown = ":prettier"
     starlark = "@buildifier_prebuilt//:buildifier",
-    visibility = ["//visibility:public"],
 )
