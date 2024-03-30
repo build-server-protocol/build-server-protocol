@@ -2,6 +2,8 @@ load("@aspect_rules_lint//format:defs.bzl", "format_multirun")
 load("@npm//website:prettier/package_json.bzl", prettier = "bin")
 load("@rules_java//java:defs.bzl", "java_binary")
 
+package(default_visibility = ["//:__subpackages__"])
+
 prettier.prettier_binary(
     name = "prettier",
     # Allow the binary to be run outside bazel
@@ -41,6 +43,6 @@ format_multirun(
     kotlin = ":ktfmt",
     scala = ":scalafmt",
     javascript = ":prettier",
-    markdown = ":prettier"
+    markdown = ":prettier",
     starlark = "@buildifier_prebuilt//:buildifier",
 )
