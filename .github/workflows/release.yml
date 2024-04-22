@@ -21,9 +21,9 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
-      - uses: webfactory/ssh-agent@v0.9.0
+      - uses: agluszak/ssh-agent@v0.9.1
         with:
-          ssh-private-key: ${{ format('{0}\n', secrets.GIT_DEPLOY_KEY) }}
+          ssh-private-key: ${{ secrets.GIT_DEPLOY_KEY }}
       - name: Publish docs
         run: |
           git config --global user.email "$GIT_USER"
