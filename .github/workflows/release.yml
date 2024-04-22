@@ -27,34 +27,31 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: bazel-out/k8-fastbuild/bin/website/docusaurus-build.sh.runfiles/_main/website/build
-#      - name: Publish bsp4j artifacts
-#        run: |
-#          bazel run \
-#            --define "maven_repo=https://oss.sonatype.org/service/local" \
-#            --define "maven_user=$MAVEN_USER" \
-#            --define "maven_password=$MAVEN_PASSWORD" \
-#            //bsp4j:bsp4j.publish
-#      - name: Publish bsp4s artifacts
-#        run: |
-#          bazel run \
-#              --define "maven_repo=https://oss.sonatype.org/service/local" \
-#              --define "maven_user=$MAVEN_USER" \
-#              --define "maven_password=$MAVEN_PASSWORD" \
-#              //bsp4s:bsp4s.publish
+      - name: Publish bsp4j artifacts
+        run: |
+          bazel run \
+            --define "maven_repo=https://oss.sonatype.org/service/local" \
+            --define "maven_user=$MAVEN_USER" \
+            --define "maven_password=$MAVEN_PASSWORD" \
+            //bsp4j:bsp4j.publish
+      - name: Publish bsp4s artifacts
+        run: |
+          bazel run \
+              --define "maven_repo=https://oss.sonatype.org/service/local" \
+              --define "maven_user=$MAVEN_USER" \
+              --define "maven_password=$MAVEN_PASSWORD" \
+              //bsp4s:bsp4s.publish
   deploy:
     name: Deploy to GitHub Pages
     needs: publish
-
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
-
     # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages

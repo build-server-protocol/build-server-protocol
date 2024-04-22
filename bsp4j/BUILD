@@ -1,5 +1,5 @@
 load("@bazel_sonatype//:defs.bzl", "sonatype_java_export")
-load("//rules/generator:generator.bzl", "library_generator")
+load("//tools/rules/generator:generator.bzl", "library_generator")
 load("//:version.bzl", "BSP_VERSION")
 
 library_generator(

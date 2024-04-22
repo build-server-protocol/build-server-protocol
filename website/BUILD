@@ -1,6 +1,6 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//website:@docusaurus/core/package_json.bzl", docusaurus_bin = "bin")
-load("//rules/generator:website.bzl", "website")
+load("//tools/rules/generator:website.bzl", "website")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("//:version.bzl", "BSP_VERSION")
 
@@ -65,7 +65,7 @@ website(
     data = ["//docs"],
     jars = [
         "//bsp4j",
-        "//old-scala-codegen",
+        "//codegen:old-scala-codegen",
         "//codegen:codegen.jar",
         "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc",
         "@maven//:com_google_code_gson_gson",
