@@ -21,8 +21,16 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GIT_DEPLOY_KEY }}
       - name: Publish docs
-        run: bazel run //website:docusaurus-deploy
+        run: |
+          git config --global user.email "$GIT_USER"
+          git config --global user.name "gh-actions"
+          bazel run //website:docusaurus-deploy
+        env:
+          USE_SSH: true
       - name: Publish bsp4j artifacts
         run: |
           bazel run \

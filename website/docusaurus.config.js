@@ -6,6 +6,7 @@ module.exports = {
   url: "https://build-server-protocol.github.io",
   baseUrl: "/",
   organizationName: "build-server-protocol",
+  trailingSlash: false,
   projectName: "build-server-protocol.github.io",
   deploymentBranch: "master",
   favicon: "img/favicon.ico",
