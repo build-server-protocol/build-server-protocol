@@ -25,14 +25,14 @@ jobs:
         run: |
           bazel run \
             --define "maven_repo=https://oss.sonatype.org/service/local" \
-            --define "maven_user=$MAVEN_USER \
+            --define "maven_user=$MAVEN_USER" \
             --define "maven_password=$MAVEN_PASSWORD" \
             //bsp4j:bsp4j.publish
       - name: Publish bsp4s artifacts
         run: |
           bazel run \
               --define "maven_repo=https://oss.sonatype.org/service/local" \
-              --define "maven_user=$MAVEN_USER \
+              --define "maven_user=$MAVEN_USER" \
               --define "maven_password=$MAVEN_PASSWORD" \
               //bsp4s:bsp4s.publish
 env:
