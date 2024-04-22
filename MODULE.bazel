@@ -1,6 +1,6 @@
 bazel_dep(name = "bazel_skylib", version = "1.5.0")
 bazel_dep(name = "rules_python", version = "0.31.0")
-bazel_dep(name = "rules_kotlin", version = "1.9.1")
+bazel_dep(name = "rules_kotlin", version = "1.9.5")
 bazel_dep(name = "rules_java", version = "7.5.0")
 bazel_dep(name = "rules_jvm_external", version = "6.0")
 
@@ -20,7 +20,7 @@ maven.install(
         "org.junit.platform:junit-platform-console:1.10.2",
 
         # publishing
-        "org.xerial.sbt:sbt-sonatype:3.10.0",
+        "com.vanniktech:gradle-maven-publish-plugin:0.28.0",
 
         # docs
         "org.scalameta:mdoc_2.13:2.5.2",
@@ -74,6 +74,7 @@ maven.install(
         # scala stdlib
         "org.scala-lang:scala-library:2.13.12",
     ],
+    fail_if_repin_required = True,
     lock_file = "//:maven_install.json",
     repositories = [
         "https://maven.google.com",
@@ -85,14 +86,15 @@ maven.install(
 use_repo(
     maven,
     "maven",
+    "unpinned_maven",
 )
 
-bazel_dep(name = "rules_nodejs", version = "6.0.5")
+bazel_dep(name = "rules_nodejs", version = "6.1.0")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(node_version = "20.11.1")
 
-bazel_dep(name = "aspect_rules_js", version = "1.40.0")
+bazel_dep(name = "aspect_rules_js", version = "1.41.2")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
@@ -105,7 +107,7 @@ npm.npm_translate_lock(
 use_repo(npm, "npm")
 
 bazel_dep(name = "rules_multirun", version = "0.9.0")
-bazel_dep(name = "aspect_rules_lint", version = "0.15.0")
+bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.6.1")
 
 bazel_dep(

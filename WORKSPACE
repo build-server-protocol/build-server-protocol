@@ -34,7 +34,7 @@ rules_scala_setup()
 
 # Loads Maven deps like Scala compiler and standard libs. On production projects you should consider
 # defining a custom deps toolchains to use your project libs instead
-rules_scala_toolchain_deps_repositories(fetch_sources = True)
+rules_scala_toolchain_deps_repositories()
 
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
 
@@ -51,3 +51,19 @@ load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "
 scalatest_repositories()
 
 scalatest_toolchain()
+
+BAZEL_SONATYPE_TAG = "1.1.1"
+
+BAZEL_SONATYPE_SHA = "6d1bc7da15dae958274df944eb46e9757e14187cda6decd66fc1aeeb1ea21758"
+
+http_archive(
+    name = "bazel_sonatype",
+    sha256 = BAZEL_SONATYPE_SHA,
+    strip_prefix = "bazel-sonatype-{}".format(BAZEL_SONATYPE_TAG),
+    url = "https://github.com/JetBrains/bazel-sonatype/archive/v{}.zip".format(BAZEL_SONATYPE_TAG),
+)
+
+# --------------------------------------------------------------------------------------------------------------------
+load("@bazel_sonatype//:defs.bzl", "sonatype_dependencies")
+
+sonatype_dependencies()

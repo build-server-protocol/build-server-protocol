@@ -8,6 +8,7 @@ The following section contains Java-specific extensions to the build server
 protocol.
 
 ## BSP version
+
 `2.2.0`
 
 ## BSP Server remote interface
@@ -24,7 +25,6 @@ targets.
 
 #### JavacOptionsParams
 
-
 ```ts
 export interface JavacOptionsParams {
   targets: BuildTargetIdentifier[];
@@ -33,7 +33,6 @@ export interface JavacOptionsParams {
 
 #### JavacOptionsResult
 
-
 ```ts
 export interface JavacOptionsResult {
   items: JavacOptionsItem[];
@@ -41,7 +40,6 @@ export interface JavacOptionsResult {
 ```
 
 #### JavacOptionsItem
-
 
 ```ts
 export interface JavacOptionsItem {
@@ -62,4 +60,3 @@ export interface JavacOptionsItem {
   classDirectory: string;
 }
 ```
-

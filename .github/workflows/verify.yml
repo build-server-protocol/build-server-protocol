@@ -23,16 +23,12 @@ jobs:
         with:
           path: '/home/runner/.cache/bazel'
           key: bazel
-
       - name: Generate
         run: bazel run //:generate
-
       - name: Build
         run: bazel build //...
-
       - name: Test
         run: bazel test //...
-
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v19
         id: verify-changed-files
@@ -41,7 +37,6 @@ jobs:
             bsp4s/src
             bsp4j/src
             website/generated
-
       - name: Fail if we detect changed files
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |

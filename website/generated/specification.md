@@ -106,6 +106,7 @@ server like Dotty IDE). It is up to the client to decide when to start
 (process-wise) and when to shutdown a server.
 
 ## BSP version
+
 `2.2.0`
 
 ## Common shapes
@@ -130,13 +131,13 @@ export type Integer = number;
 
 Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
 
-* sbt: a build target is a combined project + config. Example:
-* a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
-* a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
-* a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
-* a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
-* Pants: a pants target corresponds one-to-one with a BuildTarget
-* Bazel: a bazel target corresponds one-to-one with a BuildTarget
+- sbt: a build target is a combined project + config. Example:
+- a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
+- a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
+- a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+- a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
+- Pants: a pants target corresponds one-to-one with a BuildTarget
+- Bazel: a bazel target corresponds one-to-one with a BuildTarget
 
 The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 
@@ -281,7 +282,6 @@ export interface BuildTargetCapabilities {
 
 #### BuildTargetDataKind
 
-
 ```ts
 export type BuildTargetDataKind = string;
 
@@ -308,7 +308,6 @@ export namespace BuildTargetDataKind {
 
 #### BuildTargetData
 
-
 ```ts
 export type BuildTargetData = any;
 ```
@@ -334,7 +333,6 @@ export interface TaskId {
 ```
 
 #### Identifier
-
 
 ```ts
 export type Identifier = string;
@@ -367,11 +365,9 @@ export enum StatusCode {
 
 #### EnvironmentVariables
 
-
 ```ts
 export type EnvironmentVariables = Map<string, string>;
 ```
-
 
 ## BSP Server remote interface
 
@@ -380,8 +376,8 @@ export type EnvironmentVariables = Map<string, string>;
 Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 If the server receives a request or notification before the initialize request it should act as follows:
 
-* For a request the response should be an error with code: -32002. The message can be picked by the server.
-* Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
+- For a request the response should be an error with code: -32002. The message can be picked by the server.
+- Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
 
 Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 requests or notifications to the server.
@@ -391,7 +387,6 @@ requests or notifications to the server.
 - result: `InitializeBuildResult`
 
 #### InitializeBuildParams
-
 
 ```ts
 export interface InitializeBuildParams {
@@ -420,7 +415,6 @@ export interface InitializeBuildParams {
 
 #### BuildClientCapabilities
 
-
 ```ts
 export interface BuildClientCapabilities {
   /** The languages that this client supports.
@@ -438,23 +432,19 @@ export interface BuildClientCapabilities {
 
 #### InitializeBuildParamsDataKind
 
-
 ```ts
 export type InitializeBuildParamsDataKind = string;
 
-export namespace InitializeBuildParamsDataKind {
-}
+export namespace InitializeBuildParamsDataKind {}
 ```
 
 #### InitializeBuildParamsData
-
 
 ```ts
 export type InitializeBuildParamsData = any;
 ```
 
 #### InitializeBuildResult
-
 
 ```ts
 export interface InitializeBuildResult {
@@ -546,7 +536,6 @@ export interface BuildServerCapabilities {
 
 #### CompileProvider
 
-
 ```ts
 export interface CompileProvider {
   languageIds: LanguageId[];
@@ -554,7 +543,6 @@ export interface CompileProvider {
 ```
 
 #### TestProvider
-
 
 ```ts
 export interface TestProvider {
@@ -564,7 +552,6 @@ export interface TestProvider {
 
 #### RunProvider
 
-
 ```ts
 export interface RunProvider {
   languageIds: LanguageId[];
@@ -572,7 +559,6 @@ export interface RunProvider {
 ```
 
 #### DebugProvider
-
 
 ```ts
 export interface DebugProvider {
@@ -582,16 +568,13 @@ export interface DebugProvider {
 
 #### InitializeBuildResultDataKind
 
-
 ```ts
 export type InitializeBuildResultDataKind = string;
 
-export namespace InitializeBuildResultDataKind {
-}
+export namespace InitializeBuildResultDataKind {}
 ```
 
 #### InitializeBuildResultData
-
 
 ```ts
 export type InitializeBuildResultData = any;
@@ -634,7 +617,6 @@ for the list of all available build targets in the workspace.
 
 #### WorkspaceBuildTargetsResult
 
-
 ```ts
 export interface WorkspaceBuildTargetsResult {
   /** The build targets in this workspace that
@@ -665,7 +647,6 @@ workspace, see `buildTarget/dependencySources`.
 
 #### SourcesParams
 
-
 ```ts
 export interface SourcesParams {
   targets: BuildTargetIdentifier[];
@@ -674,7 +655,6 @@ export interface SourcesParams {
 
 #### SourcesResult
 
-
 ```ts
 export interface SourcesResult {
   items: SourcesItem[];
@@ -682,7 +662,6 @@ export interface SourcesResult {
 ```
 
 #### SourcesItem
-
 
 ```ts
 export interface SourcesItem {
@@ -698,7 +677,6 @@ export interface SourcesItem {
 ```
 
 #### SourceItem
-
 
 ```ts
 export interface SourceItem {
@@ -717,7 +695,6 @@ export interface SourceItem {
 ```
 
 #### SourceItemKind
-
 
 ```ts
 export enum SourceItemKind {
@@ -743,7 +720,6 @@ works for text documents and not directories.
 
 #### InverseSourcesParams
 
-
 ```ts
 export interface InverseSourcesParams {
   textDocument: TextDocumentIdentifier;
@@ -751,7 +727,6 @@ export interface InverseSourcesParams {
 ```
 
 #### TextDocumentIdentifier
-
 
 ```ts
 export interface TextDocumentIdentifier {
@@ -761,7 +736,6 @@ export interface TextDocumentIdentifier {
 ```
 
 #### InverseSourcesResult
-
 
 ```ts
 export interface InverseSourcesResult {
@@ -787,7 +761,6 @@ dependency sources.
 
 #### DependencySourcesParams
 
-
 ```ts
 export interface DependencySourcesParams {
   targets: BuildTargetIdentifier[];
@@ -796,7 +769,6 @@ export interface DependencySourcesParams {
 
 #### DependencySourcesResult
 
-
 ```ts
 export interface DependencySourcesResult {
   items: DependencySourcesItem[];
@@ -804,7 +776,6 @@ export interface DependencySourcesResult {
 ```
 
 #### DependencySourcesItem
-
 
 ```ts
 export interface DependencySourcesItem {
@@ -830,7 +801,6 @@ It's an extended version of `buildTarget/sources`.
 
 #### DependencyModulesParams
 
-
 ```ts
 export interface DependencyModulesParams {
   targets: BuildTargetIdentifier[];
@@ -839,7 +809,6 @@ export interface DependencyModulesParams {
 
 #### DependencyModulesResult
 
-
 ```ts
 export interface DependencyModulesResult {
   items: DependencyModulesItem[];
@@ -847,7 +816,6 @@ export interface DependencyModulesResult {
 ```
 
 #### DependencyModulesItem
-
 
 ```ts
 export interface DependencyModulesItem {
@@ -858,7 +826,6 @@ export interface DependencyModulesItem {
 ```
 
 #### DependencyModule
-
 
 ```ts
 export interface DependencyModule {
@@ -879,7 +846,6 @@ export interface DependencyModule {
 
 #### DependencyModuleDataKind
 
-
 ```ts
 export type DependencyModuleDataKind = string;
 
@@ -890,7 +856,6 @@ export namespace DependencyModuleDataKind {
 ```
 
 #### DependencyModuleData
-
 
 ```ts
 export type DependencyModuleData = any;
@@ -914,7 +879,6 @@ view, for example.
 
 #### ResourcesParams
 
-
 ```ts
 export interface ResourcesParams {
   targets: BuildTargetIdentifier[];
@@ -923,7 +887,6 @@ export interface ResourcesParams {
 
 #### ResourcesResult
 
-
 ```ts
 export interface ResourcesResult {
   items: ResourcesItem[];
@@ -931,7 +894,6 @@ export interface ResourcesResult {
 ```
 
 #### ResourcesItem
-
 
 ```ts
 export interface ResourcesItem {
@@ -957,7 +919,6 @@ during the initialize handshake whether this method is supported or not.
 
 #### OutputPathsParams
 
-
 ```ts
 export interface OutputPathsParams {
   targets: BuildTargetIdentifier[];
@@ -966,7 +927,6 @@ export interface OutputPathsParams {
 
 #### OutputPathsResult
 
-
 ```ts
 export interface OutputPathsResult {
   items: OutputPathsItem[];
@@ -974,7 +934,6 @@ export interface OutputPathsResult {
 ```
 
 #### OutputPathsItem
-
 
 ```ts
 export interface OutputPathsItem {
@@ -987,7 +946,6 @@ export interface OutputPathsItem {
 ```
 
 #### OutputPathItem
-
 
 ```ts
 export interface OutputPathItem {
@@ -1002,7 +960,6 @@ export interface OutputPathItem {
 ```
 
 #### OutputPathItemKind
-
 
 ```ts
 export enum OutputPathItemKind {
@@ -1028,7 +985,6 @@ that all workspace sources typecheck correctly and are up-to-date.
 
 #### CompileParams
 
-
 ```ts
 export interface CompileParams {
   /** A sequence of build targets to compile. */
@@ -1044,7 +1000,6 @@ export interface CompileParams {
 ```
 
 #### CompileResult
-
 
 ```ts
 export interface CompileResult {
@@ -1065,16 +1020,13 @@ export interface CompileResult {
 
 #### CompileResultDataKind
 
-
 ```ts
 export type CompileResultDataKind = string;
 
-export namespace CompileResultDataKind {
-}
+export namespace CompileResultDataKind {}
 ```
 
 #### CompileResultData
-
 
 ```ts
 export type CompileResultData = any;
@@ -1113,7 +1065,6 @@ If the client wishes to send input to the running process, it can do so by sendi
 
 #### RunParams
 
-
 ```ts
 export interface RunParams {
   /** The build target to run. */
@@ -1143,7 +1094,6 @@ export interface RunParams {
 
 #### RunParamsDataKind
 
-
 ```ts
 export type RunParamsDataKind = string;
 
@@ -1155,13 +1105,11 @@ export namespace RunParamsDataKind {
 
 #### RunParamsData
 
-
 ```ts
 export type RunParamsData = any;
 ```
 
 #### RunResult
-
 
 ```ts
 export interface RunResult {
@@ -1187,7 +1135,6 @@ this request as well.
 - result: `TestResult`
 
 #### TestParams
-
 
 ```ts
 export interface TestParams {
@@ -1218,7 +1165,6 @@ export interface TestParams {
 
 #### TestParamsDataKind
 
-
 ```ts
 export type TestParamsDataKind = string;
 
@@ -1236,13 +1182,11 @@ export namespace TestParamsDataKind {
 
 #### TestParamsData
 
-
 ```ts
 export type TestParamsData = any;
 ```
 
 #### TestResult
-
 
 ```ts
 export interface TestResult {
@@ -1263,16 +1207,13 @@ export interface TestResult {
 
 #### TestResultDataKind
 
-
 ```ts
 export type TestResultDataKind = string;
 
-export namespace TestResultDataKind {
-}
+export namespace TestResultDataKind {}
 ```
 
 #### TestResultData
-
 
 ```ts
 export type TestResultData = any;
@@ -1290,7 +1231,6 @@ and returns a connection URI for the client to interact with.
 
 #### DebugSessionParams
 
-
 ```ts
 export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
@@ -1307,7 +1247,6 @@ export interface DebugSessionParams {
 
 #### DebugSessionParamsDataKind
 
-
 ```ts
 export type DebugSessionParamsDataKind = string;
 
@@ -1322,13 +1261,11 @@ export namespace DebugSessionParamsDataKind {
 
 #### DebugSessionParamsData
 
-
 ```ts
 export type DebugSessionParamsData = any;
 ```
 
 #### DebugSessionAddress
-
 
 ```ts
 export interface DebugSessionAddress {
@@ -1356,7 +1293,6 @@ The build tool defines the exact semantics of the clean cache request:
 
 #### CleanCacheParams
 
-
 ```ts
 export interface CleanCacheParams {
   /** The build targets to clean. */
@@ -1365,7 +1301,6 @@ export interface CleanCacheParams {
 ```
 
 #### CleanCacheResult
-
 
 ```ts
 export interface CleanCacheResult {
@@ -1390,7 +1325,6 @@ input to the stdin of the running target.
 #### ReadParams
 
 **Unstable** (may change in future versions)
-
 
 ```ts
 export interface ReadParams {
@@ -1420,7 +1354,6 @@ A build/showMessage notification is similar to LSP's window/showMessage, except 
 
 #### ShowMessageParams
 
-
 ```ts
 export interface ShowMessageParams {
   /** the message type. */
@@ -1440,7 +1373,6 @@ export interface ShowMessageParams {
 ```
 
 #### MessageType
-
 
 ```ts
 export enum MessageType {
@@ -1468,7 +1400,6 @@ A build/logMessage notification is similar to LSP's window/logMessage, except fo
 - params: `LogMessageParams`
 
 #### LogMessageParams
-
 
 ```ts
 export interface LogMessageParams {
@@ -1510,7 +1441,6 @@ This field will be defined if the client defined it in the original request that
 
 #### PublishDiagnosticsParams
 
-
 ```ts
 export interface PublishDiagnosticsParams {
   /** The document where the diagnostics are published. */
@@ -1548,7 +1478,7 @@ export interface Diagnostic {
   severity?: DiagnosticSeverity;
 
   /** The diagnostic's code, which might appear in the user interface. */
-  code?: string|Integer;
+  code?: string | Integer;
 
   /** An optional property to describe the error code. */
   codeDescription?: CodeDescription;
@@ -1579,7 +1509,6 @@ export interface Diagnostic {
 
 #### Range
 
-
 ```ts
 export interface Range {
   /** The range's start position. */
@@ -1592,14 +1521,13 @@ export interface Range {
 
 #### Position
 
-
 ```ts
 export interface Position {
   /** Line position in a document (zero-based). */
   line: Integer;
 
   /** Character offset on a line in a document (zero-based)
-   * 
+   *
    * If the character value is greater than the line length it defaults back
    * to the line length. */
   character: Integer;
@@ -1607,7 +1535,6 @@ export interface Position {
 ```
 
 #### DiagnosticSeverity
-
 
 ```ts
 export enum DiagnosticSeverity {
@@ -1638,19 +1565,18 @@ export interface CodeDescription {
 
 #### DiagnosticTag
 
-
 ```ts
 export type DiagnosticTag = number;
 
 export namespace DiagnosticTag {
   /** Unused or unnecessary code.
-   * 
+   *
    * Clients are allowed to render diagnostics with this tag faded out
    * instead of having an error squiggle. */
   export const Unnecessary = 1;
 
   /** Deprecated or obsolete code.
-   * 
+   *
    * Clients are allowed to rendered diagnostics with this tag strike through. */
   export const Deprecated = 2;
 }
@@ -1674,7 +1600,6 @@ export interface DiagnosticRelatedInformation {
 
 #### Location
 
-
 ```ts
 export interface Location {
   uri: URI;
@@ -1684,7 +1609,6 @@ export interface Location {
 ```
 
 #### DiagnosticDataKind
-
 
 ```ts
 export type DiagnosticDataKind = string;
@@ -1696,7 +1620,6 @@ export namespace DiagnosticDataKind {
 ```
 
 #### DiagnosticData
-
 
 ```ts
 export type DiagnosticData = any;
@@ -1713,7 +1636,6 @@ handshake whether this method is supported or not.
 
 #### DidChangeBuildTarget
 
-
 ```ts
 export interface DidChangeBuildTarget {
   changes: BuildTargetEvent[];
@@ -1721,7 +1643,6 @@ export interface DidChangeBuildTarget {
 ```
 
 #### BuildTargetEvent
-
 
 ```ts
 export interface BuildTargetEvent {
@@ -1759,16 +1680,13 @@ export enum BuildTargetEventKind {
 
 #### BuildTargetEventDataKind
 
-
 ```ts
 export type BuildTargetEventDataKind = string;
 
-export namespace BuildTargetEventDataKind {
-}
+export namespace BuildTargetEventDataKind {}
 ```
 
 #### BuildTargetEventData
-
 
 ```ts
 export type BuildTargetEventData = any;
@@ -1801,7 +1719,6 @@ request should reference the request's `originId` parent.
 - params: `TaskStartParams`
 
 #### TaskStartParams
-
 
 ```ts
 export interface TaskStartParams {
@@ -1878,7 +1795,6 @@ export interface CompileTask {
 
 #### TestStart
 
-
 ```ts
 export interface TestStart {
   /** Name or description of the test. */
@@ -1911,7 +1827,6 @@ any number of progress notifications.
 - params: `TaskProgressParams`
 
 #### TaskProgressParams
-
 
 ```ts
 export interface TaskProgressParams {
@@ -1954,8 +1869,7 @@ specified in the `dataKind` field.
 ```ts
 export type TaskProgressDataKind = string;
 
-export namespace TaskProgressDataKind {
-}
+export namespace TaskProgressDataKind {}
 ```
 
 #### TaskProgressData
@@ -1977,7 +1891,6 @@ with the same `taskId` was sent.
 - params: `TaskFinishParams`
 
 #### TaskFinishParams
-
 
 ```ts
 export interface TaskFinishParams {
@@ -2074,7 +1987,6 @@ export interface CompileReport {
 
 #### TestFinish
 
-
 ```ts
 export interface TestFinish {
   /** Name or description of the test. */
@@ -2100,7 +2012,6 @@ export interface TestFinish {
 
 #### TestStatus
 
-
 ```ts
 export enum TestStatus {
   /** The test passed successfully. */
@@ -2122,23 +2033,19 @@ export enum TestStatus {
 
 #### TestFinishDataKind
 
-
 ```ts
 export type TestFinishDataKind = string;
 
-export namespace TestFinishDataKind {
-}
+export namespace TestFinishDataKind {}
 ```
 
 #### TestFinishData
-
 
 ```ts
 export type TestFinishData = any;
 ```
 
 #### TestReport
-
 
 ```ts
 export interface TestReport {
@@ -2182,7 +2089,6 @@ prints something to stdout.
 
 **Unstable** (may change in future versions)
 
-
 ```ts
 export interface PrintParams {
   /** The id of the request. */
@@ -2211,16 +2117,19 @@ prints something to stderr.
 ## TaskFinishData kinds
 
 ### CompileReport
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"compile-report"`.
 
 ### TestFinish
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-finish"`.
 
 ### TestReport
+
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-report"`.
@@ -2228,17 +2137,19 @@ the `dataKind` field contains `"test-report"`.
 ## TaskStartData kinds
 
 ### CompileTask
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"compile-task"`.
 
 ### TestStart
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-start"`.
 
 ### TestTask
+
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-task"`.
-

@@ -8,6 +8,7 @@ The following section contains Scala-specific extensions to the build server
 protocol.
 
 ## BSP version
+
 `2.2.0`
 
 ## BSP Server remote interface
@@ -24,7 +25,6 @@ targets.
 
 #### ScalacOptionsParams
 
-
 ```ts
 export interface ScalacOptionsParams {
   targets: BuildTargetIdentifier[];
@@ -33,7 +33,6 @@ export interface ScalacOptionsParams {
 
 #### ScalacOptionsResult
 
-
 ```ts
 export interface ScalacOptionsResult {
   items: ScalacOptionsItem[];
@@ -41,7 +40,6 @@ export interface ScalacOptionsResult {
 ```
 
 #### ScalacOptionsItem
-
 
 ```ts
 export interface ScalacOptionsItem {
@@ -75,7 +73,7 @@ This method can for example be used by a client to:
 
 - Show a list of the discovered classes that can be tested.
 - Attach a "Run test suite" button above the definition of a test suite via
- `textDocument/codeLens`.
+  `textDocument/codeLens`.
 
 (To render the code lens, the language server needs to map the fully qualified
 names of the test targets to the defining source file via
@@ -97,7 +95,6 @@ The client will get a `originId` field in `ScalaTestClassesResult` if the
 
 #### ScalaTestClassesParams
 
-
 ```ts
 export interface ScalaTestClassesParams {
   targets: BuildTargetIdentifier[];
@@ -109,7 +106,6 @@ export interface ScalaTestClassesParams {
 
 #### ScalaTestClassesResult
 
-
 ```ts
 export interface ScalaTestClassesResult {
   /** An optional id of the request that triggered this result. */
@@ -118,7 +114,6 @@ export interface ScalaTestClassesResult {
 ```
 
 #### ScalaTestClassesItem
-
 
 ```ts
 export interface ScalaTestClassesItem {
@@ -156,7 +151,6 @@ The client will get a `originId` field in `ScalaMainClassesResult` if the
 
 #### ScalaMainClassesParams
 
-
 ```ts
 export interface ScalaMainClassesParams {
   targets: BuildTargetIdentifier[];
@@ -167,7 +161,6 @@ export interface ScalaMainClassesParams {
 ```
 
 #### ScalaMainClassesResult
-
 
 ```ts
 export interface ScalaMainClassesResult {
@@ -180,7 +173,6 @@ export interface ScalaMainClassesResult {
 
 #### ScalaMainClassesItem
 
-
 ```ts
 export interface ScalaMainClassesItem {
   /** The build target that contains the test classes. */
@@ -192,7 +184,6 @@ export interface ScalaMainClassesItem {
 ```
 
 #### ScalaMainClass
-
 
 ```ts
 export interface ScalaMainClass {
@@ -215,6 +206,7 @@ export interface ScalaMainClass {
 ## RunParamsData kinds
 
 ### ScalaMainClass
+
 This structure is embedded in
 the `data?: RunParamsData` field, when
 the `dataKind` field contains `"scala-main-class"`.
@@ -222,6 +214,7 @@ the `dataKind` field contains `"scala-main-class"`.
 ## DebugSessionParamsData kinds
 
 ### ScalaAttachRemote
+
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
 the `dataKind` field contains `"scala-attach-remote"`.
@@ -231,11 +224,11 @@ the `dataKind` field contains `"scala-attach-remote"`.
 The debug session will connect to a running process. The DAP client will send the port of the running process later.
 
 ```ts
-export interface ScalaAttachRemote {
-}
+export interface ScalaAttachRemote {}
 ```
 
 ### ScalaMainClass
+
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
 the `dataKind` field contains `"scala-main-class"`.
@@ -243,6 +236,7 @@ the `dataKind` field contains `"scala-main-class"`.
 ## BuildTargetData kinds
 
 ### ScalaBuildTarget
+
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"scala"`.
@@ -277,7 +271,6 @@ export interface ScalaBuildTarget {
 
 #### ScalaPlatform
 
-
 ```ts
 export enum ScalaPlatform {
   Jvm = 1,
@@ -291,6 +284,7 @@ export enum ScalaPlatform {
 ## DiagnosticData kinds
 
 ### ScalaDiagnostic
+
 This structure is embedded in
 the `data?: DiagnosticData` field, when
 the `dataKind` field contains `"scala"`.
@@ -358,6 +352,7 @@ export interface ScalaTextEdit {
 ## TestParamsData kinds
 
 ### ScalaTestParams
+
 This structure is embedded in
 the `data?: TestParamsData` field, when
 the `dataKind` field contains `"scala-test"`.
@@ -379,6 +374,7 @@ export interface ScalaTestParams {
 ```
 
 ### ScalaTestSuiteClasses
+
 This structure is embedded in
 the `data?: TestParamsData` field, when
 the `dataKind` field contains `"scala-test-suites"`.
@@ -392,12 +388,12 @@ export type ScalaTestSuiteClasses = string[];
 ```
 
 ### ScalaTestSuites
+
 This structure is embedded in
 the `data?: TestParamsData` field, when
 the `dataKind` field contains `"scala-test-suites-selection"`.
 
 #### ScalaTestSuites
-
 
 ```ts
 export interface ScalaTestSuites {
@@ -415,7 +411,6 @@ export interface ScalaTestSuites {
 
 #### ScalaTestSuiteSelection
 
-
 ```ts
 export interface ScalaTestSuiteSelection {
   /** Fully qualified name of the test suite class */
@@ -426,4 +421,3 @@ export interface ScalaTestSuiteSelection {
   tests: string[];
 }
 ```
-

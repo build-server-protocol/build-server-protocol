@@ -1,4 +1,4 @@
-load("//rules/scala:scala_export.bzl", "scala_export")
+load("//rules/scala:scala_export.bzl", "sonatype_scala_export")
 load("//rules/generator:generator.bzl", "library_generator")
 load("//:version.bzl", "BSP_VERSION")
 
@@ -9,12 +9,12 @@ library_generator(
     visibility = ["//visibility:public"],
 )
 
-scala_export(
+sonatype_scala_export(
     name = "bsp4s",
     srcs = glob(["src/**/*.scala"]),
     data = [":generate-bsp4s"],
     maven_coordinates = "ch.epfl.scala:bsp4s_2.13:%s" % BSP_VERSION,
-    pom_template = "//tools/maven:pom.tpl",
+    maven_profile = "ch.epfl.scala",
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_github_plokhotnyuk_jsoniter_scala_jsoniter_scala_core_2_13",

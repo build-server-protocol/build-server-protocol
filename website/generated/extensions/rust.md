@@ -8,6 +8,7 @@ The following section contains Rust-specific extensions to the build server
 protocol.
 
 ## BSP version
+
 `2.2.0`
 
 ## BSP Server remote interface
@@ -32,7 +33,6 @@ The request may take a long time, as it may require building a project to some e
 
 **Unstable** (may change in future versions)
 
-
 ```ts
 export interface RustWorkspaceParams {
   /** A sequence of build targets for workspace resolution. */
@@ -43,7 +43,6 @@ export interface RustWorkspaceParams {
 #### RustWorkspaceResult
 
 **Unstable** (may change in future versions)
-
 
 ```ts
 export interface RustWorkspaceResult {
@@ -144,7 +143,6 @@ export interface RustPackage {
 
 #### RustPackageOrigin
 
-
 ```ts
 export type RustPackageOrigin = string;
 
@@ -212,7 +210,6 @@ export interface RustTarget {
 
 #### RustTargetKind
 
-
 ```ts
 export enum RustTargetKind {
   /** For lib targets. */
@@ -265,13 +262,11 @@ export enum RustCrateType {
 
 #### Feature
 
-
 ```ts
 export type Feature = string;
 ```
 
 #### RustRawDependency
-
 
 ```ts
 export interface RustRawDependency {
@@ -303,7 +298,6 @@ export interface RustRawDependency {
 
 #### RustDepKind
 
-
 ```ts
 export type RustDepKind = string;
 
@@ -324,7 +318,6 @@ export namespace RustDepKind {
 
 #### RustDependency
 
-
 ```ts
 export interface RustDependency {
   /** The Package ID of the dependency. */
@@ -341,7 +334,6 @@ export interface RustDependency {
 
 #### RustDepKindInfo
 
-
 ```ts
 export interface RustDepKindInfo {
   /** The dependency kind. */
@@ -351,4 +343,3 @@ export interface RustDepKindInfo {
   target?: string;
 }
 ```
-

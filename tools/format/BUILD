@@ -38,11 +38,11 @@ java_binary(
 
 format_multirun(
     name = "format",
+    javascript = ":prettier",
     # TODO: uncomment
     # java = ":java-format",
     kotlin = ":ktfmt",
-    scala = ":scalafmt",
-    javascript = ":prettier",
     markdown = ":prettier",
+    scala = ":scalafmt",
     starlark = "@buildifier_prebuilt//:buildifier",
 )
