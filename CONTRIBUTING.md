@@ -35,7 +35,11 @@ Formatting will happen as a part of the generation process
 
 ## Releasing
 
-TODO
+To publish a new release, you can go to the [releases
+page](https://github.com/build-server-protocol/build-server-protocol/releases)
+to tag a new release and auto-generate the Release Notes. The release notes are
+important as this is useful for downstream users to be able to click the
+"Release Notes" section of a Steward PR and be brought to this release.
 
 ## Building the docs
 

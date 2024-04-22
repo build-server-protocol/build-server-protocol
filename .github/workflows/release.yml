@@ -21,6 +21,8 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
+      - name: Publish docs
+        run: bazel run //website:docusaurus-deploy
       - name: Publish bsp4j artifacts
         run: |
           bazel run \
