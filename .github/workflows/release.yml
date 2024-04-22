@@ -21,13 +21,12 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
-      - name: Publish docs
-        run: |
-          git config --global user.email "$GIT_USER"
-          git config --global user.name "gh-actions"
-          bazel run //website:docusaurus-deploy
-        env:
-          GIT_PASS: ${{ secrets.GIT_DEPLOY_KEY }}
+      - name: Generate docs
+        run: bazel run //website:docusaurus-build
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: bazel-out/k8-fastbuild/bin/website/docusaurus-build.sh.runfiles/_main/website/build
       - name: Publish bsp4j artifacts
         run: |
           bazel run \
@@ -42,6 +41,25 @@ jobs:
               --define "maven_user=$MAVEN_USER" \
               --define "maven_password=$MAVEN_PASSWORD" \
               //bsp4s:bsp4s.publish
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: publish
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 env:
   GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
   GIT_USER: build-server-protocol@build-server-protocol.github.io
