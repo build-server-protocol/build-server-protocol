@@ -8,6 +8,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GIT_DEPLOY_KEY }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -21,9 +24,6 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.PGP_SECRET }}
           passphrase: ${{ secrets.PGP_PASSPHRASE }}
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.GIT_DEPLOY_KEY }}
       - name: Publish docs
         run: |
           git config --global user.email "$GIT_USER"
