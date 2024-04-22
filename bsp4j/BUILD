@@ -17,6 +17,7 @@ sonatype_java_export(
     ],
     maven_coordinates = "ch.epfl.scala:bsp4j:%s" % BSP_VERSION,
     maven_profile = "ch.epfl.scala",
+    pom_template = "//tools/maven:pom.tpl",
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_google_code_gson_gson",

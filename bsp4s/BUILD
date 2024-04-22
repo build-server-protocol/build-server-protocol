@@ -15,6 +15,7 @@ sonatype_scala_export(
     data = [":generate-bsp4s"],
     maven_coordinates = "ch.epfl.scala:bsp4s_2.13:%s" % BSP_VERSION,
     maven_profile = "ch.epfl.scala",
+    pom_template = "//tools/maven:pom.tpl",
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_github_plokhotnyuk_jsoniter_scala_jsoniter_scala_core_2_13",
