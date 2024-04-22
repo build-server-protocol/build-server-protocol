@@ -37,6 +37,7 @@ def website(name, jars, data, library_version, **kwargs):
             "generated": "%s_run" % name,
         },
         suggested_update_target = "%s_command" % name,
+        diff_test = False,
     )
 
     command(

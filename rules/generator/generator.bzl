@@ -16,6 +16,7 @@ def library_generator(name, gen_tool, out_dir, **kwargs):
             out_dir: "%s_run" % name,
         },
         suggested_update_target = "%s_command" % name,
+        diff_test = False,
         **kwargs
     )
 
