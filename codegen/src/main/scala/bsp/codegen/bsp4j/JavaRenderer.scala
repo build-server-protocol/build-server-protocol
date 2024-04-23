@@ -1,22 +1,22 @@
 package bsp.codegen.bsp4j
 
 import bsp.codegen.Lines
+import bsp.codegen.common.{CodegenFile, Loader, ir}
 import bsp.codegen.dsl.{block, empty, lines, newline}
-import bsp.codegen.ir.Def._
-import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
-import bsp.codegen.ir.Hint.{Deprecated, Unstable, Documentation}
+import bsp.codegen.common.ir.Def._
+import bsp.codegen.common.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
 import bsp.codegen.ir.Primitive._
-import bsp.codegen.ir.Type._
+import bsp.codegen.common.ir.Type._
 import bsp.codegen.ir._
 import cats.implicits.toFoldableOps
-import bsp.codegen.{CodegenFile, Loader}
 import os.RelPath
 import software.amazon.smithy.model.shapes.ShapeId
 
 import java.nio.file.Path
 
-class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
+class JavaRenderer(basepkg: String, definitions: List[ir.Def], version: String) {
   import bsp.codegen.Settings.java
 
   val baseRelPath: Path = Path.of(basepkg.replace(".", "/"))
@@ -46,7 +46,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     new CodegenFile(baseRelPath.resolve("Bsp4j.java"), contents.render)
   }
 
-  def renderDef(definition: Def): Option[CodegenFile] = {
+  def renderDef(definition: ir.Def): Option[CodegenFile] = {
     definition match {
       case Alias(shapeId, tpe, _)               => None
       case Structure(shapeId, fields, hints, _) => Some(renderStructure(shapeId, fields, hints))
@@ -58,7 +58,11 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     }
   }
 
-  def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): CodegenFile = {
+  def renderStructure(
+      shapeId: ShapeId,
+      fields: List[ir.Field],
+      hints: List[ir.Hint]
+  ): CodegenFile = {
     val requiredFields = fields.filter(_.required)
     val docsLines = renderDocs(hints)
 
@@ -85,12 +89,12 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     new CodegenFile(baseRelPath.resolve(fileName), allLines.render)
   }
 
-  def spreadEnumLines[A](enumType: EnumType[A], values: List[EnumValue[A]]): Lines = {
+  def spreadEnumLines[A](enumType: ir.EnumType[A], values: List[ir.EnumValue[A]]): Lines = {
     val renderedValues = values.map(renderEnumValueDef(enumType))
     renderedValues.init.map(_ + ",") :+ (renderedValues.last + ";")
   }
 
-  def renderDocs(hints: List[Hint]): Lines = {
+  def renderDocs(hints: List[ir.Hint]): Lines = {
     val isUnstable = hints.contains(Unstable)
     val unstableNote = if (isUnstable) {
       List("**Unstable** (may change in future versions)")
@@ -114,9 +118,9 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderClosedEnum[A](
       shapeId: ShapeId,
-      enumType: EnumType[A],
-      values: List[EnumValue[A]],
-      hints: List[Hint]
+      enumType: ir.EnumType[A],
+      values: List[ir.EnumValue[A]],
+      hints: List[ir.Hint]
   ): CodegenFile = {
     val evt = enumValueType(enumType)
     val tpe = shapeId.getName()
@@ -158,9 +162,9 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderOpenEnum[A](
       shapeId: ShapeId,
-      enumType: EnumType[A],
-      values: List[EnumValue[A]],
-      hints: List[Hint]
+      enumType: ir.EnumType[A],
+      values: List[ir.EnumValue[A]],
+      hints: List[ir.Hint]
   ): CodegenFile = {
     val tpe = shapeId.getName()
     val docsLines = renderDocs(hints)
@@ -177,7 +181,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     new CodegenFile(baseRelPath.resolve(fileName), allLines.render)
   }
 
-  def renderService(shapeId: ShapeId, operations: List[Operation]): CodegenFile = {
+  def renderService(shapeId: ShapeId, operations: List[ir.Operation]): CodegenFile = {
     val allLines = lines(
       renderPkg(shapeId).map(_ + ";"),
       newline,
@@ -196,7 +200,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     new CodegenFile(baseRelPath.resolve(fileName), allLines.render)
   }
 
-  def renderOperation(operation: Operation): Lines = {
+  def renderOperation(operation: ir.Operation): Lines = {
     val output = (operation.jsonRPCMethodType, operation.outputType) match {
       case (Notification, _)                         => "void"
       case (Request, TPrimitive(Primitive.PUnit, _)) => s"CompletableFuture<Object>"
@@ -223,24 +227,24 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def enumValueType[A](enumType: EnumType[A]): String = enumType match {
+  def enumValueType[A](enumType: ir.EnumType[A]): String = enumType match {
     case IntEnum    => "int"
     case StringEnum => "String"
   }
 
-  def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
+  def renderStaticValue[A](enumType: ir.EnumType[A]): ir.EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value};"""
+        (ev: ir.EnumValue[Int]) => s"""public static final int ${ev.name} = ${ev.value};"""
       case StringEnum =>
-        (ev: EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}";"""
+        (ev: ir.EnumValue[String]) => s"""public static final String ${ev.name} = "${ev.value}";"""
     }
   }
 
-  def renderEnumValueDef[A](enumType: EnumType[A]): EnumValue[A] => String = {
+  def renderEnumValueDef[A](enumType: ir.EnumType[A]): ir.EnumValue[A] => String = {
     enumType match {
-      case IntEnum    => (ev: EnumValue[Int]) => s"${ev.name}(${ev.value})"
-      case StringEnum => (ev: EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
+      case IntEnum    => (ev: ir.EnumValue[Int]) => s"${ev.name}(${ev.value})"
+      case StringEnum => (ev: ir.EnumValue[String]) => s"""${ev.name}("${ev.value}")"""
     }
   }
 
@@ -248,10 +252,10 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     s"package $basepkg"
   )
 
-  def renderImports(fields: List[Field]): Lines =
+  def renderImports(fields: List[ir.Field]): Lines =
     fields.foldMap(renderImport).distinct.sorted
 
-  def renderImportFromType(tpe: Type): Lines = tpe match {
+  def renderImportFromType(tpe: ir.Type): Lines = tpe match {
     case TRef(shapeId) => empty // assuming everything is generated in the same package
     case TMap(key, value) =>
       lines(s"import java.util.Map") ++ renderImportFromType(key) ++ renderImportFromType(value)
@@ -266,7 +270,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TPrimitive(prim, _) => empty
   }
 
-  def renderImport(field: Field): Lines = {
+  def renderImport(field: ir.Field): Lines = {
     val renameAnnotation = if (field.jsonRename.isDefined) {
       lines(s"import com.google.gson.annotations.SerializedName")
     } else empty
@@ -287,14 +291,14 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     renameAnnotation ++ importType ++ jsonAdapter ++ nonNull
   }
 
-  def useJsonAdapter(field: Field): Boolean = {
+  def useJsonAdapter(field: ir.Field): Boolean = {
     field.tpe match {
-      case Type.TPrimitive(Primitive.PDocument, _) => true
-      case _                                       => false
+      case ir.Type.TPrimitive(Primitive.PDocument, _) => true
+      case _                                          => false
     }
   }
 
-  def renderJavaField(field: Field): Lines = {
+  def renderJavaField(field: ir.Field): Lines = {
     val maybeAdapter = if (useJsonAdapter(field)) {
       lines("@JsonAdapter(JsonElementTypeAdapter.Factory)")
     } else empty
@@ -309,18 +313,18 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def renderParam(field: Field): String = {
+  def renderParam(field: ir.Field): String = {
     val decl = renderFieldRaw(field)
     if (field.required) {
       s"@NonNull $decl"
     } else decl
   }
 
-  def renderFieldRaw(field: Field): String = {
+  def renderFieldRaw(field: ir.Field): String = {
     s"${renderType(field.tpe)} ${field.name}"
   }
 
-  def renderType(tpe: Type): String = tpe match {
+  def renderType(tpe: ir.Type): String = tpe match {
     case TRef(shapeId)        => shapeId.getName()
     case TPrimitive(prim, _)  => renderPrimitive(prim)
     case TMap(key, value)     => s"Map<${renderType(key)}, ${renderType(value)}>"
@@ -329,7 +333,7 @@ class JavaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TUntaggedUnion(tpes) => renderUntaggedUnion(tpes)
   }
 
-  private def renderUntaggedUnion(types: List[Type]): String = {
+  private def renderUntaggedUnion(types: List[ir.Type]): String = {
     if (types.size != 2)
       throw new Exception("Only unions of two types are supported")
 

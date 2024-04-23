@@ -1,4 +1,4 @@
-package ch.epfl.scala
+package ch.epfl.scala.util
 
 import com.github.plokhotnyuk.jsoniter_scala.core.{JsonReader, JsonValueCodec, JsonWriter}
 

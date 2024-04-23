@@ -1,4 +1,7 @@
-package bsp.codegen.ir
+package bsp.codegen.common.ir
+
+import software.amazon.smithy.model.shapes.ShapeId
+
 /**
  * This configuration allows to specify preferences for how the smithy model is represented
  * internally. This enhances generating libraries that fully utilize the particular language's
@@ -94,9 +97,11 @@ class IrConfig(
  * - Aliased: ``` typealias AliasedStringName = String ``` ``` val field: AliasedStringName ```
  */
 // ktfmt: on
-enum class TypeAliasing {
-  Pure,
-  Aliased,
+data class TypeAliasing(val aliased: (ShapeId) -> Boolean) {
+  companion object {
+    val Pure: TypeAliasing = TypeAliasing { false }
+    val Aliased: TypeAliasing = TypeAliasing { it.namespace.startsWith("bsp") }
+  }
 }
 
 // ktfmt: off

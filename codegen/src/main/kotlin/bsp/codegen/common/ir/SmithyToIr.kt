@@ -1,4 +1,4 @@
-package bsp.codegen.ir
+package bsp.codegen.common.ir
 
 import java.util.stream.Collectors
 import kotlin.jvm.optionals.getOrNull
@@ -254,10 +254,10 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
         }
 
         override fun stringShape(shape: StringShape): List<Def> =
-            if (config.strings == TypeAliasing.Aliased) typeShape(shape) else emptyList()
+            if (config.strings.aliased(shape.id)) typeShape(shape) else emptyList()
 
         override fun mapShape(shape: MapShape): List<Def> =
-            if (config.maps == TypeAliasing.Aliased) typeShape(shape) else emptyList()
+            if (config.maps.aliased(shape.id)) typeShape(shape) else emptyList()
       }
 
   fun pureMapType(shape: MapShape): Type? =
@@ -276,8 +276,7 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
         override fun longShape(shape: LongShape): Type = Type.Long
 
         override fun stringShape(shape: StringShape): Type =
-            if (config.strings == TypeAliasing.Aliased && aliased(shape.id)) Type.Ref(shape.id)
-            else Type.String
+            if (config.strings.aliased(shape.id)) Type.Ref(shape.id) else Type.String
 
         override fun documentShape(shape: DocumentShape): Type =
             if (shape.hasTrait(DataTrait::class.java) &&
@@ -293,7 +292,7 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
         }
 
         override fun mapShape(shape: MapShape): Type? {
-          return if (config.maps == TypeAliasing.Aliased) Type.Ref(shape.id) else pureMapType(shape)
+          return if (config.maps.aliased(shape.id)) Type.Ref(shape.id) else pureMapType(shape)
         }
 
         override fun structureShape(shape: StructureShape): Type = Type.Ref(shape.id)
@@ -323,8 +322,6 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
 
         override fun memberShape(shape: MemberShape): Type? =
             model.expectShape(shape.target).accept(this)
-
-        fun aliased(shapeId: ShapeId): Boolean = shapeId.namespace.startsWith("bsp")
       }
 
   fun getHints(shape: Shape): List<Hint> {

@@ -1,6 +1,6 @@
 package ch.epfl.scala.bsp
 
-import org.jetbrains.bsp.util.CustomCodec
+import ch.epfl.scala.util.CustomCodec
 
 import java.net.{URI, URISyntaxException}
 
@@ -547,6 +547,7 @@ object DiagnosticSeverity {
     }
   }
 }
+
 object DiagnosticTag {
   val Unnecessary = 1
   val Deprecated = 2
@@ -813,6 +814,7 @@ object MessageType {
     }
   }
 }
+
 final case class OutputPathItem(
     uri: Uri,
     kind: OutputPathItemKind
@@ -840,6 +842,7 @@ object OutputPathItemKind {
     }
   }
 }
+
 final case class OutputPathsItem(
     target: BuildTargetIdentifier,
     outputPaths: List[OutputPathItem]
@@ -1071,6 +1074,7 @@ object RustCrateType {
     }
   }
 }
+
 object RustDepKind {
   val Build = "build"
   val Dev = "dev"
@@ -1377,6 +1381,7 @@ object ScalaPlatform {
     }
   }
 }
+
 final case class ScalaTestClassesItem(
     target: BuildTargetIdentifier,
     framework: Option[String],
@@ -1555,6 +1560,7 @@ object SourceItemKind {
     }
   }
 }
+
 final case class SourcesItem(
     target: BuildTargetIdentifier,
     sources: List[SourceItem],

@@ -42,7 +42,7 @@ java_binary(
     main_class = "bsp.codegen.bsp4j.Main",
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//codegen:old-scala-codegen",
+        "//codegen:bsp4j",
     ],
 )
 
@@ -51,7 +51,7 @@ java_binary(
     main_class = "bsp.codegen.bsp4s.Main",
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//codegen:old-scala-codegen",
+        "//codegen:bsp4s",
     ],
 )
 

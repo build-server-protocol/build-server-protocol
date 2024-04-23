@@ -1,10 +1,10 @@
 package bsp.codegen.bsp4j
 
+import bsp.codegen.common.{CodegenFile, FilesGenerator, Loader}
 import scala.jdk.CollectionConverters._
 import bsp.codegen.ir.SmithyToIR
 import org.eclipse.xtend.core.XtendInjectorSingleton
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler
-import bsp.codegen.{CodegenFile, FilesGenerator, Loader}
 
 import java.util
 import java.io.File

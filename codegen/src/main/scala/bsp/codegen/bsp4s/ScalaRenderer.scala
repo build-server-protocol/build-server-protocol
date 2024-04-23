@@ -1,20 +1,20 @@
 package bsp.codegen.bsp4s
 
 import bsp.codegen.Lines
+import bsp.codegen.common.{CodegenFile, Loader, ir}
 import bsp.codegen.dsl.{block, empty, lines, newline, paren}
-import bsp.codegen.ir.Def._
-import bsp.codegen.ir.EnumType.{IntEnum, StringEnum}
+import bsp.codegen.common.ir.Def._
+import bsp.codegen.common.ir.EnumType.{IntEnum, StringEnum}
 import bsp.codegen.ir.Primitive._
-import bsp.codegen.ir.Type._
+import bsp.codegen.common.ir.Type._
 import bsp.codegen.ir._
-import bsp.codegen.ir.Hint.{Deprecated, Documentation, Unstable}
+import bsp.codegen.common.ir.Hint.{Deprecated, Documentation, Unstable}
 import cats.implicits.toFoldableOps
-import bsp.codegen.{CodegenFile, Loader}
 import software.amazon.smithy.model.shapes.ShapeId
 
 import java.nio.file.Path
 
-class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
+class ScalaRenderer(basepkg: String, definitions: List[ir.Def], version: String) {
   import bsp.codegen.Settings.scala
 
   val baseRelPath: Path = Path.of(basepkg.replace(".", "/"))
@@ -117,7 +117,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   }
 
-  def renderStructure(shapeId: ShapeId, fields: List[Field], hints: List[Hint]): Lines = {
+  def renderStructure(shapeId: ShapeId, fields: List[ir.Field], hints: List[ir.Hint]): Lines = {
     val docsLines = renderDocs(hints)
     lines(
       docsLines,
@@ -139,9 +139,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderClosedEnum[A](
       shapeId: ShapeId,
-      enumType: EnumType[A],
-      values: List[EnumValue[A]],
-      hints: List[Hint]
+      enumType: ir.EnumType[A],
+      values: List[ir.EnumValue[A]],
+      hints: List[ir.Hint]
   ): Lines = {
     val valueType = enumValueType(enumType)
     val enumName = shapeId.getName()
@@ -172,9 +172,9 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
 
   def renderOpenEnum[A](
       shapeId: ShapeId,
-      enumType: EnumType[A],
-      values: List[EnumValue[A]],
-      hints: List[Hint]
+      enumType: ir.EnumType[A],
+      values: List[ir.EnumValue[A]],
+      hints: List[ir.Hint]
   ): Lines = {
     val tpe = shapeId.getName()
     val docsLines = renderDocs(hints)
@@ -187,7 +187,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def renderDocs(hints: List[Hint]): Lines = {
+  def renderDocs(hints: List[ir.Hint]): Lines = {
     val isUnstable = hints.contains(Unstable)
     val unstableNote = if (isUnstable) {
       List("**Unstable** (may change in future versions)")
@@ -209,7 +209,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     }
   }
 
-  def renderOperations(operations: List[Operation]): Lines = {
+  def renderOperations(operations: List[ir.Operation]): Lines = {
     val groupedByTargetName = operations.groupBy(_.jsonRPCMethod.split("/")(0))
     lines(
       groupedByTargetName.map { case (targetName, operations) =>
@@ -225,7 +225,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def renderOperation(operation: Operation): Lines = {
+  def renderOperation(operation: ir.Operation): Lines = {
     val name = operation.jsonRPCMethod.split("/")(1)
     val output = operation.outputType match {
       case TPrimitive(Primitive.PUnit, _) => "Unit"
@@ -236,7 +236,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
       case other                          => renderType(other)
     }
 
-    val maybeDeprecated = operation.hints.collectFirst { case Hint.Deprecated(message) =>
+    val maybeDeprecated = operation.hints.collectFirst { case ir.Hint.Deprecated(message) =>
       if (message.isEmpty) "@deprecated" else s"""@deprecated("$message")"""
     }
     val docsLines = renderDocs(operation.hints)
@@ -248,7 +248,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def enumValueType[A](enumType: EnumType[A]): String = enumType match {
+  def enumValueType[A](enumType: ir.EnumType[A]): String = enumType match {
     case IntEnum    => "Int"
     case StringEnum => "String"
   }
@@ -257,27 +257,30 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     str.toLowerCase.split("_").map(_.capitalize).mkString("")
   }
 
-  def renderStaticValue[A](enumType: EnumType[A]): EnumValue[A] => String = {
+  def renderStaticValue[A](enumType: ir.EnumType[A]): ir.EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) => s"""val ${toUpperCamelCase(ev.name)} = ${ev.value}"""
+        (ev: ir.EnumValue[Int]) => s"""val ${toUpperCamelCase(ev.name)} = ${ev.value}"""
       case StringEnum =>
-        (ev: EnumValue[String]) => s"""val ${toUpperCamelCase(ev.name)} = "${ev.value}""""
+        (ev: ir.EnumValue[String]) => s"""val ${toUpperCamelCase(ev.name)} = "${ev.value}""""
     }
   }
 
-  def renderEnumValueDef[A](enumType: EnumType[A], shapeId: ShapeId): EnumValue[A] => String = {
+  def renderEnumValueDef[A](
+      enumType: ir.EnumType[A],
+      shapeId: ShapeId
+  ): ir.EnumValue[A] => String = {
     enumType match {
       case IntEnum =>
-        (ev: EnumValue[Int]) =>
+        (ev: ir.EnumValue[Int]) =>
           s"case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}(${ev.value})"
       case StringEnum =>
-        (ev: EnumValue[String]) =>
+        (ev: ir.EnumValue[String]) =>
           s"""case object ${toUpperCamelCase(ev.name)} extends ${shapeId.getName}("${ev.value}")"""
     }
   }
 
-  def renderScalaField(field: Field): Lines = {
+  def renderScalaField(field: ir.Field): Lines = {
     val maybeRename =
       field.jsonRename.map(name => lines(s"""@named("$name")""")).getOrElse(empty)
     lines(
@@ -286,7 +289,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     )
   }
 
-  def renderFieldRaw(field: Field): String = {
+  def renderFieldRaw(field: ir.Field): String = {
     val name =
       if (field.name == "type")
         "`type`"
@@ -297,7 +300,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     s"$name: $tpe"
   }
 
-  def renderType(tpe: Type): String = tpe match {
+  def renderType(tpe: ir.Type): String = tpe match {
     case TRef(shapeId)             => shapeId.getName()
     case TPrimitive(prim, shapeId) => renderPrimitive(prim, shapeId)
     case TMap(key, value)          => s"Map[${renderType(key)}, ${renderType(value)}]"
@@ -306,7 +309,7 @@ class ScalaRenderer(basepkg: String, definitions: List[Def], version: String) {
     case TUntaggedUnion(tpes)      => renderUntaggedUnion(tpes)
   }
 
-  private def renderUntaggedUnion(types: List[Type]): String = {
+  private def renderUntaggedUnion(types: List[ir.Type]): String = {
     val primitiveTypes = types.collect { case TPrimitive(prim, _) => prim }
     if (types.size != 2 || !(primitiveTypes == List(Primitive.PString, Primitive.PInt)))
       throw new Exception("Only unions with String and Int are supported (order matters)")

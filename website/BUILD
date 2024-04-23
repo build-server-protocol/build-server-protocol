@@ -65,7 +65,7 @@ website(
     data = ["//docs"],
     jars = [
         "//bsp4j",
-        "//codegen:old-scala-codegen",
+        #         "//codegen:old-scala-codegen",
         "//codegen:codegen.jar",
         "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc",
         "@maven//:com_google_code_gson_gson",

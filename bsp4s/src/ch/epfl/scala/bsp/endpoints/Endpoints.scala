@@ -3,25 +3,9 @@ package endpoints
 
 import jsonrpc4s.Endpoint
 import jsonrpc4s.Endpoint.unitCodec
-object Run extends Run
-trait Run {
 
-  /** **Unstable** (may change in future versions) Notification sent from the server to the client
-    * when the target being run or tested prints something to stdout.
-    */
-  object printStdout extends Endpoint[PrintParams, Unit]("run/printStdout")
-
-  /** **Unstable** (may change in future versions) Notification sent from the server to the client
-    * when the target being run or tested prints something to stderr.
-    */
-  object printStderr extends Endpoint[PrintParams, Unit]("run/printStderr")
-
-  /** **Unstable** (may change in future versions) Notification sent from the client to the server
-    * when the user wants to send input to the stdin of the running target.
-    */
-  object readStdin extends Endpoint[ReadParams, Unit]("run/readStdin")
-}
 object Build extends Build
+
 trait Build {
 
   /** The show message notification is sent from a server to a client to ask the client to display a
@@ -131,7 +115,9 @@ trait Build {
     */
   object exit extends Endpoint[Unit, Unit]("build/exit")
 }
+
 object BuildTarget extends BuildTarget
+
 trait BuildTarget {
 
   /** The build target changed notification is sent from the server to the client to signal a change
@@ -361,7 +347,29 @@ trait BuildTarget {
         "buildTarget/scalaMainClasses"
       )
 }
+
+object Run extends Run
+
+trait Run {
+
+  /** **Unstable** (may change in future versions) Notification sent from the server to the client
+    * when the target being run or tested prints something to stdout.
+    */
+  object printStdout extends Endpoint[PrintParams, Unit]("run/printStdout")
+
+  /** **Unstable** (may change in future versions) Notification sent from the server to the client
+    * when the target being run or tested prints something to stderr.
+    */
+  object printStderr extends Endpoint[PrintParams, Unit]("run/printStderr")
+
+  /** **Unstable** (may change in future versions) Notification sent from the client to the server
+    * when the user wants to send input to the stdin of the running target.
+    */
+  object readStdin extends Endpoint[ReadParams, Unit]("run/readStdin")
+}
+
 object Workspace extends Workspace
+
 trait Workspace {
 
   /** The workspace build targets request is sent from the client to the server to ask for the list
@@ -390,7 +398,9 @@ trait Workspace {
   object setCargoFeatures
       extends Endpoint[SetCargoFeaturesParams, SetCargoFeaturesResult]("workspace/setCargoFeatures")
 }
+
 object DebugSession extends DebugSession
+
 trait DebugSession {
 
   /** The debug request is sent from the client to the server to debug build target(s). The server
@@ -399,7 +409,9 @@ trait DebugSession {
     */
   object start extends Endpoint[DebugSessionParams, DebugSessionAddress]("debugSession/start")
 }
+
 object $ extends $
+
 trait $ {
 
   /** Like the language server protocol, a notification to ask the server to cancel a request.

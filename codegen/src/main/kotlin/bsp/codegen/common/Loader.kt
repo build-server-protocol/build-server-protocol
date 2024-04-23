@@ -1,13 +1,12 @@
-package bsp.codegen
+package bsp.codegen.common
 
 import software.amazon.smithy.model.Model
 
 object Loader {
   fun readResource(name: String): String {
     try {
-      return Loader::class.java.classLoader.getResourceAsStream(name)!!.bufferedReader().use {
-        it.readText()
-      }
+      val loader = Loader::class.java.classLoader
+      return loader.getResourceAsStream(name)!!.bufferedReader().use { it.readText() }
     } catch (e: Throwable) {
       throw RuntimeException("Failed to read resource $name", e)
     }

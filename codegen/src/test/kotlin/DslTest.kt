@@ -1,5 +1,5 @@
-import bsp.codegen.dsl.CodeBlock
-import bsp.codegen.dsl.code
+import bsp.codegen.common.dsl.CodeBlock
+import bsp.codegen.common.dsl.code
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

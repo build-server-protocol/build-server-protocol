@@ -1,6 +1,6 @@
 package bsp.codegen.docs
 
-import bsp.codegen.ir.{Def, Operation, PolymorphicDataKind}
+import bsp.codegen.common.ir.{Def, Operation, PolymorphicDataKind}
 import software.amazon.smithy.model.shapes.ShapeId
 
 case class DocTree(

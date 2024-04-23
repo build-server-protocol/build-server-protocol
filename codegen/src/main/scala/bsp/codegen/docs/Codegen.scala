@@ -1,7 +1,7 @@
 package bsp.codegen.docs
 
+import bsp.codegen.common.Loader
 import bsp.codegen.ir.SmithyToIR
-import bsp.codegen.Loader
 
 object Codegen {
   def docs(namespace: String): String = {

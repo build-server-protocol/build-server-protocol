@@ -1,8 +1,7 @@
 package bsp.codegen.bsp4s
 
 import bsp.codegen.ir.SmithyToIR
-import bsp.codegen.Loader
-import bsp.codegen.FilesGenerator
+import bsp.codegen.common.{FilesGenerator, Loader}
 
 import java.io.File
 import java.nio.file.Path

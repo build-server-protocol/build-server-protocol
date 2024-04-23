@@ -1,4 +1,4 @@
-package bsp.codegen
+package bsp.codegen.common
 
 import java.nio.file.Path
 

@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaMainClass {
-  @SerializedName("class")
+  @SerializedName("JsonRename(name=class)")
   @NonNull
   private String className;
 

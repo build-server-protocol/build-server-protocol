@@ -1,4 +1,4 @@
-package bsp.codegen.dsl
+package bsp.codegen.common.dsl
 
 @DslMarker annotation class CodeMarker
 
@@ -174,6 +174,8 @@ fun code(settings: RenderSettings = RenderSettings(), init: CodeBlock.() -> Unit
   code.init()
   return code
 }
+
+val emptyCode = code {}
 
 fun rustCode(
     settings: RenderSettings = RenderSettings(indent = "    "),

@@ -1,4 +1,4 @@
-package bsp.codegen.ir
+package bsp.codegen.common.ir
 
 import software.amazon.smithy.model.shapes.ShapeId
 

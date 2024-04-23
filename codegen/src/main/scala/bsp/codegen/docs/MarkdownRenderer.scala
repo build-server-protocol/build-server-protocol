@@ -2,11 +2,11 @@ package bsp.codegen.docs
 
 import bsp.codegen.Lines.fromToLines
 import bsp.codegen.Lines
-import bsp.codegen.ir.Hint.{Deprecated, Documentation}
+import bsp.codegen.common.Loader
+import bsp.codegen.common.ir.Hint.{Deprecated, Documentation}
 import bsp.codegen.ir.JsonRPCMethodType.{Notification, Request}
-import bsp.codegen.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import cats.syntax.all._
-import bsp.codegen.Loader
+import bsp.codegen.common.ir.{Def, Hint, Operation, PolymorphicDataKind}
 import software.amazon.smithy.model.shapes.ShapeId
 
 import scala.collection.mutable.{Set => MSet}
