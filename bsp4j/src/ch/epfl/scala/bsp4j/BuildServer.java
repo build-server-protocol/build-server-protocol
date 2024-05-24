@@ -203,7 +203,7 @@ public interface BuildServer {
   CompletableFuture<CleanCacheResult> buildTargetCleanCache(CleanCacheParams params);
 
 /**
- * **Unstable** (may change in future versions)
+**Unstable** (may change in future versions)
  * Notification sent from the client to the server when the user wants to send
  * input to the stdin of the running target.
  */

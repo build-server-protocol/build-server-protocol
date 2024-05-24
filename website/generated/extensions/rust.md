@@ -16,7 +16,6 @@ protocol.
 ### RustWorkspace: request
 
 **Unstable** (may change in future versions)
-
 The Rust workspace request is sent from the client to the server to query for
 the information about project's workspace for the given list of build targets.
 
@@ -51,12 +50,12 @@ export interface RustWorkspaceResult {
 
   /** Dependencies in `cargo metadata` as listed in the package `Cargo.toml`,
    * without package resolution or any additional data. */
-  rawDependencies: Map<string, RustRawDependency[]>;
+  rawDependencies: RustRawDependencies;
 
   /** Resolved dependencies of the build. Handles renamed dependencies.
    * Correspond to dependencies from resolved dependency graph from `cargo metadata` that shows
    * the actual dependencies that are being used in the build. */
-  dependencies: Map<string, RustDependency[]>;
+  dependencies: RustDependencies;
 
   /** A sequence of build targets taken into consideration during build process. */
   resolvedTargets: BuildTargetIdentifier[];
@@ -114,7 +113,7 @@ export interface RustPackage {
   /** Set of features defined for the package (including optional dependencies).
    * Each feature maps to an array of features or dependencies it enables.
    * The entry named "default" defines which features are enabled by default. */
-  features: Map<Feature, Set<Feature>>;
+  features: FeaturesDependencyGraph;
 
   /** Array of features enabled on this package. */
   enabledFeatures: Set<Feature>;
@@ -125,10 +124,10 @@ export interface RustPackage {
    * The `cfg` is split by '=' delimiter and the first half becomes key and
    * the second is aggregated to the value in `RustCfgOptions`.
    * For "cfg1" the value is empty. */
-  cfgOptions?: Map<string, string[]>;
+  cfgOptions?: RustCfgOptions;
 
   /** Environment variables for the package. */
-  env?: Map<string, string>;
+  env?: EnvironmentVariables;
 
   /** An absolute path which is used as a value of `OUT_DIR` environmental
    * variable when compiling current package. */
@@ -144,18 +143,13 @@ export interface RustPackage {
 #### RustPackageOrigin
 
 ```ts
-export type RustPackageOrigin = string;
-
 export namespace RustPackageOrigin {
   /** External dependency of [WORKSPACE] or other [DEPENDENCY] package. */
   export const Dependency = "dependency";
-
   /** The package comes from the standard library. */
   export const Stdlib = "stdlib";
-
   /** External dependency of [STDLIB] or other [STDLIB_DEPENDENCY] package. */
-  export const StdlibDependency = "stdlib-dependency";
-
+  export const Stdlib_dependency = "stdlib-dependency";
   /** The package is a part of our workspace. */
   export const Workspace = "workspace";
 }
@@ -166,13 +160,9 @@ export namespace RustPackageOrigin {
 The Rust edition.
 
 ```ts
-export type RustEdition = string;
-
 export namespace RustEdition {
   export const E2015 = "2015";
-
   export const E2018 = "2018";
-
   export const E2021 = "2021";
 }
 ```
@@ -214,22 +204,16 @@ export interface RustTarget {
 export enum RustTargetKind {
   /** For lib targets. */
   Lib = 1,
-
   /** For binaries. */
   Bin = 2,
-
   /** For integration tests. */
   Test = 3,
-
   /** For examples. */
   Example = 4,
-
   /** For benchmarks. */
   Bench = 5,
-
   /** For build scripts. */
-  CustomBuild = 6,
-
+  Custom_build = 6,
   /** For unknown targets. */
   Unknown = 7,
 }
@@ -243,19 +227,12 @@ Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for
 ```ts
 export enum RustCrateType {
   Bin = 1,
-
   Lib = 2,
-
   Rlib = 3,
-
   Dylib = 4,
-
   Cdylib = 5,
-
   Staticlib = 6,
-
-  ProcMacro = 7,
-
+  Proc_macro = 7,
   Unknown = 8,
 }
 ```
@@ -266,80 +243,41 @@ export enum RustCrateType {
 export type Feature = string;
 ```
 
-#### RustRawDependency
+#### FeaturesDependencyGraph
+
+The feature dependency graph is a mapping between
+feature and the features it turns on
 
 ```ts
-export interface RustRawDependency {
-  /** The name of the dependency. */
-  name: string;
-
-  /** Name to which this dependency is renamed when declared in Cargo.toml.
-   * This field allows to specify an alternative name for a dependency to use in a code,
-   * regardless of how it's published (helpful for example if multiple dependencies
-   * have conflicting names). */
-  rename?: string;
-
-  /** The dependency kind. */
-  kind?: RustDepKind;
-
-  /** The target platform for the dependency. */
-  target?: string;
-
-  /** Indicates whether this is an optional dependency. */
-  optional: boolean;
-
-  /** Indicates whether default features are enabled. */
-  usesDefaultFeatures: boolean;
-
-  /** A sequence of enabled features. */
-  features: Set<Feature>;
-}
+/** The feature dependency graph is a mapping between
+ * feature and the features it turns on */
+export type FeaturesDependencyGraph = Map<Feature, Set<Feature>>;
 ```
 
-#### RustDepKind
+#### RustCfgOptions
 
 ```ts
-export type RustDepKind = string;
-
-export namespace RustDepKind {
-  /** For [build-dependencies]. */
-  export const Build = "build";
-
-  /** For [dev-dependencies]. */
-  export const Dev = "dev";
-
-  /** For [dependencies]. */
-  export const Normal = "normal";
-
-  /** For old Cargo versions prior to `1.41.0`. */
-  export const Unclassified = "unclassified";
-}
+export type RustCfgOptions = Map<string, string[]>;
 ```
 
-#### RustDependency
+#### RustRawDependencies
+
+The RustRawDependencies is a mapping between
+package id and the package's raw dependencies info.
 
 ```ts
-export interface RustDependency {
-  /** The Package ID of the dependency. */
-  pkg: string;
-
-  /** The name of the dependency's library target.
-   * If this is a renamed dependency, this is the new name. */
-  name?: string;
-
-  /** Array of dependency kinds. */
-  depKinds?: RustDepKindInfo[];
-}
+/** The RustRawDependencies is a mapping between
+ * package id and the package's raw dependencies info. */
+export type RustRawDependencies = Map<string, RustRawDependency[]>;
 ```
 
-#### RustDepKindInfo
+#### RustDependencies
+
+The RustDependencies is a mapping between
+package id and the package's dependencies info.
 
 ```ts
-export interface RustDepKindInfo {
-  /** The dependency kind. */
-  kind: RustDepKind;
-
-  /** The target platform for the dependency. */
-  target?: string;
-}
+/** The RustDependencies is a mapping between
+ * package id and the package's dependencies info. */
+export type RustDependencies = Map<string, RustDependency[]>;
 ```

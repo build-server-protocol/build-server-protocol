@@ -14,11 +14,11 @@ build files.
 
 ## BuildTargetData kinds
 
-### SbtBuildTarget
+### BuildTargetData
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"sbt"`.
+the `dataKind` field contains `sbt`.
 
 #### SbtBuildTarget
 

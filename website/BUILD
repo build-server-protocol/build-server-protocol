@@ -65,17 +65,14 @@ website(
     data = ["//docs"],
     jars = [
         "//bsp4j",
-        #         "//codegen:old-scala-codegen",
         "//codegen:codegen.jar",
+        "//codegen:docs.jar",
         "@maven//:org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc",
         "@maven//:com_google_code_gson_gson",
         "@rules_kotlin//kotlin/compiler:kotlin-stdlib",
         "@maven//:software_amazon_smithy_smithy_model",
         "@maven//:software_amazon_smithy_smithy_utils",
         "//spec-traits:spec-traits.jar",
-        "@maven//:com_monovore_decline_2_13",
-        "@maven//:org_typelevel_cats_core_2_13",
-        "@maven//:org_typelevel_cats_kernel_2_13",
     ],
     library_version = BSP_VERSION,
 )

@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface RustBuildServer {
 /**
- * **Unstable** (may change in future versions)
+**Unstable** (may change in future versions)
  * The Rust workspace request is sent from the client to the server to query for
  * the information about project's workspace for the given list of build targets.
  * 

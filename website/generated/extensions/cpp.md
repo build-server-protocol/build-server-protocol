@@ -70,11 +70,11 @@ export interface CppOptionsItem {
 
 ## BuildTargetData kinds
 
-### CppBuildTarget
+### BuildTargetData
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"cpp"`.
+the `dataKind` field contains `cpp`.
 
 #### CppBuildTarget
 

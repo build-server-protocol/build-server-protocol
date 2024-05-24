@@ -5525,5 +5525,389 @@
       "software.amazon.smithy:smithy-utils"
     ]
   },
+  "services": {
+    "io.get-coursier:interface": {
+      "coursierapi.shaded.coursier.jniutils.NativeApi": [
+        "coursierapi.internal.jniutils.ApiInternalNativeApi"
+      ]
+    },
+    "io.undertow:undertow-core": {
+      "io.undertow.attribute.ExchangeAttributeBuilder": [
+        "io.undertow.attribute.AuthenticationTypeExchangeAttribute$Builder",
+        "io.undertow.attribute.BytesSentAttribute$Builder",
+        "io.undertow.attribute.CookieAttribute$Builder",
+        "io.undertow.attribute.DateTimeAttribute$Builder",
+        "io.undertow.attribute.HostAndPortAttribute$Builder",
+        "io.undertow.attribute.IdentUsernameAttribute$Builder",
+        "io.undertow.attribute.LocalIPAttribute$Builder",
+        "io.undertow.attribute.LocalPortAttribute$Builder",
+        "io.undertow.attribute.LocalServerNameAttribute$Builder",
+        "io.undertow.attribute.NullAttribute$Builder",
+        "io.undertow.attribute.PathParameterAttribute$Builder",
+        "io.undertow.attribute.PredicateContextAttribute$Builder",
+        "io.undertow.attribute.QueryParameterAttribute$Builder",
+        "io.undertow.attribute.QueryStringAttribute$Builder",
+        "io.undertow.attribute.RelativePathAttribute$Builder",
+        "io.undertow.attribute.RemoteHostAttribute$Builder",
+        "io.undertow.attribute.RemoteIPAttribute$Builder",
+        "io.undertow.attribute.RemoteObfuscatedIPAttribute$Builder",
+        "io.undertow.attribute.RemoteUserAttribute$Builder",
+        "io.undertow.attribute.RequestCookieAttribute$Builder",
+        "io.undertow.attribute.RequestHeaderAttribute$Builder",
+        "io.undertow.attribute.RequestLineAttribute$Builder",
+        "io.undertow.attribute.RequestMethodAttribute$Builder",
+        "io.undertow.attribute.RequestPathAttribute$Builder",
+        "io.undertow.attribute.RequestProtocolAttribute$Builder",
+        "io.undertow.attribute.RequestSchemeAttribute$Builder",
+        "io.undertow.attribute.RequestURLAttribute$Builder",
+        "io.undertow.attribute.ResolvedPathAttribute$Builder",
+        "io.undertow.attribute.ResponseCodeAttribute$Builder",
+        "io.undertow.attribute.ResponseCookieAttribute$Builder",
+        "io.undertow.attribute.ResponseHeaderAttribute$Builder",
+        "io.undertow.attribute.ResponseReasonPhraseAttribute$Builder",
+        "io.undertow.attribute.ResponseTimeAttribute$Builder",
+        "io.undertow.attribute.SecureExchangeAttribute$Builder",
+        "io.undertow.attribute.SslCipherAttribute$Builder",
+        "io.undertow.attribute.SslClientCertAttribute$Builder",
+        "io.undertow.attribute.SslSessionIdAttribute$Builder",
+        "io.undertow.attribute.StoredResponse$Builder",
+        "io.undertow.attribute.ThreadNameAttribute$Builder",
+        "io.undertow.attribute.TransportProtocolAttribute$Builder"
+      ],
+      "io.undertow.client.ClientProvider": [
+        "io.undertow.client.ajp.AjpClientProvider",
+        "io.undertow.client.http.HttpClientProvider",
+        "io.undertow.client.http2.Http2ClearClientProvider",
+        "io.undertow.client.http2.Http2ClientProvider",
+        "io.undertow.client.http2.Http2PriorKnowledgeClientProvider"
+      ],
+      "io.undertow.predicate.PredicateBuilder": [
+        "io.undertow.predicate.AuthenticationRequiredPredicate$Builder",
+        "io.undertow.predicate.ContainsPredicate$Builder",
+        "io.undertow.predicate.EqualsPredicate$Builder",
+        "io.undertow.predicate.ExistsPredicate$Builder",
+        "io.undertow.predicate.IdempotentPredicate$Builder",
+        "io.undertow.predicate.MaxContentSizePredicate$Builder",
+        "io.undertow.predicate.MethodPredicate$Builder",
+        "io.undertow.predicate.MinContentSizePredicate$Builder",
+        "io.undertow.predicate.PathMatchPredicate$Builder",
+        "io.undertow.predicate.PathPrefixPredicate$Builder",
+        "io.undertow.predicate.PathSuffixPredicate$Builder",
+        "io.undertow.predicate.PathTemplatePredicate$Builder",
+        "io.undertow.predicate.RegularExpressionPredicate$Builder",
+        "io.undertow.predicate.RequestLargerThanPredicate$Builder",
+        "io.undertow.predicate.RequestSmallerThanPredicate$Builder",
+        "io.undertow.predicate.SecurePredicate$Builder"
+      ],
+      "io.undertow.protocols.alpn.ALPNEngineManager": [
+        "io.undertow.protocols.alpn.DefaultAlpnEngineManager",
+        "io.undertow.protocols.ssl.SNIAlpnEngineManager"
+      ],
+      "io.undertow.protocols.alpn.ALPNProvider": [
+        "io.undertow.protocols.alpn.JDK8HackAlpnProvider",
+        "io.undertow.protocols.alpn.JDK9AlpnProvider",
+        "io.undertow.protocols.alpn.JettyAlpnProvider",
+        "io.undertow.protocols.alpn.OpenSSLAlpnProvider"
+      ],
+      "io.undertow.server.handlers.builder.HandlerBuilder": [
+        "io.undertow.predicate.PredicatesHandler$DoneHandlerBuilder",
+        "io.undertow.predicate.PredicatesHandler$RestartHandlerBuilder",
+        "io.undertow.server.JvmRouteHandler$Builder",
+        "io.undertow.server.handlers.AccessControlListHandler$Builder",
+        "io.undertow.server.handlers.AllowedMethodsHandler$Builder",
+        "io.undertow.server.handlers.BlockingHandler$Builder",
+        "io.undertow.server.handlers.ByteRangeHandler$Builder",
+        "io.undertow.server.handlers.CanonicalPathHandler$Builder",
+        "io.undertow.server.handlers.DisableCacheHandler$Builder",
+        "io.undertow.server.handlers.DisallowedMethodsHandler$Builder",
+        "io.undertow.server.handlers.ForwardedHandler$Builder",
+        "io.undertow.server.handlers.HttpContinueAcceptingHandler$Builder",
+        "io.undertow.server.handlers.HttpTraceHandler$Builder",
+        "io.undertow.server.handlers.IPAddressAccessControlHandler$Builder",
+        "io.undertow.server.handlers.JDBCLogHandler$Builder",
+        "io.undertow.server.handlers.LearningPushHandler$Builder",
+        "io.undertow.server.handlers.LocalNameResolvingHandler$Builder",
+        "io.undertow.server.handlers.PathSeparatorHandler$Builder",
+        "io.undertow.server.handlers.PeerNameResolvingHandler$Builder",
+        "io.undertow.server.handlers.ProxyPeerAddressHandler$Builder",
+        "io.undertow.server.handlers.RedirectHandler$Builder",
+        "io.undertow.server.handlers.RequestBufferingHandler$Builder",
+        "io.undertow.server.handlers.RequestDumpingHandler$Builder",
+        "io.undertow.server.handlers.RequestLimitingHandler$Builder",
+        "io.undertow.server.handlers.ResponseRateLimitingHandler$Builder",
+        "io.undertow.server.handlers.SSLHeaderHandler$Builder",
+        "io.undertow.server.handlers.SameSiteCookieHandler$Builder",
+        "io.undertow.server.handlers.SecureCookieHandler$Builder",
+        "io.undertow.server.handlers.SetAttributeHandler$Builder",
+        "io.undertow.server.handlers.SetAttributeHandler$ClearBuilder",
+        "io.undertow.server.handlers.SetErrorHandler$Builder",
+        "io.undertow.server.handlers.SetHeaderHandler$Builder",
+        "io.undertow.server.handlers.StoredResponseHandler$Builder",
+        "io.undertow.server.handlers.StuckThreadDetectionHandler$Builder",
+        "io.undertow.server.handlers.URLDecodingHandler$Builder",
+        "io.undertow.server.handlers.accesslog.AccessLogHandler$Builder",
+        "io.undertow.server.handlers.builder.ResponseCodeHandlerBuilder",
+        "io.undertow.server.handlers.builder.RewriteHandlerBuilder",
+        "io.undertow.server.handlers.encoding.EncodingHandler$Builder",
+        "io.undertow.server.handlers.encoding.RequestEncodingHandler$Builder",
+        "io.undertow.server.handlers.error.FileErrorPageHandler$Builder",
+        "io.undertow.server.handlers.form.EagerFormParsingHandler$Builder",
+        "io.undertow.server.handlers.proxy.ProxyHandlerBuilder",
+        "io.undertow.server.handlers.resource.ResourceHandler$Builder"
+      ]
+    },
+    "org.eclipse.jdt:org.eclipse.jdt.compiler.tool": {
+      "javax.tools.JavaCompiler": [
+        "org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"
+      ]
+    },
+    "org.eclipse.platform:org.eclipse.osgi": {
+      "org.osgi.framework.connect.ConnectFrameworkFactory": [
+        "org.eclipse.osgi.launch.EquinoxFactory"
+      ],
+      "org.osgi.framework.launch.FrameworkFactory": [
+        "org.eclipse.osgi.launch.EquinoxFactory"
+      ]
+    },
+    "org.jboss.xnio:xnio-nio": {
+      "org.xnio.XnioProvider": ["org.xnio.nio.NioXnioProvider"]
+    },
+    "org.jline:jline": {
+      "org/": [],
+      "org/jline/": [],
+      "org/jline/terminal/": [],
+      "org/jline/terminal/provider/": [],
+      "org/jline/terminal/provider/exec": [
+        "class=org.jline.terminal.impl.exec.ExecTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jansi": [
+        "class=org.jline.terminal.impl.jansi.JansiTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jna": [
+        "class=org.jline.terminal.impl.jna.JnaTerminalProvider"
+      ]
+    },
+    "org.junit.jupiter:junit-jupiter-engine": {
+      "org.junit.platform.engine.TestEngine": [
+        "org.junit.jupiter.engine.JupiterTestEngine"
+      ]
+    },
+    "org.junit.platform:junit-platform-console": {
+      "java.util.spi.ToolProvider": [
+        "org.junit.platform.console.ConsoleLauncherToolProvider"
+      ]
+    },
+    "org.junit.platform:junit-platform-launcher": {
+      "org.junit.platform.launcher.TestExecutionListener": [
+        "org.junit.platform.launcher.listeners.UniqueIdTrackingListener"
+      ]
+    },
+    "org.junit.platform:junit-platform-reporting": {
+      "org.junit.platform.launcher.TestExecutionListener": [
+        "org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener"
+      ]
+    },
+    "org.scala-lang:scala-compiler": {
+      "javax.script.ScriptEngineFactory": [
+        "scala.tools.nsc.interpreter.shell.Scripted$Factory"
+      ]
+    },
+    "org.scalameta:mdoc_2.13": {
+      "mdoc.StringModifier": ["mdoc.modifiers.ScastieModifier"],
+      "mdoc.interfaces.Mdoc": ["mdoc.internal.worksheets.Mdoc"]
+    },
+    "org.scalameta:scalafmt-dynamic_2.13": {
+      "org.scalafmt.interfaces.Scalafmt": [
+        "org.scalafmt.dynamic.ScalafmtDynamic"
+      ]
+    },
+    "software.amazon.smithy:smithy-build": {
+      "software.amazon.smithy.build.ProjectionTransformer": [
+        "software.amazon.smithy.build.transforms.Apply",
+        "software.amazon.smithy.build.transforms.ChangeStringEnumsToEnumShapes",
+        "software.amazon.smithy.build.transforms.ChangeTypes",
+        "software.amazon.smithy.build.transforms.ExcludeMetadata",
+        "software.amazon.smithy.build.transforms.ExcludeShapesBySelector",
+        "software.amazon.smithy.build.transforms.ExcludeShapesByTag",
+        "software.amazon.smithy.build.transforms.ExcludeShapesByTrait",
+        "software.amazon.smithy.build.transforms.ExcludeTags",
+        "software.amazon.smithy.build.transforms.ExcludeTraits",
+        "software.amazon.smithy.build.transforms.ExcludeTraitsByTag",
+        "software.amazon.smithy.build.transforms.FilterSuppressions",
+        "software.amazon.smithy.build.transforms.FlattenNamespaces",
+        "software.amazon.smithy.build.transforms.IncludeMetadata",
+        "software.amazon.smithy.build.transforms.IncludeNamespaces",
+        "software.amazon.smithy.build.transforms.IncludeServices",
+        "software.amazon.smithy.build.transforms.IncludeShapesBySelector",
+        "software.amazon.smithy.build.transforms.IncludeShapesByTag",
+        "software.amazon.smithy.build.transforms.IncludeTags",
+        "software.amazon.smithy.build.transforms.IncludeTraits",
+        "software.amazon.smithy.build.transforms.IncludeTraitsByTag",
+        "software.amazon.smithy.build.transforms.RemoveTraitDefinitions",
+        "software.amazon.smithy.build.transforms.RemoveUnusedShapes",
+        "software.amazon.smithy.build.transforms.RenameShapes"
+      ],
+      "software.amazon.smithy.build.SmithyBuildPlugin": [
+        "software.amazon.smithy.build.plugins.BuildInfoPlugin",
+        "software.amazon.smithy.build.plugins.ModelPlugin",
+        "software.amazon.smithy.build.plugins.NullabilityReportPlugin",
+        "software.amazon.smithy.build.plugins.RunPlugin",
+        "software.amazon.smithy.build.plugins.SourcesPlugin"
+      ]
+    },
+    "software.amazon.smithy:smithy-model": {
+      "software.amazon.smithy.model.traits.TraitService": [
+        "software.amazon.smithy.model.traits.AddedDefaultTrait$Provider",
+        "software.amazon.smithy.model.traits.AuthDefinitionTrait$Provider",
+        "software.amazon.smithy.model.traits.AuthTrait$Provider",
+        "software.amazon.smithy.model.traits.BoxTrait$Provider",
+        "software.amazon.smithy.model.traits.ClientOptionalTrait$Provider",
+        "software.amazon.smithy.model.traits.CorsTrait$Provider",
+        "software.amazon.smithy.model.traits.DefaultTrait$Provider",
+        "software.amazon.smithy.model.traits.DeprecatedTrait$Provider",
+        "software.amazon.smithy.model.traits.DocumentationTrait$Provider",
+        "software.amazon.smithy.model.traits.EndpointTrait$Provider",
+        "software.amazon.smithy.model.traits.EnumTrait$Provider",
+        "software.amazon.smithy.model.traits.EnumValueTrait$Provider",
+        "software.amazon.smithy.model.traits.ErrorTrait$Provider",
+        "software.amazon.smithy.model.traits.EventHeaderTrait$Provider",
+        "software.amazon.smithy.model.traits.EventPayloadTrait$Provider",
+        "software.amazon.smithy.model.traits.ExamplesTrait$Provider",
+        "software.amazon.smithy.model.traits.ExternalDocumentationTrait$Provider",
+        "software.amazon.smithy.model.traits.HostLabelTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpApiKeyAuthTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpBasicAuthTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpBearerAuthTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpChecksumRequiredTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpDigestAuthTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpErrorTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpHeaderTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpLabelTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpPayloadTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpPrefixHeadersTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpQueryParamsTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpQueryTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpResponseCodeTrait$Provider",
+        "software.amazon.smithy.model.traits.HttpTrait$Provider",
+        "software.amazon.smithy.model.traits.IdRefTrait$Provider",
+        "software.amazon.smithy.model.traits.IdempotencyTokenTrait$Provider",
+        "software.amazon.smithy.model.traits.IdempotentTrait$Provider",
+        "software.amazon.smithy.model.traits.InputTrait$Provider",
+        "software.amazon.smithy.model.traits.InternalTrait$Provider",
+        "software.amazon.smithy.model.traits.JsonNameTrait$Provider",
+        "software.amazon.smithy.model.traits.LengthTrait$Provider",
+        "software.amazon.smithy.model.traits.MediaTypeTrait$Provider",
+        "software.amazon.smithy.model.traits.MixinTrait$Provider",
+        "software.amazon.smithy.model.traits.NestedPropertiesTrait$Provider",
+        "software.amazon.smithy.model.traits.NoReplaceTrait$Provider",
+        "software.amazon.smithy.model.traits.NotPropertyTrait$Provider",
+        "software.amazon.smithy.model.traits.OptionalAuthTrait$Provider",
+        "software.amazon.smithy.model.traits.OutputTrait$Provider",
+        "software.amazon.smithy.model.traits.PaginatedTrait$Provider",
+        "software.amazon.smithy.model.traits.PatternTrait$Provider",
+        "software.amazon.smithy.model.traits.PrivateTrait$Provider",
+        "software.amazon.smithy.model.traits.PropertyTrait$Provider",
+        "software.amazon.smithy.model.traits.ProtocolDefinitionTrait$Provider",
+        "software.amazon.smithy.model.traits.RangeTrait$Provider",
+        "software.amazon.smithy.model.traits.ReadonlyTrait$Provider",
+        "software.amazon.smithy.model.traits.RecommendedTrait$Provider",
+        "software.amazon.smithy.model.traits.ReferencesTrait$Provider",
+        "software.amazon.smithy.model.traits.RequestCompressionTrait$Provider",
+        "software.amazon.smithy.model.traits.RequiredTrait$Provider",
+        "software.amazon.smithy.model.traits.RequiresLengthTrait$Provider",
+        "software.amazon.smithy.model.traits.ResourceIdentifierTrait$Provider",
+        "software.amazon.smithy.model.traits.RetryableTrait$Provider",
+        "software.amazon.smithy.model.traits.SensitiveTrait$Provider",
+        "software.amazon.smithy.model.traits.SinceTrait$Provider",
+        "software.amazon.smithy.model.traits.SparseTrait$Provider",
+        "software.amazon.smithy.model.traits.StreamingTrait$Provider",
+        "software.amazon.smithy.model.traits.SuppressTrait$Provider",
+        "software.amazon.smithy.model.traits.TagsTrait$Provider",
+        "software.amazon.smithy.model.traits.TimestampFormatTrait$Provider",
+        "software.amazon.smithy.model.traits.TitleTrait$Provider",
+        "software.amazon.smithy.model.traits.TraitDefinition$Provider",
+        "software.amazon.smithy.model.traits.UniqueItemsTrait$Provider",
+        "software.amazon.smithy.model.traits.UnitTypeTrait$Provider",
+        "software.amazon.smithy.model.traits.UnstableTrait$Provider",
+        "software.amazon.smithy.model.traits.XmlAttributeTrait$Provider",
+        "software.amazon.smithy.model.traits.XmlFlattenedTrait$Provider",
+        "software.amazon.smithy.model.traits.XmlNameTrait$Provider",
+        "software.amazon.smithy.model.traits.XmlNamespaceTrait$Provider"
+      ],
+      "software.amazon.smithy.model.transform.ModelTransformerPlugin": [
+        "software.amazon.smithy.model.transform.plugins.CleanBindings",
+        "software.amazon.smithy.model.transform.plugins.CleanOperationStructures",
+        "software.amazon.smithy.model.transform.plugins.CleanResourceReferences",
+        "software.amazon.smithy.model.transform.plugins.CleanServiceRenames",
+        "software.amazon.smithy.model.transform.plugins.CleanStructureAndUnionMembers",
+        "software.amazon.smithy.model.transform.plugins.CleanTraitDefinitions",
+        "software.amazon.smithy.model.transform.plugins.RemoveMixins",
+        "software.amazon.smithy.model.transform.plugins.RemoveTraits"
+      ],
+      "software.amazon.smithy.model.validation.Validator": [
+        "software.amazon.smithy.model.validation.validators.AuthTraitValidator",
+        "software.amazon.smithy.model.validation.validators.DefaultTraitValidator",
+        "software.amazon.smithy.model.validation.validators.DefaultValueInUpdateValidator",
+        "software.amazon.smithy.model.validation.validators.DeprecatedTraitValidator",
+        "software.amazon.smithy.model.validation.validators.EnumShapeValidator",
+        "software.amazon.smithy.model.validation.validators.EnumTraitValidator",
+        "software.amazon.smithy.model.validation.validators.EventPayloadTraitValidator",
+        "software.amazon.smithy.model.validation.validators.ExamplesTraitValidator",
+        "software.amazon.smithy.model.validation.validators.ExclusiveStructureMemberTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HostLabelTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpApiKeyAuthTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpBindingTraitIgnoredValidator",
+        "software.amazon.smithy.model.validation.validators.HttpBindingsMissingValidator",
+        "software.amazon.smithy.model.validation.validators.HttpHeaderTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpLabelTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpMethodSemanticsValidator",
+        "software.amazon.smithy.model.validation.validators.HttpPayloadValidator",
+        "software.amazon.smithy.model.validation.validators.HttpPrefixHeadersTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpQueryParamsTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpQueryTraitValidator",
+        "software.amazon.smithy.model.validation.validators.HttpResponseCodeSemanticsValidator",
+        "software.amazon.smithy.model.validation.validators.HttpUriConflictValidator",
+        "software.amazon.smithy.model.validation.validators.HttpUriFormatValidator",
+        "software.amazon.smithy.model.validation.validators.JsonNameValidator",
+        "software.amazon.smithy.model.validation.validators.LengthTraitValidator",
+        "software.amazon.smithy.model.validation.validators.MediaTypeValidator",
+        "software.amazon.smithy.model.validation.validators.NoInlineDocumentSupportValidator",
+        "software.amazon.smithy.model.validation.validators.OperationValidator",
+        "software.amazon.smithy.model.validation.validators.PaginatedTraitValidator",
+        "software.amazon.smithy.model.validation.validators.PatternTraitValidator",
+        "software.amazon.smithy.model.validation.validators.PrivateAccessValidator",
+        "software.amazon.smithy.model.validation.validators.RangeTraitValidator",
+        "software.amazon.smithy.model.validation.validators.ReferencesTraitValidator",
+        "software.amazon.smithy.model.validation.validators.RequestCompressionTraitValidator",
+        "software.amazon.smithy.model.validation.validators.ResourceCycleValidator",
+        "software.amazon.smithy.model.validation.validators.ResourceIdentifierBindingValidator",
+        "software.amazon.smithy.model.validation.validators.ResourceIdentifierValidator",
+        "software.amazon.smithy.model.validation.validators.ResourceLifecycleValidator",
+        "software.amazon.smithy.model.validation.validators.ResourceOperationInputOutputValidator",
+        "software.amazon.smithy.model.validation.validators.ServiceAuthDefinitionsValidator",
+        "software.amazon.smithy.model.validation.validators.ServiceValidator",
+        "software.amazon.smithy.model.validation.validators.SetValidator",
+        "software.amazon.smithy.model.validation.validators.ShapeIdConflictValidator",
+        "software.amazon.smithy.model.validation.validators.ShapeRecursionValidator",
+        "software.amazon.smithy.model.validation.validators.SingleOperationBindingValidator",
+        "software.amazon.smithy.model.validation.validators.SingleResourceBindingValidator",
+        "software.amazon.smithy.model.validation.validators.StreamingTraitValidator",
+        "software.amazon.smithy.model.validation.validators.TargetValidator",
+        "software.amazon.smithy.model.validation.validators.TraitBreakingChangesValidator",
+        "software.amazon.smithy.model.validation.validators.TraitConflictValidator",
+        "software.amazon.smithy.model.validation.validators.TraitTargetValidator",
+        "software.amazon.smithy.model.validation.validators.TraitValueValidator",
+        "software.amazon.smithy.model.validation.validators.UnionValidator",
+        "software.amazon.smithy.model.validation.validators.UnitTypeValidator",
+        "software.amazon.smithy.model.validation.validators.UnstableTraitValidator",
+        "software.amazon.smithy.model.validation.validators.XmlNamespaceTraitValidator"
+      ],
+      "software.amazon.smithy.model.validation.ValidatorService": [
+        "software.amazon.smithy.model.validation.linters.EmitEachSelectorValidator$Provider",
+        "software.amazon.smithy.model.validation.linters.EmitNoneSelectorValidator$Provider",
+        "software.amazon.smithy.model.validation.linters.UnreferencedShapeValidator$Provider"
+      ]
+    }
+  },
   "version": "2"
 }

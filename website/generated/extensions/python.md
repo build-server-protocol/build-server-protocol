@@ -53,11 +53,11 @@ export interface PythonOptionsItem {
 
 ## BuildTargetData kinds
 
-### PythonBuildTarget
+### BuildTargetData
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"python"`.
+the `dataKind` field contains `python`.
 
 #### PythonBuildTarget
 

@@ -36,9 +36,7 @@ import traits.UntaggedUnionTrait
 
 class SmithyToIr(val model: Model, val config: IrConfig) {
 
-  data class PolymorphicData(val kind: String, val shapeId: ShapeId)
-
-  val allDataKindAnnotated: Map<ShapeId, List<PolymorphicData>> = run {
+  val allDataKindAnnotated: Map<ShapeId, List<PolymorphicDataKind>> = run {
     val allExtendableTypes = model.getShapesWithTrait(DataTrait::class.java).toList()
     val allExtendableTypeIds = allExtendableTypes.map { it.id }.toSet()
 
@@ -65,7 +63,9 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
             .groupBy { (_, _, referencedShapeId) -> referencedShapeId }
             .map { (dataType, shapeAndTraits) ->
               dataType to
-                  shapeAndTraits.map { (shape, dataKind, _) -> PolymorphicData(dataKind, shape.id) }
+                  shapeAndTraits.map { (shape, dataKind, _) ->
+                    PolymorphicDataKind(dataKind, shape.id, getHints(shape))
+                  }
             }
             .toMap()
 
@@ -84,7 +84,7 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
 
   private val toDefVisitor =
       object : ShapeVisitor.Default<List<Def>>() {
-        override fun getDefault(shape: Shape): List<Def> = emptyList()
+        override fun getDefault(shape: Shape): List<Def> = typeShape(shape)
 
         fun buildOperation(op: OperationShape): Operation? {
           val maybeMethod =
@@ -221,8 +221,7 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
             val values =
                 allKnownInhabitants.map { (kind, memberId) ->
                   val memberDoc = "`data` field must contain a ${memberId.name} object."
-                  PolymorphicDataKind(
-                      kind, getType(memberId)!!, listOf(Hint.Documentation(memberDoc)))
+                  PolymorphicDataKind(kind, memberId, listOf(Hint.Documentation(memberDoc)))
                 }
 
             val dataKinds = Def.DataKinds(id, openEnumId, values, hints)
@@ -241,12 +240,17 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
           } else emptyList()
         }
 
+        // Always resolves to a primitive (non-ref) type
         fun typeShape(shape: Shape): List<Def> {
           val hints = getHints(shape)
           val type =
               when (shape) {
                 is StringShape -> Type.String
                 is MapShape -> pureMapType(shape)
+                is ListShape -> Type.List(shape.member.accept(toTypeVisitor)!!)
+                is BooleanShape -> Type.Bool
+                is IntegerShape -> Type.Int
+                is LongShape -> Type.Long
                 else -> null
               }
 

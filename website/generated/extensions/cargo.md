@@ -16,7 +16,6 @@ protocol.
 ### CargoFeaturesState: request
 
 **Unstable** (may change in future versions)
-
 The cargo features state request is sent from the client to the server to
 query for the current state of the Cargo features. Provides also mapping
 between Cargo packages and build target identifiers.
@@ -47,7 +46,7 @@ export interface PackageFeatures {
   targets: BuildTargetIdentifier[];
 
   /** The list of available features for the Cargo package. */
-  availableFeatures: Map<Feature, Set<Feature>>;
+  availableFeatures: FeaturesDependencyGraph;
 
   /** The list of enabled features for the Cargo package. */
   enabledFeatures: Set<Feature>;
@@ -57,7 +56,6 @@ export interface PackageFeatures {
 ### SetCargoFeatures: request
 
 **Unstable** (may change in future versions)
-
 The enable cargo features request is sent from the client to the server to
 set provided features collection as a new state for
 the specified Cargo package.
@@ -93,11 +91,11 @@ export interface SetCargoFeaturesResult {
 
 ## BuildTargetData kinds
 
-### CargoBuildTarget
+### BuildTargetData
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"cargo"`.
+the `dataKind` field contains `cargo`.
 
 #### CargoBuildTarget
 

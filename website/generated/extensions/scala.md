@@ -63,8 +63,7 @@ export interface ScalacOptionsItem {
 
 ### BuildTargetScalaTestClasses: request
 
-**Deprecated**: Use buildTarget/jvmTestEnvironment instead
-
+**Deprecated**
 The Scala build target test classes request is sent from the client to the
 server to query for the list of fully qualified names of test classes in a given
 list of targets.
@@ -132,8 +131,7 @@ export interface ScalaTestClassesItem {
 
 ### BuildTargetScalaMainClasses: request
 
-**Deprecated**: Use buildTarget/jvmRunEnvironment instead
-
+**Deprecated**
 The build target main classes request is sent from the client to the server to
 query for the list of main classes that can be fed as arguments to
 `buildTarget/run`. This method can be used for the same use cases than the
@@ -205,19 +203,19 @@ export interface ScalaMainClass {
 
 ## RunParamsData kinds
 
-### ScalaMainClass
+### RunParamsData
 
 This structure is embedded in
 the `data?: RunParamsData` field, when
-the `dataKind` field contains `"scala-main-class"`.
+the `dataKind` field contains `scala-main-class`.
 
 ## DebugSessionParamsData kinds
 
-### ScalaAttachRemote
+### DebugSessionParamsData
 
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-attach-remote"`.
+the `dataKind` field contains `scala-attach-remote`.
 
 #### ScalaAttachRemote
 
@@ -227,67 +225,19 @@ The debug session will connect to a running process. The DAP client will send th
 export interface ScalaAttachRemote {}
 ```
 
-### ScalaMainClass
+### DebugSessionParamsData
 
 This structure is embedded in
 the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-main-class"`.
-
-## BuildTargetData kinds
-
-### ScalaBuildTarget
-
-This structure is embedded in
-the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"scala"`.
-
-#### ScalaBuildTarget
-
-`ScalaBuildTarget` is a basic data structure that contains scala-specific
-metadata for compiling a target containing Scala sources.
-
-```ts
-export interface ScalaBuildTarget {
-  /** The Scala organization that is used for a target. */
-  scalaOrganization: string;
-
-  /** The scala version to compile this target */
-  scalaVersion: string;
-
-  /** The binary version of scalaVersion.
-   * For example, 2.12 if scalaVersion is 2.12.4. */
-  scalaBinaryVersion: string;
-
-  /** The target platform for this target */
-  platform: ScalaPlatform;
-
-  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
-  jars: URI[];
-
-  /** The jvm build target describing jdk to be used */
-  jvmBuildTarget?: JvmBuildTarget;
-}
-```
-
-#### ScalaPlatform
-
-```ts
-export enum ScalaPlatform {
-  Jvm = 1,
-
-  Js = 2,
-
-  Native = 3,
-}
-```
+the `dataKind` field contains `scala-main-class`.
 
 ## DiagnosticData kinds
 
-### ScalaDiagnostic
+### DiagnosticData
 
 This structure is embedded in
 the `data?: DiagnosticData` field, when
-the `dataKind` field contains `"scala"`.
+the `dataKind` field contains `scala`.
 
 #### ScalaDiagnostic
 
@@ -349,13 +299,59 @@ export interface ScalaTextEdit {
 }
 ```
 
+## BuildTargetData kinds
+
+### BuildTargetData
+
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `scala`.
+
+#### ScalaBuildTarget
+
+`ScalaBuildTarget` is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources.
+
+```ts
+export interface ScalaBuildTarget {
+  /** The Scala organization that is used for a target. */
+  scalaOrganization: string;
+
+  /** The scala version to compile this target */
+  scalaVersion: string;
+
+  /** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: string;
+
+  /** The target platform for this target */
+  platform: ScalaPlatform;
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  jars: URI[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget?: JvmBuildTarget;
+}
+```
+
+#### ScalaPlatform
+
+```ts
+export enum ScalaPlatform {
+  Jvm = 1,
+  Js = 2,
+  Native = 3,
+}
+```
+
 ## TestParamsData kinds
 
-### ScalaTestParams
+### TestParamsData
 
 This structure is embedded in
 the `data?: TestParamsData` field, when
-the `dataKind` field contains `"scala-test"`.
+the `dataKind` field contains `scala-test`.
 
 #### ScalaTestParams
 
@@ -373,25 +369,26 @@ export interface ScalaTestParams {
 }
 ```
 
-### ScalaTestSuiteClasses
+### TestParamsData
 
 This structure is embedded in
 the `data?: TestParamsData` field, when
-the `dataKind` field contains `"scala-test-suites"`.
+the `dataKind` field contains `scala-test-suites`.
 
 #### ScalaTestSuiteClasses
 
 Each element of this array is a fully qualified class name.
 
 ```ts
+/** Each element of this array is a fully qualified class name. */
 export type ScalaTestSuiteClasses = string[];
 ```
 
-### ScalaTestSuites
+### TestParamsData
 
 This structure is embedded in
 the `data?: TestParamsData` field, when
-the `dataKind` field contains `"scala-test-suites-selection"`.
+the `dataKind` field contains `scala-test-suites-selection`.
 
 #### ScalaTestSuites
 

@@ -55,6 +55,24 @@ sealed interface Def {
   ) : Def
 }
 
+fun Def.referencedShapeIds(): List<ShapeId> =
+    when (this) {
+      is Def.Alias ->
+          when (aliasedType) {
+            is Type.Ref -> listOf(aliasedType.shapeId)
+            else -> emptyList()
+          }
+      is Def.Service ->
+          operations
+              .flatMap { listOf(it.inputType, it.outputType) }
+              .flatMap { it.referencedShapeIds() }
+      is Def.Structure -> fields.flatMap { it.type.referencedShapeIds() }
+      is Def.OpenEnum<*> -> emptyList()
+      is Def.ClosedEnum<*> -> emptyList()
+      is Def.DataKinds -> kinds.map { it.shape }
+      is Def.UntaggedUnion -> members.flatMap { it.referencedShapeIds() }
+    }
+
 sealed interface Type {
   // primitive types
   object Unit : Type
@@ -82,6 +100,37 @@ sealed interface Type {
   // Def as type
   data class UntaggedUnion(val members: kotlin.collections.List<Type>) : Type
 }
+
+// fun Type.referencedShapeIds(): List<ShapeId> {
+//  val set = mutableSetOf<ShapeId>()
+//
+//  fun go(type: Type) {
+//    when (type) {
+//      is Type.Ref -> set.add(type.shapeId)
+//      is Type.Set -> go(type.member)
+//      is Type.List -> go(type.member)
+//      is Type.Map -> {
+//        go(type.key)
+//        go(type.value)
+//      }
+//      is Type.UntaggedUnion -> type.members.forEach(::go)
+//      else -> {}
+//    }
+//  }
+//
+//  go(this)
+//  return set.toList()
+// }
+
+fun Type.referencedShapeIds(): List<ShapeId> =
+    when (this) {
+      is Type.Ref -> listOf(shapeId)
+      is Type.Set -> member.referencedShapeIds()
+      is Type.List -> member.referencedShapeIds()
+      is Type.Map -> key.referencedShapeIds() + value.referencedShapeIds()
+      is Type.UntaggedUnion -> members.flatMap { it.referencedShapeIds() }
+      else -> emptyList()
+    }
 
 sealed interface JsonRpcMethodType {
   object Request : JsonRpcMethodType
@@ -111,7 +160,7 @@ sealed interface EnumType<A> {
 
 data class EnumValue<A>(val name: String, val value: A, val hints: List<Hint>)
 
-data class PolymorphicDataKind(val kind: String, val shape: Type, val hints: List<Hint>)
+data class PolymorphicDataKind(val kind: String, val shape: ShapeId, val hints: List<Hint>)
 
 sealed interface Hint {
   data class Documentation(val string: String) : Hint

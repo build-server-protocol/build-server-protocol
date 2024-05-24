@@ -1,8 +1,8 @@
-bazel_dep(name = "bazel_skylib", version = "1.5.0")
-bazel_dep(name = "rules_python", version = "0.31.0")
+bazel_dep(name = "bazel_skylib", version = "1.6.1")
+bazel_dep(name = "rules_python", version = "0.32.2")
 bazel_dep(name = "rules_kotlin", version = "1.9.5")
-bazel_dep(name = "rules_java", version = "7.5.0")
-bazel_dep(name = "rules_jvm_external", version = "6.0")
+bazel_dep(name = "rules_java", version = "7.6.1")
+bazel_dep(name = "rules_jvm_external", version = "6.1")
 
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
@@ -89,12 +89,12 @@ use_repo(
     "unpinned_maven",
 )
 
-bazel_dep(name = "rules_nodejs", version = "6.1.0")
+bazel_dep(name = "rules_nodejs", version = "6.1.1")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(node_version = "20.11.1")
 
-bazel_dep(name = "aspect_rules_js", version = "1.41.2")
+bazel_dep(name = "aspect_rules_js", version = "2.0.0-rc1")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
@@ -107,8 +107,8 @@ npm.npm_translate_lock(
 use_repo(npm, "npm")
 
 bazel_dep(name = "rules_multirun", version = "0.9.0")
-bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
-bazel_dep(name = "aspect_bazel_lib", version = "2.6.1")
+bazel_dep(name = "aspect_rules_lint", version = "1.0.0-rc1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.7.6")
 
 bazel_dep(
     name = "buildifier_prebuilt",

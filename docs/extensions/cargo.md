@@ -8,5 +8,5 @@ The following section contains Cargo-specific extensions to the build server
 protocol.
 
 ```scala mdoc:passthrough
-bsp.codegen.docs.Codegen.printDocs("bsp.cargo")
+Console.println(bsp.codegen.docs.Codegen.docs("bsp.cargo"))
 ```
