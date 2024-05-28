@@ -20,7 +20,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: coursier/cache-action@v6
       - name: Mount bazel cache
         uses: actions/cache@v4
         with:
@@ -34,7 +33,7 @@ jobs:
       - name: Test
         run: bazel test //...
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v19
+        uses: tj-actions/verify-changed-files@v20
         id: verify-changed-files
         with:
           files: |
