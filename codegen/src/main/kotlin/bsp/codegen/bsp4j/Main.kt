@@ -24,6 +24,7 @@ object Main {
     val config =
         IrConfig(
             strings = TypeAliasing.Pure,
+            numbers = TypeAliasing.Pure,
             maps = TypeAliasing.Pure,
             dataWithKind = AbstractionLevel.AsType,
             openEnums = AbstractionLevel.AsType,

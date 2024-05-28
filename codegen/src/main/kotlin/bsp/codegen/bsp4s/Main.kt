@@ -21,6 +21,7 @@ object Main {
 
     val config =
         IrConfig(
+            numbers = TypeAliasing.Pure,
             strings = TypeAliasing { it == ShapeId.fromParts("bsp", "URI") },
             maps = TypeAliasing.Pure,
             dataWithKind = AbstractionLevel.AsType,

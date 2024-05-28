@@ -129,8 +129,9 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
         fun getType(shapeId: ShapeId?): Type? =
             shapeId?.let { model.expectShape(it).accept(toTypeVisitor) }
 
-        fun dataKindShapeId(dataTypeShapeId: ShapeId): ShapeId =
-            ShapeId.fromParts(dataTypeShapeId.namespace, dataTypeShapeId.name + "Kind")
+        fun dataKindShapeId(dataShapeId: ShapeId): ShapeId {
+          return ShapeId.fromParts(dataShapeId.namespace, dataShapeId.name + "Kind")
+        }
 
         override fun structureShape(shape: StructureShape): List<Def> {
           // Skip shapes that are used as mixins.
@@ -140,16 +141,22 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
 
           var fields = shape.members().mapNotNull { toField(it) }
 
-          fun fieldIsData(field: Field): Boolean = field.name == "data" && field.type == Type.Json
+          fun fieldIsData(field: Field): Boolean = field.name == "data"
 
           fun makeDiscriminatorField(dataField: Field): Field {
             val doc =
                 "Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified."
             val hints = listOf(Hint.Documentation(doc))
-            if (dataField.type != Type.Json) {
-              throw RuntimeException("Expected document type")
-            }
-            return Field("dataKind", Type.String, false, hints)
+            val type =
+                if (config.dataWithKind == AbstractionLevel.AsDef) {
+                  val dataShapeId =
+                      when (val dataShape = dataField.type) {
+                        is Type.Ref -> dataShape.shapeId
+                        else -> throw RuntimeException("Data field must be a reference.")
+                      }
+                  Type.Ref(dataKindShapeId(dataShapeId))
+                } else Type.String
+            return Field("dataKind", type, false, hints)
           }
 
           fun insertDiscriminator(fields: List<Field>): List<Field> {
@@ -164,9 +171,7 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
             return mutableFields
           }
 
-          if (config.dataWithKind == AbstractionLevel.AsType) {
-            fields = insertDiscriminator(fields)
-          }
+          fields = insertDiscriminator(fields)
 
           return listOf(Def.Structure(shape.id, fields, getHints(shape)))
         }
@@ -257,6 +262,12 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
           return listOfNotNull(type?.let { Def.Alias(shape.id, it, hints) })
         }
 
+        override fun integerShape(shape: IntegerShape): List<Def> =
+            if (config.numbers.aliased(shape.id)) typeShape(shape) else emptyList()
+
+        override fun longShape(shape: LongShape): List<Def> =
+            if (config.numbers.aliased(shape.id)) typeShape(shape) else emptyList()
+
         override fun stringShape(shape: StringShape): List<Def> =
             if (config.strings.aliased(shape.id)) typeShape(shape) else emptyList()
 
@@ -275,9 +286,11 @@ class SmithyToIr(val model: Model, val config: IrConfig) {
 
         override fun booleanShape(shape: BooleanShape): Type = Type.Bool
 
-        override fun integerShape(shape: IntegerShape): Type = Type.Int
+        override fun integerShape(shape: IntegerShape): Type =
+            if (config.numbers.aliased(shape.id)) Type.Ref(shape.id) else Type.Int
 
-        override fun longShape(shape: LongShape): Type = Type.Long
+        override fun longShape(shape: LongShape): Type =
+            if (config.numbers.aliased(shape.id)) Type.Ref(shape.id) else Type.Long
 
         override fun stringShape(shape: StringShape): Type =
             if (config.strings.aliased(shape.id)) Type.Ref(shape.id) else Type.String

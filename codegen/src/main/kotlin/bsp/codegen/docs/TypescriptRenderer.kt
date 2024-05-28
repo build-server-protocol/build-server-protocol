@@ -8,7 +8,7 @@ import bsp.codegen.common.ir.EnumValue
 import bsp.codegen.common.ir.Field
 import bsp.codegen.common.ir.Hint
 import bsp.codegen.common.ir.Type
-import bsp.codegen.common.util.kebabToUpperCamelCase
+import bsp.codegen.common.util.snakeToUpperCamelCase
 import kotlin.math.max
 
 class TypescriptRenderer {
@@ -19,14 +19,13 @@ class TypescriptRenderer {
       is Def.Structure -> renderStructure(definition)
       is Def.ClosedEnum<*> -> renderClosedEnum(definition)
       is Def.OpenEnum<*> -> renderOpenEnum(definition)
-      is Def.Service -> null
-      is Def.DataKinds -> null
-      is Def.UntaggedUnion -> null
+      is Def.Service -> throw RuntimeException("Service should not be rendered")
+      is Def.DataKinds -> throw RuntimeException("DataKinds should not be rendered")
+      is Def.UntaggedUnion -> throw RuntimeException("UntaggedUnion should not be rendered")
     }
   }
 
   fun renderAlias(definition: Def.Alias): CodeBlock = code {
-    include(renderDocumentation(definition.hints))
     -"export type ${definition.shapeId.name} = ${renderType(definition.aliasedType)};"
   }
 
@@ -39,10 +38,14 @@ class TypescriptRenderer {
     val (withoutLast, last) = definition.fields.splitAtLast()
     block("export interface ${definition.shapeId.name}") {
       withoutLast.forEach {
-        include(renderTSField(it))
+        include(renderDocumentation(it.hints))
+        -renderTSField(it)
         newline()
       }
-      last.forEach { include(renderTSField(it)) }
+      last.forEach {
+        include(renderDocumentation(it.hints))
+        -renderTSField(it)
+      }
     }
   }
 
@@ -51,30 +54,38 @@ class TypescriptRenderer {
       definition.values.forEach {
         include(renderDocumentation(it.hints))
         -"${renderStaticValue(definition.enumType)(it)},"
+        newline()
       }
     }
   }
 
   fun renderOpenEnum(definition: Def.OpenEnum<*>): CodeBlock = code {
+    val enumType =
+        renderType(
+            when (definition.enumType) {
+              is EnumType.IntEnum -> Type.Int
+              is EnumType.StringEnum -> Type.String
+            })
+    -"export type ${definition.shapeId.name} = $enumType;"
+    newline()
     block("export namespace ${definition.shapeId.name}") {
       definition.values.forEach {
         include(renderDocumentation(it.hints))
         -"export const ${renderStaticValue(definition.enumType)(it)};"
+        newline()
       }
     }
   }
 
   fun renderStaticValue(enumType: EnumType<*>): (EnumValue<*>) -> String = { value ->
     when (enumType) {
-      is EnumType.IntEnum -> "${value.name.kebabToUpperCamelCase()} = ${value.value}"
-      is EnumType.StringEnum -> "${value.name.kebabToUpperCamelCase()} = \"${value.value}\""
+      is EnumType.IntEnum -> "${value.name.snakeToUpperCamelCase()} = ${value.value}"
+      is EnumType.StringEnum -> "${value.name.snakeToUpperCamelCase()} = \"${value.value}\""
     }
   }
 
-  fun renderTSField(field: Field): CodeBlock = code {
-    include(renderDocumentation(field.hints))
-    -"${field.name}${"?".takeUnless { field.required } ?: ""}: ${renderType(field.type)};"
-  }
+  fun renderTSField(field: Field): String =
+      "${field.name}${"?".takeUnless { field.required } ?: ""}: ${renderType(field.type)};"
 
   fun renderType(tpe: Type): String =
       when (tpe) {

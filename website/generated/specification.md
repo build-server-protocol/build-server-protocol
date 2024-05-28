@@ -116,7 +116,6 @@ server like Dotty IDE). It is up to the client to decide when to start
 An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
 
 ```ts
-/** An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive). */
 export type Integer = number;
 ```
 
@@ -125,7 +124,6 @@ export type Integer = number;
 A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
 
 ```ts
-/** A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive). */
 export type Long = number;
 ```
 
@@ -178,6 +176,9 @@ export interface BuildTarget {
   /** The capabilities of this build target. */
   capabilities: BuildTargetCapabilities;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: BuildTargetDataKind;
+
   /** Language-specific metadata about this target.
    * See ScalaBuildTarget as an example. */
   data?: BuildTargetData;
@@ -202,8 +203,6 @@ A resource identifier that is a valid URI according to rfc3986:
 https://tools.ietf.org/html/rfc3986
 
 ```ts
-/** A resource identifier that is a valid URI according to rfc3986:
- * https://tools.ietf.org/html/rfc3986 */
 export type URI = string;
 ```
 
@@ -212,22 +211,28 @@ export type URI = string;
 A list of predefined tags that can be used to categorize build targets.
 
 ```ts
+export type BuildTargetTag = string;
+
 export namespace BuildTargetTag {
   /** Target contains source code for producing any kind of application, may have
    * but does not require the `canRun` capability. */
   export const Application = "application";
+
   /** Target contains source code to measure performance of a program, may have
    * but does not require the `canRun` build target capability. */
   export const Benchmark = "benchmark";
+
   /** Target contains source code for integration testing purposes, may have
    * but does not require the `canTest` capability.
    * The difference between "test" and "integration-test" is that
    * integration tests traditionally run slower compared to normal tests
    * and require more computing resources to execute. */
-  export const Integration_test = "integration-test";
+  export const IntegrationTest = "integration-test";
+
   /** Target contains re-usable functionality for downstream targets. May have any
    * combination of capabilities. */
   export const Library = "library";
+
   /** Actions on the target such as build and test should only be invoked manually
    * and explicitly. For example, triggering a build on all targets in the workspace
    * should by default not include this target.
@@ -235,8 +240,10 @@ export namespace BuildTargetTag {
    * that exists in Bazel, where targets with this tag have to be specified explicitly
    * on the command line. */
   export const Manual = "manual";
+
   /** Target should be ignored by IDEs. */
-  export const No_ide = "no-ide";
+  export const NoIde = "no-ide";
+
   /** Target contains source code for testing purposes, may have but does not
    * require the `canTest` capability. */
   export const Test = "test";
@@ -249,8 +256,6 @@ Language IDs are defined here
 https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem
 
 ```ts
-/** Language IDs are defined here
- * https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem */
 export type LanguageId = string;
 ```
 
@@ -275,14 +280,43 @@ export interface BuildTargetCapabilities {
 }
 ```
 
+#### BuildTargetDataKind
+
+```ts
+export type BuildTargetDataKind = string;
+
+export namespace BuildTargetDataKind {
+  /** `data` field must contain a CargoBuildTarget object. */
+  export const Cargo = "cargo";
+
+  /** `data` field must contain a CppBuildTarget object. */
+  export const Cpp = "cpp";
+
+  /** `data` field must contain a JvmBuildTarget object. */
+  export const Jvm = "jvm";
+
+  /** `data` field must contain a PythonBuildTarget object. */
+  export const Python = "python";
+
+  /** `data` field must contain a SbtBuildTarget object. */
+  export const Sbt = "sbt";
+
+  /** `data` field must contain a ScalaBuildTarget object. */
+  export const Scala = "scala";
+}
+```
+
 #### BuildTargetData
+
+```ts
+export type BuildTargetData = any;
+```
 
 #### OriginId
 
 Represents the identifier of a BSP request.
 
 ```ts
-/** Represents the identifier of a BSP request. */
 export type OriginId = string;
 ```
 
@@ -320,8 +354,10 @@ Included in notifications of tasks or requests to signal the completion state.
 export enum StatusCode {
   /** Execution was successful. */
   Ok = 1,
+
   /** Execution failed. */
   Error = 2,
+
   /** Execution was cancelled. */
   Cancelled = 3,
 }
@@ -369,6 +405,9 @@ export interface InitializeBuildParams {
   /** The capabilities of the client */
   capabilities: BuildClientCapabilities;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: InitializeBuildParamsDataKind;
+
   /** Additional metadata about the client */
   data?: InitializeBuildParamsData;
 }
@@ -391,7 +430,19 @@ export interface BuildClientCapabilities {
 }
 ```
 
+#### InitializeBuildParamsDataKind
+
+```ts
+export type InitializeBuildParamsDataKind = string;
+
+export namespace InitializeBuildParamsDataKind {}
+```
+
 #### InitializeBuildParamsData
+
+```ts
+export type InitializeBuildParamsData = any;
+```
 
 #### InitializeBuildResult
 
@@ -408,6 +459,9 @@ export interface InitializeBuildResult {
 
   /** The capabilities of the build server */
   capabilities: BuildServerCapabilities;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: InitializeBuildResultDataKind;
 
   /** Additional metadata about the server */
   data?: InitializeBuildResultData;
@@ -512,7 +566,19 @@ export interface DebugProvider {
 }
 ```
 
+#### InitializeBuildResultDataKind
+
+```ts
+export type InitializeBuildResultDataKind = string;
+
+export namespace InitializeBuildResultDataKind {}
+```
+
 #### InitializeBuildResultData
+
+```ts
+export type InitializeBuildResultData = any;
+```
 
 ### OnBuildInitialized: notification
 
@@ -634,6 +700,7 @@ export interface SourceItem {
 export enum SourceItemKind {
   /** The source item references a normal file. */
   File = 1,
+
   /** The source item references a directory. */
   Directory = 2,
 }
@@ -768,13 +835,31 @@ export interface DependencyModule {
   /** Module version */
   version: string;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: DependencyModuleDataKind;
+
   /** Language-specific metadata about this module.
    * See MavenDependencyModule as an example. */
   data?: DependencyModuleData;
 }
 ```
 
+#### DependencyModuleDataKind
+
+```ts
+export type DependencyModuleDataKind = string;
+
+export namespace DependencyModuleDataKind {
+  /** `data` field must contain a MavenDependencyModule object. */
+  export const Maven = "maven";
+}
+```
+
 #### DependencyModuleData
+
+```ts
+export type DependencyModuleData = any;
+```
 
 ### BuildTargetResources: request
 
@@ -880,6 +965,7 @@ export interface OutputPathItem {
 export enum OutputPathItemKind {
   /** The output path item references a normal file. */
   File = 1,
+
   /** The output path item references a directory. */
   Directory = 2,
 }
@@ -923,13 +1009,28 @@ export interface CompileResult {
   /** A status code for the execution. */
   statusCode: StatusCode;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: CompileResultDataKind;
+
   /** A field containing language-specific information, like products
    * of compilation or compiler-specific metadata the client needs to know. */
   data?: CompileResultData;
 }
 ```
 
+#### CompileResultDataKind
+
+```ts
+export type CompileResultDataKind = string;
+
+export namespace CompileResultDataKind {}
+```
+
 #### CompileResultData
+
+```ts
+export type CompileResultData = any;
+```
 
 ### BuildTargetRun: request
 
@@ -982,13 +1083,31 @@ export interface RunParams {
   /** Optional working directory */
   workingDirectory?: URI;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: RunParamsDataKind;
+
   /** Language-specific metadata for this execution.
    * See ScalaMainClass as an example. */
   data?: RunParamsData;
 }
 ```
 
+#### RunParamsDataKind
+
+```ts
+export type RunParamsDataKind = string;
+
+export namespace RunParamsDataKind {
+  /** `data` field must contain a ScalaMainClass object. */
+  export const ScalaMainClass = "scala-main-class";
+}
+```
+
 #### RunParamsData
+
+```ts
+export type RunParamsData = any;
+```
 
 #### RunResult
 
@@ -1035,13 +1154,37 @@ export interface TestParams {
   /** Optional working directory */
   workingDirectory?: URI;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TestParamsDataKind;
+
   /** Language-specific metadata about for this test execution.
    * See ScalaTestParams as an example. */
   data?: TestParamsData;
 }
 ```
 
+#### TestParamsDataKind
+
+```ts
+export type TestParamsDataKind = string;
+
+export namespace TestParamsDataKind {
+  /** `data` field must contain a ScalaTestParams object. */
+  export const ScalaTest = "scala-test";
+
+  /** `data` field must contain a ScalaTestSuiteClasses object. */
+  export const ScalaTestSuites = "scala-test-suites";
+
+  /** `data` field must contain a ScalaTestSuites object. */
+  export const ScalaTestSuitesSelection = "scala-test-suites-selection";
+}
+```
+
 #### TestParamsData
+
+```ts
+export type TestParamsData = any;
+```
 
 #### TestResult
 
@@ -1053,13 +1196,28 @@ export interface TestResult {
   /** A status code for the execution. */
   statusCode: StatusCode;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TestResultDataKind;
+
   /** Language-specific metadata about the test result.
    * See ScalaTestParams as an example. */
   data?: TestResultData;
 }
 ```
 
+#### TestResultDataKind
+
+```ts
+export type TestResultDataKind = string;
+
+export namespace TestResultDataKind {}
+```
+
 #### TestResultData
+
+```ts
+export type TestResultData = any;
+```
 
 ### DebugSessionStart: request
 
@@ -1078,13 +1236,34 @@ export interface DebugSessionParams {
   /** A sequence of build targets affected by the debugging action. */
   targets: BuildTargetIdentifier[];
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: DebugSessionParamsDataKind;
+
   /** Language-specific metadata for this execution.
    * See ScalaMainClass as an example. */
   data?: DebugSessionParamsData;
 }
 ```
 
+#### DebugSessionParamsDataKind
+
+```ts
+export type DebugSessionParamsDataKind = string;
+
+export namespace DebugSessionParamsDataKind {
+  /** `data` field must contain a ScalaAttachRemote object. */
+  export const ScalaAttachRemote = "scala-attach-remote";
+
+  /** `data` field must contain a ScalaMainClass object. */
+  export const ScalaMainClass = "scala-main-class";
+}
+```
+
 #### DebugSessionParamsData
+
+```ts
+export type DebugSessionParamsData = any;
+```
 
 #### DebugSessionAddress
 
@@ -1136,6 +1315,7 @@ export interface CleanCacheResult {
 ### OnRunReadStdin: notification
 
 **Unstable** (may change in future versions)
+
 Notification sent from the client to the server when the user wants to send
 input to the stdin of the running target.
 
@@ -1198,10 +1378,13 @@ export interface ShowMessageParams {
 export enum MessageType {
   /** An error message. */
   Error = 1,
+
   /** A warning message. */
   Warning = 2,
+
   /** An information message. */
   Info = 3,
+
   /** A log message. */
   Log = 4,
 }
@@ -1295,7 +1478,7 @@ export interface Diagnostic {
   severity?: DiagnosticSeverity;
 
   /** The diagnostic's code, which might appear in the user interface. */
-  code?: string | number;
+  code?: string | Integer;
 
   /** An optional property to describe the error code. */
   codeDescription?: CodeDescription;
@@ -1313,6 +1496,9 @@ export interface Diagnostic {
   /** An array of related diagnostic information, e.g. when symbol-names within
    * a scope collide all definitions can be marked via this property. */
   relatedInformation?: DiagnosticRelatedInformation[];
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: DiagnosticDataKind;
 
   /** A data entry field that is preserved between a
    * `textDocument/publishDiagnostics` notification and
@@ -1338,13 +1524,13 @@ export interface Range {
 ```ts
 export interface Position {
   /** Line position in a document (zero-based). */
-  line: number;
+  line: Integer;
 
   /** Character offset on a line in a document (zero-based)
    *
    * If the character value is greater than the line length it defaults back
    * to the line length. */
-  character: number;
+  character: Integer;
 }
 ```
 
@@ -1354,10 +1540,13 @@ export interface Position {
 export enum DiagnosticSeverity {
   /** Reports an error. */
   Error = 1,
+
   /** Reports a warning. */
   Warning = 2,
+
   /** Reports an information. */
   Information = 3,
+
   /** Reports a hint. */
   Hint = 4,
 }
@@ -1377,12 +1566,15 @@ export interface CodeDescription {
 #### DiagnosticTag
 
 ```ts
+export type DiagnosticTag = number;
+
 export namespace DiagnosticTag {
   /** Unused or unnecessary code.
    *
    * Clients are allowed to render diagnostics with this tag faded out
    * instead of having an error squiggle. */
   export const Unnecessary = 1;
+
   /** Deprecated or obsolete code.
    *
    * Clients are allowed to rendered diagnostics with this tag strike through. */
@@ -1416,7 +1608,22 @@ export interface Location {
 }
 ```
 
+#### DiagnosticDataKind
+
+```ts
+export type DiagnosticDataKind = string;
+
+export namespace DiagnosticDataKind {
+  /** `data` field must contain a ScalaDiagnostic object. */
+  export const Scala = "scala";
+}
+```
+
 #### DiagnosticData
+
+```ts
+export type DiagnosticData = any;
+```
 
 ### OnBuildTargetDidChange: notification
 
@@ -1445,6 +1652,9 @@ export interface BuildTargetEvent {
   /** The kind of change for this build target */
   kind?: BuildTargetEventKind;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: BuildTargetEventDataKind;
+
   /** Any additional metadata about what information changed. */
   data?: BuildTargetEventData;
 }
@@ -1459,14 +1669,28 @@ reindexing or update the user interface with the new information.
 export enum BuildTargetEventKind {
   /** The build target is new. */
   Created = 1,
+
   /** The build target has changed. */
   Changed = 2,
+
   /** The build target has been deleted. */
   Deleted = 3,
 }
 ```
 
+#### BuildTargetEventDataKind
+
+```ts
+export type BuildTargetEventDataKind = string;
+
+export namespace BuildTargetEventDataKind {}
+```
+
 #### BuildTargetEventData
+
+```ts
+export type BuildTargetEventData = any;
+```
 
 ### OnBuildTaskStart: notification
 
@@ -1505,10 +1729,13 @@ export interface TaskStartParams {
   originId?: Identifier;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: number;
+  eventTime?: Long;
 
   /** Message describing the task. */
   message?: string;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TaskStartDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
@@ -1516,7 +1743,7 @@ export interface TaskStartParams {
 }
 ```
 
-#### TaskStartData
+#### TaskStartDataKind
 
 Task start notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
@@ -1525,42 +1752,25 @@ specified in the `dataKind` field.
 There are predefined kinds of objects for compile and test tasks, as described
 in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 
-#### CompileTask
-
-The beginning of a compilation unit may be signalled to the client with a
-`build/taskStart` notification. When the compilation unit is a build target, the
-notification's `dataKind` field must be "compile-task" and the `data` field must
-include a `CompileTask` object:
-
 ```ts
-export interface CompileTask {
-  target: BuildTargetIdentifier;
+export type TaskStartDataKind = string;
+
+export namespace TaskStartDataKind {
+  /** `data` field must contain a CompileTask object. */
+  export const CompileTask = "compile-task";
+
+  /** `data` field must contain a TestStart object. */
+  export const TestStart = "test-start";
+
+  /** `data` field must contain a TestTask object. */
+  export const TestTask = "test-task";
 }
 ```
 
-#### TestStart
+#### TaskStartData
 
 ```ts
-export interface TestStart {
-  /** Name or description of the test. */
-  displayName: string;
-
-  /** Source location of the test, as LSP location. */
-  location?: Location;
-}
-```
-
-#### TestTask
-
-The beginning of a testing unit may be signalled to the client with a
-`build/taskStart` notification. When the testing unit is a build target, the
-notification's `dataKind` field must be `test-task` and the `data` field must
-include a `TestTask` object.
-
-```ts
-export interface TestTask {
-  target: BuildTargetIdentifier;
-}
+export type TaskStartData = any;
 ```
 
 ### OnBuildTaskProgress: notification
@@ -1582,19 +1792,22 @@ export interface TaskProgressParams {
   originId?: Identifier;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: number;
+  eventTime?: Long;
 
   /** Message describing the task. */
   message?: string;
 
   /** If known, total amount of work units in this task. */
-  total?: number;
+  total?: Long;
 
   /** If known, completed amount of work units in this task. */
-  progress?: number;
+  progress?: Long;
 
   /** Name of a work unit. For example, "files" or "tests". May be empty. */
   unit?: string;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TaskProgressDataKind;
 
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
@@ -1602,11 +1815,23 @@ export interface TaskProgressParams {
 }
 ```
 
-#### TaskProgressData
+#### TaskProgressDataKind
 
 Task progress notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
+
+```ts
+export type TaskProgressDataKind = string;
+
+export namespace TaskProgressDataKind {}
+```
+
+#### TaskProgressData
+
+```ts
+export type TaskProgressData = any;
+```
 
 ### OnBuildTaskFinish: notification
 
@@ -1627,7 +1852,7 @@ export interface TaskFinishParams {
   originId?: Identifier;
 
   /** Timestamp of when the event started in milliseconds since Epoch. */
-  eventTime?: number;
+  eventTime?: Long;
 
   /** Message describing the task. */
   message?: string;
@@ -1635,13 +1860,16 @@ export interface TaskFinishParams {
   /** Task completion status. */
   status: StatusCode;
 
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TaskFinishDataKind;
+
   /** Optional metadata about the task.
    * Objects for specific tasks like compile, test, etc are specified in the protocol. */
   data?: TaskFinishData;
 }
 ```
 
-#### TaskFinishData
+#### TaskFinishDataKind
 
 Task finish notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
@@ -1650,110 +1878,31 @@ specified in the `dataKind` field.
 There are predefined kinds of objects for compile and test tasks, as described
 in [[bsp#BuildTargetCompile]] and [[bsp#BuildTargetTest]]
 
-#### CompileReport
-
-The completion of a compilation task should be signalled with a
-`build/taskFinish` notification. When the compilation unit is a build target,
-the notification's `dataKind` field must be `compile-report` and the `data`
-field must include a `CompileReport` object:
-
 ```ts
-export interface CompileReport {
-  /** The build target that was compiled. */
-  target: BuildTargetIdentifier;
+export type TaskFinishDataKind = string;
 
-  /** An optional request id to know the origin of this report.
-   * Deprecated: Use the field in TaskFinishParams instead */
-  originId?: Identifier;
+export namespace TaskFinishDataKind {
+  /** `data` field must contain a CompileReport object. */
+  export const CompileReport = "compile-report";
 
-  /** The total number of reported errors compiling this target. */
-  errors: number;
+  /** `data` field must contain a TestFinish object. */
+  export const TestFinish = "test-finish";
 
-  /** The total number of reported warnings compiling the target. */
-  warnings: number;
-
-  /** The total number of milliseconds it took to compile the target. */
-  time?: number;
-
-  /** The compilation was a noOp compilation. */
-  noOp?: boolean;
+  /** `data` field must contain a TestReport object. */
+  export const TestReport = "test-report";
 }
 ```
 
-#### TestFinish
+#### TaskFinishData
 
 ```ts
-export interface TestFinish {
-  /** Name or description of the test. */
-  displayName: string;
-
-  /** Information about completion of the test, for example an error message. */
-  message?: string;
-
-  /** Completion status of the test. */
-  status: TestStatus;
-
-  /** Source location of the test, as LSP location. */
-  location?: Location;
-
-  /** Optionally, structured metadata about the test completion.
-   * For example: stack traces, expected/actual values. */
-  data?: TestFinishData;
-}
-```
-
-#### TestStatus
-
-```ts
-export enum TestStatus {
-  /** The test passed successfully. */
-  Passed = 1,
-  /** The test failed. */
-  Failed = 2,
-  /** The test was marked as ignored. */
-  Ignored = 3,
-  /** The test execution was cancelled. */
-  Cancelled = 4,
-  /** The was not included in execution. */
-  Skipped = 5,
-}
-```
-
-#### TestFinishData
-
-#### TestReport
-
-```ts
-export interface TestReport {
-  /** Deprecated: Use the field in TaskFinishParams instead */
-  originId?: Identifier;
-
-  /** The build target that was compiled. */
-  target: BuildTargetIdentifier;
-
-  /** The total number of successful tests. */
-  passed: number;
-
-  /** The total number of failed tests. */
-  failed: number;
-
-  /** The total number of ignored tests. */
-  ignored: number;
-
-  /** The total number of cancelled tests. */
-  cancelled: number;
-
-  /** The total number of skipped tests. */
-  skipped: number;
-
-  /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
-  time?: number;
-}
+export type TaskFinishData = any;
 ```
 
 ### OnRunPrintStdout: notification
 
 **Unstable** (may change in future versions)
+
 Notification sent from the server to the client when the target being run or tested
 prints something to stdout.
 
@@ -1782,48 +1931,207 @@ export interface PrintParams {
 ### OnRunPrintStderr: notification
 
 **Unstable** (may change in future versions)
+
 Notification sent from the server to the client when the target being run or tested
 prints something to stderr.
 
 - method: `run/printStderr`
 - params: `PrintParams`
 
-## TaskFinishData kinds
-
-### TaskFinishData
-
-This structure is embedded in
-the `data?: TaskFinishData` field, when
-the `dataKind` field contains `compile-report`.
-
-### TaskFinishData
-
-This structure is embedded in
-the `data?: TaskFinishData` field, when
-the `dataKind` field contains `test-finish`.
-
-### TaskFinishData
-
-This structure is embedded in
-the `data?: TaskFinishData` field, when
-the `dataKind` field contains `test-report`.
-
 ## TaskStartData kinds
 
-### TaskStartData
+### CompileTask
 
 This structure is embedded in
 the `data?: TaskStartData` field, when
-the `dataKind` field contains `compile-task`.
+the `dataKind` field contains `"compile-task"`.
 
-### TaskStartData
+#### CompileTask
+
+The beginning of a compilation unit may be signalled to the client with a
+`build/taskStart` notification. When the compilation unit is a build target, the
+notification's `dataKind` field must be "compile-task" and the `data` field must
+include a `CompileTask` object:
+
+```ts
+export interface CompileTask {
+  target: BuildTargetIdentifier;
+}
+```
+
+### TestStart
 
 This structure is embedded in
 the `data?: TaskStartData` field, when
-the `dataKind` field contains `test-start`.
+the `dataKind` field contains `"test-start"`.
 
-### TaskStartData
+#### TestStart
+
+```ts
+export interface TestStart {
+  /** Name or description of the test. */
+  displayName: string;
+
+  /** Source location of the test, as LSP location. */
+  location?: Location;
+}
+```
+
+### TestTask
 
 This structure is embedded in
 the `data?: TaskStartData` field, when
-the `dataKind` field contains `test-task`.
+the `dataKind` field contains `"test-task"`.
+
+#### TestTask
+
+The beginning of a testing unit may be signalled to the client with a
+`build/taskStart` notification. When the testing unit is a build target, the
+notification's `dataKind` field must be `test-task` and the `data` field must
+include a `TestTask` object.
+
+```ts
+export interface TestTask {
+  target: BuildTargetIdentifier;
+}
+```
+
+## TaskFinishData kinds
+
+### CompileReport
+
+This structure is embedded in
+the `data?: TaskFinishData` field, when
+the `dataKind` field contains `"compile-report"`.
+
+#### CompileReport
+
+The completion of a compilation task should be signalled with a
+`build/taskFinish` notification. When the compilation unit is a build target,
+the notification's `dataKind` field must be `compile-report` and the `data`
+field must include a `CompileReport` object:
+
+```ts
+export interface CompileReport {
+  /** The build target that was compiled. */
+  target: BuildTargetIdentifier;
+
+  /** An optional request id to know the origin of this report.
+   * Deprecated: Use the field in TaskFinishParams instead */
+  originId?: Identifier;
+
+  /** The total number of reported errors compiling this target. */
+  errors: Integer;
+
+  /** The total number of reported warnings compiling the target. */
+  warnings: Integer;
+
+  /** The total number of milliseconds it took to compile the target. */
+  time?: Long;
+
+  /** The compilation was a noOp compilation. */
+  noOp?: boolean;
+}
+```
+
+### TestFinish
+
+This structure is embedded in
+the `data?: TaskFinishData` field, when
+the `dataKind` field contains `"test-finish"`.
+
+#### TestFinish
+
+```ts
+export interface TestFinish {
+  /** Name or description of the test. */
+  displayName: string;
+
+  /** Information about completion of the test, for example an error message. */
+  message?: string;
+
+  /** Completion status of the test. */
+  status: TestStatus;
+
+  /** Source location of the test, as LSP location. */
+  location?: Location;
+
+  /** Kind of data to expect in the `data` field. If this field is not set, the kind of data is not specified. */
+  dataKind?: TestFinishDataKind;
+
+  /** Optionally, structured metadata about the test completion.
+   * For example: stack traces, expected/actual values. */
+  data?: TestFinishData;
+}
+```
+
+#### TestStatus
+
+```ts
+export enum TestStatus {
+  /** The test passed successfully. */
+  Passed = 1,
+
+  /** The test failed. */
+  Failed = 2,
+
+  /** The test was marked as ignored. */
+  Ignored = 3,
+
+  /** The test execution was cancelled. */
+  Cancelled = 4,
+
+  /** The was not included in execution. */
+  Skipped = 5,
+}
+```
+
+#### TestFinishDataKind
+
+```ts
+export type TestFinishDataKind = string;
+
+export namespace TestFinishDataKind {}
+```
+
+#### TestFinishData
+
+```ts
+export type TestFinishData = any;
+```
+
+### TestReport
+
+This structure is embedded in
+the `data?: TaskFinishData` field, when
+the `dataKind` field contains `"test-report"`.
+
+#### TestReport
+
+```ts
+export interface TestReport {
+  /** Deprecated: Use the field in TaskFinishParams instead */
+  originId?: Identifier;
+
+  /** The build target that was compiled. */
+  target: BuildTargetIdentifier;
+
+  /** The total number of successful tests. */
+  passed: Integer;
+
+  /** The total number of failed tests. */
+  failed: Integer;
+
+  /** The total number of ignored tests. */
+  ignored: Integer;
+
+  /** The total number of cancelled tests. */
+  cancelled: Integer;
+
+  /** The total number of skipped tests. */
+  skipped: Integer;
+
+  /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
+  time?: Long;
+}
+```

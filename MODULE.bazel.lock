@@ -3248,7 +3248,7 @@
         "bzlTransitiveDigest": "8AIjzxyvVnJujblgziVgY6LujIxVChTDYqcPK+GLgJI=",
         "recordedFileInputs": {
           "@@rules_jvm_external~//rules_jvm_external_deps_install.json": "0bfbc915d9155df44d7a3b216e8f3c1fbcd110e358dd07637dc393583a5227e8",
-          "@@//maven_install.json": "081075c16ed9b9ff9f7daa5ced7e59e1cf4c12221d057e11beb362e1f621cf6a"
+          "@@//maven_install.json": "794187f2b97464019772b16026f6f6693fd5c1d266d32895a1bdee795387c60c"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},

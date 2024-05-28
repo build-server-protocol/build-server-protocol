@@ -16,6 +16,7 @@ protocol.
 ### RustWorkspace: request
 
 **Unstable** (may change in future versions)
+
 The Rust workspace request is sent from the client to the server to query for
 the information about project's workspace for the given list of build targets.
 
@@ -143,13 +144,18 @@ export interface RustPackage {
 #### RustPackageOrigin
 
 ```ts
+export type RustPackageOrigin = string;
+
 export namespace RustPackageOrigin {
   /** External dependency of [WORKSPACE] or other [DEPENDENCY] package. */
   export const Dependency = "dependency";
+
   /** The package comes from the standard library. */
   export const Stdlib = "stdlib";
+
   /** External dependency of [STDLIB] or other [STDLIB_DEPENDENCY] package. */
-  export const Stdlib_dependency = "stdlib-dependency";
+  export const StdlibDependency = "stdlib-dependency";
+
   /** The package is a part of our workspace. */
   export const Workspace = "workspace";
 }
@@ -160,9 +166,13 @@ export namespace RustPackageOrigin {
 The Rust edition.
 
 ```ts
+export type RustEdition = string;
+
 export namespace RustEdition {
   export const E2015 = "2015";
+
   export const E2018 = "2018";
+
   export const E2021 = "2021";
 }
 ```
@@ -204,16 +214,22 @@ export interface RustTarget {
 export enum RustTargetKind {
   /** For lib targets. */
   Lib = 1,
+
   /** For binaries. */
   Bin = 2,
+
   /** For integration tests. */
   Test = 3,
+
   /** For examples. */
   Example = 4,
+
   /** For benchmarks. */
   Bench = 5,
+
   /** For build scripts. */
-  Custom_build = 6,
+  CustomBuild = 6,
+
   /** For unknown targets. */
   Unknown = 7,
 }
@@ -227,12 +243,19 @@ Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for
 ```ts
 export enum RustCrateType {
   Bin = 1,
+
   Lib = 2,
+
   Rlib = 3,
+
   Dylib = 4,
+
   Cdylib = 5,
+
   Staticlib = 6,
-  Proc_macro = 7,
+
+  ProcMacro = 7,
+
   Unknown = 8,
 }
 ```
@@ -249,8 +272,6 @@ The feature dependency graph is a mapping between
 feature and the features it turns on
 
 ```ts
-/** The feature dependency graph is a mapping between
- * feature and the features it turns on */
 export type FeaturesDependencyGraph = Map<Feature, Set<Feature>>;
 ```
 
@@ -266,8 +287,6 @@ The RustRawDependencies is a mapping between
 package id and the package's raw dependencies info.
 
 ```ts
-/** The RustRawDependencies is a mapping between
- * package id and the package's raw dependencies info. */
 export type RustRawDependencies = Map<string, RustRawDependency[]>;
 ```
 
@@ -277,7 +296,5 @@ The RustDependencies is a mapping between
 package id and the package's dependencies info.
 
 ```ts
-/** The RustDependencies is a mapping between
- * package id and the package's dependencies info. */
 export type RustDependencies = Map<string, RustDependency[]>;
 ```

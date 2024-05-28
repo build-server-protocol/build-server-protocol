@@ -13,11 +13,11 @@ protocol.
 
 ## DependencyModuleData kinds
 
-### DependencyModuleData
+### MavenDependencyModule
 
 This structure is embedded in
 the `data?: DependencyModuleData` field, when
-the `dataKind` field contains `maven`.
+the `dataKind` field contains `"maven"`.
 
 #### MavenDependencyModule
 

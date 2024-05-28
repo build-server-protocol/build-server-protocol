@@ -57,6 +57,8 @@ class IrConfig(
      * </pre>
      */
     val strings: TypeAliasing,
+    /** Same as `strings`, but for numbers. */
+    val numbers: TypeAliasing,
     /**
      * <pre>
      * - Smithy:

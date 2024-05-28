@@ -176,12 +176,3 @@ fun code(settings: RenderSettings = RenderSettings(), init: CodeBlock.() -> Unit
 }
 
 val emptyCode = code {}
-
-fun rustCode(
-    settings: RenderSettings = RenderSettings(indent = "    "),
-    init: CodeBlock.() -> Unit
-): CodeBlock {
-  val code = CodeBlock(RenderContext(settings))
-  code.init()
-  return code
-}

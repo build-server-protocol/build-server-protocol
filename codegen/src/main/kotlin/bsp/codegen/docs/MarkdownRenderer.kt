@@ -79,11 +79,11 @@ class MarkdownRenderer(
       return emptyCode
     }
 
-    val node = tree.structures[id] ?: throw RuntimeException("Id not found: $id")
+    val node =
+        tree.structures[id]
+            ?: throw RuntimeException("Id not found: $id, structures: ${tree.structures}")
 
     if (visited.contains(id)) return emptyCode
-
-    println("dupa2:: ${id}")
 
     visited.add(id)
     return code {
@@ -116,10 +116,10 @@ class MarkdownRenderer(
   fun renderDataKindNode(extendableType: ShapeId): (kind: PolymorphicDataKind) -> CodeBlock =
       { kind ->
         code {
-          -"### ${extendableType.name}"
+          -"### ${kind.shape.name}"
           -"This structure is embedded in"
           -"the `data?: ${extendableType.name}` field, when"
-          -"the `dataKind` field contains `${kind.kind}`."
+          -"the `dataKind` field contains `\"${kind.kind}\"`."
           newline()
           include(renderStructureNode(kind.shape))
         }
@@ -163,7 +163,7 @@ class MarkdownRenderer(
         hints
             .firstNotNullOfOrNull { it as? Hint.Deprecated }
             ?.let { deprecated ->
-              if (deprecated.message.isEmpty()) {
+              if (deprecated.message.isNotEmpty()) {
                 "**Deprecated**: ${deprecated.message}"
               } else {
                 "**Deprecated**"
@@ -171,7 +171,8 @@ class MarkdownRenderer(
             }
 
     val maybeUnstable =
-        "**Unstable** (may change in future versions)".takeIf { hints.any { it is Hint.Unstable } }
+        "**Unstable** (may change in future versions)\n"
+            .takeIf { hints.any { it is Hint.Unstable } }
 
     val docs =
         hints.filterIsInstance<Hint.Documentation>().flatMap {
@@ -180,6 +181,7 @@ class MarkdownRenderer(
 
     -maybeDeprecated
     -maybeUnstable
+    newline()
     docs.forEach { -it }
   }
 

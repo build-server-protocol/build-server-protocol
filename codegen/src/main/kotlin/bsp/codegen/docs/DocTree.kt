@@ -1,9 +1,13 @@
 package bsp.codegen.docs
 
 import bsp.codegen.common.ir.Def
+import bsp.codegen.common.ir.EnumType
+import bsp.codegen.common.ir.EnumValue
 import bsp.codegen.common.ir.Operation
 import bsp.codegen.common.ir.PolymorphicDataKind
 import bsp.codegen.common.ir.SmithyToIr
+import bsp.codegen.common.ir.Type
+import bsp.codegen.common.util.kebabToScreamingSnakeCase
 import software.amazon.smithy.model.shapes.ShapeId
 import software.amazon.smithy.model.traits.TagsTrait
 import traits.DocsPriorityTrait
@@ -59,19 +63,8 @@ fun SmithyToIr.docTree(namespace: String): DocTree {
       definitions.filterIsInstance<Def.Service>().map { def ->
         ServiceDocNode(def.shapeId, def.operations.map { it.shapeId })
       }
-  val structures =
-      definitions
-          .filter {
-            it is Def.Structure ||
-                it is Def.OpenEnum<*> ||
-                it is Def.ClosedEnum<*> ||
-                it is Def.Alias ||
-                it is Def.DataKinds
-          }
-          .map { def -> StructureDocNode(def) }
-          .associateBy { it.shapeId }
 
-  println("dupa:: ${structures}")
+  val structures = definitions.flatMap { toStructureNodes(it) }.associateBy { it.shapeId }
 
   val commonShapeIds = commonShapes.map { it.id }
 
@@ -81,4 +74,25 @@ fun SmithyToIr.docTree(namespace: String): DocTree {
           .filterValues { it.isNotEmpty() }
 
   return DocTree(commonShapeIds, services, operations, structures, dataKindInhabitants)
+}
+
+private fun toStructureNodes(definition: Def): List<StructureDocNode> {
+  return when (definition) {
+    is Def.Structure -> listOf(StructureDocNode(definition))
+    is Def.OpenEnum<*> -> listOf(StructureDocNode(definition))
+    is Def.ClosedEnum<*> -> listOf(StructureDocNode(definition))
+    is Def.Alias -> listOf(StructureDocNode(definition))
+    is Def.DataKinds -> {
+      val data = Def.Alias(definition.shapeId, Type.Json, emptyList())
+      val values =
+          definition.kinds.map { polyData ->
+            val snakeCased = polyData.kind.kebabToScreamingSnakeCase()
+            EnumValue(snakeCased, polyData.kind, polyData.hints)
+          }
+      val openEnum =
+          Def.OpenEnum(definition.kindsEnumId, EnumType.StringEnum, values, definition.hints)
+      listOf(StructureDocNode(data), StructureDocNode(openEnum))
+    }
+    else -> emptyList()
+  }
 }

@@ -101,27 +101,6 @@ sealed interface Type {
   data class UntaggedUnion(val members: kotlin.collections.List<Type>) : Type
 }
 
-// fun Type.referencedShapeIds(): List<ShapeId> {
-//  val set = mutableSetOf<ShapeId>()
-//
-//  fun go(type: Type) {
-//    when (type) {
-//      is Type.Ref -> set.add(type.shapeId)
-//      is Type.Set -> go(type.member)
-//      is Type.List -> go(type.member)
-//      is Type.Map -> {
-//        go(type.key)
-//        go(type.value)
-//      }
-//      is Type.UntaggedUnion -> type.members.forEach(::go)
-//      else -> {}
-//    }
-//  }
-//
-//  go(this)
-//  return set.toList()
-// }
-
 fun Type.referencedShapeIds(): List<ShapeId> =
     when (this) {
       is Type.Ref -> listOf(shapeId)

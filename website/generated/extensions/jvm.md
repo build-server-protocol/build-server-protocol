@@ -142,11 +142,11 @@ export interface JvmCompileClasspathItem {
 
 ## BuildTargetData kinds
 
-### BuildTargetData
+### JvmBuildTarget
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `jvm`.
+the `dataKind` field contains `"jvm"`.
 
 #### JvmBuildTarget
 

@@ -63,7 +63,8 @@ export interface ScalacOptionsItem {
 
 ### BuildTargetScalaTestClasses: request
 
-**Deprecated**
+**Deprecated**: Use buildTarget/jvmTestEnvironment instead
+
 The Scala build target test classes request is sent from the client to the
 server to query for the list of fully qualified names of test classes in a given
 list of targets.
@@ -131,7 +132,8 @@ export interface ScalaTestClassesItem {
 
 ### BuildTargetScalaMainClasses: request
 
-**Deprecated**
+**Deprecated**: Use buildTarget/jvmRunEnvironment instead
+
 The build target main classes request is sent from the client to the server to
 query for the list of main classes that can be fed as arguments to
 `buildTarget/run`. This method can be used for the same use cases than the
@@ -203,41 +205,19 @@ export interface ScalaMainClass {
 
 ## RunParamsData kinds
 
-### RunParamsData
+### ScalaMainClass
 
 This structure is embedded in
 the `data?: RunParamsData` field, when
-the `dataKind` field contains `scala-main-class`.
-
-## DebugSessionParamsData kinds
-
-### DebugSessionParamsData
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `scala-attach-remote`.
-
-#### ScalaAttachRemote
-
-The debug session will connect to a running process. The DAP client will send the port of the running process later.
-
-```ts
-export interface ScalaAttachRemote {}
-```
-
-### DebugSessionParamsData
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `scala-main-class`.
+the `dataKind` field contains `"scala-main-class"`.
 
 ## DiagnosticData kinds
 
-### DiagnosticData
+### ScalaDiagnostic
 
 This structure is embedded in
 the `data?: DiagnosticData` field, when
-the `dataKind` field contains `scala`.
+the `dataKind` field contains `"scala"`.
 
 #### ScalaDiagnostic
 
@@ -299,13 +279,108 @@ export interface ScalaTextEdit {
 }
 ```
 
+## TestParamsData kinds
+
+### ScalaTestParams
+
+This structure is embedded in
+the `data?: TestParamsData` field, when
+the `dataKind` field contains `"scala-test"`.
+
+#### ScalaTestParams
+
+`ScalaTestParams` contains scala-specific metadata for testing Scala targets.
+
+```ts
+export interface ScalaTestParams {
+  /** The test classes to be run in this test execution.
+   * It is the result of `buildTarget/scalaTestClasses`. */
+  testClasses?: ScalaTestClassesItem[];
+
+  /** The JVM options to run tests with. They replace any options
+   * that are defined by the build server if defined. */
+  jvmOptions?: string[];
+}
+```
+
+### ScalaTestSuiteClasses
+
+This structure is embedded in
+the `data?: TestParamsData` field, when
+the `dataKind` field contains `"scala-test-suites"`.
+
+#### ScalaTestSuiteClasses
+
+Each element of this array is a fully qualified class name.
+
+```ts
+export type ScalaTestSuiteClasses = string[];
+```
+
+### ScalaTestSuites
+
+This structure is embedded in
+the `data?: TestParamsData` field, when
+the `dataKind` field contains `"scala-test-suites-selection"`.
+
+#### ScalaTestSuites
+
+```ts
+export interface ScalaTestSuites {
+  /** The fully qualified names of the test classes in this target and the tests in this test classes */
+  suites: ScalaTestSuiteSelection[];
+
+  /** Additional jvmOptions which will be passed to the forked JVM */
+  jvmOptions: string[];
+
+  /** Enviroment variables should be an array of strings in format KEY=VALUE
+   * Deprecated: Use `buildTarget/test` params instead */
+  environmentVariables: string[];
+}
+```
+
+#### ScalaTestSuiteSelection
+
+```ts
+export interface ScalaTestSuiteSelection {
+  /** Fully qualified name of the test suite class */
+  className: string;
+
+  /** List of tests which should be run within this test suite.
+   * Empty collection means that all of them are supposed to be executed. */
+  tests: string[];
+}
+```
+
+## DebugSessionParamsData kinds
+
+### ScalaAttachRemote
+
+This structure is embedded in
+the `data?: DebugSessionParamsData` field, when
+the `dataKind` field contains `"scala-attach-remote"`.
+
+#### ScalaAttachRemote
+
+The debug session will connect to a running process. The DAP client will send the port of the running process later.
+
+```ts
+export interface ScalaAttachRemote {}
+```
+
+### ScalaMainClass
+
+This structure is embedded in
+the `data?: DebugSessionParamsData` field, when
+the `dataKind` field contains `"scala-main-class"`.
+
 ## BuildTargetData kinds
 
-### BuildTargetData
+### ScalaBuildTarget
 
 This structure is embedded in
 the `data?: BuildTargetData` field, when
-the `dataKind` field contains `scala`.
+the `dataKind` field contains `"scala"`.
 
 #### ScalaBuildTarget
 
@@ -340,81 +415,9 @@ export interface ScalaBuildTarget {
 ```ts
 export enum ScalaPlatform {
   Jvm = 1,
+
   Js = 2,
+
   Native = 3,
-}
-```
-
-## TestParamsData kinds
-
-### TestParamsData
-
-This structure is embedded in
-the `data?: TestParamsData` field, when
-the `dataKind` field contains `scala-test`.
-
-#### ScalaTestParams
-
-`ScalaTestParams` contains scala-specific metadata for testing Scala targets.
-
-```ts
-export interface ScalaTestParams {
-  /** The test classes to be run in this test execution.
-   * It is the result of `buildTarget/scalaTestClasses`. */
-  testClasses?: ScalaTestClassesItem[];
-
-  /** The JVM options to run tests with. They replace any options
-   * that are defined by the build server if defined. */
-  jvmOptions?: string[];
-}
-```
-
-### TestParamsData
-
-This structure is embedded in
-the `data?: TestParamsData` field, when
-the `dataKind` field contains `scala-test-suites`.
-
-#### ScalaTestSuiteClasses
-
-Each element of this array is a fully qualified class name.
-
-```ts
-/** Each element of this array is a fully qualified class name. */
-export type ScalaTestSuiteClasses = string[];
-```
-
-### TestParamsData
-
-This structure is embedded in
-the `data?: TestParamsData` field, when
-the `dataKind` field contains `scala-test-suites-selection`.
-
-#### ScalaTestSuites
-
-```ts
-export interface ScalaTestSuites {
-  /** The fully qualified names of the test classes in this target and the tests in this test classes */
-  suites: ScalaTestSuiteSelection[];
-
-  /** Additional jvmOptions which will be passed to the forked JVM */
-  jvmOptions: string[];
-
-  /** Enviroment variables should be an array of strings in format KEY=VALUE
-   * Deprecated: Use `buildTarget/test` params instead */
-  environmentVariables: string[];
-}
-```
-
-#### ScalaTestSuiteSelection
-
-```ts
-export interface ScalaTestSuiteSelection {
-  /** Fully qualified name of the test suite class */
-  className: string;
-
-  /** List of tests which should be run within this test suite.
-   * Empty collection means that all of them are supposed to be executed. */
-  tests: string[];
 }
 ```

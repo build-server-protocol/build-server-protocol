@@ -15,6 +15,7 @@ object Codegen {
         IrConfig(
             maps = TypeAliasing.Aliased,
             strings = TypeAliasing.Aliased,
+            numbers = TypeAliasing.Aliased,
             dataWithKind = AbstractionLevel.AsDef,
             openEnums = AbstractionLevel.AsDef,
             untaggedUnions = AbstractionLevel.AsType,
