@@ -185,6 +185,59 @@ export interface BuildTarget {
 }
 ```
 
+#### BuildTargetCapabilities
+
+Clients can use these capabilities to notify users what BSP endpoints can and
+cannot be used and why.
+
+```ts
+export interface BuildTargetCapabilities {
+  /** This target can be compiled by the BSP server. */
+  canCompile?: boolean;
+
+  /** This target can be tested by the BSP server. */
+  canTest?: boolean;
+
+  /** This target can be run by the BSP server. */
+  canRun?: boolean;
+
+  /** This target can be debugged by the BSP server. */
+  canDebug?: boolean;
+}
+```
+
+#### BuildTargetData
+
+```ts
+export type BuildTargetData = any;
+```
+
+#### BuildTargetDataKind
+
+```ts
+export type BuildTargetDataKind = string;
+
+export namespace BuildTargetDataKind {
+  /** `data` field must contain a CargoBuildTarget object. */
+  export const Cargo = "cargo";
+
+  /** `data` field must contain a CppBuildTarget object. */
+  export const Cpp = "cpp";
+
+  /** `data` field must contain a JvmBuildTarget object. */
+  export const Jvm = "jvm";
+
+  /** `data` field must contain a PythonBuildTarget object. */
+  export const Python = "python";
+
+  /** `data` field must contain a SbtBuildTarget object. */
+  export const Sbt = "sbt";
+
+  /** `data` field must contain a ScalaBuildTarget object. */
+  export const Scala = "scala";
+}
+```
+
 #### BuildTargetIdentifier
 
 A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
@@ -257,59 +310,6 @@ https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/spe
 
 ```ts
 export type LanguageId = string;
-```
-
-#### BuildTargetCapabilities
-
-Clients can use these capabilities to notify users what BSP endpoints can and
-cannot be used and why.
-
-```ts
-export interface BuildTargetCapabilities {
-  /** This target can be compiled by the BSP server. */
-  canCompile?: boolean;
-
-  /** This target can be tested by the BSP server. */
-  canTest?: boolean;
-
-  /** This target can be run by the BSP server. */
-  canRun?: boolean;
-
-  /** This target can be debugged by the BSP server. */
-  canDebug?: boolean;
-}
-```
-
-#### BuildTargetDataKind
-
-```ts
-export type BuildTargetDataKind = string;
-
-export namespace BuildTargetDataKind {
-  /** `data` field must contain a CargoBuildTarget object. */
-  export const Cargo = "cargo";
-
-  /** `data` field must contain a CppBuildTarget object. */
-  export const Cpp = "cpp";
-
-  /** `data` field must contain a JvmBuildTarget object. */
-  export const Jvm = "jvm";
-
-  /** `data` field must contain a PythonBuildTarget object. */
-  export const Python = "python";
-
-  /** `data` field must contain a SbtBuildTarget object. */
-  export const Sbt = "sbt";
-
-  /** `data` field must contain a ScalaBuildTarget object. */
-  export const Scala = "scala";
-}
-```
-
-#### BuildTargetData
-
-```ts
-export type BuildTargetData = any;
 ```
 
 #### OriginId
@@ -430,18 +430,18 @@ export interface BuildClientCapabilities {
 }
 ```
 
+#### InitializeBuildParamsData
+
+```ts
+export type InitializeBuildParamsData = any;
+```
+
 #### InitializeBuildParamsDataKind
 
 ```ts
 export type InitializeBuildParamsDataKind = string;
 
 export namespace InitializeBuildParamsDataKind {}
-```
-
-#### InitializeBuildParamsData
-
-```ts
-export type InitializeBuildParamsData = any;
 ```
 
 #### InitializeBuildResult
@@ -542,10 +542,10 @@ export interface CompileProvider {
 }
 ```
 
-#### TestProvider
+#### DebugProvider
 
 ```ts
-export interface TestProvider {
+export interface DebugProvider {
   languageIds: LanguageId[];
 }
 ```
@@ -558,12 +558,18 @@ export interface RunProvider {
 }
 ```
 
-#### DebugProvider
+#### TestProvider
 
 ```ts
-export interface DebugProvider {
+export interface TestProvider {
   languageIds: LanguageId[];
 }
+```
+
+#### InitializeBuildResultData
+
+```ts
+export type InitializeBuildResultData = any;
 ```
 
 #### InitializeBuildResultDataKind
@@ -572,12 +578,6 @@ export interface DebugProvider {
 export type InitializeBuildResultDataKind = string;
 
 export namespace InitializeBuildResultDataKind {}
-```
-
-#### InitializeBuildResultData
-
-```ts
-export type InitializeBuildResultData = any;
 ```
 
 ### OnBuildInitialized: notification
@@ -844,6 +844,12 @@ export interface DependencyModule {
 }
 ```
 
+#### DependencyModuleData
+
+```ts
+export type DependencyModuleData = any;
+```
+
 #### DependencyModuleDataKind
 
 ```ts
@@ -853,12 +859,6 @@ export namespace DependencyModuleDataKind {
   /** `data` field must contain a MavenDependencyModule object. */
   export const Maven = "maven";
 }
-```
-
-#### DependencyModuleData
-
-```ts
-export type DependencyModuleData = any;
 ```
 
 ### BuildTargetResources: request
@@ -1018,18 +1018,18 @@ export interface CompileResult {
 }
 ```
 
+#### CompileResultData
+
+```ts
+export type CompileResultData = any;
+```
+
 #### CompileResultDataKind
 
 ```ts
 export type CompileResultDataKind = string;
 
 export namespace CompileResultDataKind {}
-```
-
-#### CompileResultData
-
-```ts
-export type CompileResultData = any;
 ```
 
 ### BuildTargetRun: request
@@ -1092,6 +1092,12 @@ export interface RunParams {
 }
 ```
 
+#### RunParamsData
+
+```ts
+export type RunParamsData = any;
+```
+
 #### RunParamsDataKind
 
 ```ts
@@ -1101,12 +1107,6 @@ export namespace RunParamsDataKind {
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
 }
-```
-
-#### RunParamsData
-
-```ts
-export type RunParamsData = any;
 ```
 
 #### RunResult
@@ -1163,6 +1163,12 @@ export interface TestParams {
 }
 ```
 
+#### TestParamsData
+
+```ts
+export type TestParamsData = any;
+```
+
 #### TestParamsDataKind
 
 ```ts
@@ -1178,12 +1184,6 @@ export namespace TestParamsDataKind {
   /** `data` field must contain a ScalaTestSuites object. */
   export const ScalaTestSuitesSelection = "scala-test-suites-selection";
 }
-```
-
-#### TestParamsData
-
-```ts
-export type TestParamsData = any;
 ```
 
 #### TestResult
@@ -1205,18 +1205,18 @@ export interface TestResult {
 }
 ```
 
+#### TestResultData
+
+```ts
+export type TestResultData = any;
+```
+
 #### TestResultDataKind
 
 ```ts
 export type TestResultDataKind = string;
 
 export namespace TestResultDataKind {}
-```
-
-#### TestResultData
-
-```ts
-export type TestResultData = any;
 ```
 
 ### DebugSessionStart: request
@@ -1245,6 +1245,12 @@ export interface DebugSessionParams {
 }
 ```
 
+#### DebugSessionParamsData
+
+```ts
+export type DebugSessionParamsData = any;
+```
+
 #### DebugSessionParamsDataKind
 
 ```ts
@@ -1257,12 +1263,6 @@ export namespace DebugSessionParamsDataKind {
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
 }
-```
-
-#### DebugSessionParamsData
-
-```ts
-export type DebugSessionParamsData = any;
 ```
 
 #### DebugSessionAddress
@@ -1507,6 +1507,60 @@ export interface Diagnostic {
 }
 ```
 
+#### CodeDescription
+
+Structure to capture a description for an error code.
+
+```ts
+export interface CodeDescription {
+  /** An URI to open with more information about the diagnostic error. */
+  href: URI;
+}
+```
+
+#### DiagnosticData
+
+```ts
+export type DiagnosticData = any;
+```
+
+#### DiagnosticDataKind
+
+```ts
+export type DiagnosticDataKind = string;
+
+export namespace DiagnosticDataKind {
+  /** `data` field must contain a ScalaDiagnostic object. */
+  export const Scala = "scala";
+}
+```
+
+#### DiagnosticRelatedInformation
+
+Represents a related message and source code location for a diagnostic.
+This should be used to point to code locations that cause or are related to
+a diagnostics, e.g when duplicating a symbol in a scope.
+
+```ts
+export interface DiagnosticRelatedInformation {
+  /** The location of this related diagnostic information. */
+  location: Location;
+
+  /** The message of this related diagnostic information. */
+  message: string;
+}
+```
+
+#### Location
+
+```ts
+export interface Location {
+  uri: URI;
+
+  range: Range;
+}
+```
+
 #### Range
 
 ```ts
@@ -1552,17 +1606,6 @@ export enum DiagnosticSeverity {
 }
 ```
 
-#### CodeDescription
-
-Structure to capture a description for an error code.
-
-```ts
-export interface CodeDescription {
-  /** An URI to open with more information about the diagnostic error. */
-  href: URI;
-}
-```
-
 #### DiagnosticTag
 
 ```ts
@@ -1580,49 +1623,6 @@ export namespace DiagnosticTag {
    * Clients are allowed to rendered diagnostics with this tag strike through. */
   export const Deprecated = 2;
 }
-```
-
-#### DiagnosticRelatedInformation
-
-Represents a related message and source code location for a diagnostic.
-This should be used to point to code locations that cause or are related to
-a diagnostics, e.g when duplicating a symbol in a scope.
-
-```ts
-export interface DiagnosticRelatedInformation {
-  /** The location of this related diagnostic information. */
-  location: Location;
-
-  /** The message of this related diagnostic information. */
-  message: string;
-}
-```
-
-#### Location
-
-```ts
-export interface Location {
-  uri: URI;
-
-  range: Range;
-}
-```
-
-#### DiagnosticDataKind
-
-```ts
-export type DiagnosticDataKind = string;
-
-export namespace DiagnosticDataKind {
-  /** `data` field must contain a ScalaDiagnostic object. */
-  export const Scala = "scala";
-}
-```
-
-#### DiagnosticData
-
-```ts
-export type DiagnosticData = any;
 ```
 
 ### OnBuildTargetDidChange: notification
@@ -1660,6 +1660,20 @@ export interface BuildTargetEvent {
 }
 ```
 
+#### BuildTargetEventData
+
+```ts
+export type BuildTargetEventData = any;
+```
+
+#### BuildTargetEventDataKind
+
+```ts
+export type BuildTargetEventDataKind = string;
+
+export namespace BuildTargetEventDataKind {}
+```
+
 #### BuildTargetEventKind
 
 The `BuildTargetEventKind` information can be used by clients to trigger
@@ -1676,20 +1690,6 @@ export enum BuildTargetEventKind {
   /** The build target has been deleted. */
   Deleted = 3,
 }
-```
-
-#### BuildTargetEventDataKind
-
-```ts
-export type BuildTargetEventDataKind = string;
-
-export namespace BuildTargetEventDataKind {}
-```
-
-#### BuildTargetEventData
-
-```ts
-export type BuildTargetEventData = any;
 ```
 
 ### OnBuildTaskStart: notification
@@ -1743,6 +1743,12 @@ export interface TaskStartParams {
 }
 ```
 
+#### TaskStartData
+
+```ts
+export type TaskStartData = any;
+```
+
 #### TaskStartDataKind
 
 Task start notifications may contain an arbitrary interface in their `data`
@@ -1765,12 +1771,6 @@ export namespace TaskStartDataKind {
   /** `data` field must contain a TestTask object. */
   export const TestTask = "test-task";
 }
-```
-
-#### TaskStartData
-
-```ts
-export type TaskStartData = any;
 ```
 
 ### OnBuildTaskProgress: notification
@@ -1815,6 +1815,12 @@ export interface TaskProgressParams {
 }
 ```
 
+#### TaskProgressData
+
+```ts
+export type TaskProgressData = any;
+```
+
 #### TaskProgressDataKind
 
 Task progress notifications may contain an arbitrary interface in their `data`
@@ -1825,12 +1831,6 @@ specified in the `dataKind` field.
 export type TaskProgressDataKind = string;
 
 export namespace TaskProgressDataKind {}
-```
-
-#### TaskProgressData
-
-```ts
-export type TaskProgressData = any;
 ```
 
 ### OnBuildTaskFinish: notification
@@ -1869,6 +1869,12 @@ export interface TaskFinishParams {
 }
 ```
 
+#### TaskFinishData
+
+```ts
+export type TaskFinishData = any;
+```
+
 #### TaskFinishDataKind
 
 Task finish notifications may contain an arbitrary interface in their `data`
@@ -1891,12 +1897,6 @@ export namespace TaskFinishDataKind {
   /** `data` field must contain a TestReport object. */
   export const TestReport = "test-report";
 }
-```
-
-#### TaskFinishData
-
-```ts
-export type TaskFinishData = any;
 ```
 
 ### OnRunPrintStdout: notification
@@ -2007,6 +2007,20 @@ export interface TestFinish {
 }
 ```
 
+#### TestFinishData
+
+```ts
+export type TestFinishData = any;
+```
+
+#### TestFinishDataKind
+
+```ts
+export type TestFinishDataKind = string;
+
+export namespace TestFinishDataKind {}
+```
+
 #### TestStatus
 
 ```ts
@@ -2026,20 +2040,6 @@ export enum TestStatus {
   /** The was not included in execution. */
   Skipped = 5,
 }
-```
-
-#### TestFinishDataKind
-
-```ts
-export type TestFinishDataKind = string;
-
-export namespace TestFinishDataKind {}
-```
-
-#### TestFinishData
-
-```ts
-export type TestFinishData = any;
 ```
 
 ### TestReport

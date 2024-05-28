@@ -71,7 +71,7 @@ fun Def.referencedShapeIds(): List<ShapeId> =
       is Def.ClosedEnum<*> -> emptyList()
       is Def.DataKinds -> kinds.map { it.shape }
       is Def.UntaggedUnion -> members.flatMap { it.referencedShapeIds() }
-    }
+    }.sorted()
 
 sealed interface Type {
   // primitive types
