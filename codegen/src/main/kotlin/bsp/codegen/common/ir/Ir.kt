@@ -75,17 +75,17 @@ fun Def.referencedShapeIds(): List<ShapeId> =
 
 sealed interface Type {
   // primitive types
-  object Unit : Type
+  data object Unit : Type
 
-  object Bool : Type
+  data object Bool : Type
 
-  object String : Type
+  data object String : Type
 
-  object Int : Type
+  data object Int : Type
 
-  object Long : Type
+  data object Long : Type
 
-  object Json : Type
+  data object Json : Type
 
   // collections
   data class Set(val member: Type) : Type
@@ -112,9 +112,9 @@ fun Type.referencedShapeIds(): List<ShapeId> =
     }
 
 sealed interface JsonRpcMethodType {
-  object Request : JsonRpcMethodType
+  data object Request : JsonRpcMethodType
 
-  object Notification : JsonRpcMethodType
+  data object Notification : JsonRpcMethodType
 }
 
 data class Operation(
@@ -132,9 +132,9 @@ data class Operation(
 data class Field(val name: String, val type: Type, val required: Boolean, val hints: List<Hint>)
 
 sealed interface EnumType<A> {
-  object IntEnum : EnumType<Int>
+  data object IntEnum : EnumType<Int>
 
-  object StringEnum : EnumType<String>
+  data object StringEnum : EnumType<String>
 }
 
 data class EnumValue<A>(val name: String, val value: A, val hints: List<Hint>)
@@ -148,5 +148,5 @@ sealed interface Hint {
 
   data class JsonRename(val name: String) : Hint
 
-  object Unstable : Hint
+  data object Unstable : Hint
 }

@@ -9,11 +9,9 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencyModule {
-  @NonNull
-  private String name;
+  @NonNull private String name;
 
-  @NonNull
-  private String version;
+  @NonNull private String version;
 
   private String dataKind;
 
@@ -77,33 +75,22 @@ public class DependencyModule {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DependencyModule other = (DependencyModule) obj;
     if (this.name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!this.name.equals(other.name))
-      return false;
+      if (other.name != null) return false;
+    } else if (!this.name.equals(other.name)) return false;
     if (this.version == null) {
-      if (other.version != null)
-        return false;
-    } else if (!this.version.equals(other.version))
-      return false;
+      if (other.version != null) return false;
+    } else if (!this.version.equals(other.version)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -112,9 +99,9 @@ public class DependencyModule {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

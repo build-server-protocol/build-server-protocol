@@ -7,13 +7,11 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ReadParams {
-  @NonNull
-  private String originId;
+  @NonNull private String originId;
 
   private TaskId task;
 
-  @NonNull
-  private String message;
+  @NonNull private String message;
 
   public ReadParams(@NonNull final String originId, @NonNull final String message) {
     this.originId = originId;
@@ -62,28 +60,19 @@ public class ReadParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     ReadParams other = (ReadParams) obj;
     if (this.originId == null) {
-      if (other.originId != null)
-        return false;
-    } else if (!this.originId.equals(other.originId))
-      return false;
+      if (other.originId != null) return false;
+    } else if (!this.originId.equals(other.originId)) return false;
     if (this.task == null) {
-      if (other.task != null)
-        return false;
-    } else if (!this.task.equals(other.task))
-      return false;
+      if (other.task != null) return false;
+    } else if (!this.task.equals(other.task)) return false;
     if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
-      return false;
+      if (other.message != null) return false;
+    } else if (!this.message.equals(other.message)) return false;
     return true;
   }
 
@@ -92,8 +81,8 @@ public class ReadParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.task== null) ? 0 : this.task.hashCode());
-    return prime * result + ((this.message== null) ? 0 : this.message.hashCode());
+    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.task == null) ? 0 : this.task.hashCode());
+    return prime * result + ((this.message == null) ? 0 : this.message.hashCode());
   }
 }

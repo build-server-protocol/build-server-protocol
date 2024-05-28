@@ -13,7 +13,6 @@ import kotlin.math.max
 
 class TypescriptRenderer {
   fun render(definition: Def): CodeBlock? {
-    println("Rendering:: ${definition.shapeId}")
     return when (definition) {
       is Def.Alias -> renderAlias(definition)
       is Def.Structure -> renderStructure(definition)

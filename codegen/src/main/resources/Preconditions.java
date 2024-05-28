@@ -11,25 +11,21 @@
  ******************************************************************************/
 package org.eclipse.lsp4j.util;
 
-/**
- * Utilities for checking method and constructor arguments.
- */
+/** Utilities for checking method and constructor arguments. */
 public final class Preconditions {
 
-    private Preconditions() {
+  private Preconditions() {}
+
+  private static boolean nullChecks = true;
+
+  public static void enableNullChecks(boolean enable) {
+    Preconditions.nullChecks = enable;
+  }
+
+  public static <T> T checkNotNull(T object, String propertyName) {
+    if (nullChecks && object == null) {
+      throw new IllegalArgumentException("Property must not be null: " + propertyName);
     }
-
-    private static boolean nullChecks = true;
-
-    public static void enableNullChecks(boolean enable) {
-        Preconditions.nullChecks = enable;
-    }
-
-    public static <T> T checkNotNull(T object, String propertyName) {
-        if (nullChecks && object == null) {
-            throw new IllegalArgumentException("Property must not be null: " + propertyName);
-        }
-        return object;
-    }
-
+    return object;
+  }
 }

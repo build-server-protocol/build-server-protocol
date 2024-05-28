@@ -322,7 +322,7 @@ class JavaRenderer(val basepkg: String, val definitions: List<Def>, val version:
     val maybeNonNull = "@NonNull".takeIf { field.required }
     val maybeRename =
         field.hints.filterIsInstance<Hint.JsonRename>().firstOrNull()?.let {
-          """@SerializedName("$it")"""
+          """@SerializedName("${it.name}")"""
         }
     return code {
       -maybeAdapter

@@ -7,8 +7,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class MavenDependencyModuleArtifact {
-  @NonNull
-  private String uri;
+  @NonNull private String uri;
 
   private String classifier;
 
@@ -47,23 +46,16 @@ public class MavenDependencyModuleArtifact {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     MavenDependencyModuleArtifact other = (MavenDependencyModuleArtifact) obj;
     if (this.uri == null) {
-      if (other.uri != null)
-        return false;
-    } else if (!this.uri.equals(other.uri))
-      return false;
+      if (other.uri != null) return false;
+    } else if (!this.uri.equals(other.uri)) return false;
     if (this.classifier == null) {
-      if (other.classifier != null)
-        return false;
-    } else if (!this.classifier.equals(other.classifier))
-      return false;
+      if (other.classifier != null) return false;
+    } else if (!this.classifier.equals(other.classifier)) return false;
     return true;
   }
 
@@ -72,7 +64,7 @@ public class MavenDependencyModuleArtifact {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
-    return prime * result + ((this.classifier== null) ? 0 : this.classifier.hashCode());
+    result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
+    return prime * result + ((this.classifier == null) ? 0 : this.classifier.hashCode());
   }
 }

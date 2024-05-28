@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class SetCargoFeaturesParams {
-  @NonNull
-  private String packageId;
+  @NonNull private String packageId;
 
-  @NonNull
-  private Set<String> features;
+  @NonNull private Set<String> features;
 
-  public SetCargoFeaturesParams(@NonNull final String packageId, @NonNull final Set<String> features) {
+  public SetCargoFeaturesParams(
+      @NonNull final String packageId, @NonNull final Set<String> features) {
     this.packageId = packageId;
     this.features = features;
   }
@@ -51,23 +50,16 @@ public class SetCargoFeaturesParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     SetCargoFeaturesParams other = (SetCargoFeaturesParams) obj;
     if (this.packageId == null) {
-      if (other.packageId != null)
-        return false;
-    } else if (!this.packageId.equals(other.packageId))
-      return false;
+      if (other.packageId != null) return false;
+    } else if (!this.packageId.equals(other.packageId)) return false;
     if (this.features == null) {
-      if (other.features != null)
-        return false;
-    } else if (!this.features.equals(other.features))
-      return false;
+      if (other.features != null) return false;
+    } else if (!this.features.equals(other.features)) return false;
     return true;
   }
 
@@ -76,7 +68,7 @@ public class SetCargoFeaturesParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.packageId== null) ? 0 : this.packageId.hashCode());
-    return prime * result + ((this.features== null) ? 0 : this.features.hashCode());
+    result = prime * result + ((this.packageId == null) ? 0 : this.packageId.hashCode());
+    return prime * result + ((this.features == null) ? 0 : this.features.hashCode());
   }
 }

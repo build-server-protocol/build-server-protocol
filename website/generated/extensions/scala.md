@@ -203,14 +203,6 @@ export interface ScalaMainClass {
 }
 ```
 
-## RunParamsData kinds
-
-### ScalaMainClass
-
-This structure is embedded in
-the `data?: RunParamsData` field, when
-the `dataKind` field contains `"scala-main-class"`.
-
 ## DiagnosticData kinds
 
 ### ScalaDiagnostic
@@ -421,3 +413,11 @@ export enum ScalaPlatform {
   Native = 3,
 }
 ```
+
+## RunParamsData kinds
+
+### ScalaMainClass
+
+This structure is embedded in
+the `data?: RunParamsData` field, when
+the `dataKind` field contains `"scala-main-class"`.

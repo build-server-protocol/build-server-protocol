@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class PythonOptionsItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<String> interpreterOptions;
+  @NonNull private List<String> interpreterOptions;
 
-  public PythonOptionsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> interpreterOptions) {
+  public PythonOptionsItem(
+      @NonNull final BuildTargetIdentifier target, @NonNull final List<String> interpreterOptions) {
     this.target = target;
     this.interpreterOptions = interpreterOptions;
   }
@@ -51,23 +50,16 @@ public class PythonOptionsItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     PythonOptionsItem other = (PythonOptionsItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.interpreterOptions == null) {
-      if (other.interpreterOptions != null)
-        return false;
-    } else if (!this.interpreterOptions.equals(other.interpreterOptions))
-      return false;
+      if (other.interpreterOptions != null) return false;
+    } else if (!this.interpreterOptions.equals(other.interpreterOptions)) return false;
     return true;
   }
 
@@ -76,7 +68,8 @@ public class PythonOptionsItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.interpreterOptions== null) ? 0 : this.interpreterOptions.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    return prime * result
+        + ((this.interpreterOptions == null) ? 0 : this.interpreterOptions.hashCode());
   }
 }

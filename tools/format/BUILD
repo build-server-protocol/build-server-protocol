@@ -38,9 +38,8 @@ java_binary(
 
 format_multirun(
     name = "format",
+    java = ":java-format",
     javascript = ":prettier",
-    # TODO: uncomment
-    # java = ":java-format",
     kotlin = ":ktfmt",
     markdown = ":prettier",
     scala = ":scalafmt",

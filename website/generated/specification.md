@@ -1938,64 +1938,6 @@ prints something to stderr.
 - method: `run/printStderr`
 - params: `PrintParams`
 
-## TaskStartData kinds
-
-### CompileTask
-
-This structure is embedded in
-the `data?: TaskStartData` field, when
-the `dataKind` field contains `"compile-task"`.
-
-#### CompileTask
-
-The beginning of a compilation unit may be signalled to the client with a
-`build/taskStart` notification. When the compilation unit is a build target, the
-notification's `dataKind` field must be "compile-task" and the `data` field must
-include a `CompileTask` object:
-
-```ts
-export interface CompileTask {
-  target: BuildTargetIdentifier;
-}
-```
-
-### TestStart
-
-This structure is embedded in
-the `data?: TaskStartData` field, when
-the `dataKind` field contains `"test-start"`.
-
-#### TestStart
-
-```ts
-export interface TestStart {
-  /** Name or description of the test. */
-  displayName: string;
-
-  /** Source location of the test, as LSP location. */
-  location?: Location;
-}
-```
-
-### TestTask
-
-This structure is embedded in
-the `data?: TaskStartData` field, when
-the `dataKind` field contains `"test-task"`.
-
-#### TestTask
-
-The beginning of a testing unit may be signalled to the client with a
-`build/taskStart` notification. When the testing unit is a build target, the
-notification's `dataKind` field must be `test-task` and the `data` field must
-include a `TestTask` object.
-
-```ts
-export interface TestTask {
-  target: BuildTargetIdentifier;
-}
-```
-
 ## TaskFinishData kinds
 
 ### CompileReport
@@ -2133,5 +2075,63 @@ export interface TestReport {
 
   /** The total number of milliseconds tests take to run (e.g. doesn't include compile times). */
   time?: Long;
+}
+```
+
+## TaskStartData kinds
+
+### CompileTask
+
+This structure is embedded in
+the `data?: TaskStartData` field, when
+the `dataKind` field contains `"compile-task"`.
+
+#### CompileTask
+
+The beginning of a compilation unit may be signalled to the client with a
+`build/taskStart` notification. When the compilation unit is a build target, the
+notification's `dataKind` field must be "compile-task" and the `data` field must
+include a `CompileTask` object:
+
+```ts
+export interface CompileTask {
+  target: BuildTargetIdentifier;
+}
+```
+
+### TestStart
+
+This structure is embedded in
+the `data?: TaskStartData` field, when
+the `dataKind` field contains `"test-start"`.
+
+#### TestStart
+
+```ts
+export interface TestStart {
+  /** Name or description of the test. */
+  displayName: string;
+
+  /** Source location of the test, as LSP location. */
+  location?: Location;
+}
+```
+
+### TestTask
+
+This structure is embedded in
+the `data?: TaskStartData` field, when
+the `dataKind` field contains `"test-task"`.
+
+#### TestTask
+
+The beginning of a testing unit may be signalled to the client with a
+`build/taskStart` notification. When the testing unit is a build target, the
+notification's `dataKind` field must be `test-task` and the `data` field must
+include a `TestTask` object.
+
+```ts
+export interface TestTask {
+  target: BuildTargetIdentifier;
 }
 ```

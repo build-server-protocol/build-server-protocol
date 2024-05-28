@@ -7,8 +7,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class SetCargoFeaturesResult {
-  @NonNull
-  private StatusCode statusCode;
+  @NonNull private StatusCode statusCode;
 
   public SetCargoFeaturesResult(@NonNull final StatusCode statusCode) {
     this.statusCode = statusCode;
@@ -35,24 +34,19 @@ public class SetCargoFeaturesResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     SetCargoFeaturesResult other = (SetCargoFeaturesResult) obj;
     if (this.statusCode == null) {
-      if (other.statusCode != null)
-        return false;
-    } else if (!this.statusCode.equals(other.statusCode))
-      return false;
+      if (other.statusCode != null) return false;
+    } else if (!this.statusCode.equals(other.statusCode)) return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.statusCode== null) ? 0 : this.statusCode.hashCode());
+    return 31 * 1 + ((this.statusCode == null) ? 0 : this.statusCode.hashCode());
   }
 }
