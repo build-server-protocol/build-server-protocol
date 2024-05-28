@@ -16,8 +16,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      # Bazel calls mdoc, mdoc calls coursier, and coursier expects the cache to exist
+      # (otherwise it throws an error because it tries to create a directory in a read-only file system).
       - uses: coursier/cache-action@v6
-      - uses: coursier/setup-action@v1
       - name: Mount bazel cache
         uses: actions/cache@v4
         with:
