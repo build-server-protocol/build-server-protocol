@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustRawDependency {
-  @NonNull private String name;
+  @NonNull
+  private String name;
 
   private String rename;
 
@@ -16,17 +17,16 @@ public class RustRawDependency {
 
   private String target;
 
-  @NonNull private Boolean optional;
+  @NonNull
+  private Boolean optional;
 
-  @NonNull private Boolean usesDefaultFeatures;
+  @NonNull
+  private Boolean usesDefaultFeatures;
 
-  @NonNull private Set<String> features;
+  @NonNull
+  private Set<String> features;
 
-  public RustRawDependency(
-      @NonNull final String name,
-      @NonNull final Boolean optional,
-      @NonNull final Boolean usesDefaultFeatures,
-      @NonNull final Set<String> features) {
+  public RustRawDependency(@NonNull final String name, @NonNull final Boolean optional, @NonNull final Boolean usesDefaultFeatures, @NonNull final Set<String> features) {
     this.name = name;
     this.optional = optional;
     this.usesDefaultFeatures = usesDefaultFeatures;
@@ -87,8 +87,7 @@ public class RustRawDependency {
   }
 
   public void setUsesDefaultFeatures(@NonNull final Boolean usesDefaultFeatures) {
-    this.usesDefaultFeatures =
-        Preconditions.checkNotNull(usesDefaultFeatures, "usesDefaultFeatures");
+    this.usesDefaultFeatures = Preconditions.checkNotNull(usesDefaultFeatures, "usesDefaultFeatures");
   }
 
   @Pure
@@ -118,31 +117,48 @@ public class RustRawDependency {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     RustRawDependency other = (RustRawDependency) obj;
     if (this.name == null) {
-      if (other.name != null) return false;
-    } else if (!this.name.equals(other.name)) return false;
+      if (other.name != null)
+        return false;
+    } else if (!this.name.equals(other.name))
+      return false;
     if (this.rename == null) {
-      if (other.rename != null) return false;
-    } else if (!this.rename.equals(other.rename)) return false;
+      if (other.rename != null)
+        return false;
+    } else if (!this.rename.equals(other.rename))
+      return false;
     if (this.kind == null) {
-      if (other.kind != null) return false;
-    } else if (!this.kind.equals(other.kind)) return false;
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     if (this.optional == null) {
-      if (other.optional != null) return false;
-    } else if (!this.optional.equals(other.optional)) return false;
+      if (other.optional != null)
+        return false;
+    } else if (!this.optional.equals(other.optional))
+      return false;
     if (this.usesDefaultFeatures == null) {
-      if (other.usesDefaultFeatures != null) return false;
-    } else if (!this.usesDefaultFeatures.equals(other.usesDefaultFeatures)) return false;
+      if (other.usesDefaultFeatures != null)
+        return false;
+    } else if (!this.usesDefaultFeatures.equals(other.usesDefaultFeatures))
+      return false;
     if (this.features == null) {
-      if (other.features != null) return false;
-    } else if (!this.features.equals(other.features)) return false;
+      if (other.features != null)
+        return false;
+    } else if (!this.features.equals(other.features))
+      return false;
     return true;
   }
 
@@ -151,14 +167,12 @@ public class RustRawDependency {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.rename == null) ? 0 : this.rename.hashCode());
-    result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-    result = prime * result + ((this.optional == null) ? 0 : this.optional.hashCode());
-    result =
-        prime * result
-            + ((this.usesDefaultFeatures == null) ? 0 : this.usesDefaultFeatures.hashCode());
-    return prime * result + ((this.features == null) ? 0 : this.features.hashCode());
+    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.rename== null) ? 0 : this.rename.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.optional== null) ? 0 : this.optional.hashCode());
+    result = prime * result + ((this.usesDefaultFeatures== null) ? 0 : this.usesDefaultFeatures.hashCode());
+    return prime * result + ((this.features== null) ? 0 : this.features.hashCode());
   }
 }

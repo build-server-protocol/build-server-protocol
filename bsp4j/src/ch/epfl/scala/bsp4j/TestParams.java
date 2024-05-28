@@ -11,7 +11,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestParams {
-  @NonNull private List<BuildTargetIdentifier> targets;
+  @NonNull
+  private List<BuildTargetIdentifier> targets;
 
   private String originId;
 
@@ -111,31 +112,48 @@ public class TestParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     TestParams other = (TestParams) obj;
     if (this.targets == null) {
-      if (other.targets != null) return false;
-    } else if (!this.targets.equals(other.targets)) return false;
+      if (other.targets != null)
+        return false;
+    } else if (!this.targets.equals(other.targets))
+      return false;
     if (this.originId == null) {
-      if (other.originId != null) return false;
-    } else if (!this.originId.equals(other.originId)) return false;
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     if (this.arguments == null) {
-      if (other.arguments != null) return false;
-    } else if (!this.arguments.equals(other.arguments)) return false;
+      if (other.arguments != null)
+        return false;
+    } else if (!this.arguments.equals(other.arguments))
+      return false;
     if (this.environmentVariables == null) {
-      if (other.environmentVariables != null) return false;
-    } else if (!this.environmentVariables.equals(other.environmentVariables)) return false;
+      if (other.environmentVariables != null)
+        return false;
+    } else if (!this.environmentVariables.equals(other.environmentVariables))
+      return false;
     if (this.workingDirectory == null) {
-      if (other.workingDirectory != null) return false;
-    } else if (!this.workingDirectory.equals(other.workingDirectory)) return false;
+      if (other.workingDirectory != null)
+        return false;
+    } else if (!this.workingDirectory.equals(other.workingDirectory))
+      return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null) return false;
-    } else if (!this.dataKind.equals(other.dataKind)) return false;
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
-      if (other.data != null) return false;
-    } else if (!this.data.equals(other.data)) return false;
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
+      return false;
     return true;
   }
 
@@ -144,15 +162,12 @@ public class TestParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
-    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
-    result =
-        prime * result
-            + ((this.environmentVariables == null) ? 0 : this.environmentVariables.hashCode());
-    result =
-        prime * result + ((this.workingDirectory == null) ? 0 : this.workingDirectory.hashCode());
-    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    result = prime * result + ((this.environmentVariables== null) ? 0 : this.environmentVariables.hashCode());
+    result = prime * result + ((this.workingDirectory== null) ? 0 : this.workingDirectory.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

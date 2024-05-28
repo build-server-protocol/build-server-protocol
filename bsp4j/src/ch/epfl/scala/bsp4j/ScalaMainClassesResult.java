@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaMainClassesResult {
-  @NonNull private List<ScalaMainClassesItem> items;
+  @NonNull
+  private List<ScalaMainClassesItem> items;
 
   private String originId;
 
@@ -47,16 +48,23 @@ public class ScalaMainClassesResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ScalaMainClassesResult other = (ScalaMainClassesResult) obj;
     if (this.items == null) {
-      if (other.items != null) return false;
-    } else if (!this.items.equals(other.items)) return false;
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
     if (this.originId == null) {
-      if (other.originId != null) return false;
-    } else if (!this.originId.equals(other.originId)) return false;
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     return true;
   }
 
@@ -65,7 +73,7 @@ public class ScalaMainClassesResult {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.items == null) ? 0 : this.items.hashCode());
-    return prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.items== null) ? 0 : this.items.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

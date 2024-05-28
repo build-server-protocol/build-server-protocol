@@ -4,13 +4,14 @@ import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
 /**
- * The `BuildTargetEventKind` information can be used by clients to trigger reindexing or update the
- * user interface with the new information.
+ * The `BuildTargetEventKind` information can be used by clients to trigger
+ * reindexing or update the user interface with the new information.
  */
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum BuildTargetEventKind {
-  CREATED(1),
-  CHANGED(2),
+
+CREATED(1),
+CHANGED(2),
   DELETED(3);
 
   private final int value;
@@ -26,7 +27,8 @@ public enum BuildTargetEventKind {
   public static BuildTargetEventKind forValue(int value) {
     BuildTargetEventKind[] allValues = BuildTargetEventKind.values();
     if (value < 1 || value > allValues.length)
-      throw new IllegalArgumentException("Illegal enum value: " + value);
+    throw new IllegalArgumentException("Illegal enum value: " + value);
     return allValues[value - 1];
   }
 }
+

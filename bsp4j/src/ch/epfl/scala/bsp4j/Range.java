@@ -7,9 +7,11 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class Range {
-  @NonNull private Position start;
+  @NonNull
+  private Position start;
 
-  @NonNull private Position end;
+  @NonNull
+  private Position end;
 
   public Range(@NonNull final Position start, @NonNull final Position end) {
     this.start = start;
@@ -48,16 +50,23 @@ public class Range {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     Range other = (Range) obj;
     if (this.start == null) {
-      if (other.start != null) return false;
-    } else if (!this.start.equals(other.start)) return false;
+      if (other.start != null)
+        return false;
+    } else if (!this.start.equals(other.start))
+      return false;
     if (this.end == null) {
-      if (other.end != null) return false;
-    } else if (!this.end.equals(other.end)) return false;
+      if (other.end != null)
+        return false;
+    } else if (!this.end.equals(other.end))
+      return false;
     return true;
   }
 
@@ -66,7 +75,7 @@ public class Range {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.start == null) ? 0 : this.start.hashCode());
-    return prime * result + ((this.end == null) ? 0 : this.end.hashCode());
+    result = prime * result + ((this.start== null) ? 0 : this.start.hashCode());
+    return prime * result + ((this.end== null) ? 0 : this.end.hashCode());
   }
 }

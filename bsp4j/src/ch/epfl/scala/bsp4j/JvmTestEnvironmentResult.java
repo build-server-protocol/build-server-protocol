@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmTestEnvironmentResult {
-  @NonNull private List<JvmEnvironmentItem> items;
+  @NonNull
+  private List<JvmEnvironmentItem> items;
 
   public JvmTestEnvironmentResult(@NonNull final List<JvmEnvironmentItem> items) {
     this.items = items;
@@ -35,19 +36,24 @@ public class JvmTestEnvironmentResult {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     JvmTestEnvironmentResult other = (JvmTestEnvironmentResult) obj;
     if (this.items == null) {
-      if (other.items != null) return false;
-    } else if (!this.items.equals(other.items)) return false;
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
     return true;
   }
 
   @Override
   @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.items == null) ? 0 : this.items.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

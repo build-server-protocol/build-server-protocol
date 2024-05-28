@@ -8,12 +8,13 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaTestSuiteSelection {
-  @NonNull private String className;
+  @NonNull
+  private String className;
 
-  @NonNull private List<String> tests;
+  @NonNull
+  private List<String> tests;
 
-  public ScalaTestSuiteSelection(
-      @NonNull final String className, @NonNull final List<String> tests) {
+  public ScalaTestSuiteSelection(@NonNull final String className, @NonNull final List<String> tests) {
     this.className = className;
     this.tests = tests;
   }
@@ -50,16 +51,23 @@ public class ScalaTestSuiteSelection {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ScalaTestSuiteSelection other = (ScalaTestSuiteSelection) obj;
     if (this.className == null) {
-      if (other.className != null) return false;
-    } else if (!this.className.equals(other.className)) return false;
+      if (other.className != null)
+        return false;
+    } else if (!this.className.equals(other.className))
+      return false;
     if (this.tests == null) {
-      if (other.tests != null) return false;
-    } else if (!this.tests.equals(other.tests)) return false;
+      if (other.tests != null)
+        return false;
+    } else if (!this.tests.equals(other.tests))
+      return false;
     return true;
   }
 
@@ -68,7 +76,7 @@ public class ScalaTestSuiteSelection {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.className == null) ? 0 : this.className.hashCode());
-    return prime * result + ((this.tests == null) ? 0 : this.tests.hashCode());
+    result = prime * result + ((this.className== null) ? 0 : this.className.hashCode());
+    return prime * result + ((this.tests== null) ? 0 : this.tests.hashCode());
   }
 }

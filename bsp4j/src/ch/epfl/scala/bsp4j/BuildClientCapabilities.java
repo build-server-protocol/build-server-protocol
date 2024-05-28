@@ -8,7 +8,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class BuildClientCapabilities {
-  @NonNull private List<String> languageIds;
+  @NonNull
+  private List<String> languageIds;
 
   private Boolean jvmCompileClasspathReceiver;
 
@@ -47,15 +48,21 @@ public class BuildClientCapabilities {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BuildClientCapabilities other = (BuildClientCapabilities) obj;
     if (this.languageIds == null) {
-      if (other.languageIds != null) return false;
-    } else if (!this.languageIds.equals(other.languageIds)) return false;
+      if (other.languageIds != null)
+        return false;
+    } else if (!this.languageIds.equals(other.languageIds))
+      return false;
     if (this.jvmCompileClasspathReceiver == null) {
-      if (other.jvmCompileClasspathReceiver != null) return false;
+      if (other.jvmCompileClasspathReceiver != null)
+        return false;
     } else if (!this.jvmCompileClasspathReceiver.equals(other.jvmCompileClasspathReceiver))
       return false;
     return true;
@@ -66,10 +73,7 @@ public class BuildClientCapabilities {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.languageIds == null) ? 0 : this.languageIds.hashCode());
-    return prime * result
-        + ((this.jvmCompileClasspathReceiver == null)
-            ? 0
-            : this.jvmCompileClasspathReceiver.hashCode());
+    result = prime * result + ((this.languageIds== null) ? 0 : this.languageIds.hashCode());
+    return prime * result + ((this.jvmCompileClasspathReceiver== null) ? 0 : this.jvmCompileClasspathReceiver.hashCode());
   }
 }

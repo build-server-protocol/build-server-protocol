@@ -9,7 +9,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class BuildTargetEvent {
-  @NonNull private BuildTargetIdentifier target;
+  @NonNull
+  private BuildTargetIdentifier target;
 
   private BuildTargetEventKind kind;
 
@@ -73,22 +74,33 @@ public class BuildTargetEvent {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     BuildTargetEvent other = (BuildTargetEvent) obj;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     if (this.kind == null) {
-      if (other.kind != null) return false;
-    } else if (!this.kind.equals(other.kind)) return false;
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null) return false;
-    } else if (!this.dataKind.equals(other.dataKind)) return false;
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
-      if (other.data != null) return false;
-    } else if (!this.data.equals(other.data)) return false;
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
+      return false;
     return true;
   }
 
@@ -97,9 +109,9 @@ public class BuildTargetEvent {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-    result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }

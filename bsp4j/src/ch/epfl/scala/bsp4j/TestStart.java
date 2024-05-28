@@ -7,7 +7,8 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestStart {
-  @NonNull private String displayName;
+  @NonNull
+  private String displayName;
 
   private Location location;
 
@@ -46,16 +47,23 @@ public class TestStart {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     TestStart other = (TestStart) obj;
     if (this.displayName == null) {
-      if (other.displayName != null) return false;
-    } else if (!this.displayName.equals(other.displayName)) return false;
+      if (other.displayName != null)
+        return false;
+    } else if (!this.displayName.equals(other.displayName))
+      return false;
     if (this.location == null) {
-      if (other.location != null) return false;
-    } else if (!this.location.equals(other.location)) return false;
+      if (other.location != null)
+        return false;
+    } else if (!this.location.equals(other.location))
+      return false;
     return true;
   }
 
@@ -64,7 +72,7 @@ public class TestStart {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.displayName == null) ? 0 : this.displayName.hashCode());
-    return prime * result + ((this.location == null) ? 0 : this.location.hashCode());
+    result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
+    return prime * result + ((this.location== null) ? 0 : this.location.hashCode());
   }
 }
