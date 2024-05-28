@@ -104,7 +104,7 @@ class JavaRenderer(val basepkg: String, val definitions: List<Def>, val version:
         hints.filterIsInstance<Hint.Documentation>().flatMap {
           it.string.split(System.lineSeparator())
         }
-    return if (docs.isEmpty()) {
+    return if (docs.isEmpty() && !isUnstable) {
       emptyCode
     } else {
       code {

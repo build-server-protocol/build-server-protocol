@@ -203,6 +203,28 @@ export interface ScalaMainClass {
 }
 ```
 
+## DebugSessionParamsData kinds
+
+### ScalaAttachRemote
+
+This structure is embedded in
+the `data?: DebugSessionParamsData` field, when
+the `dataKind` field contains `"scala-attach-remote"`.
+
+#### ScalaAttachRemote
+
+The debug session will connect to a running process. The DAP client will send the port of the running process later.
+
+```ts
+export interface ScalaAttachRemote {}
+```
+
+### ScalaMainClass
+
+This structure is embedded in
+the `data?: DebugSessionParamsData` field, when
+the `dataKind` field contains `"scala-main-class"`.
+
 ## DiagnosticData kinds
 
 ### ScalaDiagnostic
@@ -268,6 +290,54 @@ export interface ScalaTextEdit {
   /** The string to be inserted. For delete operations use an
    * empty string. */
   newText: string;
+}
+```
+
+## BuildTargetData kinds
+
+### ScalaBuildTarget
+
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"scala"`.
+
+#### ScalaBuildTarget
+
+`ScalaBuildTarget` is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources.
+
+```ts
+export interface ScalaBuildTarget {
+  /** The Scala organization that is used for a target. */
+  scalaOrganization: string;
+
+  /** The scala version to compile this target */
+  scalaVersion: string;
+
+  /** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: string;
+
+  /** The target platform for this target */
+  platform: ScalaPlatform;
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  jars: URI[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget?: JvmBuildTarget;
+}
+```
+
+#### ScalaPlatform
+
+```ts
+export enum ScalaPlatform {
+  Jvm = 1,
+
+  Js = 2,
+
+  Native = 3,
 }
 ```
 
@@ -341,76 +411,6 @@ export interface ScalaTestSuiteSelection {
   /** List of tests which should be run within this test suite.
    * Empty collection means that all of them are supposed to be executed. */
   tests: string[];
-}
-```
-
-## DebugSessionParamsData kinds
-
-### ScalaAttachRemote
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-attach-remote"`.
-
-#### ScalaAttachRemote
-
-The debug session will connect to a running process. The DAP client will send the port of the running process later.
-
-```ts
-export interface ScalaAttachRemote {}
-```
-
-### ScalaMainClass
-
-This structure is embedded in
-the `data?: DebugSessionParamsData` field, when
-the `dataKind` field contains `"scala-main-class"`.
-
-## BuildTargetData kinds
-
-### ScalaBuildTarget
-
-This structure is embedded in
-the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"scala"`.
-
-#### ScalaBuildTarget
-
-`ScalaBuildTarget` is a basic data structure that contains scala-specific
-metadata for compiling a target containing Scala sources.
-
-```ts
-export interface ScalaBuildTarget {
-  /** The Scala organization that is used for a target. */
-  scalaOrganization: string;
-
-  /** The scala version to compile this target */
-  scalaVersion: string;
-
-  /** The binary version of scalaVersion.
-   * For example, 2.12 if scalaVersion is 2.12.4. */
-  scalaBinaryVersion: string;
-
-  /** The target platform for this target */
-  platform: ScalaPlatform;
-
-  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
-  jars: URI[];
-
-  /** The jvm build target describing jdk to be used */
-  jvmBuildTarget?: JvmBuildTarget;
-}
-```
-
-#### ScalaPlatform
-
-```ts
-export enum ScalaPlatform {
-  Jvm = 1,
-
-  Js = 2,
-
-  Native = 3,
 }
 ```
 
