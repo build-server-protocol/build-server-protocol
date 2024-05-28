@@ -203,6 +203,54 @@ export interface ScalaMainClass {
 }
 ```
 
+## BuildTargetData kinds
+
+### ScalaBuildTarget
+
+This structure is embedded in
+the `data?: BuildTargetData` field, when
+the `dataKind` field contains `"scala"`.
+
+#### ScalaBuildTarget
+
+`ScalaBuildTarget` is a basic data structure that contains scala-specific
+metadata for compiling a target containing Scala sources.
+
+```ts
+export interface ScalaBuildTarget {
+  /** The Scala organization that is used for a target. */
+  scalaOrganization: string;
+
+  /** The scala version to compile this target */
+  scalaVersion: string;
+
+  /** The binary version of scalaVersion.
+   * For example, 2.12 if scalaVersion is 2.12.4. */
+  scalaBinaryVersion: string;
+
+  /** The target platform for this target */
+  platform: ScalaPlatform;
+
+  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
+  jars: URI[];
+
+  /** The jvm build target describing jdk to be used */
+  jvmBuildTarget?: JvmBuildTarget;
+}
+```
+
+#### ScalaPlatform
+
+```ts
+export enum ScalaPlatform {
+  Jvm = 1,
+
+  Js = 2,
+
+  Native = 3,
+}
+```
+
 ## DebugSessionParamsData kinds
 
 ### ScalaAttachRemote
@@ -293,53 +341,13 @@ export interface ScalaTextEdit {
 }
 ```
 
-## BuildTargetData kinds
+## RunParamsData kinds
 
-### ScalaBuildTarget
+### ScalaMainClass
 
 This structure is embedded in
-the `data?: BuildTargetData` field, when
-the `dataKind` field contains `"scala"`.
-
-#### ScalaBuildTarget
-
-`ScalaBuildTarget` is a basic data structure that contains scala-specific
-metadata for compiling a target containing Scala sources.
-
-```ts
-export interface ScalaBuildTarget {
-  /** The Scala organization that is used for a target. */
-  scalaOrganization: string;
-
-  /** The scala version to compile this target */
-  scalaVersion: string;
-
-  /** The binary version of scalaVersion.
-   * For example, 2.12 if scalaVersion is 2.12.4. */
-  scalaBinaryVersion: string;
-
-  /** The target platform for this target */
-  platform: ScalaPlatform;
-
-  /** A sequence of Scala jars such as scala-library, scala-compiler and scala-reflect. */
-  jars: URI[];
-
-  /** The jvm build target describing jdk to be used */
-  jvmBuildTarget?: JvmBuildTarget;
-}
-```
-
-#### ScalaPlatform
-
-```ts
-export enum ScalaPlatform {
-  Jvm = 1,
-
-  Js = 2,
-
-  Native = 3,
-}
-```
+the `data?: RunParamsData` field, when
+the `dataKind` field contains `"scala-main-class"`.
 
 ## TestParamsData kinds
 
@@ -413,11 +421,3 @@ export interface ScalaTestSuiteSelection {
   tests: string[];
 }
 ```
-
-## RunParamsData kinds
-
-### ScalaMainClass
-
-This structure is embedded in
-the `data?: RunParamsData` field, when
-the `dataKind` field contains `"scala-main-class"`.

@@ -63,15 +63,6 @@ export interface RustWorkspaceResult {
 }
 ```
 
-#### RustDependencies
-
-The RustDependencies is a mapping between
-package id and the package's dependencies info.
-
-```ts
-export type RustDependencies = Map<string, RustDependency[]>;
-```
-
 #### RustPackage
 
 A `crate` is the smallest amount of code that the Rust compiler considers at a time.
@@ -150,43 +141,6 @@ export interface RustPackage {
 }
 ```
 
-#### Feature
-
-```ts
-export type Feature = string;
-```
-
-#### FeaturesDependencyGraph
-
-The feature dependency graph is a mapping between
-feature and the features it turns on
-
-```ts
-export type FeaturesDependencyGraph = Map<Feature, Set<Feature>>;
-```
-
-#### RustCfgOptions
-
-```ts
-export type RustCfgOptions = Map<string, string[]>;
-```
-
-#### RustEdition
-
-The Rust edition.
-
-```ts
-export type RustEdition = string;
-
-export namespace RustEdition {
-  export const E2015 = "2015";
-
-  export const E2018 = "2018";
-
-  export const E2021 = "2021";
-}
-```
-
 #### RustPackageOrigin
 
 ```ts
@@ -204,6 +158,22 @@ export namespace RustPackageOrigin {
 
   /** The package is a part of our workspace. */
   export const Workspace = "workspace";
+}
+```
+
+#### RustEdition
+
+The Rust edition.
+
+```ts
+export type RustEdition = string;
+
+export namespace RustEdition {
+  export const E2015 = "2015";
+
+  export const E2018 = "2018";
+
+  export const E2021 = "2021";
 }
 ```
 
@@ -238,31 +208,6 @@ export interface RustTarget {
 }
 ```
 
-#### RustCrateType
-
-Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for
-`lib` and `example` target kinds. For other target kinds `bin` crate type is listed.
-
-```ts
-export enum RustCrateType {
-  Bin = 1,
-
-  Lib = 2,
-
-  Rlib = 3,
-
-  Dylib = 4,
-
-  Cdylib = 5,
-
-  Staticlib = 6,
-
-  ProcMacro = 7,
-
-  Unknown = 8,
-}
-```
-
 #### RustTargetKind
 
 ```ts
@@ -290,6 +235,52 @@ export enum RustTargetKind {
 }
 ```
 
+#### RustCrateType
+
+Crate types (`lib`, `rlib`, `dylib`, `cdylib`, `staticlib`) are listed for
+`lib` and `example` target kinds. For other target kinds `bin` crate type is listed.
+
+```ts
+export enum RustCrateType {
+  Bin = 1,
+
+  Lib = 2,
+
+  Rlib = 3,
+
+  Dylib = 4,
+
+  Cdylib = 5,
+
+  Staticlib = 6,
+
+  ProcMacro = 7,
+
+  Unknown = 8,
+}
+```
+
+#### Feature
+
+```ts
+export type Feature = string;
+```
+
+#### FeaturesDependencyGraph
+
+The feature dependency graph is a mapping between
+feature and the features it turns on
+
+```ts
+export type FeaturesDependencyGraph = Map<Feature, Set<Feature>>;
+```
+
+#### RustCfgOptions
+
+```ts
+export type RustCfgOptions = Map<string, string[]>;
+```
+
 #### RustRawDependencies
 
 The RustRawDependencies is a mapping between
@@ -297,4 +288,13 @@ package id and the package's raw dependencies info.
 
 ```ts
 export type RustRawDependencies = Map<string, RustRawDependency[]>;
+```
+
+#### RustDependencies
+
+The RustDependencies is a mapping between
+package id and the package's dependencies info.
+
+```ts
+export type RustDependencies = Map<string, RustDependency[]>;
 ```

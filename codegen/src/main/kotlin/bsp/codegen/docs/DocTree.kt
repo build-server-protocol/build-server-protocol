@@ -72,6 +72,7 @@ fun SmithyToIr.docTree(namespace: String): DocTree {
       allDataKindAnnotated
           .mapValues { (_, inhabitants) -> inhabitants.filter { it.shape.namespace == namespace } }
           .filterValues { it.isNotEmpty() }
+          .toSortedMap()
 
   return DocTree(commonShapeIds, services, operations, structures, dataKindInhabitants)
 }
