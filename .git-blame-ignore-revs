@@ -3,3 +3,6 @@
 # https://www.moxio.com/blog/43/ignoring-bulk-change-commits-with-git-blame
 #
 ccb5152da9b44b5891858d9370ec944efcc5c49f
+
+# Scala Steward: Reformat with scalafmt 3.8.1
+3cc9a50c2d6d66e570ad18f17da20830484a9c2a

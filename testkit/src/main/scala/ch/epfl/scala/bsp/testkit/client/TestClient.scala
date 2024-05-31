@@ -502,7 +502,7 @@ class TestClient(
           !testTargetsDiff.hasChanges,
           s"Workspace Build Targets did not match!\n${val visitor = new ToMapPrintingVisitor(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
             testTargetsDiff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
         workspaceBuildTargetsResult
       })
@@ -681,7 +681,7 @@ class TestClient(
           !testItemsDiff.hasChanges,
           s"JVM Run Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
             testItemsDiff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -707,7 +707,7 @@ class TestClient(
           !testItemsDiff.hasChanges,
           s"JVM Test Environment Items did not match!\n${val visitor = new ToMapPrintingVisitor(jvmItems, expectedResult.getItems)
             testItemsDiff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -762,7 +762,7 @@ class TestClient(
           !diff.hasChanges,
           s"Javac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(javacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -799,7 +799,7 @@ class TestClient(
           !diff.hasChanges,
           s"Scalac Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(scalacOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -827,7 +827,7 @@ class TestClient(
           !diff.hasChanges,
           s"Cpp Options Items did not match!\n${val visitor = new ToMapPrintingVisitor(cppOptionsItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -881,7 +881,7 @@ class TestClient(
           !diff.hasChanges,
           s"Scalac Main Classes Items did not match!\n${val visitor = new ToMapPrintingVisitor(mainItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
@@ -918,7 +918,7 @@ class TestClient(
           !diff.hasChanges,
           s"Scalac Test Classes Items did not match!\n${val visitor = new ToMapPrintingVisitor(testItems, expectedResult.getItems)
             diff.visit(visitor)
-            visitor.getMessagesAsString }"
+            visitor.getMessagesAsString}"
         )
       })
   }
