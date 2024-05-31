@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `MavenDependencyModule` is a basic data structure that contains maven-like metadata. This
@@ -34,7 +33,6 @@ public class MavenDependencyModule {
     this.artifacts = artifacts;
   }
 
-  @Pure
   @NonNull
   public String getOrganization() {
     return this.organization;
@@ -44,7 +42,6 @@ public class MavenDependencyModule {
     this.organization = Preconditions.checkNotNull(organization, "organization");
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -54,7 +51,6 @@ public class MavenDependencyModule {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -64,7 +60,6 @@ public class MavenDependencyModule {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public List<MavenDependencyModuleArtifact> getArtifacts() {
     return this.artifacts;
@@ -74,7 +69,6 @@ public class MavenDependencyModule {
     this.artifacts = Preconditions.checkNotNull(artifacts, "artifacts");
   }
 
-  @Pure
   public String getScope() {
     return this.scope;
   }
@@ -84,7 +78,6 @@ public class MavenDependencyModule {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("organization", this.organization);
@@ -96,7 +89,6 @@ public class MavenDependencyModule {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -121,7 +113,6 @@ public class MavenDependencyModule {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

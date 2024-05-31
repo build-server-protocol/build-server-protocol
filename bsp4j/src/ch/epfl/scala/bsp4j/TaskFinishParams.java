@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TaskFinishParams {
@@ -29,7 +28,6 @@ public class TaskFinishParams {
     this.status = status;
   }
 
-  @Pure
   @NonNull
   public TaskId getTaskId() {
     return this.taskId;
@@ -39,7 +37,6 @@ public class TaskFinishParams {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -48,7 +45,6 @@ public class TaskFinishParams {
     this.originId = originId;
   }
 
-  @Pure
   public Long getEventTime() {
     return this.eventTime;
   }
@@ -57,7 +53,6 @@ public class TaskFinishParams {
     this.eventTime = eventTime;
   }
 
-  @Pure
   public String getMessage() {
     return this.message;
   }
@@ -66,7 +61,6 @@ public class TaskFinishParams {
     this.message = message;
   }
 
-  @Pure
   @NonNull
   public StatusCode getStatus() {
     return this.status;
@@ -76,7 +70,6 @@ public class TaskFinishParams {
     this.status = Preconditions.checkNotNull(status, "status");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -85,7 +78,6 @@ public class TaskFinishParams {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -95,7 +87,6 @@ public class TaskFinishParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("taskId", this.taskId);
@@ -109,7 +100,6 @@ public class TaskFinishParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -140,7 +130,6 @@ public class TaskFinishParams {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

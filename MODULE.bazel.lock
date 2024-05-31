@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "4b63f3f252018005a916019c4f27340563c8a51338bc04df8071cfa8e7b544a7",
+  "moduleFileHash": "250ed3711bc22156e6eba30615918f2d637f8a035a0d07ee9c23d3e54e1b354a",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -43,9 +43,9 @@
               "tagName": "install",
               "attributeValues": {
                 "artifacts": [
-                  "software.amazon.smithy:smithy-model:1.45.0",
-                  "software.amazon.smithy:smithy-codegen-core:1.45.0",
-                  "software.amazon.smithy:smithy-utils:1.45.0",
+                  "software.amazon.smithy:smithy-model:1.49.0",
+                  "software.amazon.smithy:smithy-codegen-core:1.49.0",
+                  "software.amazon.smithy:smithy-utils:1.49.0",
                   "org.junit.jupiter:junit-jupiter:5.10.2",
                   "org.junit.jupiter:junit-jupiter-api:5.10.2",
                   "org.junit.jupiter:junit-jupiter-engine:5.10.2",
@@ -53,13 +53,7 @@
                   "org.junit.platform:junit-platform-console:1.10.2",
                   "com.vanniktech:gradle-maven-publish-plugin:0.28.0",
                   "org.scalameta:mdoc_2.13:2.5.2",
-                  "org.scalameta:scalafmt-cli_2.13:3.8.0",
-                  "org.scala-lang.modules:scala-collection-compat_2.13:2.11.0",
-                  "com.lihaoyi:os-lib_2.13:0.9.3",
-                  "com.lihaoyi:geny_2.13:1.0.0",
-                  "com.monovore:decline_2.13:2.4.1",
-                  "org.typelevel:cats-core_2.13:2.10.0",
-                  "org.typelevel:cats-kernel_2.13:2.10.0",
+                  "org.scalameta:scalafmt-cli_2.13:3.8.1",
                   "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-core_2.13:2.28.3",
                   "com.github.plokhotnyuk.jsoniter-scala:jsoniter-scala-macros_2.13:2.28.3",
                   "me.vican.jorge:jsonrpc4s_2.13:0.1.0",
@@ -75,15 +69,13 @@
                   "io.monix:monix-eval_2.13:3.2.0",
                   "io.monix:monix-execution_2.13:3.2.0",
                   "com.outr:scribe_2.13:3.5.5",
-                  "org.eclipse.lsp4j:org.eclipse.lsp4j:0.20.1",
-                  "org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.20.1",
-                  "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.20.1",
-                  "org.eclipse.xtend:org.eclipse.xtend.core:2.28.0",
-                  "org.eclipse.xtend:org.eclipse.xtend.lib:2.28.0",
-                  "org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.28.0",
-                  "com.google.guava:guava:33.1.0-jre",
-                  "com.google.inject:guice:7.0.0",
-                  "org.scala-lang:scala-library:2.13.12"
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j:0.23.1",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.23.1",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.23.1",
+                  "org.eclipse.xtend:org.eclipse.xtend.core:2.32.0",
+                  "org.eclipse.xtend:org.eclipse.xtend.lib:2.32.0",
+                  "org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.32.0",
+                  "org.scala-lang:scala-library:2.13.14"
                 ],
                 "fail_if_repin_required": true,
                 "lock_file": "//:maven_install.json",
@@ -111,7 +103,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 94,
+            "line": 84,
             "column": 21
           },
           "imports": {},
@@ -125,7 +117,7 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 95,
+                "line": 85,
                 "column": 15
               }
             }
@@ -139,7 +131,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 99,
+            "line": 89,
             "column": 20
           },
           "imports": {
@@ -163,7 +155,7 @@
               "devDependency": true,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 100,
+                "line": 90,
                 "column": 23
               }
             }
@@ -3248,7 +3240,7 @@
         "bzlTransitiveDigest": "8AIjzxyvVnJujblgziVgY6LujIxVChTDYqcPK+GLgJI=",
         "recordedFileInputs": {
           "@@rules_jvm_external~//rules_jvm_external_deps_install.json": "0bfbc915d9155df44d7a3b216e8f3c1fbcd110e358dd07637dc393583a5227e8",
-          "@@//maven_install.json": "794187f2b97464019772b16026f6f6693fd5c1d266d32895a1bdee795387c60c"
+          "@@//maven_install.json": "42d81ebb4154cdb3b681be37373a046062ab2d31bbafabc255865654e325abec"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -3273,6 +3265,20 @@
                 "https://repo1.maven.org/maven2/io/opentelemetry/opentelemetry-context/1.36.0/opentelemetry-context-1.36.0.jar"
               ],
               "downloaded_file_path": "v1/io/opentelemetry/opentelemetry-context/1.36.0/opentelemetry-context-1.36.0.jar"
+            }
+          },
+          "com_google_guava_guava_32_1_2_jre": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "bc65dea7cfd9e4dacf8419d8af0e741655857d27885bb35d943d7187fc3a8fce",
+              "urls": [
+                "https://maven.google.com/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar",
+                "https://repo.maven.apache.org/maven2/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar",
+                "https://repo1.maven.org/maven2/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar",
+                "https://jitpack.io/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar"
             }
           },
           "com_lihaoyi_pprint_2_13_0_8_1": {
@@ -3309,20 +3315,6 @@
                 "https://repo1.maven.org/maven2/io/grpc/grpc-util/1.62.2/grpc-util-1.62.2.jar"
               ],
               "downloaded_file_path": "v1/io/grpc/grpc-util/1.62.2/grpc-util-1.62.2.jar"
-            }
-          },
-          "ch_qos_reload4j_reload4j_1_2_19": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "fa07aa7adedf2a65eb09007443bb60b51c725b1b5b88e481e00c529ff2d3b5b5",
-              "urls": [
-                "https://maven.google.com/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar",
-                "https://repo.maven.apache.org/maven2/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar",
-                "https://repo1.maven.org/maven2/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar",
-                "https://jitpack.io/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar"
-              ],
-              "downloaded_file_path": "v1/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar"
             }
           },
           "com_vladsch_flexmark_flexmark_ext_emoji_0_64_8": {
@@ -3516,18 +3508,18 @@
               "downloaded_file_path": "v1/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar"
             }
           },
-          "org_scalameta_scalafmt_config_2_13_3_8_0": {
+          "org_scalameta_scalafmt_config_2_13_3_8_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "bd86994ffdde780d4dd31526677cd90c9febdb97d9f05012a624fa1a6242bf84",
+              "sha256": "66e95984b4f94569b615d3dd7e6a825df2030c0702b845504067261587f0ac30",
               "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-config_2.13/3.8.0/scalafmt-config_2.13-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-config_2.13/3.8.0/scalafmt-config_2.13-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-config_2.13/3.8.0/scalafmt-config_2.13-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-config_2.13/3.8.0/scalafmt-config_2.13-3.8.0.jar"
+                "https://maven.google.com/org/scalameta/scalafmt-config_2.13/3.8.1/scalafmt-config_2.13-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-config_2.13/3.8.1/scalafmt-config_2.13-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-config_2.13/3.8.1/scalafmt-config_2.13-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-config_2.13/3.8.1/scalafmt-config_2.13-3.8.1.jar"
               ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-config_2.13/3.8.0/scalafmt-config_2.13-3.8.0.jar"
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-config_2.13/3.8.1/scalafmt-config_2.13-3.8.1.jar"
             }
           },
           "org_scalactic_scalactic_2_13_3_2_16": {
@@ -3542,6 +3534,20 @@
                 "https://jitpack.io/org/scalactic/scalactic_2.13/3.2.16/scalactic_2.13-3.2.16.jar"
               ],
               "downloaded_file_path": "v1/org/scalactic/scalactic_2.13/3.2.16/scalactic_2.13-3.2.16.jar"
+            }
+          },
+          "software_amazon_smithy_smithy_codegen_core_1_49_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "510af77b9b9c57832318a3c9ddfa3b5e8dcb05bcd1bca69bfabb454f3205a326",
+              "urls": [
+                "https://maven.google.com/software/amazon/smithy/smithy-codegen-core/1.49.0/smithy-codegen-core-1.49.0.jar",
+                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-codegen-core/1.49.0/smithy-codegen-core-1.49.0.jar",
+                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-codegen-core/1.49.0/smithy-codegen-core-1.49.0.jar",
+                "https://jitpack.io/software/amazon/smithy/smithy-codegen-core/1.49.0/smithy-codegen-core-1.49.0.jar"
+              ],
+              "downloaded_file_path": "v1/software/amazon/smithy/smithy-codegen-core/1.49.0/smithy-codegen-core-1.49.0.jar"
             }
           },
           "org_apache_maven_resolver_maven_resolver_transport_file_1_9_18": {
@@ -3624,20 +3630,6 @@
               "downloaded_file_path": "v1/software/amazon/awssdk/utils/2.25.23/utils-2.25.23.jar"
             }
           },
-          "com_google_code_gson_gson_2_10_1": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593",
-              "urls": [
-                "https://maven.google.com/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
-                "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
-                "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
-                "https://jitpack.io/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar"
-              ],
-              "downloaded_file_path": "v1/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar"
-            }
-          },
           "com_lihaoyi_sourcecode_2_13_0_3_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3650,6 +3642,17 @@
                 "https://jitpack.io/com/lihaoyi/sourcecode_2.13/0.3.1/sourcecode_2.13-0.3.1.jar"
               ],
               "downloaded_file_path": "v1/com/lihaoyi/sourcecode_2.13/0.3.1/sourcecode_2.13-0.3.1.jar"
+            }
+          },
+          "com_google_code_gson_gson_2_10_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593",
+              "urls": [
+                "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar"
             }
           },
           "io_opencensus_opencensus_proto_jar_sources_0_2_0": {
@@ -3727,6 +3730,20 @@
               "downloaded_file_path": "v1/com/google/http-client/google-http-client-apache-v2/1.44.1/google-http-client-apache-v2-1.44.1-sources.jar"
             }
           },
+          "org_eclipse_emf_org_eclipse_emf_ecore_2_26_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "cb21a45447f852a21532a73da52b2c5e640fbe487b5cda87fb7612c3120212ab",
+              "urls": [
+                "https://maven.google.com/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar",
+                "https://jitpack.io/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar"
+            }
+          },
           "com_martiansoftware_nailgun_server_0_9_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3739,6 +3756,20 @@
                 "https://jitpack.io/com/martiansoftware/nailgun-server/0.9.1/nailgun-server-0.9.1.jar"
               ],
               "downloaded_file_path": "v1/com/martiansoftware/nailgun-server/0.9.1/nailgun-server-0.9.1.jar"
+            }
+          },
+          "org_eclipse_jdt_org_eclipse_jdt_core_3_33_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "c03cbbf5ab447d954efb8268a58dd9f2fe70f9e5d9be0a8371f79d785357eba3",
+              "urls": [
+                "https://maven.google.com/org/eclipse/jdt/org.eclipse.jdt.core/3.33.0/org.eclipse.jdt.core-3.33.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/jdt/org.eclipse.jdt.core/3.33.0/org.eclipse.jdt.core-3.33.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/jdt/org.eclipse.jdt.core/3.33.0/org.eclipse.jdt.core-3.33.0.jar",
+                "https://jitpack.io/org/eclipse/jdt/org.eclipse.jdt.core/3.33.0/org.eclipse.jdt.core-3.33.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/jdt/org.eclipse.jdt.core/3.33.0/org.eclipse.jdt.core-3.33.0.jar"
             }
           },
           "org_apache_maven_resolver_maven_resolver_api_1_9_18": {
@@ -3780,20 +3811,6 @@
               "downloaded_file_path": "v1/org/scalatest/scalatest-core_2.13/3.2.16/scalatest-core_2.13-3.2.16.jar"
             }
           },
-          "org_typelevel_cats_core_2_13_2_10_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "9d710e00f6af12dd8e885ec622f78d4b3a35802872e9f01c17ce9c82273aa0b8",
-              "urls": [
-                "https://maven.google.com/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar",
-                "https://repo.maven.apache.org/maven2/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar",
-                "https://repo1.maven.org/maven2/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar",
-                "https://jitpack.io/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar"
-            }
-          },
           "com_google_cloud_google_cloud_core_2_36_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3817,6 +3834,20 @@
                 "https://jitpack.io/com/google/protobuf/protobuf-java/3.19.6/protobuf-java-3.19.6.jar"
               ],
               "downloaded_file_path": "v1/com/google/protobuf/protobuf-java/3.19.6/protobuf-java-3.19.6.jar"
+            }
+          },
+          "org_eclipse_xtext_org_eclipse_xtext_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "9b47a362033c5aa8a586e3ead345d6f88166b37d1cb8493ef8e96ee058ac5b7b",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext/2.32.0/org.eclipse.xtext-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext/2.32.0/org.eclipse.xtext-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext/2.32.0/org.eclipse.xtext-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext/2.32.0/org.eclipse.xtext-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext/2.32.0/org.eclipse.xtext-2.32.0.jar"
             }
           },
           "software_amazon_awssdk_s3_2_25_23": {
@@ -3863,6 +3894,20 @@
               "downloaded_file_path": "v1/org/apache/maven/shared/maven-shared-utils/3.3.4/maven-shared-utils-3.3.4.jar"
             }
           },
+          "org_ow2_asm_asm_9_5": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "b62e84b5980729751b0458c534cf1366f727542bb8d158621335682a460f0353",
+              "urls": [
+                "https://maven.google.com/org/ow2/asm/asm/9.5/asm-9.5.jar",
+                "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.5/asm-9.5.jar",
+                "https://repo1.maven.org/maven2/org/ow2/asm/asm/9.5/asm-9.5.jar",
+                "https://jitpack.io/org/ow2/asm/asm/9.5/asm-9.5.jar"
+              ],
+              "downloaded_file_path": "v1/org/ow2/asm/asm/9.5/asm-9.5.jar"
+            }
+          },
           "software_amazon_awssdk_apache_client_2_25_23": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3902,20 +3947,6 @@
               "downloaded_file_path": "v1/de/rototor/pdfbox/graphics2d/0.32/graphics2d-0.32.jar"
             }
           },
-          "org_ow2_asm_asm_9_3": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "1263369b59e29c943918de11d6d6152e2ec6085ce63e5710516f8c67d368e4bc",
-              "urls": [
-                "https://maven.google.com/org/ow2/asm/asm/9.3/asm-9.3.jar",
-                "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.3/asm-9.3.jar",
-                "https://repo1.maven.org/maven2/org/ow2/asm/asm/9.3/asm-9.3.jar",
-                "https://jitpack.io/org/ow2/asm/asm/9.3/asm-9.3.jar"
-              ],
-              "downloaded_file_path": "v1/org/ow2/asm/asm/9.3/asm-9.3.jar"
-            }
-          },
           "org_apache_maven_resolver_maven_resolver_impl_1_9_18": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3925,6 +3956,20 @@
                 "https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-impl/1.9.18/maven-resolver-impl-1.9.18.jar"
               ],
               "downloaded_file_path": "v1/org/apache/maven/resolver/maven-resolver-impl/1.9.18/maven-resolver-impl-1.9.18.jar"
+            }
+          },
+          "ch_qos_reload4j_reload4j_1_2_24": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "6a2e8e19a3eba170fdb2b93d2653bdc9ec9d86c40f3f37e8c28974143fbc80d1",
+              "urls": [
+                "https://maven.google.com/ch/qos/reload4j/reload4j/1.2.24/reload4j-1.2.24.jar",
+                "https://repo.maven.apache.org/maven2/ch/qos/reload4j/reload4j/1.2.24/reload4j-1.2.24.jar",
+                "https://repo1.maven.org/maven2/ch/qos/reload4j/reload4j/1.2.24/reload4j-1.2.24.jar",
+                "https://jitpack.io/ch/qos/reload4j/reload4j/1.2.24/reload4j-1.2.24.jar"
+              ],
+              "downloaded_file_path": "v1/ch/qos/reload4j/reload4j/1.2.24/reload4j-1.2.24.jar"
             }
           },
           "io_netty_netty_handler_jar_sources_4_1_108_Final": {
@@ -3988,6 +4033,34 @@
               "downloaded_file_path": "v1/io/grpc/grpc-context/1.62.2/grpc-context-1.62.2.jar"
             }
           },
+          "org_eclipse_xtext_org_eclipse_xtext_xbase_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "36c6dcd06f26ef053748711f4190f27439fe8d1e8659ce9bc07420f50a862b05",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.xbase/2.32.0/org.eclipse.xtext.xbase-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase/2.32.0/org.eclipse.xtext.xbase-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase/2.32.0/org.eclipse.xtext.xbase-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.xbase/2.32.0/org.eclipse.xtext.xbase-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.xbase/2.32.0/org.eclipse.xtext.xbase-2.32.0.jar"
+            }
+          },
+          "org_eclipse_lsp4j_org_eclipse_lsp4j_0_23_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "b16bbc6232a3946e03d537bb9be74e18489dbc6a8b8c5ab6cb7980854df8440f",
+              "urls": [
+                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j/0.23.1/org.eclipse.lsp4j-0.23.1.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j/0.23.1/org.eclipse.lsp4j-0.23.1.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j/0.23.1/org.eclipse.lsp4j-0.23.1.jar",
+                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j/0.23.1/org.eclipse.lsp4j-0.23.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j/0.23.1/org.eclipse.lsp4j-0.23.1.jar"
+            }
+          },
           "com_vladsch_flexmark_flexmark_youtrack_converter_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4035,18 +4108,46 @@
               "downloaded_file_path": "v1/software/amazon/awssdk/aws-core/2.25.23/aws-core-2.25.23.jar"
             }
           },
-          "org_scalameta_scalafmt_sysops_2_13_3_8_0": {
+          "org_eclipse_platform_org_eclipse_core_commands_3_10_300": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "ad575e719ccbc3fba75774dad2a86690281f1a38529ff734ed1cf0fb40973412",
+              "sha256": "e589b4036723278bcd25e7aa190d1632a58569437a202d5c2b97c7ac9847b874",
               "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-sysops_2.13/3.8.0/scalafmt-sysops_2.13-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-sysops_2.13/3.8.0/scalafmt-sysops_2.13-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-sysops_2.13/3.8.0/scalafmt-sysops_2.13-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-sysops_2.13/3.8.0/scalafmt-sysops_2.13-3.8.0.jar"
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.commands/3.10.300/org.eclipse.core.commands-3.10.300.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.commands/3.10.300/org.eclipse.core.commands-3.10.300.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.commands/3.10.300/org.eclipse.core.commands-3.10.300.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.commands/3.10.300/org.eclipse.core.commands-3.10.300.jar"
               ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-sysops_2.13/3.8.0/scalafmt-sysops_2.13-3.8.0.jar"
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.commands/3.10.300/org.eclipse.core.commands-3.10.300.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_osgi_3_18_300": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "bab943e58edd17309238672dba7a45aec9e2dacbdddb818a8cf17723ea13fa22",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar"
+            }
+          },
+          "org_scalameta_scalafmt_sysops_2_13_3_8_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "85224529e9039f55e5947291efb17f95e841e19d8c6920adf2162bb931de8abb",
+              "urls": [
+                "https://maven.google.com/org/scalameta/scalafmt-sysops_2.13/3.8.1/scalafmt-sysops_2.13-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-sysops_2.13/3.8.1/scalafmt-sysops_2.13-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-sysops_2.13/3.8.1/scalafmt-sysops_2.13-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-sysops_2.13/3.8.1/scalafmt-sysops_2.13-3.8.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-sysops_2.13/3.8.1/scalafmt-sysops_2.13-3.8.1.jar"
             }
           },
           "com_squareup_retrofit2_retrofit_2_9_0": {
@@ -4105,18 +4206,32 @@
               "downloaded_file_path": "v1/com/outr/perfolation_2.13/1.2.8/perfolation_2.13-1.2.8.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_core_commands_3_12_0": {
+          "software_amazon_smithy_smithy_build_1_49_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "da31fa772bffd30db84486a2ddf43c5f67774eaf3931f06d3d83b969a57ea790",
+              "sha256": "e964011f9e87ebb1f52ac2bb47532bbbba25db48fddfa94e22ca6e8327192387",
               "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.commands/3.12.0/org.eclipse.core.commands-3.12.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.commands/3.12.0/org.eclipse.core.commands-3.12.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.commands/3.12.0/org.eclipse.core.commands-3.12.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.commands/3.12.0/org.eclipse.core.commands-3.12.0.jar"
+                "https://maven.google.com/software/amazon/smithy/smithy-build/1.49.0/smithy-build-1.49.0.jar",
+                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-build/1.49.0/smithy-build-1.49.0.jar",
+                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-build/1.49.0/smithy-build-1.49.0.jar",
+                "https://jitpack.io/software/amazon/smithy/smithy-build/1.49.0/smithy-build-1.49.0.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.commands/3.12.0/org.eclipse.core.commands-3.12.0.jar"
+              "downloaded_file_path": "v1/software/amazon/smithy/smithy-build/1.49.0/smithy-build-1.49.0.jar"
+            }
+          },
+          "org_eclipse_jdt_ecj_3_33_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "f7686c4960cf70c2ebc5c500a73a8cfc04541b730c18f1c5c21329889b137f45",
+              "urls": [
+                "https://maven.google.com/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar",
+                "https://jitpack.io/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar"
             }
           },
           "com_google_googlejavaformat_google_java_format_1_22_0": {
@@ -4144,6 +4259,20 @@
               "downloaded_file_path": "v1/org/scalameta/svm-subs/101.0.0/svm-subs-101.0.0.jar"
             }
           },
+          "org_eclipse_xtend_org_eclipse_xtend_core_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "bcdd2443acba034f9933e0ccdbbd2a3193492f7f69789fd98318f693e2d84905",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.core/2.32.0/org.eclipse.xtend.core-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.core/2.32.0/org.eclipse.xtend.core-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.core/2.32.0/org.eclipse.xtend.core-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.core/2.32.0/org.eclipse.xtend.core-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.core/2.32.0/org.eclipse.xtend.core-2.32.0.jar"
+            }
+          },
           "com_vladsch_flexmark_flexmark_ext_toc_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4156,20 +4285,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-toc/0.64.8/flexmark-ext-toc-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-toc/0.64.8/flexmark-ext-toc-0.64.8.jar"
-            }
-          },
-          "org_scalameta_common_2_13_4_9_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "37b50b14b3e5701127781b520f220fae8f7a60afdeb7d47a764e51396c037455",
-              "urls": [
-                "https://maven.google.com/org/scalameta/common_2.13/4.9.0/common_2.13-4.9.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/common_2.13/4.9.0/common_2.13-4.9.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/common_2.13/4.9.0/common_2.13-4.9.0.jar",
-                "https://jitpack.io/org/scalameta/common_2.13/4.9.0/common_2.13-4.9.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/common_2.13/4.9.0/common_2.13-4.9.0.jar"
             }
           },
           "org_scalatest_scalatest_propspec_2_13_3_2_16": {
@@ -4197,6 +4312,20 @@
               "downloaded_file_path": "v1/com/google/code/gson/gson/2.10.1/gson-2.10.1-sources.jar"
             }
           },
+          "org_scalameta_common_2_13_4_9_3": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "000fa56321622dea855bd6b87d6a39c1e566bf8054eb471ec58cd1e15b9e1583",
+              "urls": [
+                "https://maven.google.com/org/scalameta/common_2.13/4.9.3/common_2.13-4.9.3.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/common_2.13/4.9.3/common_2.13-4.9.3.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/common_2.13/4.9.3/common_2.13-4.9.3.jar",
+                "https://jitpack.io/org/scalameta/common_2.13/4.9.3/common_2.13-4.9.3.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/common_2.13/4.9.3/common_2.13-4.9.3.jar"
+            }
+          },
           "com_google_auto_value_auto_value_annotations_1_10_4": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4206,6 +4335,34 @@
                 "https://repo1.maven.org/maven2/com/google/auto/value/auto-value-annotations/1.10.4/auto-value-annotations-1.10.4.jar"
               ],
               "downloaded_file_path": "v1/com/google/auto/value/auto-value-annotations/1.10.4/auto-value-annotations-1.10.4.jar"
+            }
+          },
+          "software_amazon_smithy_smithy_utils_1_49_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "78f69a76ef3abfc4f0a4e24f2e9fb4d9f45d5383bf55561a05fef5b35b9da235",
+              "urls": [
+                "https://maven.google.com/software/amazon/smithy/smithy-utils/1.49.0/smithy-utils-1.49.0.jar",
+                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-utils/1.49.0/smithy-utils-1.49.0.jar",
+                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-utils/1.49.0/smithy-utils-1.49.0.jar",
+                "https://jitpack.io/software/amazon/smithy/smithy-utils/1.49.0/smithy-utils-1.49.0.jar"
+              ],
+              "downloaded_file_path": "v1/software/amazon/smithy/smithy-utils/1.49.0/smithy-utils-1.49.0.jar"
+            }
+          },
+          "software_amazon_smithy_smithy_model_1_49_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "d967b9265a107d6ce75c6f91a3fae6b012f2211da08e2b8abc7f733d97ead21d",
+              "urls": [
+                "https://maven.google.com/software/amazon/smithy/smithy-model/1.49.0/smithy-model-1.49.0.jar",
+                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-model/1.49.0/smithy-model-1.49.0.jar",
+                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-model/1.49.0/smithy-model-1.49.0.jar",
+                "https://jitpack.io/software/amazon/smithy/smithy-model/1.49.0/smithy-model-1.49.0.jar"
+              ],
+              "downloaded_file_path": "v1/software/amazon/smithy/smithy-model/1.49.0/smithy-model-1.49.0.jar"
             }
           },
           "com_google_inject_guice_jar_sources_5_1_0": {
@@ -4317,20 +4474,6 @@
               "downloaded_file_path": "v1/com/google/inject/guice/7.0.0/guice-7.0.0.jar"
             }
           },
-          "org_scalameta_scalafmt_dynamic_2_13_3_8_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "5cece406ab4b06af9822fecf48fa5acb2dbbaf426335ab7ad82fc16726bc9f73",
-              "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-dynamic_2.13/3.8.0/scalafmt-dynamic_2.13-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-dynamic_2.13/3.8.0/scalafmt-dynamic_2.13-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-dynamic_2.13/3.8.0/scalafmt-dynamic_2.13-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-dynamic_2.13/3.8.0/scalafmt-dynamic_2.13-3.8.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-dynamic_2.13/3.8.0/scalafmt-dynamic_2.13-3.8.0.jar"
-            }
-          },
           "io_netty_netty_transport_native_unix_common_4_1_108_Final": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4340,6 +4483,20 @@
                 "https://repo1.maven.org/maven2/io/netty/netty-transport-native-unix-common/4.1.108.Final/netty-transport-native-unix-common-4.1.108.Final.jar"
               ],
               "downloaded_file_path": "v1/io/netty/netty-transport-native-unix-common/4.1.108.Final/netty-transport-native-unix-common-4.1.108.Final.jar"
+            }
+          },
+          "org_scalameta_scalafmt_dynamic_2_13_3_8_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "12670a67e7bce02afe7f34e985f6c1f64471391f0c9e1ed9463058ee1849de66",
+              "urls": [
+                "https://maven.google.com/org/scalameta/scalafmt-dynamic_2.13/3.8.1/scalafmt-dynamic_2.13-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-dynamic_2.13/3.8.1/scalafmt-dynamic_2.13-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-dynamic_2.13/3.8.1/scalafmt-dynamic_2.13-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-dynamic_2.13/3.8.1/scalafmt-dynamic_2.13-3.8.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-dynamic_2.13/3.8.1/scalafmt-dynamic_2.13-3.8.1.jar"
             }
           },
           "software_amazon_awssdk_endpoints_spi_jar_sources_2_25_23": {
@@ -4453,20 +4610,6 @@
               "downloaded_file_path": "v1/com/github/plokhotnyuk/jsoniter-scala/jsoniter-scala-macros_2.13/2.28.3/jsoniter-scala-macros_2.13-2.28.3.jar"
             }
           },
-          "com_lihaoyi_geny_2_13_1_0_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "078af5bf405bbf41d6eca6441b2bcd282551d054c47acf4f949b6c983063b117",
-              "urls": [
-                "https://maven.google.com/com/lihaoyi/geny_2.13/1.0.0/geny_2.13-1.0.0.jar",
-                "https://repo.maven.apache.org/maven2/com/lihaoyi/geny_2.13/1.0.0/geny_2.13-1.0.0.jar",
-                "https://repo1.maven.org/maven2/com/lihaoyi/geny_2.13/1.0.0/geny_2.13-1.0.0.jar",
-                "https://jitpack.io/com/lihaoyi/geny_2.13/1.0.0/geny_2.13-1.0.0.jar"
-              ],
-              "downloaded_file_path": "v1/com/lihaoyi/geny_2.13/1.0.0/geny_2.13-1.0.0.jar"
-            }
-          },
           "org_jetbrains_kotlin_kotlin_stdlib_jdk7_1_8_21": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4493,20 +4636,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-macros/0.64.8/flexmark-ext-macros-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-macros/0.64.8/flexmark-ext-macros-0.64.8.jar"
-            }
-          },
-          "org_eclipse_platform_org_eclipse_core_filesystem_1_10_300": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "710aa427aa95ecf2d1569930223c33ddf84a831836874ded5c299db83d21743d",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.filesystem/1.10.300/org.eclipse.core.filesystem-1.10.300.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.filesystem/1.10.300/org.eclipse.core.filesystem-1.10.300.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.filesystem/1.10.300/org.eclipse.core.filesystem-1.10.300.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.filesystem/1.10.300/org.eclipse.core.filesystem-1.10.300.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.filesystem/1.10.300/org.eclipse.core.filesystem-1.10.300.jar"
             }
           },
           "org_junit_platform_junit_platform_commons_1_10_2": {
@@ -4678,20 +4807,6 @@
               "downloaded_file_path": "v1/com/google/auth/google-auth-library-credentials/1.23.0/google-auth-library-credentials-1.23.0.jar"
             }
           },
-          "org_eclipse_emf_org_eclipse_emf_common_2_17_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "5b8aa3fd7ef54ac695aa73c6bfea299a9be2cf7472ed6b8a9fa84dfd000bdcb3",
-              "urls": [
-                "https://maven.google.com/org/eclipse/emf/org.eclipse.emf.common/2.17.0/org.eclipse.emf.common-2.17.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/emf/org.eclipse.emf.common/2.17.0/org.eclipse.emf.common-2.17.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/emf/org.eclipse.emf.common/2.17.0/org.eclipse.emf.common-2.17.0.jar",
-                "https://jitpack.io/org/eclipse/emf/org.eclipse.emf.common/2.17.0/org.eclipse.emf.common-2.17.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/emf/org.eclipse.emf.common/2.17.0/org.eclipse.emf.common-2.17.0.jar"
-            }
-          },
           "com_vladsch_flexmark_flexmark_util_options_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -4809,18 +4924,18 @@
               "downloaded_file_path": "v1/org/nibor/autolink/autolink/0.6.0/autolink-0.6.0.jar"
             }
           },
-          "org_eclipse_xtend_org_eclipse_xtend_lib_2_28_0": {
+          "com_google_j2objc_j2objc_annotations_2_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "e18b609a3f99ece787443efd231504232f4b6179e9cc1c7b0905361dd31c8fdf",
+              "sha256": "f02a95fa1a5e95edb3ed859fd0fb7df709d121a35290eff8b74dce2ab7f4d6ed",
               "urls": [
-                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.lib/2.28.0/org.eclipse.xtend.lib-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib/2.28.0/org.eclipse.xtend.lib-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib/2.28.0/org.eclipse.xtend.lib-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.lib/2.28.0/org.eclipse.xtend.lib-2.28.0.jar"
+                "https://maven.google.com/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar",
+                "https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar",
+                "https://repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar",
+                "https://jitpack.io/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.lib/2.28.0/org.eclipse.xtend.lib-2.28.0.jar"
+              "downloaded_file_path": "v1/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar"
             }
           },
           "io_grpc_grpc_services_jar_sources_1_62_2": {
@@ -4870,46 +4985,32 @@
               "downloaded_file_path": "v1/org/apache/maven/maven-settings/3.9.6/maven-settings-3.9.6.jar"
             }
           },
-          "org_eclipse_xtext_org_eclipse_xtext_xbase_lib_2_28_0": {
+          "org_scalameta_trees_2_13_4_9_3": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "2e81c2ad0b4e48b0b1ba2e5873a06bb877dfbbcb0651c1ed0988ee15c6ebbdfe",
+              "sha256": "c2db2db0496210d8d9be1f1b1db5cf77e385545160f22acaaf4a3e486ee23b7a",
               "urls": [
-                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.28.0/org.eclipse.xtext.xbase.lib-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.28.0/org.eclipse.xtext.xbase.lib-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.28.0/org.eclipse.xtext.xbase.lib-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.28.0/org.eclipse.xtext.xbase.lib-2.28.0.jar"
+                "https://maven.google.com/org/scalameta/trees_2.13/4.9.3/trees_2.13-4.9.3.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/trees_2.13/4.9.3/trees_2.13-4.9.3.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/trees_2.13/4.9.3/trees_2.13-4.9.3.jar",
+                "https://jitpack.io/org/scalameta/trees_2.13/4.9.3/trees_2.13-4.9.3.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.28.0/org.eclipse.xtext.xbase.lib-2.28.0.jar"
+              "downloaded_file_path": "v1/org/scalameta/trees_2.13/4.9.3/trees_2.13-4.9.3.jar"
             }
           },
-          "org_scalameta_trees_2_13_4_9_0": {
+          "org_scalameta_scalafmt_cli_2_13_3_8_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "3663bf894fbdfceb9bcc6614094f215a41ddffa97a7244e2cc1a1ef014e0428a",
+              "sha256": "82bb76e139f5bec5d90ce0af4af5a7c58b7f6ddb855503e2529f7a99f19b28fa",
               "urls": [
-                "https://maven.google.com/org/scalameta/trees_2.13/4.9.0/trees_2.13-4.9.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/trees_2.13/4.9.0/trees_2.13-4.9.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/trees_2.13/4.9.0/trees_2.13-4.9.0.jar",
-                "https://jitpack.io/org/scalameta/trees_2.13/4.9.0/trees_2.13-4.9.0.jar"
+                "https://maven.google.com/org/scalameta/scalafmt-cli_2.13/3.8.1/scalafmt-cli_2.13-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-cli_2.13/3.8.1/scalafmt-cli_2.13-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-cli_2.13/3.8.1/scalafmt-cli_2.13-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-cli_2.13/3.8.1/scalafmt-cli_2.13-3.8.1.jar"
               ],
-              "downloaded_file_path": "v1/org/scalameta/trees_2.13/4.9.0/trees_2.13-4.9.0.jar"
-            }
-          },
-          "org_scalameta_scalafmt_cli_2_13_3_8_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "ef00167f0c456be6e611290fb01cf07294695284a952f07a7f46bc98473de7ec",
-              "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-cli_2.13/3.8.0/scalafmt-cli_2.13-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-cli_2.13/3.8.0/scalafmt-cli_2.13-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-cli_2.13/3.8.0/scalafmt-cli_2.13-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-cli_2.13/3.8.0/scalafmt-cli_2.13-3.8.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-cli_2.13/3.8.0/scalafmt-cli_2.13-3.8.0.jar"
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-cli_2.13/3.8.1/scalafmt-cli_2.13-3.8.1.jar"
             }
           },
           "org_apache_maven_maven_settings_jar_sources_3_9_6": {
@@ -4965,20 +5066,6 @@
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-yaml-front-matter/0.64.8/flexmark-ext-yaml-front-matter-0.64.8.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_equinox_preferences_3_11_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "3a0b0d0013c02973ce45bf42f46a837c9dd218017cb469170253ea021b580045",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.0/org.eclipse.equinox.preferences-3.11.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.0/org.eclipse.equinox.preferences-3.11.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.0/org.eclipse.equinox.preferences-3.11.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.0/org.eclipse.equinox.preferences-3.11.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.0/org.eclipse.equinox.preferences-3.11.0.jar"
-            }
-          },
           "com_google_http_client_google_http_client_jackson2_jar_sources_1_44_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5026,16 +5113,27 @@
               "downloaded_file_path": "v1/com/google/re2j/re2j/1.7/re2j-1.7-sources.jar"
             }
           },
+          "org_typelevel_cats_kernel_2_13_2_1_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "a1fbf7673e10933d26aa00e514e1291f4631cbd24936fec101ba1d82fe91494b",
+              "urls": [
+                "https://maven.google.com/org/typelevel/cats-kernel_2.13/2.1.1/cats-kernel_2.13-2.1.1.jar",
+                "https://repo.maven.apache.org/maven2/org/typelevel/cats-kernel_2.13/2.1.1/cats-kernel_2.13-2.1.1.jar",
+                "https://repo1.maven.org/maven2/org/typelevel/cats-kernel_2.13/2.1.1/cats-kernel_2.13-2.1.1.jar",
+                "https://jitpack.io/org/typelevel/cats-kernel_2.13/2.1.1/cats-kernel_2.13-2.1.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/typelevel/cats-kernel_2.13/2.1.1/cats-kernel_2.13-2.1.1.jar"
+            }
+          },
           "com_google_guava_guava_33_1_0_jre": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
               "sha256": "346aec0eb8c8987360c8a264e70ff10c2fba760446eb27e8ab07e78e787a75fe",
               "urls": [
-                "https://maven.google.com/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar",
-                "https://repo.maven.apache.org/maven2/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar",
-                "https://repo1.maven.org/maven2/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar",
-                "https://jitpack.io/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar"
+                "https://repo1.maven.org/maven2/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar"
               ],
               "downloaded_file_path": "v1/com/google/guava/guava/33.1.0-jre/guava-33.1.0-jre.jar"
             }
@@ -5062,18 +5160,18 @@
               "downloaded_file_path": "v1/org/apache/maven/resolver/maven-resolver-named-locks/1.9.18/maven-resolver-named-locks-1.9.18-sources.jar"
             }
           },
-          "org_scala_lang_scalap_2_13_12": {
+          "org_scala_lang_scalap_2_13_13": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "ba4152ca85f42f04d76d903e006f9848f4e7d0629791d016953f05a5a04954c8",
+              "sha256": "b8ea34fd1f8d261d43002ae92f9d323f0441c1c9385f6606848c59eb9505a15d",
               "urls": [
-                "https://maven.google.com/org/scala-lang/scalap/2.13.12/scalap-2.13.12.jar",
-                "https://repo.maven.apache.org/maven2/org/scala-lang/scalap/2.13.12/scalap-2.13.12.jar",
-                "https://repo1.maven.org/maven2/org/scala-lang/scalap/2.13.12/scalap-2.13.12.jar",
-                "https://jitpack.io/org/scala-lang/scalap/2.13.12/scalap-2.13.12.jar"
+                "https://maven.google.com/org/scala-lang/scalap/2.13.13/scalap-2.13.13.jar",
+                "https://repo.maven.apache.org/maven2/org/scala-lang/scalap/2.13.13/scalap-2.13.13.jar",
+                "https://repo1.maven.org/maven2/org/scala-lang/scalap/2.13.13/scalap-2.13.13.jar",
+                "https://jitpack.io/org/scala-lang/scalap/2.13.13/scalap-2.13.13.jar"
               ],
-              "downloaded_file_path": "v1/org/scala-lang/scalap/2.13.12/scalap-2.13.12.jar"
+              "downloaded_file_path": "v1/org/scala-lang/scalap/2.13.13/scalap-2.13.13.jar"
             }
           },
           "org_jboss_logging_jboss_logging_3_4_1_Final": {
@@ -5140,20 +5238,6 @@
               "downloaded_file_path": "v1/io/netty/netty-transport-classes-epoll/4.1.108.Final/netty-transport-classes-epoll-4.1.108.Final-sources.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_core_contenttype_3_9_300": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "c2c553b07ad8a69e1c8cdea48697d8d8857af140f50e4e12fecf465fb4bc2fbd",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.contenttype/3.9.300/org.eclipse.core.contenttype-3.9.300.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/3.9.300/org.eclipse.core.contenttype-3.9.300.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/3.9.300/org.eclipse.core.contenttype-3.9.300.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.contenttype/3.9.300/org.eclipse.core.contenttype-3.9.300.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.contenttype/3.9.300/org.eclipse.core.contenttype-3.9.300.jar"
-            }
-          },
           "io_grpc_grpc_googleapis_1_62_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5193,20 +5277,6 @@
               "downloaded_file_path": "v1/org/junit/platform/junit-platform-reporting/1.10.2/junit-platform-reporting-1.10.2.jar"
             }
           },
-          "org_typelevel_cats_kernel_2_13_2_10_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "4692439fa950910c0e7572aebcfbe98fed871f1b208a192011b954305851e181",
-              "urls": [
-                "https://maven.google.com/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar",
-                "https://repo.maven.apache.org/maven2/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar",
-                "https://repo1.maven.org/maven2/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar",
-                "https://jitpack.io/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar"
-            }
-          },
           "software_amazon_awssdk_profiles_2_25_23": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5229,18 +5299,18 @@
               "downloaded_file_path": "v1/org/apache/maven/maven-artifact/3.9.6/maven-artifact-3.9.6.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_osgi_3_19_0": {
+          "org_eclipse_xtext_org_eclipse_xtext_common_types_2_32_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "54fdb98ced9062689b0459d67a202137867e8647c486b7f47ad64ea3160efa2e",
+              "sha256": "6a42ac0108b3c06fbbc7a0e2ef0a1d525a0372ab8c82d4203f7121e9244a8a0d",
               "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.osgi/3.19.0/org.eclipse.osgi-3.19.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.19.0/org.eclipse.osgi-3.19.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.19.0/org.eclipse.osgi-3.19.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.osgi/3.19.0/org.eclipse.osgi-3.19.0.jar"
+                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.common.types/2.32.0/org.eclipse.xtext.common.types-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.common.types/2.32.0/org.eclipse.xtext.common.types-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.common.types/2.32.0/org.eclipse.xtext.common.types-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.common.types/2.32.0/org.eclipse.xtext.common.types-2.32.0.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.osgi/3.19.0/org.eclipse.osgi-3.19.0.jar"
+              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.common.types/2.32.0/org.eclipse.xtext.common.types-2.32.0.jar"
             }
           },
           "software_amazon_eventstream_eventstream_1_0_1": {
@@ -5298,18 +5368,32 @@
               "downloaded_file_path": "v1/org/codehaus/plexus/plexus-sec-dispatcher/2.0/plexus-sec-dispatcher-2.0-sources.jar"
             }
           },
-          "org_eclipse_lsp4j_org_eclipse_lsp4j_generator_0_20_1": {
+          "org_eclipse_emf_org_eclipse_emf_common_2_24_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "def6366c47d380dcf878f70e84c0d860b9c4112ae2066119db83026af4afaca3",
+              "sha256": "6f771159d2701255bd78efd0cd9a1e00c10d82756ede708ba74cea497e73c312",
               "urls": [
-                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.20.1/org.eclipse.lsp4j.generator-0.20.1.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.20.1/org.eclipse.lsp4j.generator-0.20.1.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.20.1/org.eclipse.lsp4j.generator-0.20.1.jar",
-                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.20.1/org.eclipse.lsp4j.generator-0.20.1.jar"
+                "https://maven.google.com/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar",
+                "https://jitpack.io/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.20.1/org.eclipse.lsp4j.generator-0.20.1.jar"
+              "downloaded_file_path": "v1/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_equinox_app_1_6_200": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "52840b5fe48ed8f50a26d792d21b2db73b622a0a10d64c18883da6fb85dcbc24",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.app/1.6.200/org.eclipse.equinox.app-1.6.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.app/1.6.200/org.eclipse.equinox.app-1.6.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.app/1.6.200/org.eclipse.equinox.app-1.6.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.app/1.6.200/org.eclipse.equinox.app-1.6.200.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.app/1.6.200/org.eclipse.equinox.app-1.6.200.jar"
             }
           },
           "io_grpc_grpc_stub_1_62_2": {
@@ -5321,6 +5405,20 @@
                 "https://repo1.maven.org/maven2/io/grpc/grpc-stub/1.62.2/grpc-stub-1.62.2.jar"
               ],
               "downloaded_file_path": "v1/io/grpc/grpc-stub/1.62.2/grpc-stub-1.62.2.jar"
+            }
+          },
+          "org_typelevel_cats_core_2_13_2_1_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "a2fc5c69d631347b52ae15d64a5a669593daafde93064c06b5c3199c563395ff",
+              "urls": [
+                "https://maven.google.com/org/typelevel/cats-core_2.13/2.1.1/cats-core_2.13-2.1.1.jar",
+                "https://repo.maven.apache.org/maven2/org/typelevel/cats-core_2.13/2.1.1/cats-core_2.13-2.1.1.jar",
+                "https://repo1.maven.org/maven2/org/typelevel/cats-core_2.13/2.1.1/cats-core_2.13-2.1.1.jar",
+                "https://jitpack.io/org/typelevel/cats-core_2.13/2.1.1/cats-core_2.13-2.1.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/typelevel/cats-core_2.13/2.1.1/cats-core_2.13-2.1.1.jar"
             }
           },
           "com_google_cloud_google_cloud_core_http_2_36_1": {
@@ -5470,6 +5568,20 @@
               "downloaded_file_path": "v1/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16-sources.jar"
             }
           },
+          "org_scala_lang_scala_compiler_2_13_13": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "b5558245d07a530ce99e6845d53282dc46eb328d1973bce269dcc7980c0c8c71",
+              "urls": [
+                "https://maven.google.com/org/scala-lang/scala-compiler/2.13.13/scala-compiler-2.13.13.jar",
+                "https://repo.maven.apache.org/maven2/org/scala-lang/scala-compiler/2.13.13/scala-compiler-2.13.13.jar",
+                "https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.13.13/scala-compiler-2.13.13.jar",
+                "https://jitpack.io/org/scala-lang/scala-compiler/2.13.13/scala-compiler-2.13.13.jar"
+              ],
+              "downloaded_file_path": "v1/org/scala-lang/scala-compiler/2.13.13/scala-compiler-2.13.13.jar"
+            }
+          },
           "org_fusesource_jansi_jansi_jar_sources_2_4_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5578,20 +5690,6 @@
               "downloaded_file_path": "v1/com/google/auth/google-auth-library-credentials/1.23.0/google-auth-library-credentials-1.23.0-sources.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_text_3_14_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "b2fed1a6a45b17a185a19c07d082a1c69718139e101b0afbf0db0e756322d9fc",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.text/3.14.0/org.eclipse.text-3.14.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.text/3.14.0/org.eclipse.text-3.14.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.text/3.14.0/org.eclipse.text-3.14.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.text/3.14.0/org.eclipse.text-3.14.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.text/3.14.0/org.eclipse.text-3.14.0.jar"
-            }
-          },
           "io_monix_monix_reactive_2_13_3_2_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5629,20 +5727,6 @@
                 "https://jitpack.io/net/bytebuddy/byte-buddy-agent/1.12.7/byte-buddy-agent-1.12.7.jar"
               ],
               "downloaded_file_path": "v1/net/bytebuddy/byte-buddy-agent/1.12.7/byte-buddy-agent-1.12.7.jar"
-            }
-          },
-          "org_scala_lang_scala_compiler_2_13_12": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "583adb1ffa7b29fdbfdd6f4c97a396af06a8a91625d059823bba1b7172242d6a",
-              "urls": [
-                "https://maven.google.com/org/scala-lang/scala-compiler/2.13.12/scala-compiler-2.13.12.jar",
-                "https://repo.maven.apache.org/maven2/org/scala-lang/scala-compiler/2.13.12/scala-compiler-2.13.12.jar",
-                "https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.13.12/scala-compiler-2.13.12.jar",
-                "https://jitpack.io/org/scala-lang/scala-compiler/2.13.12/scala-compiler-2.13.12.jar"
-              ],
-              "downloaded_file_path": "v1/org/scala-lang/scala-compiler/2.13.12/scala-compiler-2.13.12.jar"
             }
           },
           "software_amazon_awssdk_http_auth_aws_2_25_23": {
@@ -5690,20 +5774,6 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/annotations/2.25.23/annotations-2.25.23-sources.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/annotations/2.25.23/annotations-2.25.23-sources.jar"
-            }
-          },
-          "com_monovore_decline_2_13_2_4_1": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "eb6d3081b9f3fdf1188d5a772029ff85fc4e963b81d070a769cdc2f31dd93dd3",
-              "urls": [
-                "https://maven.google.com/com/monovore/decline_2.13/2.4.1/decline_2.13-2.4.1.jar",
-                "https://repo.maven.apache.org/maven2/com/monovore/decline_2.13/2.4.1/decline_2.13-2.4.1.jar",
-                "https://repo1.maven.org/maven2/com/monovore/decline_2.13/2.4.1/decline_2.13-2.4.1.jar",
-                "https://jitpack.io/com/monovore/decline_2.13/2.4.1/decline_2.13-2.4.1.jar"
-              ],
-              "downloaded_file_path": "v1/com/monovore/decline_2.13/2.4.1/decline_2.13-2.4.1.jar"
             }
           },
           "org_eclipse_sisu_org_eclipse_sisu_plexus_jar_sources_0_9_0_M2": {
@@ -5867,6 +5937,20 @@
               "downloaded_file_path": "v1/org/apache/maven/maven-core/3.9.6/maven-core-3.9.6.jar"
             }
           },
+          "org_eclipse_platform_org_eclipse_core_resources_3_18_200": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "df6e64965c436c96c3d1de0481407a3c5523e320145dac01ca3d2edf4aa66738",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.resources/3.18.200/org.eclipse.core.resources-3.18.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.resources/3.18.200/org.eclipse.core.resources-3.18.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.resources/3.18.200/org.eclipse.core.resources-3.18.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.resources/3.18.200/org.eclipse.core.resources-3.18.200.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.resources/3.18.200/org.eclipse.core.resources-3.18.200.jar"
+            }
+          },
           "commons_codec_commons_codec_1_16_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -5903,46 +5987,18 @@
               "downloaded_file_path": "v1/org/scala-lang/modules/scala-parallel-collections_2.13/1.0.4/scala-parallel-collections_2.13-1.0.4.jar"
             }
           },
-          "software_amazon_smithy_smithy_model_1_45_0": {
+          "org_scalameta_scalafmt_core_2_13_3_8_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "2f36c23636484eac51cb47f1674abb805312c098634d11abf7b8d4f24d0f5a81",
+              "sha256": "72d9088c7970d18936409e8a216f4ed98d9e9f8c6befd0f9b1dc3752230a9f11",
               "urls": [
-                "https://maven.google.com/software/amazon/smithy/smithy-model/1.45.0/smithy-model-1.45.0.jar",
-                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-model/1.45.0/smithy-model-1.45.0.jar",
-                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-model/1.45.0/smithy-model-1.45.0.jar",
-                "https://jitpack.io/software/amazon/smithy/smithy-model/1.45.0/smithy-model-1.45.0.jar"
+                "https://maven.google.com/org/scalameta/scalafmt-core_2.13/3.8.1/scalafmt-core_2.13-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-core_2.13/3.8.1/scalafmt-core_2.13-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-core_2.13/3.8.1/scalafmt-core_2.13-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-core_2.13/3.8.1/scalafmt-core_2.13-3.8.1.jar"
               ],
-              "downloaded_file_path": "v1/software/amazon/smithy/smithy-model/1.45.0/smithy-model-1.45.0.jar"
-            }
-          },
-          "org_scalameta_scalafmt_core_2_13_3_8_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "807224aa5a828745bf714952d4cffb01e83134c60c866191fef5788bd7547226",
-              "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-core_2.13/3.8.0/scalafmt-core_2.13-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-core_2.13/3.8.0/scalafmt-core_2.13-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-core_2.13/3.8.0/scalafmt-core_2.13-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-core_2.13/3.8.0/scalafmt-core_2.13-3.8.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-core_2.13/3.8.0/scalafmt-core_2.13-3.8.0.jar"
-            }
-          },
-          "org_eclipse_lsp4j_org_eclipse_lsp4j_0_20_1": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "5ce77e810046ba2a46cf657d552d049b269bf8ce917435792729b1d2a3fdf3fc",
-              "urls": [
-                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j/0.20.1/org.eclipse.lsp4j-0.20.1.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j/0.20.1/org.eclipse.lsp4j-0.20.1.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j/0.20.1/org.eclipse.lsp4j-0.20.1.jar",
-                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j/0.20.1/org.eclipse.lsp4j-0.20.1.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j/0.20.1/org.eclipse.lsp4j-0.20.1.jar"
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-core_2.13/3.8.1/scalafmt-core_2.13-3.8.1.jar"
             }
           },
           "io_grpc_grpc_netty_shaded_jar_sources_1_62_2": {
@@ -6206,20 +6262,6 @@
               "downloaded_file_path": "v1/org/codehaus/mojo/animal-sniffer-annotations/1.23/animal-sniffer-annotations-1.23-sources.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_equinox_registry_3_12_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "9c8cb9ac4bf6088a9c54f69ffb44a36cb87c602fb82b474ee63c9b6be9faff30",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.registry/3.12.0/org.eclipse.equinox.registry-3.12.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.registry/3.12.0/org.eclipse.equinox.registry-3.12.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.registry/3.12.0/org.eclipse.equinox.registry-3.12.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.registry/3.12.0/org.eclipse.equinox.registry-3.12.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.registry/3.12.0/org.eclipse.equinox.registry-3.12.0.jar"
-            }
-          },
           "com_google_inject_guice_5_1_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -6254,6 +6296,20 @@
                 "https://repo1.maven.org/maven2/com/google/api/gax-httpjson/2.46.1/gax-httpjson-2.46.1.jar"
               ],
               "downloaded_file_path": "v1/com/google/api/gax-httpjson/2.46.1/gax-httpjson-2.46.1.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_equinox_preferences_3_10_100": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "ee791bfa46e35e3551209b89b2152544a6f860a12c4aab4a2f6c9c0cc3dd1dda",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.preferences/3.10.100/org.eclipse.equinox.preferences-3.10.100.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/3.10.100/org.eclipse.equinox.preferences-3.10.100.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/3.10.100/org.eclipse.equinox.preferences-3.10.100.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.preferences/3.10.100/org.eclipse.equinox.preferences-3.10.100.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.preferences/3.10.100/org.eclipse.equinox.preferences-3.10.100.jar"
             }
           },
           "org_jetbrains_annotations_24_0_1": {
@@ -6334,20 +6390,6 @@
               "downloaded_file_path": "v1/javax/inject/javax.inject/1/javax.inject-1.jar"
             }
           },
-          "org_eclipse_xtext_org_eclipse_xtext_util_2_28_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "34f8de3374a2236cd4a36969951f5b56ff5dbc1def952014e7329948f9230dab",
-              "urls": [
-                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.util/2.28.0/org.eclipse.xtext.util-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.util/2.28.0/org.eclipse.xtext.util-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.util/2.28.0/org.eclipse.xtext.util-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.util/2.28.0/org.eclipse.xtext.util-2.28.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.util/2.28.0/org.eclipse.xtext.util-2.28.0.jar"
-            }
-          },
           "org_scalameta_mdoc_2_13_2_5_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -6393,6 +6435,20 @@
                 "https://repo1.maven.org/maven2/com/google/android/annotations/4.1.1.4/annotations-4.1.1.4-sources.jar"
               ],
               "downloaded_file_path": "v1/com/google/android/annotations/4.1.1.4/annotations-4.1.1.4-sources.jar"
+            }
+          },
+          "com_google_code_gson_gson_2_11_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b",
+              "urls": [
+                "https://maven.google.com/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+                "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+                "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+                "https://jitpack.io/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar"
             }
           },
           "com_google_android_annotations_4_1_1_4": {
@@ -6550,6 +6606,20 @@
               "downloaded_file_path": "v1/io/perfmark/perfmark-api/0.27.0/perfmark-api-0.27.0-sources.jar"
             }
           },
+          "org_scalameta_parsers_2_13_4_9_3": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "0bb66edb34fc02bd447553ff9d8a8bf2c5d20e51785249275fd733b3375c17dc",
+              "urls": [
+                "https://maven.google.com/org/scalameta/parsers_2.13/4.9.3/parsers_2.13-4.9.3.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/parsers_2.13/4.9.3/parsers_2.13-4.9.3.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/parsers_2.13/4.9.3/parsers_2.13-4.9.3.jar",
+                "https://jitpack.io/org/scalameta/parsers_2.13/4.9.3/parsers_2.13-4.9.3.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/parsers_2.13/4.9.3/parsers_2.13-4.9.3.jar"
+            }
+          },
           "org_apache_maven_resolver_maven_resolver_transport_file_jar_sources_1_9_18": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -6570,20 +6640,6 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/http-auth-spi/2.25.23/http-auth-spi-2.25.23-sources.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/http-auth-spi/2.25.23/http-auth-spi-2.25.23-sources.jar"
-            }
-          },
-          "org_scalameta_parsers_2_13_4_9_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "a2550b601df40f0d12545f83a117c1092bcc5a46f7cdf93a74ea36d895c1840a",
-              "urls": [
-                "https://maven.google.com/org/scalameta/parsers_2.13/4.9.0/parsers_2.13-4.9.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/parsers_2.13/4.9.0/parsers_2.13-4.9.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/parsers_2.13/4.9.0/parsers_2.13-4.9.0.jar",
-                "https://jitpack.io/org/scalameta/parsers_2.13/4.9.0/parsers_2.13-4.9.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/parsers_2.13/4.9.0/parsers_2.13-4.9.0.jar"
             }
           },
           "org_apache_commons_commons_lang3_3_12_0": {
@@ -6681,6 +6737,20 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-footnotes/0.64.8/flexmark-ext-footnotes-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-footnotes/0.64.8/flexmark-ext-footnotes-0.64.8.jar"
+            }
+          },
+          "com_google_errorprone_error_prone_annotations_2_27_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "24c923372c58e35d0b9f16a028929bb9aedc77521867c274f2bd0735df5ba1f5",
+              "urls": [
+                "https://maven.google.com/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar",
+                "https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar",
+                "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar",
+                "https://jitpack.io/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar"
             }
           },
           "com_vladsch_flexmark_flexmark_ext_admonition_0_64_8": {
@@ -6836,9 +6906,9 @@
                 "{ \"repo_url\": \"https://jitpack.io\" }"
               ],
               "artifacts": [
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-model\", \"version\": \"1.45.0\" }",
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-codegen-core\", \"version\": \"1.45.0\" }",
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-utils\", \"version\": \"1.45.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-model\", \"version\": \"1.49.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-codegen-core\", \"version\": \"1.49.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-utils\", \"version\": \"1.49.0\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter\", \"version\": \"5.10.2\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter-api\", \"version\": \"5.10.2\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter-engine\", \"version\": \"5.10.2\" }",
@@ -6846,13 +6916,7 @@
                 "{ \"group\": \"org.junit.platform\", \"artifact\": \"junit-platform-console\", \"version\": \"1.10.2\" }",
                 "{ \"group\": \"com.vanniktech\", \"artifact\": \"gradle-maven-publish-plugin\", \"version\": \"0.28.0\" }",
                 "{ \"group\": \"org.scalameta\", \"artifact\": \"mdoc_2.13\", \"version\": \"2.5.2\" }",
-                "{ \"group\": \"org.scalameta\", \"artifact\": \"scalafmt-cli_2.13\", \"version\": \"3.8.0\" }",
-                "{ \"group\": \"org.scala-lang.modules\", \"artifact\": \"scala-collection-compat_2.13\", \"version\": \"2.11.0\" }",
-                "{ \"group\": \"com.lihaoyi\", \"artifact\": \"os-lib_2.13\", \"version\": \"0.9.3\" }",
-                "{ \"group\": \"com.lihaoyi\", \"artifact\": \"geny_2.13\", \"version\": \"1.0.0\" }",
-                "{ \"group\": \"com.monovore\", \"artifact\": \"decline_2.13\", \"version\": \"2.4.1\" }",
-                "{ \"group\": \"org.typelevel\", \"artifact\": \"cats-core_2.13\", \"version\": \"2.10.0\" }",
-                "{ \"group\": \"org.typelevel\", \"artifact\": \"cats-kernel_2.13\", \"version\": \"2.10.0\" }",
+                "{ \"group\": \"org.scalameta\", \"artifact\": \"scalafmt-cli_2.13\", \"version\": \"3.8.1\" }",
                 "{ \"group\": \"com.github.plokhotnyuk.jsoniter-scala\", \"artifact\": \"jsoniter-scala-core_2.13\", \"version\": \"2.28.3\" }",
                 "{ \"group\": \"com.github.plokhotnyuk.jsoniter-scala\", \"artifact\": \"jsoniter-scala-macros_2.13\", \"version\": \"2.28.3\" }",
                 "{ \"group\": \"me.vican.jorge\", \"artifact\": \"jsonrpc4s_2.13\", \"version\": \"0.1.0\" }",
@@ -6868,15 +6932,13 @@
                 "{ \"group\": \"io.monix\", \"artifact\": \"monix-eval_2.13\", \"version\": \"3.2.0\" }",
                 "{ \"group\": \"io.monix\", \"artifact\": \"monix-execution_2.13\", \"version\": \"3.2.0\" }",
                 "{ \"group\": \"com.outr\", \"artifact\": \"scribe_2.13\", \"version\": \"3.5.5\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.generator\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.core\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.lib\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"org.eclipse.xtext\", \"artifact\": \"org.eclipse.xtext.xbase.lib\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"33.1.0-jre\" }",
-                "{ \"group\": \"com.google.inject\", \"artifact\": \"guice\", \"version\": \"7.0.0\" }",
-                "{ \"group\": \"org.scala-lang\", \"artifact\": \"scala-library\", \"version\": \"2.13.12\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.generator\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.core\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.lib\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.eclipse.xtext\", \"artifact\": \"org.eclipse.xtext.xbase.lib\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.scala-lang\", \"artifact\": \"scala-library\", \"version\": \"2.13.14\" }",
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
                 "{ \"group\": \"com.google.errorprone\", \"artifact\": \"error_prone_annotations\", \"version\": \"2.3.2\" }",
@@ -6955,10 +7017,7 @@
             "attributes": {
               "sha256": "ccaedd33af0b7894d9f2f3b644f4d19e43928e32902e61ac4d10777830f5aac7",
               "urls": [
-                "https://maven.google.com/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar",
-                "https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar",
-                "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar",
-                "https://jitpack.io/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar"
+                "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar"
               ],
               "downloaded_file_path": "v1/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar"
             }
@@ -6986,6 +7045,20 @@
                 "https://repo1.maven.org/maven2/io/grpc/grpc-xds/1.62.2/grpc-xds-1.62.2.jar"
               ],
               "downloaded_file_path": "v1/io/grpc/grpc-xds/1.62.2/grpc-xds-1.62.2.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_core_filesystem_1_9_500": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "0c4810a1fa6e871c0bb23b29090a72c83b760af8171495c1325b4711b919072b",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.filesystem/1.9.500/org.eclipse.core.filesystem-1.9.500.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.filesystem/1.9.500/org.eclipse.core.filesystem-1.9.500.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.filesystem/1.9.500/org.eclipse.core.filesystem-1.9.500.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.filesystem/1.9.500/org.eclipse.core.filesystem-1.9.500.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.filesystem/1.9.500/org.eclipse.core.filesystem-1.9.500.jar"
             }
           },
           "net_bytebuddy_byte_buddy_1_12_7": {
@@ -7041,20 +7114,6 @@
               "downloaded_file_path": "v1/com/google/api/gax-grpc/2.46.1/gax-grpc-2.46.1-sources.jar"
             }
           },
-          "org_eclipse_xtext_org_eclipse_xtext_xbase_2_28_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "313a904f38ee94db01f15727b16ec8f9ff32585dcbd7187662c7f85967726d94",
-              "urls": [
-                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.xbase/2.28.0/org.eclipse.xtext.xbase-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase/2.28.0/org.eclipse.xtext.xbase-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase/2.28.0/org.eclipse.xtext.xbase-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.xbase/2.28.0/org.eclipse.xtext.xbase-2.28.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.xbase/2.28.0/org.eclipse.xtext.xbase-2.28.0.jar"
-            }
-          },
           "com_vladsch_flexmark_flexmark_pdf_converter_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7081,6 +7140,20 @@
                 "https://jitpack.io/org/scalameta/mdoc-interfaces/2.5.2/mdoc-interfaces-2.5.2.jar"
               ],
               "downloaded_file_path": "v1/org/scalameta/mdoc-interfaces/2.5.2/mdoc-interfaces-2.5.2.jar"
+            }
+          },
+          "org_typelevel_cats_macros_2_13_2_1_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "388d94dee40037d40543a6934fcb38c2935ad12027c080e77abcb67e02f3b9eb",
+              "urls": [
+                "https://maven.google.com/org/typelevel/cats-macros_2.13/2.1.1/cats-macros_2.13-2.1.1.jar",
+                "https://repo.maven.apache.org/maven2/org/typelevel/cats-macros_2.13/2.1.1/cats-macros_2.13-2.1.1.jar",
+                "https://repo1.maven.org/maven2/org/typelevel/cats-macros_2.13/2.1.1/cats-macros_2.13-2.1.1.jar",
+                "https://jitpack.io/org/typelevel/cats-macros_2.13/2.1.1/cats-macros_2.13-2.1.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/typelevel/cats-macros_2.13/2.1.1/cats-macros_2.13-2.1.1.jar"
             }
           },
           "org_apache_maven_resolver_maven_resolver_named_locks_1_9_18": {
@@ -7128,6 +7201,20 @@
                 "https://jitpack.io/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar"
               ],
               "downloaded_file_path": "v1/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar"
+            }
+          },
+          "org_eclipse_lsp4j_org_eclipse_lsp4j_generator_0_23_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "1adaeb34550ebec21636a45afe76ff8b60188a056966feb3c7e562450ba911be",
+              "urls": [
+                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.23.1/org.eclipse.lsp4j.generator-0.23.1.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.23.1/org.eclipse.lsp4j.generator-0.23.1.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.23.1/org.eclipse.lsp4j.generator-0.23.1.jar",
+                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.23.1/org.eclipse.lsp4j.generator-0.23.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j.generator/0.23.1/org.eclipse.lsp4j.generator-0.23.1.jar"
             }
           },
           "com_google_http_client_google_http_client_gson_1_44_1": {
@@ -7202,18 +7289,18 @@
               "downloaded_file_path": "v1/io/grpc/grpc-util/1.62.2/grpc-util-1.62.2-sources.jar"
             }
           },
-          "org_eclipse_xtext_org_eclipse_xtext_2_28_0": {
+          "org_eclipse_platform_org_eclipse_core_contenttype_3_8_200": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "1f46f9d7c13213cf13f2cfce79ff04f11ed487edbb32045d35f53ecad934d6cd",
+              "sha256": "d32716bfb03e7f3244a5df0f8816a8f0b6644a8c782f54062af8a3b00e1b4e45",
               "urls": [
-                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext/2.28.0/org.eclipse.xtext-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext/2.28.0/org.eclipse.xtext-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext/2.28.0/org.eclipse.xtext-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext/2.28.0/org.eclipse.xtext-2.28.0.jar"
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.contenttype/3.8.200/org.eclipse.core.contenttype-3.8.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/3.8.200/org.eclipse.core.contenttype-3.8.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/3.8.200/org.eclipse.core.contenttype-3.8.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.contenttype/3.8.200/org.eclipse.core.contenttype-3.8.200.jar"
               ],
-              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext/2.28.0/org.eclipse.xtext-2.28.0.jar"
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.contenttype/3.8.200/org.eclipse.core.contenttype-3.8.200.jar"
             }
           },
           "com_geirsson_metaconfig_core_2_13_0_12_0": {
@@ -7324,6 +7411,20 @@
               "downloaded_file_path": "v1/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2-sources.jar"
             }
           },
+          "org_eclipse_xtend_org_eclipse_xtend_lib_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "b1dbd2916d941e3109a288ba63156afe45c8010852601ff66c156aa616383d74",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.lib/2.32.0/org.eclipse.xtend.lib-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib/2.32.0/org.eclipse.xtend.lib-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib/2.32.0/org.eclipse.xtend.lib-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.lib/2.32.0/org.eclipse.xtend.lib-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.lib/2.32.0/org.eclipse.xtend.lib-2.32.0.jar"
+            }
+          },
           "javax_inject_javax_inject_jar_sources_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7369,20 +7470,6 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/aws-query-protocol/2.25.23/aws-query-protocol-2.25.23-sources.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/aws-query-protocol/2.25.23/aws-query-protocol-2.25.23-sources.jar"
-            }
-          },
-          "org_eclipse_emf_org_eclipse_emf_ecore_2_20_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "9ee539a3c50ef3cfcbaa3a85f34f041eea682ad459d3e956df7769f6b2991b36",
-              "urls": [
-                "https://maven.google.com/org/eclipse/emf/org.eclipse.emf.ecore/2.20.0/org.eclipse.emf.ecore-2.20.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/emf/org.eclipse.emf.ecore/2.20.0/org.eclipse.emf.ecore-2.20.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/emf/org.eclipse.emf.ecore/2.20.0/org.eclipse.emf.ecore-2.20.0.jar",
-                "https://jitpack.io/org/eclipse/emf/org.eclipse.emf.ecore/2.20.0/org.eclipse.emf.ecore-2.20.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/emf/org.eclipse.emf.ecore/2.20.0/org.eclipse.emf.ecore-2.20.0.jar"
             }
           },
           "com_squareup_okio_okio_jvm_3_7_0": {
@@ -7620,20 +7707,6 @@
               "downloaded_file_path": "v1/org/codehaus/plexus/plexus-classworlds/2.7.0/plexus-classworlds-2.7.0.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_core_runtime_3_31_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "f883cb596392adb49fa45b97e5a58b219c44d5f151c9134a4d05c68312a0a06f",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.runtime/3.31.0/org.eclipse.core.runtime-3.31.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/3.31.0/org.eclipse.core.runtime-3.31.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/3.31.0/org.eclipse.core.runtime-3.31.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.runtime/3.31.0/org.eclipse.core.runtime-3.31.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.runtime/3.31.0/org.eclipse.core.runtime-3.31.0.jar"
-            }
-          },
           "com_google_guava_guava_testlib_31_1_jre": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7646,6 +7719,20 @@
                 "https://jitpack.io/com/google/guava/guava-testlib/31.1-jre/guava-testlib-31.1-jre.jar"
               ],
               "downloaded_file_path": "v1/com/google/guava/guava-testlib/31.1-jre/guava-testlib-31.1-jre.jar"
+            }
+          },
+          "org_checkerframework_checker_qual_3_33_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "e316255bbfcd9fe50d165314b85abb2b33cb2a66a93c491db648e498a82c2de1",
+              "urls": [
+                "https://maven.google.com/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar",
+                "https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar",
+                "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar",
+                "https://jitpack.io/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar"
             }
           },
           "org_scala_sbt_test_interface_1_0": {
@@ -7707,20 +7794,6 @@
                 "https://jitpack.io/org/jsoup/jsoup/1.15.4/jsoup-1.15.4.jar"
               ],
               "downloaded_file_path": "v1/org/jsoup/jsoup/1.15.4/jsoup-1.15.4.jar"
-            }
-          },
-          "org_scalameta_scalameta_2_13_4_9_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "6fac07d4abbef08fc06da846c681c4b438879c993665d28d9c2baf1ec7fc010b",
-              "urls": [
-                "https://maven.google.com/org/scalameta/scalameta_2.13/4.9.0/scalameta_2.13-4.9.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalameta_2.13/4.9.0/scalameta_2.13-4.9.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalameta_2.13/4.9.0/scalameta_2.13-4.9.0.jar",
-                "https://jitpack.io/org/scalameta/scalameta_2.13/4.9.0/scalameta_2.13-4.9.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/scalameta/scalameta_2.13/4.9.0/scalameta_2.13-4.9.0.jar"
             }
           },
           "unpinned_rules_jvm_external_deps": {
@@ -7795,6 +7868,20 @@
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-resizable-image/0.64.8/flexmark-ext-resizable-image-0.64.8.jar"
             }
           },
+          "org_scalameta_scalameta_2_13_4_9_3": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "d1364639b0634feb7670580772060061d0a5d8fe8436fa2c7172a9186e229c4b",
+              "urls": [
+                "https://maven.google.com/org/scalameta/scalameta_2.13/4.9.3/scalameta_2.13-4.9.3.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalameta_2.13/4.9.3/scalameta_2.13-4.9.3.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalameta_2.13/4.9.3/scalameta_2.13-4.9.3.jar",
+                "https://jitpack.io/org/scalameta/scalameta_2.13/4.9.3/scalameta_2.13-4.9.3.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/scalameta_2.13/4.9.3/scalameta_2.13-4.9.3.jar"
+            }
+          },
           "com_vladsch_flexmark_flexmark_ext_tables_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7807,6 +7894,20 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-tables/0.64.8/flexmark-ext-tables-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-tables/0.64.8/flexmark-ext-tables-0.64.8.jar"
+            }
+          },
+          "io_github_classgraph_classgraph_4_8_149": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "ece8abfe1277450a8b95e57fc56991dca1fd42ffefdad88f65fe171ac576f604",
+              "urls": [
+                "https://maven.google.com/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar",
+                "https://repo.maven.apache.org/maven2/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar",
+                "https://repo1.maven.org/maven2/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar",
+                "https://jitpack.io/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar"
+              ],
+              "downloaded_file_path": "v1/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar"
             }
           },
           "com_vladsch_flexmark_flexmark_util_data_0_64_8": {
@@ -7843,6 +7944,20 @@
                 "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar"
               ],
               "downloaded_file_path": "v1/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar"
+            }
+          },
+          "org_eclipse_xtext_org_eclipse_xtext_xbase_lib_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "3e24abf388fa777e27aa35edd645ed9eae4001daa5b0455d312bd79018e4c47e",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.32.0/org.eclipse.xtext.xbase.lib-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.32.0/org.eclipse.xtext.xbase.lib-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.32.0/org.eclipse.xtext.xbase.lib-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.32.0/org.eclipse.xtext.xbase.lib-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.xbase.lib/2.32.0/org.eclipse.xtext.xbase.lib-2.32.0.jar"
             }
           },
           "com_google_cloud_google_cloud_storage_2_36_1": {
@@ -7914,6 +8029,20 @@
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-util-ast/0.64.8/flexmark-util-ast-0.64.8.jar"
             }
           },
+          "org_eclipse_xtend_org_eclipse_xtend_lib_macro_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "3b04ece768ba9027f1bff4bbfdc6e5c8c6e6ef1e588c47672e10995a54bded2b",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.32.0/org.eclipse.xtend.lib.macro-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.32.0/org.eclipse.xtend.lib.macro-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.32.0/org.eclipse.xtend.lib.macro-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.32.0/org.eclipse.xtend.lib.macro-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.32.0/org.eclipse.xtend.lib.macro-2.32.0.jar"
+            }
+          },
           "com_google_api_api_common_jar_sources_2_29_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7953,20 +8082,6 @@
               "downloaded_file_path": "v1/org/scalatest/scalatest-freespec_2.13/3.2.16/scalatest-freespec_2.13-3.2.16.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_core_jobs_3_15_200": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "ceb9e68fd2226068a0e07bda3c8a21bd6cd996552874934b8026c58547ccdbd3",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.jobs/3.15.200/org.eclipse.core.jobs-3.15.200.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/3.15.200/org.eclipse.core.jobs-3.15.200.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/3.15.200/org.eclipse.core.jobs-3.15.200.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.jobs/3.15.200/org.eclipse.core.jobs-3.15.200.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.jobs/3.15.200/org.eclipse.core.jobs-3.15.200.jar"
-            }
-          },
           "com_google_api_grpc_proto_google_iam_v1_jar_sources_1_32_1": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -7998,20 +8113,6 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/regions/2.25.23/regions-2.25.23-sources.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/regions/2.25.23/regions-2.25.23-sources.jar"
-            }
-          },
-          "org_eclipse_xtend_org_eclipse_xtend_core_2_28_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "5279c5f7ce6c376c901f636e3f72da7da6ac8dbc8d186b2aa2bed13024fd77ef",
-              "urls": [
-                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.core/2.28.0/org.eclipse.xtend.core-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.core/2.28.0/org.eclipse.xtend.core-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.core/2.28.0/org.eclipse.xtend.core-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.core/2.28.0/org.eclipse.xtend.core-2.28.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.core/2.28.0/org.eclipse.xtend.core-2.28.0.jar"
             }
           },
           "com_google_auto_value_auto_value_annotations_jar_sources_1_10_4": {
@@ -8050,20 +8151,6 @@
               "downloaded_file_path": "v1/com/google/api/grpc/proto-google-common-protos/2.37.1/proto-google-common-protos-2.37.1-sources.jar"
             }
           },
-          "io_github_classgraph_classgraph_4_8_138": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "272ffa06f76c8ed227d36ddbba1e5bbd1c7754c6541197b948a3a5c59d724bad",
-              "urls": [
-                "https://maven.google.com/io/github/classgraph/classgraph/4.8.138/classgraph-4.8.138.jar",
-                "https://repo.maven.apache.org/maven2/io/github/classgraph/classgraph/4.8.138/classgraph-4.8.138.jar",
-                "https://repo1.maven.org/maven2/io/github/classgraph/classgraph/4.8.138/classgraph-4.8.138.jar",
-                "https://jitpack.io/io/github/classgraph/classgraph/4.8.138/classgraph-4.8.138.jar"
-              ],
-              "downloaded_file_path": "v1/io/github/classgraph/classgraph/4.8.138/classgraph-4.8.138.jar"
-            }
-          },
           "com_google_code_findbugs_jsr305_3_0_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8084,10 +8171,7 @@
             "attributes": {
               "sha256": "de25f2d9a2156529bd765f51d8efdfc0dfa7301e04efb9cc75b7f10cf5d0e0fb",
               "urls": [
-                "https://maven.google.com/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar",
-                "https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar",
-                "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar",
-                "https://jitpack.io/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar"
+                "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar"
               ],
               "downloaded_file_path": "v1/com/google/errorprone/error_prone_annotations/2.26.1/error_prone_annotations-2.26.1.jar"
             }
@@ -8158,20 +8242,6 @@
               "downloaded_file_path": "v1/software/amazon/awssdk/http-auth/2.25.23/http-auth-2.25.23.jar"
             }
           },
-          "org_eclipse_platform_org_eclipse_equinox_common_3_19_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "67474862af2ff101aaa4ddd9e097bb0f650ed61bb00367e2c1d86cc266ac97e1",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.common/3.19.0/org.eclipse.equinox.common-3.19.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/3.19.0/org.eclipse.equinox.common-3.19.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/3.19.0/org.eclipse.equinox.common-3.19.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.common/3.19.0/org.eclipse.equinox.common-3.19.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.common/3.19.0/org.eclipse.equinox.common-3.19.0.jar"
-            }
-          },
           "com_outr_moduload_2_13_1_1_5": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8192,10 +8262,7 @@
             "attributes": {
               "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064",
               "urls": [
-                "https://maven.google.com/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar",
-                "https://repo.maven.apache.org/maven2/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar",
-                "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar",
-                "https://jitpack.io/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar"
+                "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar"
               ],
               "downloaded_file_path": "v1/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar"
             }
@@ -8206,12 +8273,23 @@
             "attributes": {
               "sha256": "88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64",
               "urls": [
-                "https://maven.google.com/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar",
-                "https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar",
-                "https://repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar",
-                "https://jitpack.io/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar"
+                "https://repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar"
               ],
               "downloaded_file_path": "v1/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar"
+            }
+          },
+          "com_google_guava_failureaccess_1_0_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
+              "urls": [
+                "https://maven.google.com/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
+                "https://repo.maven.apache.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
+                "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
+                "https://jitpack.io/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
             }
           },
           "com_google_http_client_google_http_client_jar_sources_1_44_1": {
@@ -8256,20 +8334,6 @@
                 "https://repo1.maven.org/maven2/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2.jar"
               ],
               "downloaded_file_path": "v1/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2.jar"
-            }
-          },
-          "org_eclipse_jdt_org_eclipse_jdt_compiler_apt_1_3_1100": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "cc9a940321bc5ff21db2305175c3c6601618a1ea2c0dbafae4d189057e5f56c2",
-              "urls": [
-                "https://maven.google.com/org/eclipse/jdt/org.eclipse.jdt.compiler.apt/1.3.1100/org.eclipse.jdt.compiler.apt-1.3.1100.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/jdt/org.eclipse.jdt.compiler.apt/1.3.1100/org.eclipse.jdt.compiler.apt-1.3.1100.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/jdt/org.eclipse.jdt.compiler.apt/1.3.1100/org.eclipse.jdt.compiler.apt-1.3.1100.jar",
-                "https://jitpack.io/org/eclipse/jdt/org.eclipse.jdt.compiler.apt/1.3.1100/org.eclipse.jdt.compiler.apt-1.3.1100.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/jdt/org.eclipse.jdt.compiler.apt/1.3.1100/org.eclipse.jdt.compiler.apt-1.3.1100.jar"
             }
           },
           "org_apache_maven_maven_artifact_jar_sources_3_9_6": {
@@ -8380,34 +8444,6 @@
               "downloaded_file_path": "v1/org/objenesis/objenesis/3.2/objenesis-3.2.jar"
             }
           },
-          "org_jline_jline_3_22_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "7c3ec8d2c5815188bbaefa4c7c42bc9b8ec172382ca026a4b4f3d113c0b5c3e3",
-              "urls": [
-                "https://maven.google.com/org/jline/jline/3.22.0/jline-3.22.0.jar",
-                "https://repo.maven.apache.org/maven2/org/jline/jline/3.22.0/jline-3.22.0.jar",
-                "https://repo1.maven.org/maven2/org/jline/jline/3.22.0/jline-3.22.0.jar",
-                "https://jitpack.io/org/jline/jline/3.22.0/jline-3.22.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/jline/jline/3.22.0/jline-3.22.0.jar"
-            }
-          },
-          "software_amazon_smithy_smithy_codegen_core_1_45_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "b6775b059801e40bbd055d0ac3616d49951174c1427e4d331875e967289cdc13",
-              "urls": [
-                "https://maven.google.com/software/amazon/smithy/smithy-codegen-core/1.45.0/smithy-codegen-core-1.45.0.jar",
-                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-codegen-core/1.45.0/smithy-codegen-core-1.45.0.jar",
-                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-codegen-core/1.45.0/smithy-codegen-core-1.45.0.jar",
-                "https://jitpack.io/software/amazon/smithy/smithy-codegen-core/1.45.0/smithy-codegen-core-1.45.0.jar"
-              ],
-              "downloaded_file_path": "v1/software/amazon/smithy/smithy-codegen-core/1.45.0/smithy-codegen-core-1.45.0.jar"
-            }
-          },
           "com_google_protobuf_protobuf_java_3_25_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8502,20 +8538,6 @@
               "downloaded_file_path": "v1/com/google/api/grpc/grpc-google-cloud-storage-v2/2.36.1-alpha/grpc-google-cloud-storage-v2-2.36.1-alpha-sources.jar"
             }
           },
-          "org_eclipse_xtend_org_eclipse_xtend_lib_macro_2_28_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "623a312c0bd6341fecbb72eba6c011f326561d451426fb957a4b18ba076c17c6",
-              "urls": [
-                "https://maven.google.com/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.28.0/org.eclipse.xtend.lib.macro-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.28.0/org.eclipse.xtend.lib.macro-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.28.0/org.eclipse.xtend.lib.macro-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.28.0/org.eclipse.xtend.lib.macro-2.28.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.lib.macro/2.28.0/org.eclipse.xtend.lib.macro-2.28.0.jar"
-            }
-          },
           "org_apache_httpcomponents_httpclient_jar_sources_4_5_14": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8603,20 +8625,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-gfm-issues/0.64.8/flexmark-ext-gfm-issues-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-gfm-issues/0.64.8/flexmark-ext-gfm-issues-0.64.8.jar"
-            }
-          },
-          "org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc_0_20_1": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "aa5c0581b993f13919e2e4d532ba26083aea8e426aa89012bcc6d9510a66859e",
-              "urls": [
-                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.20.1/org.eclipse.lsp4j.jsonrpc-0.20.1.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.20.1/org.eclipse.lsp4j.jsonrpc-0.20.1.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.20.1/org.eclipse.lsp4j.jsonrpc-0.20.1.jar",
-                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.20.1/org.eclipse.lsp4j.jsonrpc-0.20.1.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.20.1/org.eclipse.lsp4j.jsonrpc-0.20.1.jar"
             }
           },
           "software_amazon_awssdk_protocol_core_jar_sources_2_25_23": {
@@ -8816,20 +8824,6 @@
               "downloaded_file_path": "v1/org/apache/pdfbox/xmpbox/2.0.24/xmpbox-2.0.24.jar"
             }
           },
-          "com_lihaoyi_os_lib_2_13_0_9_3": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "f29b31884d5da05373ae86dc83a81728dc3f0b0506a196fcfa72d5e9038a996f",
-              "urls": [
-                "https://maven.google.com/com/lihaoyi/os-lib_2.13/0.9.3/os-lib_2.13-0.9.3.jar",
-                "https://repo.maven.apache.org/maven2/com/lihaoyi/os-lib_2.13/0.9.3/os-lib_2.13-0.9.3.jar",
-                "https://repo1.maven.org/maven2/com/lihaoyi/os-lib_2.13/0.9.3/os-lib_2.13-0.9.3.jar",
-                "https://jitpack.io/com/lihaoyi/os-lib_2.13/0.9.3/os-lib_2.13-0.9.3.jar"
-              ],
-              "downloaded_file_path": "v1/com/lihaoyi/os-lib_2.13/0.9.3/os-lib_2.13-0.9.3.jar"
-            }
-          },
           "org_scala_lang_modules_scala_java8_compat_2_13_1_0_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8855,18 +8849,18 @@
               "downloaded_file_path": "v1/software/amazon/awssdk/arns/2.25.23/arns-2.25.23.jar"
             }
           },
-          "org_scala_lang_scala_library_2_13_13": {
+          "org_scala_lang_scala_library_2_13_14": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "b58b223f9b59f88d04c9dc9ec26f4b463e93e6f296de5663dbd710a7dfce2743",
+              "sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
               "urls": [
-                "https://maven.google.com/org/scala-lang/scala-library/2.13.13/scala-library-2.13.13.jar",
-                "https://repo.maven.apache.org/maven2/org/scala-lang/scala-library/2.13.13/scala-library-2.13.13.jar",
-                "https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.13/scala-library-2.13.13.jar",
-                "https://jitpack.io/org/scala-lang/scala-library/2.13.13/scala-library-2.13.13.jar"
+                "https://maven.google.com/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
+                "https://repo.maven.apache.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
+                "https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
+                "https://jitpack.io/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar"
               ],
-              "downloaded_file_path": "v1/org/scala-lang/scala-library/2.13.13/scala-library-2.13.13.jar"
+              "downloaded_file_path": "v1/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar"
             }
           },
           "io_netty_netty_codec_http2_4_1_108_Final": {
@@ -8892,20 +8886,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark/0.64.8/flexmark-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark/0.64.8/flexmark-0.64.8.jar"
-            }
-          },
-          "org_eclipse_platform_org_eclipse_core_resources_3_20_100": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "60880e30a297784a37ceb944d339852a8a6d33ff0615da043f58b458232cd163",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.resources/3.20.100/org.eclipse.core.resources-3.20.100.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.resources/3.20.100/org.eclipse.core.resources-3.20.100.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.resources/3.20.100/org.eclipse.core.resources-3.20.100.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.resources/3.20.100/org.eclipse.core.resources-3.20.100.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.resources/3.20.100/org.eclipse.core.resources-3.20.100.jar"
             }
           },
           "org_apache_maven_maven_model_builder_jar_sources_3_9_6": {
@@ -8947,20 +8927,6 @@
               "downloaded_file_path": "v1/org/scala-sbt/ipcsocket/ipcsocket/1.0.1/ipcsocket-1.0.1.jar"
             }
           },
-          "software_amazon_smithy_smithy_build_1_45_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "6f8e9a5e38fbf895f96957b0f48affd74746ab3ff27b014b0d4aaeeac7239e4a",
-              "urls": [
-                "https://maven.google.com/software/amazon/smithy/smithy-build/1.45.0/smithy-build-1.45.0.jar",
-                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-build/1.45.0/smithy-build-1.45.0.jar",
-                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-build/1.45.0/smithy-build-1.45.0.jar",
-                "https://jitpack.io/software/amazon/smithy/smithy-build/1.45.0/smithy-build-1.45.0.jar"
-              ],
-              "downloaded_file_path": "v1/software/amazon/smithy/smithy-build/1.45.0/smithy-build-1.45.0.jar"
-            }
-          },
           "com_google_apis_google_api_services_storage_jar_sources_v1_rev20240311_2_0_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -8984,20 +8950,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-util-dependency/0.64.8/flexmark-util-dependency-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-util-dependency/0.64.8/flexmark-util-dependency-0.64.8.jar"
-            }
-          },
-          "org_eclipse_platform_org_eclipse_core_expressions_3_9_300": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "b85cfbc5198b0abc04eb2ec312c802acf8a9d10307bdb9fa46b086951c555827",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.expressions/3.9.300/org.eclipse.core.expressions-3.9.300.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.expressions/3.9.300/org.eclipse.core.expressions-3.9.300.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.expressions/3.9.300/org.eclipse.core.expressions-3.9.300.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.expressions/3.9.300/org.eclipse.core.expressions-3.9.300.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.expressions/3.9.300/org.eclipse.core.expressions-3.9.300.jar"
             }
           },
           "io_grpc_grpc_protobuf_lite_jar_sources_1_62_2": {
@@ -9094,18 +9046,32 @@
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-all/0.64.8/flexmark-all-0.64.8.jar"
             }
           },
-          "software_amazon_smithy_smithy_utils_1_45_0": {
+          "org_eclipse_platform_org_eclipse_equinox_common_3_17_100": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "90e14edd864f51e724613e31f904cb64209799d8cfe15b493861290f306245af",
+              "sha256": "a3464c02a8a2b0c0dd73e00656064b6ab5cb59387c80bef71244ef18caa9d24d",
               "urls": [
-                "https://maven.google.com/software/amazon/smithy/smithy-utils/1.45.0/smithy-utils-1.45.0.jar",
-                "https://repo.maven.apache.org/maven2/software/amazon/smithy/smithy-utils/1.45.0/smithy-utils-1.45.0.jar",
-                "https://repo1.maven.org/maven2/software/amazon/smithy/smithy-utils/1.45.0/smithy-utils-1.45.0.jar",
-                "https://jitpack.io/software/amazon/smithy/smithy-utils/1.45.0/smithy-utils-1.45.0.jar"
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.common/3.17.100/org.eclipse.equinox.common-3.17.100.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/3.17.100/org.eclipse.equinox.common-3.17.100.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/3.17.100/org.eclipse.equinox.common-3.17.100.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.common/3.17.100/org.eclipse.equinox.common-3.17.100.jar"
               ],
-              "downloaded_file_path": "v1/software/amazon/smithy/smithy-utils/1.45.0/smithy-utils-1.45.0.jar"
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.common/3.17.100/org.eclipse.equinox.common-3.17.100.jar"
+            }
+          },
+          "org_jline_jline_3_24_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "bd0e64bc24b21a975d47f9d12d73119ab51dce7639f0b45889d89f6325679c6d",
+              "urls": [
+                "https://maven.google.com/org/jline/jline/3.24.1/jline-3.24.1.jar",
+                "https://repo.maven.apache.org/maven2/org/jline/jline/3.24.1/jline-3.24.1.jar",
+                "https://repo1.maven.org/maven2/org/jline/jline/3.24.1/jline-3.24.1.jar",
+                "https://jitpack.io/org/jline/jline/3.24.1/jline-3.24.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/jline/jline/3.24.1/jline-3.24.1.jar"
             }
           },
           "com_vladsch_flexmark_flexmark_ext_gitlab_0_64_8": {
@@ -9120,6 +9086,20 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-ext-gitlab/0.64.8/flexmark-ext-gitlab-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-gitlab/0.64.8/flexmark-ext-gitlab-0.64.8.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_equinox_registry_3_11_200": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "7a3668ca406930213e3edb8024ac72c51fbc3f289de63a33254c8070aa8d0a3f",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.registry/3.11.200/org.eclipse.equinox.registry-3.11.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.registry/3.11.200/org.eclipse.equinox.registry-3.11.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.registry/3.11.200/org.eclipse.equinox.registry-3.11.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.registry/3.11.200/org.eclipse.equinox.registry-3.11.200.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.registry/3.11.200/org.eclipse.equinox.registry-3.11.200.jar"
             }
           },
           "io_grpc_grpc_protobuf_lite_1_62_2": {
@@ -9207,9 +9187,9 @@
               ],
               "boms": [],
               "artifacts": [
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-model\", \"version\": \"1.45.0\" }",
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-codegen-core\", \"version\": \"1.45.0\" }",
-                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-utils\", \"version\": \"1.45.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-model\", \"version\": \"1.49.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-codegen-core\", \"version\": \"1.49.0\" }",
+                "{ \"group\": \"software.amazon.smithy\", \"artifact\": \"smithy-utils\", \"version\": \"1.49.0\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter\", \"version\": \"5.10.2\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter-api\", \"version\": \"5.10.2\" }",
                 "{ \"group\": \"org.junit.jupiter\", \"artifact\": \"junit-jupiter-engine\", \"version\": \"5.10.2\" }",
@@ -9217,13 +9197,7 @@
                 "{ \"group\": \"org.junit.platform\", \"artifact\": \"junit-platform-console\", \"version\": \"1.10.2\" }",
                 "{ \"group\": \"com.vanniktech\", \"artifact\": \"gradle-maven-publish-plugin\", \"version\": \"0.28.0\" }",
                 "{ \"group\": \"org.scalameta\", \"artifact\": \"mdoc_2.13\", \"version\": \"2.5.2\" }",
-                "{ \"group\": \"org.scalameta\", \"artifact\": \"scalafmt-cli_2.13\", \"version\": \"3.8.0\" }",
-                "{ \"group\": \"org.scala-lang.modules\", \"artifact\": \"scala-collection-compat_2.13\", \"version\": \"2.11.0\" }",
-                "{ \"group\": \"com.lihaoyi\", \"artifact\": \"os-lib_2.13\", \"version\": \"0.9.3\" }",
-                "{ \"group\": \"com.lihaoyi\", \"artifact\": \"geny_2.13\", \"version\": \"1.0.0\" }",
-                "{ \"group\": \"com.monovore\", \"artifact\": \"decline_2.13\", \"version\": \"2.4.1\" }",
-                "{ \"group\": \"org.typelevel\", \"artifact\": \"cats-core_2.13\", \"version\": \"2.10.0\" }",
-                "{ \"group\": \"org.typelevel\", \"artifact\": \"cats-kernel_2.13\", \"version\": \"2.10.0\" }",
+                "{ \"group\": \"org.scalameta\", \"artifact\": \"scalafmt-cli_2.13\", \"version\": \"3.8.1\" }",
                 "{ \"group\": \"com.github.plokhotnyuk.jsoniter-scala\", \"artifact\": \"jsoniter-scala-core_2.13\", \"version\": \"2.28.3\" }",
                 "{ \"group\": \"com.github.plokhotnyuk.jsoniter-scala\", \"artifact\": \"jsoniter-scala-macros_2.13\", \"version\": \"2.28.3\" }",
                 "{ \"group\": \"me.vican.jorge\", \"artifact\": \"jsonrpc4s_2.13\", \"version\": \"0.1.0\" }",
@@ -9239,15 +9213,13 @@
                 "{ \"group\": \"io.monix\", \"artifact\": \"monix-eval_2.13\", \"version\": \"3.2.0\" }",
                 "{ \"group\": \"io.monix\", \"artifact\": \"monix-execution_2.13\", \"version\": \"3.2.0\" }",
                 "{ \"group\": \"com.outr\", \"artifact\": \"scribe_2.13\", \"version\": \"3.5.5\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.generator\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.20.1\" }",
-                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.core\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.lib\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"org.eclipse.xtext\", \"artifact\": \"org.eclipse.xtext.xbase.lib\", \"version\": \"2.28.0\" }",
-                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"33.1.0-jre\" }",
-                "{ \"group\": \"com.google.inject\", \"artifact\": \"guice\", \"version\": \"7.0.0\" }",
-                "{ \"group\": \"org.scala-lang\", \"artifact\": \"scala-library\", \"version\": \"2.13.12\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.generator\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.23.1\" }",
+                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.core\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.eclipse.xtend\", \"artifact\": \"org.eclipse.xtend.lib\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.eclipse.xtext\", \"artifact\": \"org.eclipse.xtext.xbase.lib\", \"version\": \"2.32.0\" }",
+                "{ \"group\": \"org.scala-lang\", \"artifact\": \"scala-library\", \"version\": \"2.13.14\" }",
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
                 "{ \"group\": \"com.google.errorprone\", \"artifact\": \"error_prone_annotations\", \"version\": \"2.3.2\" }",
@@ -9364,20 +9336,6 @@
               "downloaded_file_path": "v1/com/openhtmltopdf/openhtmltopdf-core/1.0.10/openhtmltopdf-core-1.0.10.jar"
             }
           },
-          "org_eclipse_jdt_org_eclipse_jdt_compiler_tool_1_2_1000": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "5d507b0a8e113cfc9c712f5306ece9d0e3775447c811fca5f8490c3615a754b4",
-              "urls": [
-                "https://maven.google.com/org/eclipse/jdt/org.eclipse.jdt.compiler.tool/1.2.1000/org.eclipse.jdt.compiler.tool-1.2.1000.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/jdt/org.eclipse.jdt.compiler.tool/1.2.1000/org.eclipse.jdt.compiler.tool-1.2.1000.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/jdt/org.eclipse.jdt.compiler.tool/1.2.1000/org.eclipse.jdt.compiler.tool-1.2.1000.jar",
-                "https://jitpack.io/org/eclipse/jdt/org.eclipse.jdt.compiler.tool/1.2.1000/org.eclipse.jdt.compiler.tool-1.2.1000.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/jdt/org.eclipse.jdt.compiler.tool/1.2.1000/org.eclipse.jdt.compiler.tool-1.2.1000.jar"
-            }
-          },
           "com_fasterxml_jackson_core_jackson_core_2_17_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -9422,6 +9380,20 @@
               "downloaded_file_path": "v1/software/amazon/awssdk/aws-xml-protocol/2.25.23/aws-xml-protocol-2.25.23-sources.jar"
             }
           },
+          "org_scalameta_scalafmt_interfaces_3_8_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "8301ef475739484984918be572b6ca3ed7c89fc2b4b9bd9ec2d3bedaf755b04c",
+              "urls": [
+                "https://maven.google.com/org/scalameta/scalafmt-interfaces/3.8.1/scalafmt-interfaces-3.8.1.jar",
+                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-interfaces/3.8.1/scalafmt-interfaces-3.8.1.jar",
+                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-interfaces/3.8.1/scalafmt-interfaces-3.8.1.jar",
+                "https://jitpack.io/org/scalameta/scalafmt-interfaces/3.8.1/scalafmt-interfaces-3.8.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/scalameta/scalafmt-interfaces/3.8.1/scalafmt-interfaces-3.8.1.jar"
+            }
+          },
           "com_geirsson_metaconfig_pprint_2_13_0_12_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -9447,18 +9419,18 @@
               "downloaded_file_path": "v1/io/grpc/grpc-api/1.62.2/grpc-api-1.62.2.jar"
             }
           },
-          "org_scalameta_scalafmt_interfaces_3_8_0": {
+          "org_eclipse_platform_org_eclipse_text_3_12_300": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "sha256": "dc3ef07ab5825a448877ea3ed36a31cf1516f3803e3f8c0a559e76ce6776938d",
+              "sha256": "6c4f4f01397ae566cb7007ca885ffc5d1813c913d6602d78a8f81801a39060e8",
               "urls": [
-                "https://maven.google.com/org/scalameta/scalafmt-interfaces/3.8.0/scalafmt-interfaces-3.8.0.jar",
-                "https://repo.maven.apache.org/maven2/org/scalameta/scalafmt-interfaces/3.8.0/scalafmt-interfaces-3.8.0.jar",
-                "https://repo1.maven.org/maven2/org/scalameta/scalafmt-interfaces/3.8.0/scalafmt-interfaces-3.8.0.jar",
-                "https://jitpack.io/org/scalameta/scalafmt-interfaces/3.8.0/scalafmt-interfaces-3.8.0.jar"
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.text/3.12.300/org.eclipse.text-3.12.300.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.text/3.12.300/org.eclipse.text-3.12.300.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.text/3.12.300/org.eclipse.text-3.12.300.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.text/3.12.300/org.eclipse.text-3.12.300.jar"
               ],
-              "downloaded_file_path": "v1/org/scalameta/scalafmt-interfaces/3.8.0/scalafmt-interfaces-3.8.0.jar"
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.text/3.12.300/org.eclipse.text-3.12.300.jar"
             }
           },
           "org_wildfly_common_wildfly_common_1_5_4_Final": {
@@ -9484,6 +9456,20 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/crt-core/2.25.23/crt-core-2.25.23-sources.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/crt-core/2.25.23/crt-core-2.25.23-sources.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_core_expressions_3_8_200": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "13dbbe3256f1199c69a79c3ba4c6ee79e6c1a0e73f67d49f5f3365b7ad387818",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.expressions/3.8.200/org.eclipse.core.expressions-3.8.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.expressions/3.8.200/org.eclipse.core.expressions-3.8.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.expressions/3.8.200/org.eclipse.core.expressions-3.8.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.expressions/3.8.200/org.eclipse.core.expressions-3.8.200.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.expressions/3.8.200/org.eclipse.core.expressions-3.8.200.jar"
             }
           },
           "com_googlecode_java_diff_utils_diffutils_1_3_0": {
@@ -9547,6 +9533,20 @@
               "downloaded_file_path": "v1/io/grpc/grpc-services/1.62.2/grpc-services-1.62.2.jar"
             }
           },
+          "org_eclipse_platform_org_eclipse_core_runtime_3_26_100": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "f90ebd2f052d602281840b2b8cd1f5a7b6d1cf2d5a85b7b0415c70456855d173",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.runtime/3.26.100/org.eclipse.core.runtime-3.26.100.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/3.26.100/org.eclipse.core.runtime-3.26.100.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/3.26.100/org.eclipse.core.runtime-3.26.100.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.runtime/3.26.100/org.eclipse.core.runtime-3.26.100.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.runtime/3.26.100/org.eclipse.core.runtime-3.26.100.jar"
+            }
+          },
           "com_vladsch_flexmark_flexmark_util_sequence_0_64_8": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -9589,6 +9589,20 @@
               "downloaded_file_path": "v1/io/get-coursier/interface/1.0.19/interface-1.0.19.jar"
             }
           },
+          "org_eclipse_xtext_org_eclipse_xtext_util_2_32_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "438fb6ec3b4d90c5354561552be243d5ab994e56eadcbe8862621e98cb5f9c42",
+              "urls": [
+                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.util/2.32.0/org.eclipse.xtext.util-2.32.0.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.util/2.32.0/org.eclipse.xtext.util-2.32.0.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.util/2.32.0/org.eclipse.xtext.util-2.32.0.jar",
+                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.util/2.32.0/org.eclipse.xtext.util-2.32.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.util/2.32.0/org.eclipse.xtext.util-2.32.0.jar"
+            }
+          },
           "com_google_api_grpc_proto_google_cloud_storage_v2_2_36_1_alpha": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -9623,20 +9637,6 @@
                 "https://jitpack.io/com/github/scopt/scopt_2.13/4.1.0/scopt_2.13-4.1.0.jar"
               ],
               "downloaded_file_path": "v1/com/github/scopt/scopt_2.13/4.1.0/scopt_2.13-4.1.0.jar"
-            }
-          },
-          "org_eclipse_platform_org_eclipse_equinox_app_1_7_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "52f333392fcf4f58264c65febce3598fb1f53a55a94cdddb8b3006c9c631e29a",
-              "urls": [
-                "https://maven.google.com/org/eclipse/platform/org.eclipse.equinox.app/1.7.0/org.eclipse.equinox.app-1.7.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.app/1.7.0/org.eclipse.equinox.app-1.7.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.equinox.app/1.7.0/org.eclipse.equinox.app-1.7.0.jar",
-                "https://jitpack.io/org/eclipse/platform/org.eclipse.equinox.app/1.7.0/org.eclipse.equinox.app-1.7.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.equinox.app/1.7.0/org.eclipse.equinox.app-1.7.0.jar"
             }
           },
           "io_netty_netty_buffer_jar_sources_4_1_108_Final": {
@@ -9723,20 +9723,6 @@
                 "https://jitpack.io/com/vladsch/flexmark/flexmark-html2md-converter/0.64.8/flexmark-html2md-converter-0.64.8.jar"
               ],
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-html2md-converter/0.64.8/flexmark-html2md-converter-0.64.8.jar"
-            }
-          },
-          "org_eclipse_jdt_org_eclipse_jdt_core_3_23_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "b1fec3e59a0c09c5e2b22a67737a54162b6117f1500378b26be490816c3443c2",
-              "urls": [
-                "https://maven.google.com/org/eclipse/jdt/org.eclipse.jdt.core/3.23.0/org.eclipse.jdt.core-3.23.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/jdt/org.eclipse.jdt.core/3.23.0/org.eclipse.jdt.core-3.23.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/jdt/org.eclipse.jdt.core/3.23.0/org.eclipse.jdt.core-3.23.0.jar",
-                "https://jitpack.io/org/eclipse/jdt/org.eclipse.jdt.core/3.23.0/org.eclipse.jdt.core-3.23.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/jdt/org.eclipse.jdt.core/3.23.0/org.eclipse.jdt.core-3.23.0.jar"
             }
           },
           "com_vladsch_flexmark_flexmark_ext_autolink_0_64_8": {
@@ -9828,6 +9814,20 @@
               "downloaded_file_path": "v1/com/vladsch/flexmark/flexmark-ext-definition/0.64.8/flexmark-ext-definition-0.64.8.jar"
             }
           },
+          "org_eclipse_lsp4j_org_eclipse_lsp4j_jsonrpc_0_23_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "4e1aa77474de1791d96dc55932fb46efdf53233548f38f62ba7376f8b0bc6650",
+              "urls": [
+                "https://maven.google.com/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.23.1/org.eclipse.lsp4j.jsonrpc-0.23.1.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.23.1/org.eclipse.lsp4j.jsonrpc-0.23.1.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.23.1/org.eclipse.lsp4j.jsonrpc-0.23.1.jar",
+                "https://jitpack.io/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.23.1/org.eclipse.lsp4j.jsonrpc-0.23.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/lsp4j/org.eclipse.lsp4j.jsonrpc/0.23.1/org.eclipse.lsp4j.jsonrpc-0.23.1.jar"
+            }
+          },
           "com_google_protobuf_protobuf_java_util_jar_sources_3_25_2": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -9837,6 +9837,20 @@
                 "https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java-util/3.25.2/protobuf-java-util-3.25.2-sources.jar"
               ],
               "downloaded_file_path": "v1/com/google/protobuf/protobuf-java-util/3.25.2/protobuf-java-util-3.25.2-sources.jar"
+            }
+          },
+          "org_eclipse_platform_org_eclipse_core_jobs_3_13_200": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "sha256": "f6303d411f5013aac5e3491860392b7fddc09b518d0eb63722b0926679cd9dbf",
+              "urls": [
+                "https://maven.google.com/org/eclipse/platform/org.eclipse.core.jobs/3.13.200/org.eclipse.core.jobs-3.13.200.jar",
+                "https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/3.13.200/org.eclipse.core.jobs-3.13.200.jar",
+                "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/3.13.200/org.eclipse.core.jobs-3.13.200.jar",
+                "https://jitpack.io/org/eclipse/platform/org.eclipse.core.jobs/3.13.200/org.eclipse.core.jobs-3.13.200.jar"
+              ],
+              "downloaded_file_path": "v1/org/eclipse/platform/org.eclipse.core.jobs/3.13.200/org.eclipse.core.jobs-3.13.200.jar"
             }
           },
           "com_google_code_findbugs_jsr305_jar_sources_3_0_2": {
@@ -9859,20 +9873,6 @@
                 "https://repo1.maven.org/maven2/software/amazon/awssdk/endpoints-spi/2.25.23/endpoints-spi-2.25.23.jar"
               ],
               "downloaded_file_path": "v1/software/amazon/awssdk/endpoints-spi/2.25.23/endpoints-spi-2.25.23.jar"
-            }
-          },
-          "org_eclipse_xtext_org_eclipse_xtext_common_types_2_28_0": {
-            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
-            "ruleClassName": "http_file",
-            "attributes": {
-              "sha256": "b0a705165e84e7b2558fe5b66b3d01cbbab7f23b52cc52c9627cd954a61d94cc",
-              "urls": [
-                "https://maven.google.com/org/eclipse/xtext/org.eclipse.xtext.common.types/2.28.0/org.eclipse.xtext.common.types-2.28.0.jar",
-                "https://repo.maven.apache.org/maven2/org/eclipse/xtext/org.eclipse.xtext.common.types/2.28.0/org.eclipse.xtext.common.types-2.28.0.jar",
-                "https://repo1.maven.org/maven2/org/eclipse/xtext/org.eclipse.xtext.common.types/2.28.0/org.eclipse.xtext.common.types-2.28.0.jar",
-                "https://jitpack.io/org/eclipse/xtext/org.eclipse.xtext.common.types/2.28.0/org.eclipse.xtext.common.types-2.28.0.jar"
-              ],
-              "downloaded_file_path": "v1/org/eclipse/xtext/org.eclipse.xtext.common.types/2.28.0/org.eclipse.xtext.common.types-2.28.0.jar"
             }
           },
           "com_google_api_grpc_proto_google_cloud_storage_v2_jar_sources_2_36_1_alpha": {

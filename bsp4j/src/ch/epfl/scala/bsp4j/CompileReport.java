@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * The completion of a compilation task should be signalled with a `build/taskFinish` notification.
@@ -33,7 +32,6 @@ public class CompileReport {
     this.warnings = warnings;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -43,7 +41,6 @@ public class CompileReport {
     this.target = Preconditions.checkNotNull(target, "target");
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -52,7 +49,6 @@ public class CompileReport {
     this.originId = originId;
   }
 
-  @Pure
   @NonNull
   public Integer getErrors() {
     return this.errors;
@@ -62,7 +58,6 @@ public class CompileReport {
     this.errors = Preconditions.checkNotNull(errors, "errors");
   }
 
-  @Pure
   @NonNull
   public Integer getWarnings() {
     return this.warnings;
@@ -72,7 +67,6 @@ public class CompileReport {
     this.warnings = Preconditions.checkNotNull(warnings, "warnings");
   }
 
-  @Pure
   public Long getTime() {
     return this.time;
   }
@@ -81,7 +75,6 @@ public class CompileReport {
     this.time = time;
   }
 
-  @Pure
   public Boolean getNoOp() {
     return this.noOp;
   }
@@ -91,7 +84,6 @@ public class CompileReport {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -104,7 +96,6 @@ public class CompileReport {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -132,7 +123,6 @@ public class CompileReport {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

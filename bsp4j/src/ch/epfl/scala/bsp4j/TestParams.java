@@ -4,10 +4,9 @@ import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TestParams {
@@ -30,7 +29,6 @@ public class TestParams {
     this.targets = targets;
   }
 
-  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
@@ -40,7 +38,6 @@ public class TestParams {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -49,7 +46,6 @@ public class TestParams {
     this.originId = originId;
   }
 
-  @Pure
   public List<String> getArguments() {
     return this.arguments;
   }
@@ -58,7 +54,6 @@ public class TestParams {
     this.arguments = arguments;
   }
 
-  @Pure
   public Map<String, String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
@@ -67,7 +62,6 @@ public class TestParams {
     this.environmentVariables = environmentVariables;
   }
 
-  @Pure
   public String getWorkingDirectory() {
     return this.workingDirectory;
   }
@@ -76,7 +70,6 @@ public class TestParams {
     this.workingDirectory = workingDirectory;
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -85,7 +78,6 @@ public class TestParams {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -95,7 +87,6 @@ public class TestParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
@@ -109,7 +100,6 @@ public class TestParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -140,7 +130,6 @@ public class TestParams {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

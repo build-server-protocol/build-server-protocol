@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RustDependency {
@@ -18,7 +17,6 @@ public class RustDependency {
     this.pkg = pkg;
   }
 
-  @Pure
   @NonNull
   public String getPkg() {
     return this.pkg;
@@ -28,7 +26,6 @@ public class RustDependency {
     this.pkg = Preconditions.checkNotNull(pkg, "pkg");
   }
 
-  @Pure
   public String getName() {
     return this.name;
   }
@@ -37,7 +34,6 @@ public class RustDependency {
     this.name = name;
   }
 
-  @Pure
   public List<RustDepKindInfo> getDepKinds() {
     return this.depKinds;
   }
@@ -47,7 +43,6 @@ public class RustDependency {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("pkg", this.pkg);
@@ -57,7 +52,6 @@ public class RustDependency {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -76,7 +70,6 @@ public class RustDependency {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -3,10 +3,9 @@ package ch.epfl.scala.bsp4j;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class PackageFeatures {
@@ -29,7 +28,6 @@ public class PackageFeatures {
     this.enabledFeatures = enabledFeatures;
   }
 
-  @Pure
   @NonNull
   public String getPackageId() {
     return this.packageId;
@@ -39,7 +37,6 @@ public class PackageFeatures {
     this.packageId = Preconditions.checkNotNull(packageId, "packageId");
   }
 
-  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
@@ -49,7 +46,6 @@ public class PackageFeatures {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
 
-  @Pure
   @NonNull
   public Map<String, Set<String>> getAvailableFeatures() {
     return this.availableFeatures;
@@ -59,7 +55,6 @@ public class PackageFeatures {
     this.availableFeatures = Preconditions.checkNotNull(availableFeatures, "availableFeatures");
   }
 
-  @Pure
   @NonNull
   public Set<String> getEnabledFeatures() {
     return this.enabledFeatures;
@@ -70,7 +65,6 @@ public class PackageFeatures {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("packageId", this.packageId);
@@ -81,7 +75,6 @@ public class PackageFeatures {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -103,7 +96,6 @@ public class PackageFeatures {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

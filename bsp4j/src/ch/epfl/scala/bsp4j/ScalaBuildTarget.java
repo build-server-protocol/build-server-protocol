@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * `ScalaBuildTarget` is a basic data structure that contains scala-specific metadata for compiling
@@ -37,7 +36,6 @@ public class ScalaBuildTarget {
     this.jars = jars;
   }
 
-  @Pure
   @NonNull
   public String getScalaOrganization() {
     return this.scalaOrganization;
@@ -47,7 +45,6 @@ public class ScalaBuildTarget {
     this.scalaOrganization = Preconditions.checkNotNull(scalaOrganization, "scalaOrganization");
   }
 
-  @Pure
   @NonNull
   public String getScalaVersion() {
     return this.scalaVersion;
@@ -57,7 +54,6 @@ public class ScalaBuildTarget {
     this.scalaVersion = Preconditions.checkNotNull(scalaVersion, "scalaVersion");
   }
 
-  @Pure
   @NonNull
   public String getScalaBinaryVersion() {
     return this.scalaBinaryVersion;
@@ -67,7 +63,6 @@ public class ScalaBuildTarget {
     this.scalaBinaryVersion = Preconditions.checkNotNull(scalaBinaryVersion, "scalaBinaryVersion");
   }
 
-  @Pure
   @NonNull
   public ScalaPlatform getPlatform() {
     return this.platform;
@@ -77,7 +72,6 @@ public class ScalaBuildTarget {
     this.platform = Preconditions.checkNotNull(platform, "platform");
   }
 
-  @Pure
   @NonNull
   public List<String> getJars() {
     return this.jars;
@@ -87,7 +81,6 @@ public class ScalaBuildTarget {
     this.jars = Preconditions.checkNotNull(jars, "jars");
   }
 
-  @Pure
   public JvmBuildTarget getJvmBuildTarget() {
     return this.jvmBuildTarget;
   }
@@ -97,7 +90,6 @@ public class ScalaBuildTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("scalaOrganization", this.scalaOrganization);
@@ -110,7 +102,6 @@ public class ScalaBuildTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -138,7 +129,6 @@ public class ScalaBuildTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

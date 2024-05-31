@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class MavenDependencyModuleArtifact {
@@ -15,7 +14,6 @@ public class MavenDependencyModuleArtifact {
     this.uri = uri;
   }
 
-  @Pure
   @NonNull
   public String getUri() {
     return this.uri;
@@ -25,7 +23,6 @@ public class MavenDependencyModuleArtifact {
     this.uri = Preconditions.checkNotNull(uri, "uri");
   }
 
-  @Pure
   public String getClassifier() {
     return this.classifier;
   }
@@ -35,7 +32,6 @@ public class MavenDependencyModuleArtifact {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
@@ -44,7 +40,6 @@ public class MavenDependencyModuleArtifact {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -60,7 +55,6 @@ public class MavenDependencyModuleArtifact {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

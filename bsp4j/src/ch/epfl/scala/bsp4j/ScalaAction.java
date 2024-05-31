@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * A Scala action represents a change that can be performed in code. See also [LSP: Code Action
@@ -24,7 +23,6 @@ public class ScalaAction {
     this.title = title;
   }
 
-  @Pure
   @NonNull
   public String getTitle() {
     return this.title;
@@ -34,7 +32,6 @@ public class ScalaAction {
     this.title = Preconditions.checkNotNull(title, "title");
   }
 
-  @Pure
   public String getDescription() {
     return this.description;
   }
@@ -43,7 +40,6 @@ public class ScalaAction {
     this.description = description;
   }
 
-  @Pure
   public ScalaWorkspaceEdit getEdit() {
     return this.edit;
   }
@@ -53,7 +49,6 @@ public class ScalaAction {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("title", this.title);
@@ -63,7 +58,6 @@ public class ScalaAction {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -82,7 +76,6 @@ public class ScalaAction {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

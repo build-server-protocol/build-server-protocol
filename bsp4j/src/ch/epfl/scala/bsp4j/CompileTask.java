@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * The beginning of a compilation unit may be signalled to the client with a `build/taskStart`
@@ -18,7 +17,6 @@ public class CompileTask {
     this.target = target;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -29,7 +27,6 @@ public class CompileTask {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -37,7 +34,6 @@ public class CompileTask {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -50,7 +46,6 @@ public class CompileTask {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.target == null) ? 0 : this.target.hashCode());
   }

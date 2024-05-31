@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * The capabilities of the build server. Clients can use these capabilities to notify users what BSP
@@ -41,7 +40,6 @@ public class BuildServerCapabilities {
 
   public BuildServerCapabilities() {}
 
-  @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;
   }
@@ -50,7 +48,6 @@ public class BuildServerCapabilities {
     this.compileProvider = compileProvider;
   }
 
-  @Pure
   public TestProvider getTestProvider() {
     return this.testProvider;
   }
@@ -59,7 +56,6 @@ public class BuildServerCapabilities {
     this.testProvider = testProvider;
   }
 
-  @Pure
   public RunProvider getRunProvider() {
     return this.runProvider;
   }
@@ -68,7 +64,6 @@ public class BuildServerCapabilities {
     this.runProvider = runProvider;
   }
 
-  @Pure
   public DebugProvider getDebugProvider() {
     return this.debugProvider;
   }
@@ -77,7 +72,6 @@ public class BuildServerCapabilities {
     this.debugProvider = debugProvider;
   }
 
-  @Pure
   public Boolean getInverseSourcesProvider() {
     return this.inverseSourcesProvider;
   }
@@ -86,7 +80,6 @@ public class BuildServerCapabilities {
     this.inverseSourcesProvider = inverseSourcesProvider;
   }
 
-  @Pure
   public Boolean getDependencySourcesProvider() {
     return this.dependencySourcesProvider;
   }
@@ -95,7 +88,6 @@ public class BuildServerCapabilities {
     this.dependencySourcesProvider = dependencySourcesProvider;
   }
 
-  @Pure
   public Boolean getDependencyModulesProvider() {
     return this.dependencyModulesProvider;
   }
@@ -104,7 +96,6 @@ public class BuildServerCapabilities {
     this.dependencyModulesProvider = dependencyModulesProvider;
   }
 
-  @Pure
   public Boolean getResourcesProvider() {
     return this.resourcesProvider;
   }
@@ -113,7 +104,6 @@ public class BuildServerCapabilities {
     this.resourcesProvider = resourcesProvider;
   }
 
-  @Pure
   public Boolean getOutputPathsProvider() {
     return this.outputPathsProvider;
   }
@@ -122,7 +112,6 @@ public class BuildServerCapabilities {
     this.outputPathsProvider = outputPathsProvider;
   }
 
-  @Pure
   public Boolean getBuildTargetChangedProvider() {
     return this.buildTargetChangedProvider;
   }
@@ -131,7 +120,6 @@ public class BuildServerCapabilities {
     this.buildTargetChangedProvider = buildTargetChangedProvider;
   }
 
-  @Pure
   public Boolean getJvmRunEnvironmentProvider() {
     return this.jvmRunEnvironmentProvider;
   }
@@ -140,7 +128,6 @@ public class BuildServerCapabilities {
     this.jvmRunEnvironmentProvider = jvmRunEnvironmentProvider;
   }
 
-  @Pure
   public Boolean getJvmTestEnvironmentProvider() {
     return this.jvmTestEnvironmentProvider;
   }
@@ -149,7 +136,6 @@ public class BuildServerCapabilities {
     this.jvmTestEnvironmentProvider = jvmTestEnvironmentProvider;
   }
 
-  @Pure
   public Boolean getCargoFeaturesProvider() {
     return this.cargoFeaturesProvider;
   }
@@ -158,7 +144,6 @@ public class BuildServerCapabilities {
     this.cargoFeaturesProvider = cargoFeaturesProvider;
   }
 
-  @Pure
   public Boolean getCanReload() {
     return this.canReload;
   }
@@ -167,7 +152,6 @@ public class BuildServerCapabilities {
     this.canReload = canReload;
   }
 
-  @Pure
   public Boolean getJvmCompileClasspathProvider() {
     return this.jvmCompileClasspathProvider;
   }
@@ -177,7 +161,6 @@ public class BuildServerCapabilities {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("compileProvider", this.compileProvider);
@@ -199,7 +182,6 @@ public class BuildServerCapabilities {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -260,7 +242,6 @@ public class BuildServerCapabilities {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

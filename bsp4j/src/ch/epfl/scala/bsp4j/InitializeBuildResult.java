@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class InitializeBuildResult {
@@ -33,7 +32,6 @@ public class InitializeBuildResult {
     this.capabilities = capabilities;
   }
 
-  @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
@@ -43,7 +41,6 @@ public class InitializeBuildResult {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -53,7 +50,6 @@ public class InitializeBuildResult {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
@@ -63,7 +59,6 @@ public class InitializeBuildResult {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
 
-  @Pure
   @NonNull
   public BuildServerCapabilities getCapabilities() {
     return this.capabilities;
@@ -73,7 +68,6 @@ public class InitializeBuildResult {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -82,7 +76,6 @@ public class InitializeBuildResult {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -92,7 +85,6 @@ public class InitializeBuildResult {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("displayName", this.displayName);
@@ -105,7 +97,6 @@ public class InitializeBuildResult {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -133,7 +124,6 @@ public class InitializeBuildResult {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

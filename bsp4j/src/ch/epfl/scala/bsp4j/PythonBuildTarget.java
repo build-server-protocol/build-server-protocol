@@ -1,7 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
  * `PythonBuildTarget` is a basic data structure that contains Python-specific metadata,
@@ -15,7 +14,6 @@ public class PythonBuildTarget {
 
   public PythonBuildTarget() {}
 
-  @Pure
   public String getVersion() {
     return this.version;
   }
@@ -24,7 +22,6 @@ public class PythonBuildTarget {
     this.version = version;
   }
 
-  @Pure
   public String getInterpreter() {
     return this.interpreter;
   }
@@ -34,7 +31,6 @@ public class PythonBuildTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("version", this.version);
@@ -43,7 +39,6 @@ public class PythonBuildTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -59,7 +54,6 @@ public class PythonBuildTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -1,9 +1,8 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class RunResult {
@@ -15,7 +14,6 @@ public class RunResult {
     this.statusCode = statusCode;
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -24,7 +22,6 @@ public class RunResult {
     this.originId = originId;
   }
 
-  @Pure
   @NonNull
   public StatusCode getStatusCode() {
     return this.statusCode;
@@ -35,7 +32,6 @@ public class RunResult {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("originId", this.originId);
@@ -44,7 +40,6 @@ public class RunResult {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -60,7 +55,6 @@ public class RunResult {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.Set;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /** `CargoBuildTarget` is a basic data structure that contains cargo-specific metadata. */
 @SuppressWarnings("all")
@@ -19,7 +18,6 @@ public class CargoBuildTarget {
     this.requiredFeatures = requiredFeatures;
   }
 
-  @Pure
   @NonNull
   public String getEdition() {
     return this.edition;
@@ -29,7 +27,6 @@ public class CargoBuildTarget {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
-  @Pure
   @NonNull
   public Set<String> getRequiredFeatures() {
     return this.requiredFeatures;
@@ -40,7 +37,6 @@ public class CargoBuildTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("edition", this.edition);
@@ -49,7 +45,6 @@ public class CargoBuildTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -65,7 +60,6 @@ public class CargoBuildTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
