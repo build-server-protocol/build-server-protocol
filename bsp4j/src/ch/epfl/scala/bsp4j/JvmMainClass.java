@@ -8,11 +8,9 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmMainClass {
-  @NonNull
-  private String className;
+  @NonNull private String className;
 
-  @NonNull
-  private List<String> arguments;
+  @NonNull private List<String> arguments;
 
   public JvmMainClass(@NonNull final String className, @NonNull final List<String> arguments) {
     this.className = className;
@@ -51,23 +49,16 @@ public class JvmMainClass {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     JvmMainClass other = (JvmMainClass) obj;
     if (this.className == null) {
-      if (other.className != null)
-        return false;
-    } else if (!this.className.equals(other.className))
-      return false;
+      if (other.className != null) return false;
+    } else if (!this.className.equals(other.className)) return false;
     if (this.arguments == null) {
-      if (other.arguments != null)
-        return false;
-    } else if (!this.arguments.equals(other.arguments))
-      return false;
+      if (other.arguments != null) return false;
+    } else if (!this.arguments.equals(other.arguments)) return false;
     return true;
   }
 
@@ -76,7 +67,7 @@ public class JvmMainClass {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.className== null) ? 0 : this.className.hashCode());
-    return prime * result + ((this.arguments== null) ? 0 : this.arguments.hashCode());
+    result = prime * result + ((this.className == null) ? 0 : this.className.hashCode());
+    return prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
   }
 }

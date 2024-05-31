@@ -6,4 +6,3 @@ public class RustPackageOrigin {
   public static final String STDLIB_DEPENDENCY = "stdlib-dependency";
   public static final String WORKSPACE = "workspace";
 }
-

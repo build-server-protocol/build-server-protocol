@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencySourcesItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<String> sources;
+  @NonNull private List<String> sources;
 
-  public DependencySourcesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> sources) {
+  public DependencySourcesItem(
+      @NonNull final BuildTargetIdentifier target, @NonNull final List<String> sources) {
     this.target = target;
     this.sources = sources;
   }
@@ -51,23 +50,16 @@ public class DependencySourcesItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DependencySourcesItem other = (DependencySourcesItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.sources == null) {
-      if (other.sources != null)
-        return false;
-    } else if (!this.sources.equals(other.sources))
-      return false;
+      if (other.sources != null) return false;
+    } else if (!this.sources.equals(other.sources)) return false;
     return true;
   }
 
@@ -76,7 +68,7 @@ public class DependencySourcesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.sources== null) ? 0 : this.sources.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.sources == null) ? 0 : this.sources.hashCode());
   }
 }

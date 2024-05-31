@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class JvmCompileClasspathItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<String> classpath;
+  @NonNull private List<String> classpath;
 
-  public JvmCompileClasspathItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath) {
+  public JvmCompileClasspathItem(
+      @NonNull final BuildTargetIdentifier target, @NonNull final List<String> classpath) {
     this.target = target;
     this.classpath = classpath;
   }
@@ -51,23 +50,16 @@ public class JvmCompileClasspathItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     JvmCompileClasspathItem other = (JvmCompileClasspathItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.classpath == null) {
-      if (other.classpath != null)
-        return false;
-    } else if (!this.classpath.equals(other.classpath))
-      return false;
+      if (other.classpath != null) return false;
+    } else if (!this.classpath.equals(other.classpath)) return false;
     return true;
   }
 
@@ -76,7 +68,7 @@ public class JvmCompileClasspathItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.classpath== null) ? 0 : this.classpath.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.classpath == null) ? 0 : this.classpath.hashCode());
   }
 }

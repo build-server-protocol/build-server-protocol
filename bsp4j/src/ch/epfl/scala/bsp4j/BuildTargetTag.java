@@ -1,8 +1,6 @@
 package ch.epfl.scala.bsp4j;
 
-/**
- * A list of predefined tags that can be used to categorize build targets.
- */
+/** A list of predefined tags that can be used to categorize build targets. */
 public class BuildTargetTag {
   public static final String APPLICATION = "application";
   public static final String BENCHMARK = "benchmark";
@@ -12,4 +10,3 @@ public class BuildTargetTag {
   public static final String NO_IDE = "no-ide";
   public static final String TEST = "test";
 }
-

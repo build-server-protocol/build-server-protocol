@@ -10,8 +10,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DebugSessionParams {
-  @NonNull
-  private List<BuildTargetIdentifier> targets;
+  @NonNull private List<BuildTargetIdentifier> targets;
 
   private String dataKind;
 
@@ -63,28 +62,19 @@ public class DebugSessionParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DebugSessionParams other = (DebugSessionParams) obj;
     if (this.targets == null) {
-      if (other.targets != null)
-        return false;
-    } else if (!this.targets.equals(other.targets))
-      return false;
+      if (other.targets != null) return false;
+    } else if (!this.targets.equals(other.targets)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -93,8 +83,8 @@ public class DebugSessionParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }
