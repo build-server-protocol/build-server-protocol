@@ -3,10 +3,9 @@ package ch.epfl.scala.bsp4j;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * Build target contains metadata about an artifact (for example library, test, or binary artifact).
@@ -58,7 +57,6 @@ public class BuildTarget {
     this.capabilities = capabilities;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getId() {
     return this.id;
@@ -68,7 +66,6 @@ public class BuildTarget {
     this.id = Preconditions.checkNotNull(id, "id");
   }
 
-  @Pure
   public String getDisplayName() {
     return this.displayName;
   }
@@ -77,7 +74,6 @@ public class BuildTarget {
     this.displayName = displayName;
   }
 
-  @Pure
   public String getBaseDirectory() {
     return this.baseDirectory;
   }
@@ -86,7 +82,6 @@ public class BuildTarget {
     this.baseDirectory = baseDirectory;
   }
 
-  @Pure
   @NonNull
   public List<String> getTags() {
     return this.tags;
@@ -96,7 +91,6 @@ public class BuildTarget {
     this.tags = Preconditions.checkNotNull(tags, "tags");
   }
 
-  @Pure
   @NonNull
   public List<String> getLanguageIds() {
     return this.languageIds;
@@ -106,7 +100,6 @@ public class BuildTarget {
     this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
 
-  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getDependencies() {
     return this.dependencies;
@@ -116,7 +109,6 @@ public class BuildTarget {
     this.dependencies = Preconditions.checkNotNull(dependencies, "dependencies");
   }
 
-  @Pure
   @NonNull
   public BuildTargetCapabilities getCapabilities() {
     return this.capabilities;
@@ -126,7 +118,6 @@ public class BuildTarget {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -135,7 +126,6 @@ public class BuildTarget {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -145,7 +135,6 @@ public class BuildTarget {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
@@ -161,7 +150,6 @@ public class BuildTarget {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -198,7 +186,6 @@ public class BuildTarget {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

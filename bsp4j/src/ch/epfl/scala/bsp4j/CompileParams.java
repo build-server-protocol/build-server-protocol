@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CompileParams {
@@ -18,7 +17,6 @@ public class CompileParams {
     this.targets = targets;
   }
 
-  @Pure
   @NonNull
   public List<BuildTargetIdentifier> getTargets() {
     return this.targets;
@@ -28,7 +26,6 @@ public class CompileParams {
     this.targets = Preconditions.checkNotNull(targets, "targets");
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -37,7 +34,6 @@ public class CompileParams {
     this.originId = originId;
   }
 
-  @Pure
   public List<String> getArguments() {
     return this.arguments;
   }
@@ -47,7 +43,6 @@ public class CompileParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
@@ -57,7 +52,6 @@ public class CompileParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -76,7 +70,6 @@ public class CompileParams {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

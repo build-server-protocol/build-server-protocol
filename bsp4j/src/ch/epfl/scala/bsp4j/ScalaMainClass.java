@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaMainClass {
@@ -28,7 +27,6 @@ public class ScalaMainClass {
     this.jvmOptions = jvmOptions;
   }
 
-  @Pure
   @NonNull
   public String getClassName() {
     return this.className;
@@ -38,7 +36,6 @@ public class ScalaMainClass {
     this.className = Preconditions.checkNotNull(className, "className");
   }
 
-  @Pure
   @NonNull
   public List<String> getArguments() {
     return this.arguments;
@@ -48,7 +45,6 @@ public class ScalaMainClass {
     this.arguments = Preconditions.checkNotNull(arguments, "arguments");
   }
 
-  @Pure
   @NonNull
   public List<String> getJvmOptions() {
     return this.jvmOptions;
@@ -58,7 +54,6 @@ public class ScalaMainClass {
     this.jvmOptions = Preconditions.checkNotNull(jvmOptions, "jvmOptions");
   }
 
-  @Pure
   public List<String> getEnvironmentVariables() {
     return this.environmentVariables;
   }
@@ -68,7 +63,6 @@ public class ScalaMainClass {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("className", this.className);
@@ -79,7 +73,6 @@ public class ScalaMainClass {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -101,7 +94,6 @@ public class ScalaMainClass {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

@@ -3,10 +3,9 @@ package ch.epfl.scala.bsp4j;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * A `crate` is the smallest amount of code that the Rust compiler considers at a time. It can come
@@ -76,7 +75,6 @@ public class RustPackage {
     this.enabledFeatures = enabledFeatures;
   }
 
-  @Pure
   @NonNull
   public String getId() {
     return this.id;
@@ -86,7 +84,6 @@ public class RustPackage {
     this.id = Preconditions.checkNotNull(id, "id");
   }
 
-  @Pure
   @NonNull
   public String getRootUrl() {
     return this.rootUrl;
@@ -96,7 +93,6 @@ public class RustPackage {
     this.rootUrl = Preconditions.checkNotNull(rootUrl, "rootUrl");
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -106,7 +102,6 @@ public class RustPackage {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -116,7 +111,6 @@ public class RustPackage {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public String getOrigin() {
     return this.origin;
@@ -126,7 +120,6 @@ public class RustPackage {
     this.origin = Preconditions.checkNotNull(origin, "origin");
   }
 
-  @Pure
   @NonNull
   public String getEdition() {
     return this.edition;
@@ -136,7 +129,6 @@ public class RustPackage {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
-  @Pure
   public String getSource() {
     return this.source;
   }
@@ -145,7 +137,6 @@ public class RustPackage {
     this.source = source;
   }
 
-  @Pure
   @NonNull
   public List<RustTarget> getResolvedTargets() {
     return this.resolvedTargets;
@@ -155,7 +146,6 @@ public class RustPackage {
     this.resolvedTargets = Preconditions.checkNotNull(resolvedTargets, "resolvedTargets");
   }
 
-  @Pure
   @NonNull
   public List<RustTarget> getAllTargets() {
     return this.allTargets;
@@ -165,7 +155,6 @@ public class RustPackage {
     this.allTargets = Preconditions.checkNotNull(allTargets, "allTargets");
   }
 
-  @Pure
   @NonNull
   public Map<String, Set<String>> getFeatures() {
     return this.features;
@@ -175,7 +164,6 @@ public class RustPackage {
     this.features = Preconditions.checkNotNull(features, "features");
   }
 
-  @Pure
   @NonNull
   public Set<String> getEnabledFeatures() {
     return this.enabledFeatures;
@@ -185,7 +173,6 @@ public class RustPackage {
     this.enabledFeatures = Preconditions.checkNotNull(enabledFeatures, "enabledFeatures");
   }
 
-  @Pure
   public Map<String, List<String>> getCfgOptions() {
     return this.cfgOptions;
   }
@@ -194,7 +181,6 @@ public class RustPackage {
     this.cfgOptions = cfgOptions;
   }
 
-  @Pure
   public Map<String, String> getEnv() {
     return this.env;
   }
@@ -203,7 +189,6 @@ public class RustPackage {
     this.env = env;
   }
 
-  @Pure
   public String getOutDirUrl() {
     return this.outDirUrl;
   }
@@ -212,7 +197,6 @@ public class RustPackage {
     this.outDirUrl = outDirUrl;
   }
 
-  @Pure
   public String getProcMacroArtifact() {
     return this.procMacroArtifact;
   }
@@ -222,7 +206,6 @@ public class RustPackage {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
@@ -244,7 +227,6 @@ public class RustPackage {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -299,7 +281,6 @@ public class RustPackage {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

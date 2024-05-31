@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencyModulesResult {
@@ -14,7 +13,6 @@ public class DependencyModulesResult {
     this.items = items;
   }
 
-  @Pure
   @NonNull
   public List<DependencyModulesItem> getItems() {
     return this.items;
@@ -25,7 +23,6 @@ public class DependencyModulesResult {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("items", this.items);
@@ -33,7 +30,6 @@ public class DependencyModulesResult {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -46,7 +42,6 @@ public class DependencyModulesResult {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     return 31 * 1 + ((this.items == null) ? 0 : this.items.hashCode());
   }

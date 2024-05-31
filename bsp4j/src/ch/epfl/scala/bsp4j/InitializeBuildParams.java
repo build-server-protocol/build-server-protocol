@@ -2,10 +2,9 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class InitializeBuildParams {
@@ -37,7 +36,6 @@ public class InitializeBuildParams {
     this.capabilities = capabilities;
   }
 
-  @Pure
   @NonNull
   public String getDisplayName() {
     return this.displayName;
@@ -47,7 +45,6 @@ public class InitializeBuildParams {
     this.displayName = Preconditions.checkNotNull(displayName, "displayName");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -57,7 +54,6 @@ public class InitializeBuildParams {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public String getBspVersion() {
     return this.bspVersion;
@@ -67,7 +63,6 @@ public class InitializeBuildParams {
     this.bspVersion = Preconditions.checkNotNull(bspVersion, "bspVersion");
   }
 
-  @Pure
   @NonNull
   public String getRootUri() {
     return this.rootUri;
@@ -77,7 +72,6 @@ public class InitializeBuildParams {
     this.rootUri = Preconditions.checkNotNull(rootUri, "rootUri");
   }
 
-  @Pure
   @NonNull
   public BuildClientCapabilities getCapabilities() {
     return this.capabilities;
@@ -87,7 +81,6 @@ public class InitializeBuildParams {
     this.capabilities = Preconditions.checkNotNull(capabilities, "capabilities");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -96,7 +89,6 @@ public class InitializeBuildParams {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -106,7 +98,6 @@ public class InitializeBuildParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("displayName", this.displayName);
@@ -120,7 +111,6 @@ public class InitializeBuildParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -151,7 +141,6 @@ public class InitializeBuildParams {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;

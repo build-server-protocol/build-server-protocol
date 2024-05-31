@@ -1,10 +1,9 @@
 package ch.epfl.scala.bsp4j;
 
 import java.util.List;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class CppOptionsItem {
@@ -29,7 +28,6 @@ public class CppOptionsItem {
     this.linkopts = linkopts;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -39,7 +37,6 @@ public class CppOptionsItem {
     this.target = Preconditions.checkNotNull(target, "target");
   }
 
-  @Pure
   @NonNull
   public List<String> getCopts() {
     return this.copts;
@@ -49,7 +46,6 @@ public class CppOptionsItem {
     this.copts = Preconditions.checkNotNull(copts, "copts");
   }
 
-  @Pure
   @NonNull
   public List<String> getDefines() {
     return this.defines;
@@ -59,7 +55,6 @@ public class CppOptionsItem {
     this.defines = Preconditions.checkNotNull(defines, "defines");
   }
 
-  @Pure
   @NonNull
   public List<String> getLinkopts() {
     return this.linkopts;
@@ -69,7 +64,6 @@ public class CppOptionsItem {
     this.linkopts = Preconditions.checkNotNull(linkopts, "linkopts");
   }
 
-  @Pure
   public Boolean getLinkshared() {
     return this.linkshared;
   }
@@ -79,7 +73,6 @@ public class CppOptionsItem {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -91,7 +84,6 @@ public class CppOptionsItem {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
@@ -116,7 +108,6 @@ public class CppOptionsItem {
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
