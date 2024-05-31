@@ -20,6 +20,8 @@ public class BuildServerCapabilities {
 
   private Boolean inverseSourcesProvider;
 
+  private Boolean wrappedSourcesProvider;
+
   private Boolean dependencySourcesProvider;
 
   private Boolean dependencyModulesProvider;
@@ -86,6 +88,15 @@ public class BuildServerCapabilities {
 
   public void setInverseSourcesProvider(final Boolean inverseSourcesProvider) {
     this.inverseSourcesProvider = inverseSourcesProvider;
+  }
+
+  @Pure
+  public Boolean getWrappedSourcesProvider() {
+    return this.wrappedSourcesProvider;
+  }
+
+  public void setWrappedSourcesProvider(final Boolean wrappedSourcesProvider) {
+    this.wrappedSourcesProvider = wrappedSourcesProvider;
   }
 
   @Pure
@@ -187,6 +198,7 @@ public class BuildServerCapabilities {
     b.add("runProvider", this.runProvider);
     b.add("debugProvider", this.debugProvider);
     b.add("inverseSourcesProvider", this.inverseSourcesProvider);
+    b.add("wrappedSourcesProvider", this.wrappedSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("dependencyModulesProvider", this.dependencyModulesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
@@ -234,6 +246,11 @@ public class BuildServerCapabilities {
       if (other.inverseSourcesProvider != null)
         return false;
     } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider))
+      return false;
+    if (this.wrappedSourcesProvider == null) {
+      if (other.wrappedSourcesProvider != null)
+        return false;
+    } else if (!this.wrappedSourcesProvider.equals(other.wrappedSourcesProvider))
       return false;
     if (this.dependencySourcesProvider == null) {
       if (other.dependencySourcesProvider != null)
@@ -298,6 +315,7 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.runProvider== null) ? 0 : this.runProvider.hashCode());
     result = prime * result + ((this.debugProvider== null) ? 0 : this.debugProvider.hashCode());
     result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
+    result = prime * result + ((this.wrappedSourcesProvider== null) ? 0 : this.wrappedSourcesProvider.hashCode());
     result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
     result = prime * result + ((this.dependencyModulesProvider== null) ? 0 : this.dependencyModulesProvider.hashCode());
     result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
