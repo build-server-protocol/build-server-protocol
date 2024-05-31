@@ -24,4 +24,4 @@ title: Implementations
 | Metals          | [scalameta/metals](https://github.com/scalameta/metals)                 | Scala                   | LSP language server.                               |
 | scala-cli       | [scala-cli](https://scala-cli.virtuslab.org/)                           | Scala                   | Act as BSP client towards Bloop.                   |
 | Gradle for Java | [Microsoft/vscode-gradle](https://github.com/microsoft/vscode-gradle)   | Java and TypeScript     | Act as BSP client towards Build Server for Gradle. |
-| bsp.nvim | [616b2f/bsp.nvim](https://github.com/616b2f/bsp.nvim)   | Lua     | BSP client for Neovim (in Alpha) |
+| bsp.nvim        | [616b2f/bsp.nvim](https://github.com/616b2f/bsp.nvim)                   | Lua                     | BSP client for Neovim (in Alpha)                   |
