@@ -67,7 +67,7 @@ service BuildServer {
 ///
 /// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 structure BuildTarget {
-    /// The target’s unique identifier
+    /// The target's unique identifier
     @required
     id: BuildTargetIdentifier
     /// A human readable name for this target.
@@ -155,7 +155,7 @@ structure BuildTargetCapabilities {
 /// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
 /// Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
 structure BuildTargetIdentifier {
-    /// The target’s Uri
+    /// The target's Uri
     @required
     uri: URI
 }
@@ -554,7 +554,11 @@ structure BuildClientCapabilities {
     /// The server must never respond with build targets for other
     /// languages than those that appear in this list.
     @required
-    languageIds: LanguageIds
+    languageIds: LanguageIds    
+    /// Mirror capability to BuildServerCapabilities.jvmCompileClasspathProvider
+    /// The client will request classpath via `buildTarget/jvmCompileClasspath` so
+    /// it's safe to return classpath in ScalacOptionsItem empty.
+    jvmCompileClasspathReceiver: Boolean = false
 }
 
 /// Language IDs are defined here
@@ -627,6 +631,9 @@ structure BuildServerCapabilities {
     cargoFeaturesProvider: Boolean = false
     /// Reloading the build state through workspace/reload is supported
     canReload: Boolean = false
+    /// The server can respond to `buildTarget/jvmCompileClasspath` requests with the
+    /// necessary information about the target's classpath.
+    jvmCompileClasspathProvider: Boolean = false
 }
 
 @mixin
@@ -797,9 +804,9 @@ union DiagnosticCode {
 }
 
 /// Structure to capture a description for an error code.
- structure CodeDescription {
-    @required
+structure CodeDescription {
     /// An URI to open with more information about the diagnostic error.
+    @required
     href: URI
 }
 

@@ -8,7 +8,6 @@ updates:
       dev-dependencies:
         patterns:
           - "*" # All updates are grouped in 1 PR
-
   - package-ecosystem: "npm"
     directory: "/website"
     schedule:

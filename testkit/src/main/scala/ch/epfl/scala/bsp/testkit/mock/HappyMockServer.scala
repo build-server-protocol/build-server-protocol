@@ -56,6 +56,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setJvmTestEnvironmentProvider(true)
     c.setCanReload(true)
     c.setDependencyModulesProvider(true)
+    c.setJvmCompileClasspathProvider(true)
     c
   }
 
@@ -168,6 +169,16 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     handleRequest {
       val item1: JvmEnvironmentItem = environmentItem(testing = true)
       val result = new JvmTestEnvironmentResult(List(item1).asJava)
+      Right(result)
+    }
+
+  override def buildTargetJvmCompileClasspath(
+      params: JvmCompileClasspathParams
+  ): CompletableFuture[JvmCompileClasspathResult] =
+    handleRequest {
+      val classpath = List("scala-library.jar").asJava
+      val item1: JvmCompileClasspathItem = new JvmCompileClasspathItem(targetId1, classpath)
+      val result = new JvmCompileClasspathResult(List(item1).asJava)
       Right(result)
     }
 

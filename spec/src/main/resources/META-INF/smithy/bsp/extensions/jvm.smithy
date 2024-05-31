@@ -17,7 +17,8 @@ use traits#jsonRequest
 service JvmBuildServer {
     operations: [
         BuildTargetJvmTestEnvironment,
-        BuildTargetJvmRunEnvironment
+        BuildTargetJvmRunEnvironment,
+        BuildTargetJvmCompileClasspath
     ]
 }
 
@@ -114,5 +115,39 @@ list JvmOptions {
     member: String
 }
 
+
+/// The build target classpath request is sent from the client to the server to
+/// query the target for its compile classpath.
+@jsonRequest("buildTarget/jvmCompileClasspath")
+operation BuildTargetJvmCompileClasspath {
+    input: JvmCompileClasspathParams
+    output: JvmCompileClasspathResult
+}
+
+
+structure JvmCompileClasspathParams {
+    @required
+    targets: BuildTargetIdentifiers
+}
+
+structure JvmCompileClasspathResult {
+    @required
+    items: JvmCompileClasspathItems
+}
+
+structure JvmCompileClasspathItem {
+    @required
+    target: BuildTargetIdentifier
+    /// The dependency classpath for this target, must be
+    /// identical to what is passed as arguments to
+    /// the -classpath flag in the command line interface
+    /// of scalac.
+    @required
+    classpath: Classpath
+}
+
+list JvmCompileClasspathItems {
+    member: JvmCompileClasspathItem
+}
 
 

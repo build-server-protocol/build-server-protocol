@@ -33,7 +33,6 @@ out/
 .bloop
 .metals/
 .vscode
-.bsp
 
 website/.docusaurus
 website/build
@@ -41,3 +40,19 @@ website/project
 
 docs-gen
 *.xtend
+
+.aspect
+website/node_modules
+# Not sure if tj-actions/verify-changed-files can expand wildcards, so I list the bazel-specific directories explicitly
+bazel-out
+bazel-bin
+bazel-testlogs
+bazel-build-server-protocol
+bazel-*
+
+# bsp specific
+.bsp
+.bazelbsp
+projectview.bazelproject
+
+__pycache__/

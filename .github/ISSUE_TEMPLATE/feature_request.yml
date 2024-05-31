@@ -10,7 +10,6 @@ body:
         I have a use case where...
     validations:
       required: true
-
   - type: textarea
     id: what
     attributes:
@@ -18,7 +17,6 @@ body:
       description: Your proposal to address the "Why" from up above
       placeholder: |
         In order to address this an idea I have is...
-
   - type: checkboxes
     id: check
     attributes:
@@ -27,7 +25,6 @@ body:
       options:
         - label: I've checked the existing protocol and there isn't a way to do this currently
           required: true
-
   - type: checkboxes
     id: maintainers
     attributes:
