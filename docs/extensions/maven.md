@@ -8,5 +8,5 @@ The following section contains Maven-specific extensions to the build server
 protocol.
 
 ```scala mdoc:passthrough
-bsp.codegen.docs.Codegen.printDocs("bsp.maven")
+Console.println(bsp.codegen.docs.Codegen.docs("bsp.maven"))
 ```

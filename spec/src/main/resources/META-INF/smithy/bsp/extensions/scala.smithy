@@ -10,7 +10,6 @@ use bsp#DebugSessionParamsData
 use bsp#DiagnosticData
 use bsp#Range
 use bsp#RunParamsData
-use bsp#TestParams
 use bsp#TestParamsData
 use bsp#URIs
 use bsp.jvm#Classpath
@@ -103,6 +102,7 @@ structure ScalacOptionsItem {
     /// the -classpath flag in the command line interface
     /// of scalac.
     @required
+    @deprecated(message: "When the jvmCompileClasspath capability is supported, this might be empty and the buildTarget/jvmCompileClasspath endpoint should be used instead.")
     classpath: Classpath
     /// The output directory for classfiles produced by this target
     @required
@@ -184,7 +184,7 @@ list ScalaTestClassesList {
 /// The build target main classes request is sent from the client to the server to
 /// query for the list of main classes that can be fed as arguments to
 /// `buildTarget/run`. This method can be used for the same use cases than the
-/// [Scala Test Classes Request](#scala-test-classes-request) enables.
+/// [Scala Test Classes Request](#buildtargetscalatestclasses-request) enables.
 /// This request may trigger a compilation on the selected build targets. The server
 /// is free to send any number of `build/taskStart`, `build/taskProgress`,
 /// `build/taskFinish`, `build/publishDiagnostics` and `build/logMessage`

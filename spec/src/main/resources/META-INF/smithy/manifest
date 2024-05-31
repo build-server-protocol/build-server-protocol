@@ -7,6 +7,7 @@ bsp/extensions/java.smithy
 bsp/extensions/jvm.smithy
 bsp/extensions/maven.smithy
 bsp/extensions/python.smithy
+bsp/extensions/rust.smithy
 bsp/extensions/sbt.smithy
 bsp/extensions/scala.smithy
 traits/traits.smithy

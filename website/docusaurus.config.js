@@ -1,3 +1,4 @@
+const { resolve } = require("path");
 module.exports = {
   title: "Build Server Protocol",
   tagline:
@@ -5,6 +6,7 @@ module.exports = {
   url: "https://build-server-protocol.github.io",
   baseUrl: "/",
   organizationName: "build-server-protocol",
+  trailingSlash: false,
   projectName: "build-server-protocol.github.io",
   deploymentBranch: "master",
   favicon: "img/favicon.ico",
@@ -19,12 +21,12 @@ module.exports = {
       "@docusaurus/preset-classic",
       {
         docs: {
-          path: "../website/generated/docs",
+          path: "generated",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           editUrl: ({ docPath }) =>
             `https://github.com/build-server-protocol/build-server-protocol/edit/master/docs/${docPath}`,
-          sidebarPath: "../website/sidebars.json",
+          sidebarPath: "sidebars.json",
         },
         blog: {},
         theme: {
@@ -34,6 +36,18 @@ module.exports = {
     ],
   ],
   plugins: [
+    () => ({
+      name: "resolve-react",
+      configureWebpack() {
+        return {
+          resolve: {
+            alias: {
+              react: resolve("node_modules/react"),
+            },
+          },
+        };
+      },
+    }),
     [
       "@docusaurus/plugin-client-redirects",
       {

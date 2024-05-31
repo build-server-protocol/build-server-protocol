@@ -8,5 +8,5 @@ The following section contains JVM-specific extensions to the build server
 protocol.
 
 ```scala mdoc:passthrough
-bsp.codegen.docs.Codegen.printDocs("bsp.jvm")
+Console.println(bsp.codegen.docs.Codegen.docs("bsp.jvm"))
 ```

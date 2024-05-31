@@ -67,7 +67,7 @@ service BuildServer {
 ///
 /// The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 structure BuildTarget {
-    /// The target’s unique identifier
+    /// The target's unique identifier
     @required
     id: BuildTargetIdentifier
     /// A human readable name for this target.
@@ -155,7 +155,7 @@ structure BuildTargetCapabilities {
 /// A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
 /// Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
 structure BuildTargetIdentifier {
-    /// The target’s Uri
+    /// The target's Uri
     @required
     uri: URI
 }
@@ -282,8 +282,6 @@ operation OnBuildLogMessage {
 }
 
 /// The Diagnostics notification are sent from the server to the client to signal results of validation runs.
-///
-/// Diagnostic is defined as it is in the LSP.
 ///
 /// When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
 /// buildTarget and set instead the diagnostics in the request. This is the same behaviour as PublishDiagnosticsParams
@@ -452,33 +450,45 @@ operation BuildTargetCompile {
 /// The test build target request is sent from the client to the server to test the
 /// given list of build targets. The server communicates during the initialize
 /// handshake whether this method is supported or not.
+///
+/// The "Implementation notes" section of the `buildTarget/run` request applies to
+/// this request as well.
 @jsonRequest("buildTarget/test")
 operation BuildTargetTest {
     input: TestParams
     output: TestResult
 }
 
-
 /// The run request is sent from the client to the server to run a build target. The
 /// server communicates during the initialize handshake whether this method is
 /// supported or not.
+///
+/// Note that a run request containing only the target id is valid.
+/// If no further parameters are provided, the server should use the default ones.
+///
+/// Implementation notes:
 ///
 /// This request may trigger a compilation on the selected build targets. The server
 /// is free to send any number of `build/task*`, `build/publishDiagnostics` and
 /// `build/logMessage` notifications during compilation before completing the
 /// response.
 ///
-/// The client will get a `originId` field in `RunResult` if the `originId` field in
-/// the `RunParams` is defined.
+/// The client will get a `originId` field in `RunResult` if and only if
+/// the `originId` field in the `RunParams` is defined.
 ///
-/// Note that an empty run request is valid. Run will be executed in the target as
-/// specified in the build tool.
+/// Cancelling this request must kill the running process.
+///
+/// If the BSP server wishes to forward the stdout and stderr streams of the running process
+/// to the client, it can do so by sending `run/printStdout` and `run/printStderr` notifications.
+///
+/// If the client wishes to send input to the running process, it can do so by sending
+/// `run/readStdin` notifications to the server.
+
 @jsonRequest("buildTarget/run")
 operation BuildTargetRun {
     input: RunParams
     output: RunResult
 }
-
 
 /// The debug request is sent from the client to the server to debug build target(s). The
 /// server launches a [Microsoft DAP](https://microsoft.github.io/debug-adapter-protocol/) server
@@ -544,7 +554,11 @@ structure BuildClientCapabilities {
     /// The server must never respond with build targets for other
     /// languages than those that appear in this list.
     @required
-    languageIds: LanguageIds
+    languageIds: LanguageIds    
+    /// Mirror capability to BuildServerCapabilities.jvmCompileClasspathProvider
+    /// The client will request classpath via `buildTarget/jvmCompileClasspath` so
+    /// it's safe to return classpath in ScalacOptionsItem empty.
+    jvmCompileClasspathReceiver: Boolean = false
 }
 
 /// Language IDs are defined here
@@ -617,6 +631,9 @@ structure BuildServerCapabilities {
     cargoFeaturesProvider: Boolean = false
     /// Reloading the build state through workspace/reload is supported
     canReload: Boolean = false
+    /// The server can respond to `buildTarget/jvmCompileClasspath` requests with the
+    /// necessary information about the target's classpath.
+    jvmCompileClasspathProvider: Boolean = false
 }
 
 @mixin
@@ -701,6 +718,7 @@ structure PublishDiagnosticsParams {
 @data
 document DiagnosticData
 
+/// Diagnostic is defined as it is in the LSP.
 structure Diagnostic {
     /// The range at which the message applies.
     @required
@@ -709,37 +727,43 @@ structure Diagnostic {
     /// client to interpret diagnostics as error, warning, info or hint.
     severity: DiagnosticSeverity
     /// The diagnostic's code, which might appear in the user interface.
-    code: String
-    //    /// An optional property to describe the error code. // TODO: new LSP version
-    //    codeDescription: CodeDescription
+    code: DiagnosticCode
+    /// An optional property to describe the error code.
+    codeDescription: CodeDescription
     /// A human-readable string describing the source of this
     /// diagnostic, e.g. 'typescript' or 'super lint'.
     source: String
     /// The diagnostic's message.
     @required
     message: String
-    //     Additional metadata about the diagnostic. // TODO: new LSP version
-    //    tags: DiagnosticTags
+    /// Additional metadata about the diagnostic.
+    tags: DiagnosticTags
     /// An array of related diagnostic information, e.g. when symbol-names within
     /// a scope collide all definitions can be marked via this property.
-    relatedInformation: DiagnosticRelatedInformationList
-    /// A data entry field that is preserved between a `textDocument/publishDiagnostics` notification
-    /// and a `textDocument/codeAction` request.
+    relatedInformation: DiagnosticRelatedInformations
+    /// A data entry field that is preserved between a
+    /// `textDocument/publishDiagnostics` notification and
+    /// `textDocument/codeAction` request.
     data: DiagnosticData
 }
 
 structure Position {
-    /// Line position within a file. First line of a file is 0.
+    /// Line position in a document (zero-based).
     @required
     line: Integer
-    /// Character position within a line. First character of a line is 0.
+    /// Character offset on a line in a document (zero-based)
+    ///
+    /// If the character value is greater than the line length it defaults back
+    /// to the line length.
     @required
     character: Integer
 }
 
 structure Range {
+    /// The range's start position.
     @required
     start: Position
+    /// The range's end position.
     @required
     end: Position
 }
@@ -763,31 +787,35 @@ list Diagnostics {
 
 @enumKind("closed")
 intEnum DiagnosticSeverity {
+    /// Reports an error.
     ERROR = 1
+    /// Reports a warning.
     WARNING = 2
+    /// Reports an information.
     INFORMATION = 3
+    /// Reports a hint.
     HINT = 4
 }
 
 @untaggedUnion
-union Code {
+union DiagnosticCode {
     string: String
     integer: Integer
 }
 
-// TODO: this has been introduced in newer versions of the LSP spec
-// /// Structure to capture a description for an error code.
-// structure CodeDescription {
-//    @required
-//    /// An URI to open with more information about the diagnostic error.
-//    href: URI
-//}
+/// Structure to capture a description for an error code.
+structure CodeDescription {
+    /// An URI to open with more information about the diagnostic error.
+    @required
+    href: URI
+}
 
 @enumKind("open")
 intEnum DiagnosticTag {
     /// Unused or unnecessary code.
     ///
-    /// Clients are allowed to render diagnostics with this tag faded out instead of having an error squiggle.
+    /// Clients are allowed to render diagnostics with this tag faded out
+    /// instead of having an error squiggle.
     UNNECESSARY = 1
     /// Deprecated or obsolete code.
     ///
@@ -811,7 +839,7 @@ structure DiagnosticRelatedInformation {
     message: String
 }
 
-list DiagnosticRelatedInformationList {
+list DiagnosticRelatedInformations {
     member: DiagnosticRelatedInformation
 }
 
@@ -1054,7 +1082,6 @@ intEnum OutputPathItemKind {
     DIRECTORY = 2
 }
 
-
 /// Task start notifications may contain an arbitrary interface in their `data`
 /// field. The kind of interface that is contained in a notification must be
 /// specified in the `dataKind` field.
@@ -1149,7 +1176,6 @@ structure TaskFinishParams {
     data: TaskFinishData
 }
 
-
 structure CompileParams {
     /// A sequence of build targets to compile.
     @required
@@ -1188,7 +1214,6 @@ structure CompileResult {
     data: CompileResultData
 }
 
-
 /// The beginning of a compilation unit may be signalled to the client with a
 /// `build/taskStart` notification. When the compilation unit is a build target, the
 /// notification's `dataKind` field must be "compile-task" and the `data` field must
@@ -1198,7 +1223,6 @@ structure CompileTask {
     @required
     target: BuildTargetIdentifier
 }
-
 
 /// The completion of a compilation task should be signalled with a
 /// `build/taskFinish` notification. When the compilation unit is a build target,
@@ -1211,8 +1235,7 @@ structure CompileReport {
     target: BuildTargetIdentifier
 
     /// An optional request id to know the origin of this report.
-    /// Deprecated: use the field in TaskFinishParams instead.
-    @deprecated
+    @deprecated(message: "Use the field in TaskFinishParams instead")
     originId: Identifier
 
     /// The total number of reported errors compiling this target.
@@ -1272,7 +1295,6 @@ structure TestResult {
     data: TestResultData
 }
 
-
 /// The beginning of a testing unit may be signalled to the client with a
 /// `build/taskStart` notification. When the testing unit is a build target, the
 /// notification's `dataKind` field must be `test-task` and the `data` field must
@@ -1285,8 +1307,7 @@ structure TestTask {
 
 @dataKind(kind: "test-report", extends: [TaskFinishData])
 structure TestReport {
-    /// Deprecated: use the field in TaskFinishParams instead.
-    @deprecated
+    @deprecated(message: "Use the field in TaskFinishParams instead")
     originId: Identifier
     /// The build target that was compiled.
     @required
