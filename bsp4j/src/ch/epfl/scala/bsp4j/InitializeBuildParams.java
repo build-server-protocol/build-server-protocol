@@ -9,27 +9,27 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class InitializeBuildParams {
-  @NonNull
-  private String displayName;
+  @NonNull private String displayName;
 
-  @NonNull
-  private String version;
+  @NonNull private String version;
 
-  @NonNull
-  private String bspVersion;
+  @NonNull private String bspVersion;
 
-  @NonNull
-  private String rootUri;
+  @NonNull private String rootUri;
 
-  @NonNull
-  private BuildClientCapabilities capabilities;
+  @NonNull private BuildClientCapabilities capabilities;
 
   private String dataKind;
 
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
 
-  public InitializeBuildParams(@NonNull final String displayName, @NonNull final String version, @NonNull final String bspVersion, @NonNull final String rootUri, @NonNull final BuildClientCapabilities capabilities) {
+  public InitializeBuildParams(
+      @NonNull final String displayName,
+      @NonNull final String version,
+      @NonNull final String bspVersion,
+      @NonNull final String rootUri,
+      @NonNull final BuildClientCapabilities capabilities) {
     this.displayName = displayName;
     this.version = version;
     this.bspVersion = bspVersion;
@@ -122,48 +122,31 @@ public class InitializeBuildParams {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     InitializeBuildParams other = (InitializeBuildParams) obj;
     if (this.displayName == null) {
-      if (other.displayName != null)
-        return false;
-    } else if (!this.displayName.equals(other.displayName))
-      return false;
+      if (other.displayName != null) return false;
+    } else if (!this.displayName.equals(other.displayName)) return false;
     if (this.version == null) {
-      if (other.version != null)
-        return false;
-    } else if (!this.version.equals(other.version))
-      return false;
+      if (other.version != null) return false;
+    } else if (!this.version.equals(other.version)) return false;
     if (this.bspVersion == null) {
-      if (other.bspVersion != null)
-        return false;
-    } else if (!this.bspVersion.equals(other.bspVersion))
-      return false;
+      if (other.bspVersion != null) return false;
+    } else if (!this.bspVersion.equals(other.bspVersion)) return false;
     if (this.rootUri == null) {
-      if (other.rootUri != null)
-        return false;
-    } else if (!this.rootUri.equals(other.rootUri))
-      return false;
+      if (other.rootUri != null) return false;
+    } else if (!this.rootUri.equals(other.rootUri)) return false;
     if (this.capabilities == null) {
-      if (other.capabilities != null)
-        return false;
-    } else if (!this.capabilities.equals(other.capabilities))
-      return false;
+      if (other.capabilities != null) return false;
+    } else if (!this.capabilities.equals(other.capabilities)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -172,12 +155,12 @@ public class InitializeBuildParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.displayName== null) ? 0 : this.displayName.hashCode());
-    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.bspVersion== null) ? 0 : this.bspVersion.hashCode());
-    result = prime * result + ((this.rootUri== null) ? 0 : this.rootUri.hashCode());
-    result = prime * result + ((this.capabilities== null) ? 0 : this.capabilities.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.displayName == null) ? 0 : this.displayName.hashCode());
+    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.bspVersion == null) ? 0 : this.bspVersion.hashCode());
+    result = prime * result + ((this.rootUri == null) ? 0 : this.rootUri.hashCode());
+    result = prime * result + ((this.capabilities == null) ? 0 : this.capabilities.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

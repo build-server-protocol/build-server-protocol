@@ -8,13 +8,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class ScalaMainClassesItem {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
-  @NonNull
-  private List<ScalaMainClass> classes;
+  @NonNull private List<ScalaMainClass> classes;
 
-  public ScalaMainClassesItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<ScalaMainClass> classes) {
+  public ScalaMainClassesItem(
+      @NonNull final BuildTargetIdentifier target, @NonNull final List<ScalaMainClass> classes) {
     this.target = target;
     this.classes = classes;
   }
@@ -51,23 +50,16 @@ public class ScalaMainClassesItem {
   @Override
   @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     ScalaMainClassesItem other = (ScalaMainClassesItem) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     if (this.classes == null) {
-      if (other.classes != null)
-        return false;
-    } else if (!this.classes.equals(other.classes))
-      return false;
+      if (other.classes != null) return false;
+    } else if (!this.classes.equals(other.classes)) return false;
     return true;
   }
 
@@ -76,7 +68,7 @@ public class ScalaMainClassesItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.classes== null) ? 0 : this.classes.hashCode());
+    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.classes == null) ? 0 : this.classes.hashCode());
   }
 }

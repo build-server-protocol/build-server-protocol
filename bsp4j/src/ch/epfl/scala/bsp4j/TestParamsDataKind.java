@@ -5,4 +5,3 @@ public class TestParamsDataKind {
   public static final String SCALA_TEST_SUITES = "scala-test-suites";
   public static final String SCALA_TEST_SUITES_SELECTION = "scala-test-suites-selection";
 }
-
