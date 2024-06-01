@@ -274,43 +274,43 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.debugProvider == null) ? 0 : this.debugProvider.hashCode());
     result =
         prime * result
-        + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
+            + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
     result =
         prime * result
-        + ((this.wrappedSourcesProvider == null) ? 0 : this.wrappedSourcesProvider.hashCode());
+            + ((this.wrappedSourcesProvider == null) ? 0 : this.wrappedSourcesProvider.hashCode());
     result =
         prime * result
-        + ((this.dependencySourcesProvider == null)
-            ? 0
-            : this.dependencySourcesProvider.hashCode());
+            + ((this.dependencySourcesProvider == null)
+                ? 0
+                : this.dependencySourcesProvider.hashCode());
     result =
         prime * result
-        + ((this.dependencyModulesProvider == null)
-            ? 0
-            : this.dependencyModulesProvider.hashCode());
+            + ((this.dependencyModulesProvider == null)
+                ? 0
+                : this.dependencyModulesProvider.hashCode());
     result =
         prime * result + ((this.resourcesProvider == null) ? 0 : this.resourcesProvider.hashCode());
     result =
         prime * result
-        + ((this.outputPathsProvider == null) ? 0 : this.outputPathsProvider.hashCode());
+            + ((this.outputPathsProvider == null) ? 0 : this.outputPathsProvider.hashCode());
     result =
         prime * result
-        + ((this.buildTargetChangedProvider == null)
-            ? 0
-            : this.buildTargetChangedProvider.hashCode());
+            + ((this.buildTargetChangedProvider == null)
+                ? 0
+                : this.buildTargetChangedProvider.hashCode());
     result =
         prime * result
-        + ((this.jvmRunEnvironmentProvider == null)
-            ? 0
-            : this.jvmRunEnvironmentProvider.hashCode());
+            + ((this.jvmRunEnvironmentProvider == null)
+                ? 0
+                : this.jvmRunEnvironmentProvider.hashCode());
     result =
         prime * result
-        + ((this.jvmTestEnvironmentProvider == null)
-            ? 0
-            : this.jvmTestEnvironmentProvider.hashCode());
+            + ((this.jvmTestEnvironmentProvider == null)
+                ? 0
+                : this.jvmTestEnvironmentProvider.hashCode());
     result =
         prime * result
-        + ((this.cargoFeaturesProvider == null) ? 0 : this.cargoFeaturesProvider.hashCode());
+            + ((this.cargoFeaturesProvider == null) ? 0 : this.cargoFeaturesProvider.hashCode());
     result = prime * result + ((this.canReload == null) ? 0 : this.canReload.hashCode());
     return prime * result
         + ((this.jvmCompileClasspathProvider == null)
