@@ -89,20 +89,16 @@ public interface BuildServer {
   @JsonRequest("buildTarget/wrappedSources")
   CompletableFuture<WrappedSourcesResult> buildTargetWrappedSources(WrappedSourcesParams params);
 
+
   /**
-   * The build target dependency sources request is sent from the client to the
-   * server to query for the sources of build target dependencies that are
-   * external
-   * to the workspace. The dependency sources response must not include source
-   * files
-   * that belong to a build target within the workspace, see
-   * `buildTarget/sources`.
-   * 
-   * The server communicates during the initialize handshake whether this method
-   * is
-   * supported or not. This method can for example be used by a language server on
-   * `textDocument/definition` to "Go to definition" from project sources to
-   * dependency sources.
+   * The build target dependency sources request is sent from the client to the server to query for
+   * the sources of build target dependencies that are external to the workspace. The dependency
+   * sources response must not include source files that belong to a build target within the
+   * workspace, see `buildTarget/sources`.
+   *
+   * <p>The server communicates during the initialize handshake whether this method is supported or
+   * not. This method can for example be used by a language server on `textDocument/definition` to
+   * "Go to definition" from project sources to dependency sources.
    */
   @JsonRequest("buildTarget/dependencySources")
   CompletableFuture<DependencySourcesResult> buildTargetDependencySources(
