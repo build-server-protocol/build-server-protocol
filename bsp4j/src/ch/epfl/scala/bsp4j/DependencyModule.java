@@ -2,18 +2,15 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class DependencyModule {
-  @NonNull
-  private String name;
+  @NonNull private String name;
 
-  @NonNull
-  private String version;
+  @NonNull private String version;
 
   private String dataKind;
 
@@ -25,7 +22,6 @@ public class DependencyModule {
     this.version = version;
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -35,7 +31,6 @@ public class DependencyModule {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -45,7 +40,6 @@ public class DependencyModule {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -54,7 +48,6 @@ public class DependencyModule {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -64,7 +57,6 @@ public class DependencyModule {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("name", this.name);
@@ -75,46 +67,33 @@ public class DependencyModule {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DependencyModule other = (DependencyModule) obj;
     if (this.name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!this.name.equals(other.name))
-      return false;
+      if (other.name != null) return false;
+    } else if (!this.name.equals(other.name)) return false;
     if (this.version == null) {
-      if (other.version != null)
-        return false;
-    } else if (!this.version.equals(other.version))
-      return false;
+      if (other.version != null) return false;
+    } else if (!this.version.equals(other.version)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

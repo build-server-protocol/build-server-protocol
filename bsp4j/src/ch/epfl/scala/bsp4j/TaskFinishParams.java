@@ -2,15 +2,13 @@ package ch.epfl.scala.bsp4j;
 
 import com.google.gson.annotations.JsonAdapter;
 import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 @SuppressWarnings("all")
 public class TaskFinishParams {
-  @NonNull
-  private TaskId taskId;
+  @NonNull private TaskId taskId;
 
   private String originId;
 
@@ -18,8 +16,7 @@ public class TaskFinishParams {
 
   private String message;
 
-  @NonNull
-  private StatusCode status;
+  @NonNull private StatusCode status;
 
   private String dataKind;
 
@@ -31,7 +28,6 @@ public class TaskFinishParams {
     this.status = status;
   }
 
-  @Pure
   @NonNull
   public TaskId getTaskId() {
     return this.taskId;
@@ -41,7 +37,6 @@ public class TaskFinishParams {
     this.taskId = Preconditions.checkNotNull(taskId, "taskId");
   }
 
-  @Pure
   public String getOriginId() {
     return this.originId;
   }
@@ -50,7 +45,6 @@ public class TaskFinishParams {
     this.originId = originId;
   }
 
-  @Pure
   public Long getEventTime() {
     return this.eventTime;
   }
@@ -59,7 +53,6 @@ public class TaskFinishParams {
     this.eventTime = eventTime;
   }
 
-  @Pure
   public String getMessage() {
     return this.message;
   }
@@ -68,7 +61,6 @@ public class TaskFinishParams {
     this.message = message;
   }
 
-  @Pure
   @NonNull
   public StatusCode getStatus() {
     return this.status;
@@ -78,7 +70,6 @@ public class TaskFinishParams {
     this.status = Preconditions.checkNotNull(status, "status");
   }
 
-  @Pure
   public String getDataKind() {
     return this.dataKind;
   }
@@ -87,7 +78,6 @@ public class TaskFinishParams {
     this.dataKind = dataKind;
   }
 
-  @Pure
   public Object getData() {
     return this.data;
   }
@@ -97,7 +87,6 @@ public class TaskFinishParams {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("taskId", this.taskId);
@@ -111,64 +100,45 @@ public class TaskFinishParams {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     TaskFinishParams other = (TaskFinishParams) obj;
     if (this.taskId == null) {
-      if (other.taskId != null)
-        return false;
-    } else if (!this.taskId.equals(other.taskId))
-      return false;
+      if (other.taskId != null) return false;
+    } else if (!this.taskId.equals(other.taskId)) return false;
     if (this.originId == null) {
-      if (other.originId != null)
-        return false;
-    } else if (!this.originId.equals(other.originId))
-      return false;
+      if (other.originId != null) return false;
+    } else if (!this.originId.equals(other.originId)) return false;
     if (this.eventTime == null) {
-      if (other.eventTime != null)
-        return false;
-    } else if (!this.eventTime.equals(other.eventTime))
-      return false;
+      if (other.eventTime != null) return false;
+    } else if (!this.eventTime.equals(other.eventTime)) return false;
     if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
-      return false;
+      if (other.message != null) return false;
+    } else if (!this.message.equals(other.message)) return false;
     if (this.status == null) {
-      if (other.status != null)
-        return false;
-    } else if (!this.status.equals(other.status))
-      return false;
+      if (other.status != null) return false;
+    } else if (!this.status.equals(other.status)) return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null)
-        return false;
-    } else if (!this.dataKind.equals(other.dataKind))
-      return false;
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
     if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!this.data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.taskId== null) ? 0 : this.taskId.hashCode());
-    result = prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
-    result = prime * result + ((this.eventTime== null) ? 0 : this.eventTime.hashCode());
-    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    result = prime * result + ((this.status== null) ? 0 : this.status.hashCode());
-    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.taskId == null) ? 0 : this.taskId.hashCode());
+    result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.eventTime == null) ? 0 : this.eventTime.hashCode());
+    result = prime * result + ((this.message == null) ? 0 : this.message.hashCode());
+    result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

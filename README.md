@@ -53,4 +53,5 @@ _Past Maintainers_
   Mark arguments and environment variables lists in ScalaMainClass and ScalaTestSuites deprecated as
   they are replaced by the parameters in the base request.
 - Add `cargo` (Rust build tool) protocol extension
+- Update diagnostic-related structures to match LSP 3.17
 - Add `Rust` protocol extension

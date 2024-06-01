@@ -12,9 +12,9 @@ fetch_java_format()
 
 fetch_ktfmt()
 
-RULES_SCALA_VERSION = "6.4.0"
+RULES_SCALA_VERSION = "6.5.0"
 
-RULES_SCALA_SHA = "9a23058a36183a556a9ba7229b4f204d3e68c8c6eb7b28260521016b38ef4e00"
+RULES_SCALA_SHA = "3b00fa0b243b04565abb17d3839a5f4fa6cc2cac571f6db9f83c1982ba1e19e5"
 
 http_archive(
     name = "io_bazel_rules_scala",

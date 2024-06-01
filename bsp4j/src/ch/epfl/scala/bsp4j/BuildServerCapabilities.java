@@ -1,12 +1,10 @@
 package ch.epfl.scala.bsp4j;
 
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
 /**
- * The capabilities of the build server.
- * Clients can use these capabilities to notify users what BSP endpoints can and
- * cannot be used and why.
+ * The capabilities of the build server. Clients can use these capabilities to notify users what BSP
+ * endpoints can and cannot be used and why.
  */
 @SuppressWarnings("all")
 public class BuildServerCapabilities {
@@ -42,10 +40,8 @@ public class BuildServerCapabilities {
 
   private Boolean jvmCompileClasspathProvider;
 
-  public BuildServerCapabilities() {
-  }
+  public BuildServerCapabilities() {}
 
-  @Pure
   public CompileProvider getCompileProvider() {
     return this.compileProvider;
   }
@@ -54,7 +50,6 @@ public class BuildServerCapabilities {
     this.compileProvider = compileProvider;
   }
 
-  @Pure
   public TestProvider getTestProvider() {
     return this.testProvider;
   }
@@ -63,7 +58,6 @@ public class BuildServerCapabilities {
     this.testProvider = testProvider;
   }
 
-  @Pure
   public RunProvider getRunProvider() {
     return this.runProvider;
   }
@@ -72,7 +66,6 @@ public class BuildServerCapabilities {
     this.runProvider = runProvider;
   }
 
-  @Pure
   public DebugProvider getDebugProvider() {
     return this.debugProvider;
   }
@@ -81,7 +74,6 @@ public class BuildServerCapabilities {
     this.debugProvider = debugProvider;
   }
 
-  @Pure
   public Boolean getInverseSourcesProvider() {
     return this.inverseSourcesProvider;
   }
@@ -90,7 +82,6 @@ public class BuildServerCapabilities {
     this.inverseSourcesProvider = inverseSourcesProvider;
   }
 
-  @Pure
   public Boolean getWrappedSourcesProvider() {
     return this.wrappedSourcesProvider;
   }
@@ -99,7 +90,14 @@ public class BuildServerCapabilities {
     this.wrappedSourcesProvider = wrappedSourcesProvider;
   }
 
-  @Pure
+  public Boolean getWrappedSourcesProvider() {
+    return this.wrappedSourcesProvider;
+  }
+
+  public void setWrappedSourcesProvider(final Boolean wrappedSourcesProvider) {
+    this.wrappedSourcesProvider = wrappedSourcesProvider;
+  }
+
   public Boolean getDependencySourcesProvider() {
     return this.dependencySourcesProvider;
   }
@@ -108,7 +106,6 @@ public class BuildServerCapabilities {
     this.dependencySourcesProvider = dependencySourcesProvider;
   }
 
-  @Pure
   public Boolean getDependencyModulesProvider() {
     return this.dependencyModulesProvider;
   }
@@ -117,7 +114,6 @@ public class BuildServerCapabilities {
     this.dependencyModulesProvider = dependencyModulesProvider;
   }
 
-  @Pure
   public Boolean getResourcesProvider() {
     return this.resourcesProvider;
   }
@@ -126,7 +122,6 @@ public class BuildServerCapabilities {
     this.resourcesProvider = resourcesProvider;
   }
 
-  @Pure
   public Boolean getOutputPathsProvider() {
     return this.outputPathsProvider;
   }
@@ -135,7 +130,6 @@ public class BuildServerCapabilities {
     this.outputPathsProvider = outputPathsProvider;
   }
 
-  @Pure
   public Boolean getBuildTargetChangedProvider() {
     return this.buildTargetChangedProvider;
   }
@@ -144,7 +138,6 @@ public class BuildServerCapabilities {
     this.buildTargetChangedProvider = buildTargetChangedProvider;
   }
 
-  @Pure
   public Boolean getJvmRunEnvironmentProvider() {
     return this.jvmRunEnvironmentProvider;
   }
@@ -153,7 +146,6 @@ public class BuildServerCapabilities {
     this.jvmRunEnvironmentProvider = jvmRunEnvironmentProvider;
   }
 
-  @Pure
   public Boolean getJvmTestEnvironmentProvider() {
     return this.jvmTestEnvironmentProvider;
   }
@@ -162,7 +154,6 @@ public class BuildServerCapabilities {
     this.jvmTestEnvironmentProvider = jvmTestEnvironmentProvider;
   }
 
-  @Pure
   public Boolean getCargoFeaturesProvider() {
     return this.cargoFeaturesProvider;
   }
@@ -171,7 +162,6 @@ public class BuildServerCapabilities {
     this.cargoFeaturesProvider = cargoFeaturesProvider;
   }
 
-  @Pure
   public Boolean getCanReload() {
     return this.canReload;
   }
@@ -180,7 +170,6 @@ public class BuildServerCapabilities {
     this.canReload = canReload;
   }
 
-  @Pure
   public Boolean getJvmCompileClasspathProvider() {
     return this.jvmCompileClasspathProvider;
   }
@@ -190,7 +179,6 @@ public class BuildServerCapabilities {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("compileProvider", this.compileProvider);
@@ -213,118 +201,120 @@ public class BuildServerCapabilities {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     BuildServerCapabilities other = (BuildServerCapabilities) obj;
     if (this.compileProvider == null) {
-      if (other.compileProvider != null)
-        return false;
-    } else if (!this.compileProvider.equals(other.compileProvider))
-      return false;
+      if (other.compileProvider != null) return false;
+    } else if (!this.compileProvider.equals(other.compileProvider)) return false;
     if (this.testProvider == null) {
-      if (other.testProvider != null)
-        return false;
-    } else if (!this.testProvider.equals(other.testProvider))
-      return false;
+      if (other.testProvider != null) return false;
+    } else if (!this.testProvider.equals(other.testProvider)) return false;
     if (this.runProvider == null) {
-      if (other.runProvider != null)
-        return false;
-    } else if (!this.runProvider.equals(other.runProvider))
-      return false;
+      if (other.runProvider != null) return false;
+    } else if (!this.runProvider.equals(other.runProvider)) return false;
     if (this.debugProvider == null) {
-      if (other.debugProvider != null)
-        return false;
-    } else if (!this.debugProvider.equals(other.debugProvider))
-      return false;
+      if (other.debugProvider != null) return false;
+    } else if (!this.debugProvider.equals(other.debugProvider)) return false;
     if (this.inverseSourcesProvider == null) {
-      if (other.inverseSourcesProvider != null)
-        return false;
-    } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider))
-      return false;
+      if (other.inverseSourcesProvider != null) return false;
+    } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider)) return false;
     if (this.wrappedSourcesProvider == null) {
-      if (other.wrappedSourcesProvider != null)
-        return false;
-    } else if (!this.wrappedSourcesProvider.equals(other.wrappedSourcesProvider))
-      return false;
+      if (other.wrappedSourcesProvider != null) return false;
+    } else if (!this.wrappedSourcesProvider.equals(other.wrappedSourcesProvider)) return false;
     if (this.dependencySourcesProvider == null) {
-      if (other.dependencySourcesProvider != null)
-        return false;
+      if (other.dependencySourcesProvider != null) return false;
     } else if (!this.dependencySourcesProvider.equals(other.dependencySourcesProvider))
       return false;
     if (this.dependencyModulesProvider == null) {
-      if (other.dependencyModulesProvider != null)
-        return false;
+      if (other.dependencyModulesProvider != null) return false;
     } else if (!this.dependencyModulesProvider.equals(other.dependencyModulesProvider))
       return false;
     if (this.resourcesProvider == null) {
-      if (other.resourcesProvider != null)
-        return false;
-    } else if (!this.resourcesProvider.equals(other.resourcesProvider))
-      return false;
+      if (other.resourcesProvider != null) return false;
+    } else if (!this.resourcesProvider.equals(other.resourcesProvider)) return false;
     if (this.outputPathsProvider == null) {
-      if (other.outputPathsProvider != null)
-        return false;
-    } else if (!this.outputPathsProvider.equals(other.outputPathsProvider))
-      return false;
+      if (other.outputPathsProvider != null) return false;
+    } else if (!this.outputPathsProvider.equals(other.outputPathsProvider)) return false;
     if (this.buildTargetChangedProvider == null) {
-      if (other.buildTargetChangedProvider != null)
-        return false;
+      if (other.buildTargetChangedProvider != null) return false;
     } else if (!this.buildTargetChangedProvider.equals(other.buildTargetChangedProvider))
       return false;
     if (this.jvmRunEnvironmentProvider == null) {
-      if (other.jvmRunEnvironmentProvider != null)
-        return false;
+      if (other.jvmRunEnvironmentProvider != null) return false;
     } else if (!this.jvmRunEnvironmentProvider.equals(other.jvmRunEnvironmentProvider))
       return false;
     if (this.jvmTestEnvironmentProvider == null) {
-      if (other.jvmTestEnvironmentProvider != null)
-        return false;
+      if (other.jvmTestEnvironmentProvider != null) return false;
     } else if (!this.jvmTestEnvironmentProvider.equals(other.jvmTestEnvironmentProvider))
       return false;
     if (this.cargoFeaturesProvider == null) {
-      if (other.cargoFeaturesProvider != null)
-        return false;
-    } else if (!this.cargoFeaturesProvider.equals(other.cargoFeaturesProvider))
-      return false;
+      if (other.cargoFeaturesProvider != null) return false;
+    } else if (!this.cargoFeaturesProvider.equals(other.cargoFeaturesProvider)) return false;
     if (this.canReload == null) {
-      if (other.canReload != null)
-        return false;
-    } else if (!this.canReload.equals(other.canReload))
-      return false;
+      if (other.canReload != null) return false;
+    } else if (!this.canReload.equals(other.canReload)) return false;
     if (this.jvmCompileClasspathProvider == null) {
-      if (other.jvmCompileClasspathProvider != null)
-        return false;
+      if (other.jvmCompileClasspathProvider != null) return false;
     } else if (!this.jvmCompileClasspathProvider.equals(other.jvmCompileClasspathProvider))
       return false;
     return true;
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.compileProvider== null) ? 0 : this.compileProvider.hashCode());
-    result = prime * result + ((this.testProvider== null) ? 0 : this.testProvider.hashCode());
-    result = prime * result + ((this.runProvider== null) ? 0 : this.runProvider.hashCode());
-    result = prime * result + ((this.debugProvider== null) ? 0 : this.debugProvider.hashCode());
-    result = prime * result + ((this.inverseSourcesProvider== null) ? 0 : this.inverseSourcesProvider.hashCode());
-    result = prime * result + ((this.wrappedSourcesProvider== null) ? 0 : this.wrappedSourcesProvider.hashCode());
-    result = prime * result + ((this.dependencySourcesProvider== null) ? 0 : this.dependencySourcesProvider.hashCode());
-    result = prime * result + ((this.dependencyModulesProvider== null) ? 0 : this.dependencyModulesProvider.hashCode());
-    result = prime * result + ((this.resourcesProvider== null) ? 0 : this.resourcesProvider.hashCode());
-    result = prime * result + ((this.outputPathsProvider== null) ? 0 : this.outputPathsProvider.hashCode());
-    result = prime * result + ((this.buildTargetChangedProvider== null) ? 0 : this.buildTargetChangedProvider.hashCode());
-    result = prime * result + ((this.jvmRunEnvironmentProvider== null) ? 0 : this.jvmRunEnvironmentProvider.hashCode());
-    result = prime * result + ((this.jvmTestEnvironmentProvider== null) ? 0 : this.jvmTestEnvironmentProvider.hashCode());
-    result = prime * result + ((this.cargoFeaturesProvider== null) ? 0 : this.cargoFeaturesProvider.hashCode());
-    result = prime * result + ((this.canReload== null) ? 0 : this.canReload.hashCode());
-    return prime * result + ((this.jvmCompileClasspathProvider== null) ? 0 : this.jvmCompileClasspathProvider.hashCode());
+    result =
+        prime * result + ((this.compileProvider == null) ? 0 : this.compileProvider.hashCode());
+    result = prime * result + ((this.testProvider == null) ? 0 : this.testProvider.hashCode());
+    result = prime * result + ((this.runProvider == null) ? 0 : this.runProvider.hashCode());
+    result = prime * result + ((this.debugProvider == null) ? 0 : this.debugProvider.hashCode());
+    result =
+        prime * result
+        + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
+    result =
+        prime * result
+        + ((this.wrappedSourcesProvider == null) ? 0 : this.wrappedSourcesProvider.hashCode());
+    result =
+        prime * result
+        + ((this.dependencySourcesProvider == null)
+            ? 0
+            : this.dependencySourcesProvider.hashCode());
+    result =
+        prime * result
+        + ((this.dependencyModulesProvider == null)
+            ? 0
+            : this.dependencyModulesProvider.hashCode());
+    result =
+        prime * result + ((this.resourcesProvider == null) ? 0 : this.resourcesProvider.hashCode());
+    result =
+        prime * result
+        + ((this.outputPathsProvider == null) ? 0 : this.outputPathsProvider.hashCode());
+    result =
+        prime * result
+        + ((this.buildTargetChangedProvider == null)
+            ? 0
+            : this.buildTargetChangedProvider.hashCode());
+    result =
+        prime * result
+        + ((this.jvmRunEnvironmentProvider == null)
+            ? 0
+            : this.jvmRunEnvironmentProvider.hashCode());
+    result =
+        prime * result
+        + ((this.jvmTestEnvironmentProvider == null)
+            ? 0
+            : this.jvmTestEnvironmentProvider.hashCode());
+    result =
+        prime * result
+        + ((this.cargoFeaturesProvider == null) ? 0 : this.cargoFeaturesProvider.hashCode());
+    result = prime * result + ((this.canReload == null) ? 0 : this.canReload.hashCode());
+    return prime * result
+        + ((this.jvmCompileClasspathProvider == null)
+            ? 0
+            : this.jvmCompileClasspathProvider.hashCode());
   }
 }

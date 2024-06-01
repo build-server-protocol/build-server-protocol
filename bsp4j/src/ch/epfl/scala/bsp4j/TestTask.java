@@ -1,26 +1,22 @@
 package ch.epfl.scala.bsp4j;
 
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * The beginning of a testing unit may be signalled to the client with a
- * `build/taskStart` notification. When the testing unit is a build target, the
- * notification's `dataKind` field must be `test-task` and the `data` field must
- * include a `TestTask` object.
+ * The beginning of a testing unit may be signalled to the client with a `build/taskStart`
+ * notification. When the testing unit is a build target, the notification's `dataKind` field must
+ * be `test-task` and the `data` field must include a `TestTask` object.
  */
 @SuppressWarnings("all")
 public class TestTask {
-  @NonNull
-  private BuildTargetIdentifier target;
+  @NonNull private BuildTargetIdentifier target;
 
   public TestTask(@NonNull final BuildTargetIdentifier target) {
     this.target = target;
   }
 
-  @Pure
   @NonNull
   public BuildTargetIdentifier getTarget() {
     return this.target;
@@ -31,7 +27,6 @@ public class TestTask {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
@@ -39,26 +34,19 @@ public class TestTask {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     TestTask other = (TestTask) obj;
     if (this.target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!this.target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!this.target.equals(other.target)) return false;
     return true;
   }
 
   @Override
-  @Pure
   public int hashCode() {
-    return 31 * 1 + ((this.target== null) ? 0 : this.target.hashCode());
+    return 31 * 1 + ((this.target == null) ? 0 : this.target.hashCode());
   }
 }

@@ -38,8 +38,7 @@ java_binary(
 
 format_multirun(
     name = "format",
-    # TODO: Uncomment once the initial PR is merged
-    # java = ":java-format",
+    java = ":java-format",
     javascript = ":prettier",
     kotlin = ":ktfmt",
     markdown = ":prettier",

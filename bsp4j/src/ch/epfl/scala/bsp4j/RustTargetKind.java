@@ -5,13 +5,12 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum RustTargetKind {
-
-LIB(1),
-BIN(2),
-TEST(3),
-EXAMPLE(4),
-BENCH(5),
-CUSTOM_BUILD(6),
+  LIB(1),
+  BIN(2),
+  TEST(3),
+  EXAMPLE(4),
+  BENCH(5),
+  CUSTOM_BUILD(6),
   UNKNOWN(7);
 
   private final int value;
@@ -27,8 +26,7 @@ CUSTOM_BUILD(6),
   public static RustTargetKind forValue(int value) {
     RustTargetKind[] allValues = RustTargetKind.values();
     if (value < 1 || value > allValues.length)
-    throw new IllegalArgumentException("Illegal enum value: " + value);
+      throw new IllegalArgumentException("Illegal enum value: " + value);
     return allValues[value - 1];
   }
 }
-

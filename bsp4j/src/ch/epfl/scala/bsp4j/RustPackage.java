@@ -3,58 +3,46 @@ package ch.epfl.scala.bsp4j;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
+import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
-import org.eclipse.lsp4j.util.Preconditions;
-import org.eclipse.xtext.xbase.lib.Pure;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
- * A `crate` is the smallest amount of code that the Rust compiler considers at a time.
- * It can come in one of two forms: a binary crate or a library crate.
- * `Binary crates` are programs you can compile to an executable that you can run,
- * such as a command-line program or a server.
- * Each must have a function called main that defines what happens when the executable runs.
- * `Library crates` don't have a main function, and they don't compile to an executable.
- * Instead, they define functionality intended to be shared with multiple projects.
- * 
- * A `package` is a bundle of one or more crates that provides a set of functionality.
- * It contains a Cargo.toml file that describes how to build those crates.
- * A package can contain many binary crates, but at most only one library crate.
- * However, it must contain at least one crate, whether that's a library or binary crate.
+ * A `crate` is the smallest amount of code that the Rust compiler considers at a time. It can come
+ * in one of two forms: a binary crate or a library crate. `Binary crates` are programs you can
+ * compile to an executable that you can run, such as a command-line program or a server. Each must
+ * have a function called main that defines what happens when the executable runs. `Library crates`
+ * don't have a main function, and they don't compile to an executable. Instead, they define
+ * functionality intended to be shared with multiple projects.
+ *
+ * <p>A `package` is a bundle of one or more crates that provides a set of functionality. It
+ * contains a Cargo.toml file that describes how to build those crates. A package can contain many
+ * binary crates, but at most only one library crate. However, it must contain at least one crate,
+ * whether that's a library or binary crate.
  */
 @SuppressWarnings("all")
 public class RustPackage {
-  @NonNull
-  private String id;
+  @NonNull private String id;
 
-  @NonNull
-  private String rootUrl;
+  @NonNull private String rootUrl;
 
-  @NonNull
-  private String name;
+  @NonNull private String name;
 
-  @NonNull
-  private String version;
+  @NonNull private String version;
 
-  @NonNull
-  private String origin;
+  @NonNull private String origin;
 
-  @NonNull
-  private String edition;
+  @NonNull private String edition;
 
   private String source;
 
-  @NonNull
-  private List<RustTarget> resolvedTargets;
+  @NonNull private List<RustTarget> resolvedTargets;
 
-  @NonNull
-  private List<RustTarget> allTargets;
+  @NonNull private List<RustTarget> allTargets;
 
-  @NonNull
-  private Map<String, Set<String>> features;
+  @NonNull private Map<String, Set<String>> features;
 
-  @NonNull
-  private Set<String> enabledFeatures;
+  @NonNull private Set<String> enabledFeatures;
 
   private Map<String, List<String>> cfgOptions;
 
@@ -64,7 +52,17 @@ public class RustPackage {
 
   private String procMacroArtifact;
 
-  public RustPackage(@NonNull final String id, @NonNull final String rootUrl, @NonNull final String name, @NonNull final String version, @NonNull final String origin, @NonNull final String edition, @NonNull final List<RustTarget> resolvedTargets, @NonNull final List<RustTarget> allTargets, @NonNull final Map<String, Set<String>> features, @NonNull final Set<String> enabledFeatures) {
+  public RustPackage(
+      @NonNull final String id,
+      @NonNull final String rootUrl,
+      @NonNull final String name,
+      @NonNull final String version,
+      @NonNull final String origin,
+      @NonNull final String edition,
+      @NonNull final List<RustTarget> resolvedTargets,
+      @NonNull final List<RustTarget> allTargets,
+      @NonNull final Map<String, Set<String>> features,
+      @NonNull final Set<String> enabledFeatures) {
     this.id = id;
     this.rootUrl = rootUrl;
     this.name = name;
@@ -77,7 +75,6 @@ public class RustPackage {
     this.enabledFeatures = enabledFeatures;
   }
 
-  @Pure
   @NonNull
   public String getId() {
     return this.id;
@@ -87,7 +84,6 @@ public class RustPackage {
     this.id = Preconditions.checkNotNull(id, "id");
   }
 
-  @Pure
   @NonNull
   public String getRootUrl() {
     return this.rootUrl;
@@ -97,7 +93,6 @@ public class RustPackage {
     this.rootUrl = Preconditions.checkNotNull(rootUrl, "rootUrl");
   }
 
-  @Pure
   @NonNull
   public String getName() {
     return this.name;
@@ -107,7 +102,6 @@ public class RustPackage {
     this.name = Preconditions.checkNotNull(name, "name");
   }
 
-  @Pure
   @NonNull
   public String getVersion() {
     return this.version;
@@ -117,7 +111,6 @@ public class RustPackage {
     this.version = Preconditions.checkNotNull(version, "version");
   }
 
-  @Pure
   @NonNull
   public String getOrigin() {
     return this.origin;
@@ -127,7 +120,6 @@ public class RustPackage {
     this.origin = Preconditions.checkNotNull(origin, "origin");
   }
 
-  @Pure
   @NonNull
   public String getEdition() {
     return this.edition;
@@ -137,7 +129,6 @@ public class RustPackage {
     this.edition = Preconditions.checkNotNull(edition, "edition");
   }
 
-  @Pure
   public String getSource() {
     return this.source;
   }
@@ -146,7 +137,6 @@ public class RustPackage {
     this.source = source;
   }
 
-  @Pure
   @NonNull
   public List<RustTarget> getResolvedTargets() {
     return this.resolvedTargets;
@@ -156,7 +146,6 @@ public class RustPackage {
     this.resolvedTargets = Preconditions.checkNotNull(resolvedTargets, "resolvedTargets");
   }
 
-  @Pure
   @NonNull
   public List<RustTarget> getAllTargets() {
     return this.allTargets;
@@ -166,7 +155,6 @@ public class RustPackage {
     this.allTargets = Preconditions.checkNotNull(allTargets, "allTargets");
   }
 
-  @Pure
   @NonNull
   public Map<String, Set<String>> getFeatures() {
     return this.features;
@@ -176,7 +164,6 @@ public class RustPackage {
     this.features = Preconditions.checkNotNull(features, "features");
   }
 
-  @Pure
   @NonNull
   public Set<String> getEnabledFeatures() {
     return this.enabledFeatures;
@@ -186,7 +173,6 @@ public class RustPackage {
     this.enabledFeatures = Preconditions.checkNotNull(enabledFeatures, "enabledFeatures");
   }
 
-  @Pure
   public Map<String, List<String>> getCfgOptions() {
     return this.cfgOptions;
   }
@@ -195,7 +181,6 @@ public class RustPackage {
     this.cfgOptions = cfgOptions;
   }
 
-  @Pure
   public Map<String, String> getEnv() {
     return this.env;
   }
@@ -204,7 +189,6 @@ public class RustPackage {
     this.env = env;
   }
 
-  @Pure
   public String getOutDirUrl() {
     return this.outDirUrl;
   }
@@ -213,7 +197,6 @@ public class RustPackage {
     this.outDirUrl = outDirUrl;
   }
 
-  @Pure
   public String getProcMacroArtifact() {
     return this.procMacroArtifact;
   }
@@ -223,7 +206,6 @@ public class RustPackage {
   }
 
   @Override
-  @Pure
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("id", this.id);
@@ -245,112 +227,80 @@ public class RustPackage {
   }
 
   @Override
-  @Pure
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     RustPackage other = (RustPackage) obj;
     if (this.id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!this.id.equals(other.id))
-      return false;
+      if (other.id != null) return false;
+    } else if (!this.id.equals(other.id)) return false;
     if (this.rootUrl == null) {
-      if (other.rootUrl != null)
-        return false;
-    } else if (!this.rootUrl.equals(other.rootUrl))
-      return false;
+      if (other.rootUrl != null) return false;
+    } else if (!this.rootUrl.equals(other.rootUrl)) return false;
     if (this.name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!this.name.equals(other.name))
-      return false;
+      if (other.name != null) return false;
+    } else if (!this.name.equals(other.name)) return false;
     if (this.version == null) {
-      if (other.version != null)
-        return false;
-    } else if (!this.version.equals(other.version))
-      return false;
+      if (other.version != null) return false;
+    } else if (!this.version.equals(other.version)) return false;
     if (this.origin == null) {
-      if (other.origin != null)
-        return false;
-    } else if (!this.origin.equals(other.origin))
-      return false;
+      if (other.origin != null) return false;
+    } else if (!this.origin.equals(other.origin)) return false;
     if (this.edition == null) {
-      if (other.edition != null)
-        return false;
-    } else if (!this.edition.equals(other.edition))
-      return false;
+      if (other.edition != null) return false;
+    } else if (!this.edition.equals(other.edition)) return false;
     if (this.source == null) {
-      if (other.source != null)
-        return false;
-    } else if (!this.source.equals(other.source))
-      return false;
+      if (other.source != null) return false;
+    } else if (!this.source.equals(other.source)) return false;
     if (this.resolvedTargets == null) {
-      if (other.resolvedTargets != null)
-        return false;
-    } else if (!this.resolvedTargets.equals(other.resolvedTargets))
-      return false;
+      if (other.resolvedTargets != null) return false;
+    } else if (!this.resolvedTargets.equals(other.resolvedTargets)) return false;
     if (this.allTargets == null) {
-      if (other.allTargets != null)
-        return false;
-    } else if (!this.allTargets.equals(other.allTargets))
-      return false;
+      if (other.allTargets != null) return false;
+    } else if (!this.allTargets.equals(other.allTargets)) return false;
     if (this.features == null) {
-      if (other.features != null)
-        return false;
-    } else if (!this.features.equals(other.features))
-      return false;
+      if (other.features != null) return false;
+    } else if (!this.features.equals(other.features)) return false;
     if (this.enabledFeatures == null) {
-      if (other.enabledFeatures != null)
-        return false;
-    } else if (!this.enabledFeatures.equals(other.enabledFeatures))
-      return false;
+      if (other.enabledFeatures != null) return false;
+    } else if (!this.enabledFeatures.equals(other.enabledFeatures)) return false;
     if (this.cfgOptions == null) {
-      if (other.cfgOptions != null)
-        return false;
-    } else if (!this.cfgOptions.equals(other.cfgOptions))
-      return false;
+      if (other.cfgOptions != null) return false;
+    } else if (!this.cfgOptions.equals(other.cfgOptions)) return false;
     if (this.env == null) {
-      if (other.env != null)
-        return false;
-    } else if (!this.env.equals(other.env))
-      return false;
+      if (other.env != null) return false;
+    } else if (!this.env.equals(other.env)) return false;
     if (this.outDirUrl == null) {
-      if (other.outDirUrl != null)
-        return false;
-    } else if (!this.outDirUrl.equals(other.outDirUrl))
-      return false;
+      if (other.outDirUrl != null) return false;
+    } else if (!this.outDirUrl.equals(other.outDirUrl)) return false;
     if (this.procMacroArtifact == null) {
-      if (other.procMacroArtifact != null)
-        return false;
-    } else if (!this.procMacroArtifact.equals(other.procMacroArtifact))
-      return false;
+      if (other.procMacroArtifact != null) return false;
+    } else if (!this.procMacroArtifact.equals(other.procMacroArtifact)) return false;
     return true;
   }
 
   @Override
-  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.id== null) ? 0 : this.id.hashCode());
-    result = prime * result + ((this.rootUrl== null) ? 0 : this.rootUrl.hashCode());
-    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.version== null) ? 0 : this.version.hashCode());
-    result = prime * result + ((this.origin== null) ? 0 : this.origin.hashCode());
-    result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
-    result = prime * result + ((this.source== null) ? 0 : this.source.hashCode());
-    result = prime * result + ((this.resolvedTargets== null) ? 0 : this.resolvedTargets.hashCode());
-    result = prime * result + ((this.allTargets== null) ? 0 : this.allTargets.hashCode());
-    result = prime * result + ((this.features== null) ? 0 : this.features.hashCode());
-    result = prime * result + ((this.enabledFeatures== null) ? 0 : this.enabledFeatures.hashCode());
-    result = prime * result + ((this.cfgOptions== null) ? 0 : this.cfgOptions.hashCode());
-    result = prime * result + ((this.env== null) ? 0 : this.env.hashCode());
-    result = prime * result + ((this.outDirUrl== null) ? 0 : this.outDirUrl.hashCode());
-    return prime * result + ((this.procMacroArtifact== null) ? 0 : this.procMacroArtifact.hashCode());
+    result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+    result = prime * result + ((this.rootUrl == null) ? 0 : this.rootUrl.hashCode());
+    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+    result = prime * result + ((this.origin == null) ? 0 : this.origin.hashCode());
+    result = prime * result + ((this.edition == null) ? 0 : this.edition.hashCode());
+    result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
+    result =
+        prime * result + ((this.resolvedTargets == null) ? 0 : this.resolvedTargets.hashCode());
+    result = prime * result + ((this.allTargets == null) ? 0 : this.allTargets.hashCode());
+    result = prime * result + ((this.features == null) ? 0 : this.features.hashCode());
+    result =
+        prime * result + ((this.enabledFeatures == null) ? 0 : this.enabledFeatures.hashCode());
+    result = prime * result + ((this.cfgOptions == null) ? 0 : this.cfgOptions.hashCode());
+    result = prime * result + ((this.env == null) ? 0 : this.env.hashCode());
+    result = prime * result + ((this.outDirUrl == null) ? 0 : this.outDirUrl.hashCode());
+    return prime * result
+        + ((this.procMacroArtifact == null) ? 0 : this.procMacroArtifact.hashCode());
   }
 }
