@@ -36,6 +36,13 @@ const Features = () => {
       image: "https://i.imgur.com/3stUaOx.png",
       imageAlign: "right",
     },
+    {
+      title: "Community-driven",
+      content:
+          "BSP was designed and is maintained by JetBrains, the Scala Center, and contributors from the broader Scala, Bazel and other communities",
+      image: "https://i.imgur.com/OIJdwV0.png",
+      imageAlign: "left",
+    },
   ];
   return (
     <div>
