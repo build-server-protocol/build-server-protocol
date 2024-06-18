@@ -25,18 +25,18 @@ If you'd like to contribute to the protocol, please check out our
 
 _Current Maintainers_
 
-- Adrien Piquerez - [@adpi2](https://github.com/adpi2)
-- Andrzej Głuszak - [@agluszak](https://github.com/agluszak)
-- Chris Kipp - [@ckipp01](https://github.com/ckipp01)
-- Justin Kaeser - [@jastice](https://github.com/jastice)
-- Łukasz Wawrzyk - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
-- Marcin Abramowicz - [@abrams27](https://github.com/abrams27)
-- Tomasz Pasternak - [@tpasternak](https://github.com/tpasternak)
+- Adrien Piquerez (Scala Center) - [@adpi2](https://github.com/adpi2)
+- Andrzej Głuszak (JetBrains) - [@agluszak](https://github.com/agluszak)
+- Justin Kaeser (JetBrains) - [@jastice](https://github.com/jastice)
+- Marcin Abramowicz (JetBrains) - [@abrams27](https://github.com/abrams27)
+- Łukasz Wawrzyk (VirtusLab) - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
+- Tomasz Pasternak (JetBrains/VirtusLab) - [@tpasternak](https://github.com/tpasternak)
 
-_Past Maintainers_
+_Former Maintainers_
 
-- Jorge Vicente Cantero - [@jvican](https://github.com/jvican)
-- Ólafur Páll Geirsson - [@olafurpg](https://github.com/olafurpg)
+- Chris Kipp (ex-Lunatech) - [@ckipp01](https://github.com/ckipp01)
+- Jorge Vicente Cantero (ex-Scala Center) - [@jvican](https://github.com/jvican)
+- Ólafur Páll Geirsson (ex-Scala Center) - [@olafurpg](https://github.com/olafurpg)
 
 ## Protocol Changelog
 
