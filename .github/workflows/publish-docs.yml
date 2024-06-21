@@ -5,7 +5,7 @@ on:
       - master
   workflow_dispatch:
 jobs:
-  publish:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,13 +19,9 @@ jobs:
           save-always: true
       - name: Generate docs
         run: bazel run //website:docusaurus-build
-      - name: Upload Build Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: bazel-bin/website/docusaurus-build_/docusaurus-build.runfiles/_main/website/build
   deploy:
     name: Deploy to GitHub Pages
-    needs: publish
+    needs: generate
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write # to deploy to Pages
@@ -36,9 +32,16 @@ jobs:
       url: https://build-server-protocol.github.io
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        # If you're changing the branch from master,
+        # also change the `master` in `refs/heads/master`
+        # below accordingly.
+        if: github.ref == 'refs/heads/master'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./bazel-bin/website/docusaurus-build_/docusaurus-build.runfiles/_main/website/build
+          destination_repo: build-server-protocol/build-server-protocol.github.io
 env:
   GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
   GIT_USER: build-server-protocol@build-server-protocol.github.io
