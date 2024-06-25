@@ -7,6 +7,8 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,19 +21,6 @@ jobs:
           save-always: true
       - name: Generate docs
         run: bazel run //website:docusaurus-build
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: generate
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: https://build-server-protocol.github.io
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         # If you're changing the branch from master,
@@ -42,6 +31,4 @@ jobs:
           personal_token: ${{ secrets.WEBSITE_PUBLISH_TOKEN }}
           publish_dir: ./bazel-bin/website/docusaurus-build_/docusaurus-build.runfiles/_main/website/build
           external_repository: build-server-protocol/build-server-protocol.github.io
-env:
-  GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
-  GIT_USER: build-server-protocol@build-server-protocol.github.io
+          publish_branch: master
