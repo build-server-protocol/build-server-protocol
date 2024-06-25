@@ -39,7 +39,7 @@ jobs:
         # below accordingly.
         if: github.ref == 'refs/heads/master'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.GIT_DEPLOY_KEY }}
           publish_dir: ./bazel-bin/website/docusaurus-build_/docusaurus-build.runfiles/_main/website/build
           external_repository: build-server-protocol/build-server-protocol.github.io
 env:
