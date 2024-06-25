@@ -41,7 +41,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./bazel-bin/website/docusaurus-build_/docusaurus-build.runfiles/_main/website/build
-          destination_repo: build-server-protocol/build-server-protocol.github.io
+          external_repository: build-server-protocol/build-server-protocol.github.io
 env:
   GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
   GIT_USER: build-server-protocol@build-server-protocol.github.io
