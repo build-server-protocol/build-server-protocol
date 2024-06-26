@@ -18,6 +18,8 @@ public class BuildServerCapabilities {
 
   private Boolean inverseSourcesProvider;
 
+  private Boolean wrappedSourcesProvider;
+
   private Boolean dependencySourcesProvider;
 
   private Boolean dependencyModulesProvider;
@@ -78,6 +80,22 @@ public class BuildServerCapabilities {
 
   public void setInverseSourcesProvider(final Boolean inverseSourcesProvider) {
     this.inverseSourcesProvider = inverseSourcesProvider;
+  }
+
+  public Boolean getWrappedSourcesProvider() {
+    return this.wrappedSourcesProvider;
+  }
+
+  public void setWrappedSourcesProvider(final Boolean wrappedSourcesProvider) {
+    this.wrappedSourcesProvider = wrappedSourcesProvider;
+  }
+
+  public Boolean getWrappedSourcesProvider() {
+    return this.wrappedSourcesProvider;
+  }
+
+  public void setWrappedSourcesProvider(final Boolean wrappedSourcesProvider) {
+    this.wrappedSourcesProvider = wrappedSourcesProvider;
   }
 
   public Boolean getDependencySourcesProvider() {
@@ -168,6 +186,7 @@ public class BuildServerCapabilities {
     b.add("runProvider", this.runProvider);
     b.add("debugProvider", this.debugProvider);
     b.add("inverseSourcesProvider", this.inverseSourcesProvider);
+    b.add("wrappedSourcesProvider", this.wrappedSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("dependencyModulesProvider", this.dependencyModulesProvider);
     b.add("resourcesProvider", this.resourcesProvider);
@@ -202,6 +221,9 @@ public class BuildServerCapabilities {
     if (this.inverseSourcesProvider == null) {
       if (other.inverseSourcesProvider != null) return false;
     } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider)) return false;
+    if (this.wrappedSourcesProvider == null) {
+      if (other.wrappedSourcesProvider != null) return false;
+    } else if (!this.wrappedSourcesProvider.equals(other.wrappedSourcesProvider)) return false;
     if (this.dependencySourcesProvider == null) {
       if (other.dependencySourcesProvider != null) return false;
     } else if (!this.dependencySourcesProvider.equals(other.dependencySourcesProvider))
@@ -253,6 +275,9 @@ public class BuildServerCapabilities {
     result =
         prime * result
             + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
+    result =
+        prime * result
+            + ((this.wrappedSourcesProvider == null) ? 0 : this.wrappedSourcesProvider.hashCode());
     result =
         prime * result
             + ((this.dependencySourcesProvider == null)

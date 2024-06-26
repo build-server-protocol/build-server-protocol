@@ -87,6 +87,7 @@ class TypoSuite extends AnyFunSuite {
         capabilities.setRunProvider(new RunProvider(Collections.singletonList("scala")))
         capabilities.setDebugProvider(new DebugProvider(Collections.singletonList("scala")))
         capabilities.setInverseSourcesProvider(true)
+        capabilities.setWrappedSourcesProvider(true)
         capabilities.setDependencySourcesProvider(true)
         capabilities.setResourcesProvider(true)
         capabilities.setBuildTargetChangedProvider(true)
@@ -140,6 +141,13 @@ class TypoSuite extends AnyFunSuite {
     ): CompletableFuture[InverseSourcesResult] = {
       CompletableFuture.completedFuture {
         new InverseSourcesResult(Collections.singletonList(buildTargetUri))
+      }
+    }
+    override def buildTargetWrappedSources(
+        params: WrappedSourcesParams
+    ): CompletableFuture[WrappedSourcesResult] = {
+      CompletableFuture.completedFuture {
+        new WrappedSourcesResult(params.map(param => WrappedSourcesItem(param.target, List.empty)))
       }
     }
     override def buildTargetDependencySources(
