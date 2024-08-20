@@ -16,6 +16,8 @@ public class RunParams {
 
   private List<String> arguments;
 
+  private List<String> buildToolArguments;
+
   private Map<String, String> environmentVariables;
 
   private String workingDirectory;
@@ -52,6 +54,14 @@ public class RunParams {
 
   public void setArguments(final List<String> arguments) {
     this.arguments = arguments;
+  }
+
+  public List<String> getBuildToolArguments() {
+    return this.buildToolArguments;
+  }
+
+  public void setBuildToolArguments(final List<String> buildToolArguments) {
+    this.buildToolArguments = buildToolArguments;
   }
 
   public Map<String, String> getEnvironmentVariables() {
@@ -92,6 +102,7 @@ public class RunParams {
     b.add("target", this.target);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
+    b.add("buildToolArguments", this.buildToolArguments);
     b.add("environmentVariables", this.environmentVariables);
     b.add("workingDirectory", this.workingDirectory);
     b.add("dataKind", this.dataKind);
@@ -114,6 +125,9 @@ public class RunParams {
     if (this.arguments == null) {
       if (other.arguments != null) return false;
     } else if (!this.arguments.equals(other.arguments)) return false;
+    if (this.buildToolArguments == null) {
+      if (other.buildToolArguments != null) return false;
+    } else if (!this.buildToolArguments.equals(other.buildToolArguments)) return false;
     if (this.environmentVariables == null) {
       if (other.environmentVariables != null) return false;
     } else if (!this.environmentVariables.equals(other.environmentVariables)) return false;
@@ -136,6 +150,9 @@ public class RunParams {
     result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
     result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
+    result =
+        prime * result
+            + ((this.buildToolArguments == null) ? 0 : this.buildToolArguments.hashCode());
     result =
         prime * result
             + ((this.environmentVariables == null) ? 0 : this.environmentVariables.hashCode());

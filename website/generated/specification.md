@@ -996,6 +996,9 @@ export interface CompileParams {
 
   /** Optional arguments to the compilation process. */
   arguments?: string[];
+
+  /** Optional arguments to the build tool. */
+  buildToolArguments?: string[];
 }
 ```
 
@@ -1077,6 +1080,9 @@ export interface RunParams {
   /** Optional arguments to the executed application. */
   arguments?: string[];
 
+  /** Optional arguments to the build tool. */
+  buildToolArguments?: string[];
+
   /** Optional environment variables to set before running the application. */
   environmentVariables?: EnvironmentVariables;
 
@@ -1147,6 +1153,9 @@ export interface TestParams {
 
   /** Optional arguments to the test execution engine. */
   arguments?: string[];
+
+  /** Optional arguments to the build tool. */
+  buildToolArguments?: string[];
 
   /** Optional environment variables to set before running the tests. */
   environmentVariables?: EnvironmentVariables;
