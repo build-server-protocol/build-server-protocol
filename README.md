@@ -55,3 +55,4 @@ _Former Maintainers_
 - Add `cargo` (Rust build tool) protocol extension
 - Update diagnostic-related structures to match LSP 3.17
 - Add `Rust` protocol extension
+- Add `buildToolParams` to compile/test/run requests

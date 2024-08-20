@@ -39,7 +39,7 @@ const Features = () => {
     {
       title: "Community-driven",
       content:
-          "BSP was designed and is maintained by JetBrains, the Scala Center, and contributors from the broader Scala, Bazel and other communities",
+        "BSP was designed and is maintained by JetBrains, the Scala Center, and contributors from the broader Scala, Bazel and other communities",
       image: "https://i.imgur.com/OIJdwV0.png",
       imageAlign: "left",
     },
