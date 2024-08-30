@@ -1,5 +1,7 @@
 package ch.epfl.scala.bsp4j;
 
+import com.google.gson.annotations.JsonAdapter;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.JsonElementTypeAdapter;
 import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
 import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -11,6 +13,11 @@ public class SourceItem {
   @NonNull private SourceItemKind kind;
 
   @NonNull private Boolean generated;
+
+  private String dataKind;
+
+  @JsonAdapter(JsonElementTypeAdapter.Factory.class)
+  private Object data;
 
   public SourceItem(
       @NonNull final String uri,
@@ -48,12 +55,30 @@ public class SourceItem {
     this.generated = Preconditions.checkNotNull(generated, "generated");
   }
 
+  public String getDataKind() {
+    return this.dataKind;
+  }
+
+  public void setDataKind(final String dataKind) {
+    this.dataKind = dataKind;
+  }
+
+  public Object getData() {
+    return this.data;
+  }
+
+  public void setData(final Object data) {
+    this.data = data;
+  }
+
   @Override
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("uri", this.uri);
     b.add("kind", this.kind);
     b.add("generated", this.generated);
+    b.add("dataKind", this.dataKind);
+    b.add("data", this.data);
     return b.toString();
   }
 
@@ -72,6 +97,12 @@ public class SourceItem {
     if (this.generated == null) {
       if (other.generated != null) return false;
     } else if (!this.generated.equals(other.generated)) return false;
+    if (this.dataKind == null) {
+      if (other.dataKind != null) return false;
+    } else if (!this.dataKind.equals(other.dataKind)) return false;
+    if (this.data == null) {
+      if (other.data != null) return false;
+    } else if (!this.data.equals(other.data)) return false;
     return true;
   }
 
@@ -81,6 +112,8 @@ public class SourceItem {
     int result = 1;
     result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
     result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    return prime * result + ((this.generated == null) ? 0 : this.generated.hashCode());
+    result = prime * result + ((this.generated == null) ? 0 : this.generated.hashCode());
+    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
   }
 }

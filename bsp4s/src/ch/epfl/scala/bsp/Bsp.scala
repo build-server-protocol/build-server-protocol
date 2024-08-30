@@ -726,6 +726,17 @@ object JvmRunEnvironmentResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
+/** `JvmSourceItemData` contains jvm-specific metadata for a source item.
+  */
+final case class JvmSourceItemData(
+    packageName: Option[String]
+)
+
+object JvmSourceItemData {
+  implicit val codec: JsonValueCodec[JvmSourceItemData] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
 final case class JvmTestEnvironmentParams(
     targets: List[BuildTargetIdentifier],
     originId: Option[String]
@@ -1536,11 +1547,17 @@ object ShowMessageParams {
 final case class SourceItem(
     uri: Uri,
     kind: SourceItemKind,
-    generated: Boolean
+    generated: Boolean,
+    dataKind: Option[String],
+    data: Option[RawJson]
 )
 
 object SourceItem {
   implicit val codec: JsonValueCodec[SourceItem] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+object SourceItemDataKind {
+  val Jvm = "jvm"
 }
 
 sealed abstract class SourceItemKind(val value: Int)

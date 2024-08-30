@@ -164,3 +164,21 @@ export interface JvmBuildTarget {
   javaVersion?: string;
 }
 ```
+
+## SourceItemData kinds
+
+### JvmSourceItemData
+
+This structure is embedded in
+the `data?: SourceItemData` field, when
+the `dataKind` field contains `"jvm"`.
+
+#### JvmSourceItemData
+
+`JvmSourceItemData` contains jvm-specific metadata for a source item.
+
+```ts
+export interface JvmSourceItemData {
+  packageName?: string;
+}
+```

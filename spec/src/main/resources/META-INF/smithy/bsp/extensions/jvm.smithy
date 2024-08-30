@@ -8,6 +8,7 @@ use bsp#BuildTargetIdentifier
 use bsp#BuildTargetIdentifiers
 use bsp#EnvironmentVariables
 use bsp#Identifier
+use bsp#SourceItemData
 use bsp#URI
 use traits#dataKind
 use traits#jsonRPC
@@ -150,4 +151,8 @@ list JvmCompileClasspathItems {
     member: JvmCompileClasspathItem
 }
 
-
+/// `JvmSourceItemData` contains jvm-specific metadata for a source item.
+@dataKind(kind: "jvm", extends: [SourceItemData])
+structure JvmSourceItemData {
+    packageName: String
+}
