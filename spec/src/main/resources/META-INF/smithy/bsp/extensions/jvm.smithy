@@ -154,5 +154,7 @@ list JvmCompileClasspathItems {
 /// `JvmSourceItemData` contains jvm-specific metadata for a source item.
 @dataKind(kind: "jvm", extends: [SourceItemData])
 structure JvmSourceItemData {
+    /// The package name for the source item, must match the package declaration
+    /// if the source item is a file.
     packageName: String
 }

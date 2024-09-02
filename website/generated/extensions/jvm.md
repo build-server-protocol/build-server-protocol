@@ -179,6 +179,8 @@ the `dataKind` field contains `"jvm"`.
 
 ```ts
 export interface JvmSourceItemData {
+  /** The package name for the source item, must match the package declaration
+   * if the source item is a file. */
   packageName?: string;
 }
 ```
