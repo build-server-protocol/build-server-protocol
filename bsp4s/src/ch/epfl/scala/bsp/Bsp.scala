@@ -726,7 +726,7 @@ object JvmRunEnvironmentResult {
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
-/** `JvmSourceItemData` contains jvm-specific metadata for a source item.
+/** `JvmSourceItemData` contains JVM-specific metadata for a source item.
   */
 final case class JvmSourceItemData(
     packageName: Option[String]

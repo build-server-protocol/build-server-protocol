@@ -151,10 +151,22 @@ list JvmCompileClasspathItems {
     member: JvmCompileClasspathItem
 }
 
-/// `JvmSourceItemData` contains jvm-specific metadata for a source item.
+/// `JvmSourceItemData` contains JVM-specific metadata for a source item.
 @dataKind(kind: "jvm", extends: [SourceItemData])
 structure JvmSourceItemData {
-    /// The package name for the source item, must match the package declaration
-    /// if the source item is a file.
+    /// The package name associated with the source item.
+    ///
+    /// If the source item is a file, this value must match the package declaration within the file.
+    ///
+    /// If the source item is a directory, the package name can be empty if the directory is at the package root,
+    /// such as in a Maven structure (e.g., source directories like `src/main/java` and `src/test/java`).
+    /// In non-conventional directory structures, the package name for the directory should be set to the package prefix
+    /// that will be applied to all source files within the directory.
+    /// For example, if a source directory is `a`, containing a source file `a/b/Lib.java`
+    /// where the package name for `Lib` is `my.example.b`,
+    /// then the package prefix for the directory `a` should be set to `my.example`.
+    /// If a consistent package name cannot be applied to the source directory,
+    /// such as when each source file within the source directory has an arbitrary package name,
+    /// the package name for the source directory should be set to null.
     packageName: String
 }

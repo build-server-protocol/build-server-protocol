@@ -2,7 +2,7 @@ package ch.epfl.scala.bsp4j;
 
 import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 
-/** `JvmSourceItemData` contains jvm-specific metadata for a source item. */
+/** `JvmSourceItemData` contains JVM-specific metadata for a source item. */
 @SuppressWarnings("all")
 public class JvmSourceItemData {
   private String packageName;
