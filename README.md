@@ -56,3 +56,4 @@ _Former Maintainers_
 - Update diagnostic-related structures to match LSP 3.17
 - Add `Rust` protocol extension
 - Add `buildToolParams` to compile/test/run requests
+- Add an optional `data` field to `SourceItem`

@@ -913,6 +913,9 @@ list SourcesItems {
     member: SourcesItem
 }
 
+@data
+document SourceItemData
+
 structure SourceItem {
     /// Either a text document or a directory. A directory entry must end with a forward
     /// slash "/" and a directory entry implies that every nested text document within the
@@ -926,6 +929,8 @@ structure SourceItem {
     /// intended to be manually edited by the user.
     @required
     generated: Boolean
+    /// Language-specific metadata about this source item.
+    data: SourceItemData
 }
 
 list SourceItems {
