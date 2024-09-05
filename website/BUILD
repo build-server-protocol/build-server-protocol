@@ -1,8 +1,8 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//website:@docusaurus/core/package_json.bzl", docusaurus_bin = "bin")
-load("//tools/rules/generator:website.bzl", "website")
-load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("//:version.bzl", "BSP_VERSION")
+load("//tools/rules/generator:website.bzl", "website")
 
 npm_link_all_packages(name = "node_modules")
 
