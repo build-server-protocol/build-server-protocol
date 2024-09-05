@@ -6,10 +6,10 @@
     "format": "prettier --write ../"
   },
   "dependencies": {
-    "@docusaurus/core": "3.4.0",
-    "@docusaurus/plugin-client-redirects": "3.4.0",
-    "@docusaurus/preset-classic": "3.4.0",
-    "@easyops-cn/docusaurus-search-local": "^0.44.4",
+    "@docusaurus/core": "3.5.2",
+    "@docusaurus/plugin-client-redirects": "3.5.2",
+    "@docusaurus/preset-classic": "3.5.2",
+    "@easyops-cn/docusaurus-search-local": "^0.44.5",
     "@mdx-js/react": "^3.0.1",
     "cheerio": "1.0.0-rc.12",
     "clsx": "^2.1.1",

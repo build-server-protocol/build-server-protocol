@@ -1,6 +1,6 @@
-load("@rules_multirun//:defs.bzl", "command")
 load("@aspect_bazel_lib//lib:run_binary.bzl", "run_binary")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@rules_multirun//:defs.bzl", "command")
 
 def library_generator(name, gen_tool, out_dir, **kwargs):
     run_binary(

@@ -1,9 +1,9 @@
-load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("@bazel_sonatype//:defs.bzl", "sonatype_java_export")
+load("@bazel_sonatype//private/rules:sonatype_publish.bzl", "sonatype_publish")
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library")
 load("@rules_jvm_external//:defs.bzl", "javadoc", "pom_file")
 load("@rules_jvm_external//private/rules:maven_project_jar.bzl", "maven_project_jar")
-load("@bazel_sonatype//private/rules:sonatype_publish.bzl", "sonatype_publish")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 SCALA_RULES_STDLIBS = [
     "@io_bazel_rules_scala_scala_library//:io_bazel_rules_scala_scala_library",

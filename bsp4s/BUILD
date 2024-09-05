@@ -1,6 +1,6 @@
-load("//tools/rules/scala:scala_export.bzl", "sonatype_scala_export")
-load("//tools/rules/generator:generator.bzl", "library_generator")
 load("//:version.bzl", "BSP_VERSION")
+load("//tools/rules/generator:generator.bzl", "library_generator")
+load("//tools/rules/scala:scala_export.bzl", "sonatype_scala_export")
 
 library_generator(
     name = "generate-bsp4s",

@@ -1,12 +1,11 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-
 # Needed until Bazel 7 allows MODULE.bazel to directly call repository rules
 load(
     "@aspect_rules_lint//format:repositories.bzl",
     "fetch_java_format",
     "fetch_ktfmt",
 )
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 fetch_java_format()
 
