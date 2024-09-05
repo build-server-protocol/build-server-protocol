@@ -81,6 +81,15 @@ public interface BuildServer {
   CompletableFuture<InverseSourcesResult> buildTargetInverseSources(InverseSourcesParams params);
 
   /**
+   * The wrapped sources request is sent from the client to the server to queryfor the list of build
+   * targets containing wrapped sources. Wrapped sources are script sources that are wrapped by the
+   * build tool with some top and bottom wrappers.
+   * The server communicates during the initialize handshake whether this method is supported or not.
+   */
+  @JsonRequest("buildTarget/wrappedSources")
+  CompletableFuture<WrappedSourcesResult> buildTargetWrappedSources(WrappedSourcesParams params);
+
+  /**
    * The build target dependency sources request is sent from the client to the server to query for
    * the sources of build target dependencies that are external to the workspace. The dependency
    * sources response must not include source files that belong to a build target within the

@@ -29,6 +29,7 @@ trait Bsp4jGenerators {
     testProvider <- genTestProvider.nullable
     debugProvider <- genDebugProvider.nullable
     inverseSourcesProvider <- BoxedGen.boolean.nullable
+    wrappedSourcesProvider <- BoxedGen.boolean.nullable
     dependencySourcesProvider <- BoxedGen.boolean.nullable
     dependencyModulesProvider <- BoxedGen.boolean.nullable
     resourcesProvider <- BoxedGen.boolean.nullable
@@ -40,6 +41,7 @@ trait Bsp4jGenerators {
     capabilities.setTestProvider(testProvider)
     capabilities.setDebugProvider(debugProvider)
     capabilities.setInverseSourcesProvider(inverseSourcesProvider)
+    capabilities.setWrappedSourcesProvider(wrappedSourcesProvider)
     capabilities.setDependencySourcesProvider(dependencySourcesProvider)
     capabilities.setResourcesProvider(resourcesProvider)
     capabilities.setBuildTargetChangedProvider(buildTargetChangedProvider)

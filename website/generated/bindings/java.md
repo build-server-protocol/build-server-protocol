@@ -157,6 +157,7 @@ class MyBuildServer extends BuildServer {
   def buildTargetDependencySources(params: DependencySourcesParams): CompletableFuture[DependencySourcesResult] = ???
   def buildTargetDependencyModules(params: DependencyModulesParams): CompletableFuture[DependencyModulesResult] = ???
   def buildTargetInverseSources(params: InverseSourcesParams): CompletableFuture[InverseSourcesResult] = ???
+  def buildTargetWrappedSources(params: WrappedSourcesParams): CompletableFuture[WrappedSourcesResult] = ???
   def buildTargetResources(params: ResourcesParams): CompletableFuture[ResourcesResult] = ???
   def buildTargetOutputPaths(params: OutputPathsParams): CompletableFuture[OutputPathsResult] = ???
   def buildTargetRun(params: RunParams): CompletableFuture[RunResult] = ???
