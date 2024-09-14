@@ -8,12 +8,12 @@ The following section contains Java-specific extensions to the build server
 protocol.
 
 ## BSP version
-
 `2.2.0`
 
 ## BSP Server remote interface
 
 ### BuildTargetJavacOptions: request
+
 
 The build target javac options request is sent from the client to the server to
 query for the list of compiler options necessary to compile in a given list of
@@ -25,6 +25,8 @@ targets.
 
 #### JavacOptionsParams
 
+
+
 ```ts
 export interface JavacOptionsParams {
   targets: BuildTargetIdentifier[];
@@ -33,6 +35,8 @@ export interface JavacOptionsParams {
 
 #### JavacOptionsResult
 
+
+
 ```ts
 export interface JavacOptionsResult {
   items: JavacOptionsItem[];
@@ -40,6 +44,8 @@ export interface JavacOptionsResult {
 ```
 
 #### JavacOptionsItem
+
+
 
 ```ts
 export interface JavacOptionsItem {
@@ -60,3 +66,5 @@ export interface JavacOptionsItem {
   classDirectory: string;
 }
 ```
+
+

@@ -7,7 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class ScalaTestClassesParams {
-  @NonNull private List<BuildTargetIdentifier> targets;
+  @NonNull
+  private List<BuildTargetIdentifier> targets;
 
   private String originId;
 
@@ -42,16 +43,23 @@ public class ScalaTestClassesParams {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ScalaTestClassesParams other = (ScalaTestClassesParams) obj;
     if (this.targets == null) {
-      if (other.targets != null) return false;
-    } else if (!this.targets.equals(other.targets)) return false;
+      if (other.targets != null)
+        return false;
+    } else if (!this.targets.equals(other.targets))
+      return false;
     if (this.originId == null) {
-      if (other.originId != null) return false;
-    } else if (!this.originId.equals(other.originId)) return false;
+      if (other.originId != null)
+        return false;
+    } else if (!this.originId.equals(other.originId))
+      return false;
     return true;
   }
 
@@ -59,7 +67,7 @@ public class ScalaTestClassesParams {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
-    return prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
+    result = prime * result + ((this.targets== null) ? 0 : this.targets.hashCode());
+    return prime * result + ((this.originId== null) ? 0 : this.originId.hashCode());
   }
 }

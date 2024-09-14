@@ -6,3 +6,4 @@ public class RustDepKind {
   public static final String NORMAL = "normal";
   public static final String UNCLASSIFIED = "unclassified";
 }
+

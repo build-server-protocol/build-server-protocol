@@ -7,7 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class ScalacOptionsParams {
-  @NonNull private List<BuildTargetIdentifier> targets;
+  @NonNull
+  private List<BuildTargetIdentifier> targets;
 
   public ScalacOptionsParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
@@ -31,18 +32,23 @@ public class ScalacOptionsParams {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ScalacOptionsParams other = (ScalacOptionsParams) obj;
     if (this.targets == null) {
-      if (other.targets != null) return false;
-    } else if (!this.targets.equals(other.targets)) return false;
+      if (other.targets != null)
+        return false;
+    } else if (!this.targets.equals(other.targets))
+      return false;
     return true;
   }
 
   @Override
   public int hashCode() {
-    return 31 * 1 + ((this.targets == null) ? 0 : this.targets.hashCode());
+    return 31 * 1 + ((this.targets== null) ? 0 : this.targets.hashCode());
   }
 }

@@ -9,18 +9,17 @@ protocol. This extension allows BSP clients to provide language support for sbt
 build files.
 
 ## BSP version
-
 `2.2.0`
 
 ## BuildTargetData kinds
 
 ### SbtBuildTarget
-
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"sbt"`.
 
 #### SbtBuildTarget
+
 
 `SbtBuildTarget` is a basic data structure that contains sbt-specific metadata
 for providing editor support for sbt build files.
@@ -50,3 +49,5 @@ export interface SbtBuildTarget {
   children: BuildTargetIdentifier[];
 }
 ```
+
+

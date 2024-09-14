@@ -8,3 +8,4 @@ public class BuildTargetDataKind {
   public static final String SBT = "sbt";
   public static final String SCALA = "scala";
 }
+

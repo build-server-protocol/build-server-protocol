@@ -6,29 +6,31 @@ import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
 import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
-/** `RustTarget` contains data of the target as defined in Cargo metadata. */
+/**
+ * `RustTarget` contains data of the target as defined in Cargo metadata.
+ */
 @SuppressWarnings("all")
 public class RustTarget {
-  @NonNull private String name;
+  @NonNull
+  private String name;
 
-  @NonNull private String crateRootUrl;
+  @NonNull
+  private String crateRootUrl;
 
-  @NonNull private RustTargetKind kind;
+  @NonNull
+  private RustTargetKind kind;
 
   private List<RustCrateType> crateTypes;
 
-  @NonNull private String edition;
+  @NonNull
+  private String edition;
 
-  @NonNull private Boolean doctest;
+  @NonNull
+  private Boolean doctest;
 
   private Set<String> requiredFeatures;
 
-  public RustTarget(
-      @NonNull final String name,
-      @NonNull final String crateRootUrl,
-      @NonNull final RustTargetKind kind,
-      @NonNull final String edition,
-      @NonNull final Boolean doctest) {
+  public RustTarget(@NonNull final String name, @NonNull final String crateRootUrl, @NonNull final RustTargetKind kind, @NonNull final String edition, @NonNull final Boolean doctest) {
     this.name = name;
     this.crateRootUrl = crateRootUrl;
     this.kind = kind;
@@ -112,31 +114,48 @@ public class RustTarget {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     RustTarget other = (RustTarget) obj;
     if (this.name == null) {
-      if (other.name != null) return false;
-    } else if (!this.name.equals(other.name)) return false;
+      if (other.name != null)
+        return false;
+    } else if (!this.name.equals(other.name))
+      return false;
     if (this.crateRootUrl == null) {
-      if (other.crateRootUrl != null) return false;
-    } else if (!this.crateRootUrl.equals(other.crateRootUrl)) return false;
+      if (other.crateRootUrl != null)
+        return false;
+    } else if (!this.crateRootUrl.equals(other.crateRootUrl))
+      return false;
     if (this.kind == null) {
-      if (other.kind != null) return false;
-    } else if (!this.kind.equals(other.kind)) return false;
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.crateTypes == null) {
-      if (other.crateTypes != null) return false;
-    } else if (!this.crateTypes.equals(other.crateTypes)) return false;
+      if (other.crateTypes != null)
+        return false;
+    } else if (!this.crateTypes.equals(other.crateTypes))
+      return false;
     if (this.edition == null) {
-      if (other.edition != null) return false;
-    } else if (!this.edition.equals(other.edition)) return false;
+      if (other.edition != null)
+        return false;
+    } else if (!this.edition.equals(other.edition))
+      return false;
     if (this.doctest == null) {
-      if (other.doctest != null) return false;
-    } else if (!this.doctest.equals(other.doctest)) return false;
+      if (other.doctest != null)
+        return false;
+    } else if (!this.doctest.equals(other.doctest))
+      return false;
     if (this.requiredFeatures == null) {
-      if (other.requiredFeatures != null) return false;
-    } else if (!this.requiredFeatures.equals(other.requiredFeatures)) return false;
+      if (other.requiredFeatures != null)
+        return false;
+    } else if (!this.requiredFeatures.equals(other.requiredFeatures))
+      return false;
     return true;
   }
 
@@ -144,13 +163,12 @@ public class RustTarget {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-    result = prime * result + ((this.crateRootUrl == null) ? 0 : this.crateRootUrl.hashCode());
-    result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    result = prime * result + ((this.crateTypes == null) ? 0 : this.crateTypes.hashCode());
-    result = prime * result + ((this.edition == null) ? 0 : this.edition.hashCode());
-    result = prime * result + ((this.doctest == null) ? 0 : this.doctest.hashCode());
-    return prime * result
-        + ((this.requiredFeatures == null) ? 0 : this.requiredFeatures.hashCode());
+    result = prime * result + ((this.name== null) ? 0 : this.name.hashCode());
+    result = prime * result + ((this.crateRootUrl== null) ? 0 : this.crateRootUrl.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.crateTypes== null) ? 0 : this.crateTypes.hashCode());
+    result = prime * result + ((this.edition== null) ? 0 : this.edition.hashCode());
+    result = prime * result + ((this.doctest== null) ? 0 : this.doctest.hashCode());
+    return prime * result + ((this.requiredFeatures== null) ? 0 : this.requiredFeatures.hashCode());
   }
 }

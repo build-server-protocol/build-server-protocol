@@ -7,13 +7,13 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class OutputPathsItem {
-  @NonNull private BuildTargetIdentifier target;
+  @NonNull
+  private BuildTargetIdentifier target;
 
-  @NonNull private List<OutputPathItem> outputPaths;
+  @NonNull
+  private List<OutputPathItem> outputPaths;
 
-  public OutputPathsItem(
-      @NonNull final BuildTargetIdentifier target,
-      @NonNull final List<OutputPathItem> outputPaths) {
+  public OutputPathsItem(@NonNull final BuildTargetIdentifier target, @NonNull final List<OutputPathItem> outputPaths) {
     this.target = target;
     this.outputPaths = outputPaths;
   }
@@ -46,16 +46,23 @@ public class OutputPathsItem {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     OutputPathsItem other = (OutputPathsItem) obj;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     if (this.outputPaths == null) {
-      if (other.outputPaths != null) return false;
-    } else if (!this.outputPaths.equals(other.outputPaths)) return false;
+      if (other.outputPaths != null)
+        return false;
+    } else if (!this.outputPaths.equals(other.outputPaths))
+      return false;
     return true;
   }
 
@@ -63,7 +70,7 @@ public class OutputPathsItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-    return prime * result + ((this.outputPaths == null) ? 0 : this.outputPaths.hashCode());
+    result = prime * result + ((this.target== null) ? 0 : this.target.hashCode());
+    return prime * result + ((this.outputPaths== null) ? 0 : this.outputPaths.hashCode());
   }
 }

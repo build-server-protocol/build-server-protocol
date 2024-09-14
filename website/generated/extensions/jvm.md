@@ -8,12 +8,12 @@ The following section contains JVM-specific extensions to the build server
 protocol.
 
 ## BSP version
-
 `2.2.0`
 
 ## BSP Server remote interface
 
 ### BuildTargetJvmTestEnvironment: request
+
 
 The JVM test environment request is sent from the client to the server in order to
 gather information required to launch a Java process. This is useful when the
@@ -30,6 +30,8 @@ after all the targets are compiled.
 
 #### JvmTestEnvironmentParams
 
+
+
 ```ts
 export interface JvmTestEnvironmentParams {
   targets: BuildTargetIdentifier[];
@@ -40,6 +42,8 @@ export interface JvmTestEnvironmentParams {
 
 #### JvmTestEnvironmentResult
 
+
+
 ```ts
 export interface JvmTestEnvironmentResult {
   items: JvmEnvironmentItem[];
@@ -47,6 +51,8 @@ export interface JvmTestEnvironmentResult {
 ```
 
 #### JvmEnvironmentItem
+
+
 
 ```ts
 export interface JvmEnvironmentItem {
@@ -66,6 +72,8 @@ export interface JvmEnvironmentItem {
 
 #### JvmMainClass
 
+
+
 ```ts
 export interface JvmMainClass {
   className: string;
@@ -76,6 +84,7 @@ export interface JvmMainClass {
 
 ### BuildTargetJvmRunEnvironment: request
 
+
 Similar to `buildTarget/jvmTestEnvironment`, but returns environment
 that should be used for regular exection of main classes, not for testing
 
@@ -84,6 +93,8 @@ that should be used for regular exection of main classes, not for testing
 - result: `JvmRunEnvironmentResult`
 
 #### JvmRunEnvironmentParams
+
+
 
 ```ts
 export interface JvmRunEnvironmentParams {
@@ -95,6 +106,8 @@ export interface JvmRunEnvironmentParams {
 
 #### JvmRunEnvironmentResult
 
+
+
 ```ts
 export interface JvmRunEnvironmentResult {
   items: JvmEnvironmentItem[];
@@ -102,6 +115,7 @@ export interface JvmRunEnvironmentResult {
 ```
 
 ### BuildTargetJvmCompileClasspath: request
+
 
 The build target classpath request is sent from the client to the server to
 query the target for its compile classpath.
@@ -112,6 +126,8 @@ query the target for its compile classpath.
 
 #### JvmCompileClasspathParams
 
+
+
 ```ts
 export interface JvmCompileClasspathParams {
   targets: BuildTargetIdentifier[];
@@ -120,6 +136,8 @@ export interface JvmCompileClasspathParams {
 
 #### JvmCompileClasspathResult
 
+
+
 ```ts
 export interface JvmCompileClasspathResult {
   items: JvmCompileClasspathItem[];
@@ -127,6 +145,8 @@ export interface JvmCompileClasspathResult {
 ```
 
 #### JvmCompileClasspathItem
+
+
 
 ```ts
 export interface JvmCompileClasspathItem {
@@ -143,12 +163,12 @@ export interface JvmCompileClasspathItem {
 ## BuildTargetData kinds
 
 ### JvmBuildTarget
-
 This structure is embedded in
 the `data?: BuildTargetData` field, when
 the `dataKind` field contains `"jvm"`.
 
 #### JvmBuildTarget
+
 
 `JvmBuildTarget` is a basic data structure that contains jvm-specific
 metadata, specifically JDK reference.
@@ -168,21 +188,21 @@ export interface JvmBuildTarget {
 ## SourceItemData kinds
 
 ### JvmSourceItemData
-
 This structure is embedded in
 the `data?: SourceItemData` field, when
 the `dataKind` field contains `"jvm"`.
 
 #### JvmSourceItemData
 
+
 `JvmSourceItemData` contains JVM-specific metadata for a source item.
 
 ```ts
 export interface JvmSourceItemData {
   /** The package name associated with the source item.
-   *
+   * 
    * If the source item is a file, this value must match the package declaration within the file.
-   *
+   * 
    * If the source item is a directory, the package name can be empty if the directory is at the package root,
    * such as in a Maven structure (e.g., source directories like `src/main/java` and `src/test/java`).
    * In non-conventional directory structures, the package name for the directory should be set to the package prefix
@@ -196,3 +216,5 @@ export interface JvmSourceItemData {
   packageName?: string;
 }
 ```
+
+

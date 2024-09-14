@@ -4,12 +4,16 @@ import org.eclipse.lsp4j.jsonrpc.util.Preconditions;
 import org.eclipse.lsp4j.jsonrpc.util.ToStringBuilder;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
-/** A textual edit applicable to a text document. */
+/**
+ * A textual edit applicable to a text document.
+ */
 @SuppressWarnings("all")
 public class ScalaTextEdit {
-  @NonNull private Range range;
+  @NonNull
+  private Range range;
 
-  @NonNull private String newText;
+  @NonNull
+  private String newText;
 
   public ScalaTextEdit(@NonNull final Range range, @NonNull final String newText) {
     this.range = range;
@@ -44,16 +48,23 @@ public class ScalaTextEdit {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     ScalaTextEdit other = (ScalaTextEdit) obj;
     if (this.range == null) {
-      if (other.range != null) return false;
-    } else if (!this.range.equals(other.range)) return false;
+      if (other.range != null)
+        return false;
+    } else if (!this.range.equals(other.range))
+      return false;
     if (this.newText == null) {
-      if (other.newText != null) return false;
-    } else if (!this.newText.equals(other.newText)) return false;
+      if (other.newText != null)
+        return false;
+    } else if (!this.newText.equals(other.newText))
+      return false;
     return true;
   }
 
@@ -61,7 +72,7 @@ public class ScalaTextEdit {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.range == null) ? 0 : this.range.hashCode());
-    return prime * result + ((this.newText == null) ? 0 : this.newText.hashCode());
+    result = prime * result + ((this.range== null) ? 0 : this.range.hashCode());
+    return prime * result + ((this.newText== null) ? 0 : this.newText.hashCode());
   }
 }

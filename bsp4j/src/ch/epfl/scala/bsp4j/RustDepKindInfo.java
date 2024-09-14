@@ -6,7 +6,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class RustDepKindInfo {
-  @NonNull private String kind;
+  @NonNull
+  private String kind;
 
   private String target;
 
@@ -41,16 +42,23 @@ public class RustDepKindInfo {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     RustDepKindInfo other = (RustDepKindInfo) obj;
     if (this.kind == null) {
-      if (other.kind != null) return false;
-    } else if (!this.kind.equals(other.kind)) return false;
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.target == null) {
-      if (other.target != null) return false;
-    } else if (!this.target.equals(other.target)) return false;
+      if (other.target != null)
+        return false;
+    } else if (!this.target.equals(other.target))
+      return false;
     return true;
   }
 
@@ -58,7 +66,7 @@ public class RustDepKindInfo {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    return prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    return prime * result + ((this.target== null) ? 0 : this.target.hashCode());
   }
 }

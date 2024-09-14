@@ -7,7 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class JvmCompileClasspathResult {
-  @NonNull private List<JvmCompileClasspathItem> items;
+  @NonNull
+  private List<JvmCompileClasspathItem> items;
 
   public JvmCompileClasspathResult(@NonNull final List<JvmCompileClasspathItem> items) {
     this.items = items;
@@ -31,18 +32,23 @@ public class JvmCompileClasspathResult {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     JvmCompileClasspathResult other = (JvmCompileClasspathResult) obj;
     if (this.items == null) {
-      if (other.items != null) return false;
-    } else if (!this.items.equals(other.items)) return false;
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
     return true;
   }
 
   @Override
   public int hashCode() {
-    return 31 * 1 + ((this.items == null) ? 0 : this.items.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

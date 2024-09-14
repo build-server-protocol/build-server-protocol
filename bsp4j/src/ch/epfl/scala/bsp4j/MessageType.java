@@ -5,9 +5,10 @@ import org.eclipse.lsp4j.jsonrpc.json.adapters.EnumTypeAdapter;
 
 @JsonAdapter(EnumTypeAdapter.Factory.class)
 public enum MessageType {
-  ERROR(1),
-  WARNING(2),
-  INFO(3),
+
+ERROR(1),
+WARNING(2),
+INFO(3),
   LOG(4);
 
   private final int value;
@@ -23,7 +24,8 @@ public enum MessageType {
   public static MessageType forValue(int value) {
     MessageType[] allValues = MessageType.values();
     if (value < 1 || value > allValues.length)
-      throw new IllegalArgumentException("Illegal enum value: " + value);
+    throw new IllegalArgumentException("Illegal enum value: " + value);
     return allValues[value - 1];
   }
 }
+

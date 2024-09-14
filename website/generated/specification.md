@@ -106,12 +106,12 @@ server like Dotty IDE). It is up to the client to decide when to start
 (process-wise) and when to shutdown a server.
 
 ## BSP version
-
 `2.2.0`
 
 ## Common shapes
 
 #### Integer
+
 
 An integer is a 32-bit signed integer ranging from -2^31 to (2^31)-1 (inclusive).
 
@@ -121,6 +121,7 @@ export type Integer = number;
 
 #### Long
 
+
 A long is a 64-bit signed integer ranging from -2^63 to (2^63)-1 (inclusive).
 
 ```ts
@@ -129,15 +130,16 @@ export type Long = number;
 
 #### BuildTarget
 
+
 Build target contains metadata about an artifact (for example library, test, or binary artifact). Using vocabulary of other build tools:
 
-- sbt: a build target is a combined project + config. Example:
-- a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
-- a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
-- a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
-- a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
-- Pants: a pants target corresponds one-to-one with a BuildTarget
-- Bazel: a bazel target corresponds one-to-one with a BuildTarget
+* sbt: a build target is a combined project + config. Example:
+* a regular JVM project with main and test configurations will have 2 build targets, one for main and one for test.
+* a single configuration in a single project that contains both Java and Scala sources maps to one BuildTarget.
+* a project with crossScalaVersions 2.11 and 2.12 containing main and test configuration in each will have 4 build targets.
+* a Scala 2.11 and 2.12 cross-built project for Scala.js and the JVM with main and test configurations will have 8 build targets.
+* Pants: a pants target corresponds one-to-one with a BuildTarget
+* Bazel: a bazel target corresponds one-to-one with a BuildTarget
 
 The general idea is that the BuildTarget data structure should contain only information that is fast or cheap to compute.
 
@@ -187,6 +189,7 @@ export interface BuildTarget {
 
 #### BuildTargetIdentifier
 
+
 A unique identifier for a target, can use any URI-compatible encoding as long as it is unique within the workspace.
 Clients should not infer metadata out of the URI structure such as the path or query parameters, use `BuildTarget` instead.
 
@@ -199,6 +202,7 @@ export interface BuildTargetIdentifier {
 
 #### URI
 
+
 A resource identifier that is a valid URI according to rfc3986:
 https://tools.ietf.org/html/rfc3986
 
@@ -207,6 +211,7 @@ export type URI = string;
 ```
 
 #### BuildTargetTag
+
 
 A list of predefined tags that can be used to categorize build targets.
 
@@ -247,10 +252,12 @@ export namespace BuildTargetTag {
   /** Target contains source code for testing purposes, may have but does not
    * require the `canTest` capability. */
   export const Test = "test";
+
 }
 ```
 
 #### LanguageId
+
 
 Language IDs are defined here
 https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem
@@ -260,6 +267,7 @@ export type LanguageId = string;
 ```
 
 #### BuildTargetCapabilities
+
 
 Clients can use these capabilities to notify users what BSP endpoints can and
 cannot be used and why.
@@ -282,6 +290,8 @@ export interface BuildTargetCapabilities {
 
 #### BuildTargetDataKind
 
+
+
 ```ts
 export type BuildTargetDataKind = string;
 
@@ -303,16 +313,20 @@ export namespace BuildTargetDataKind {
 
   /** `data` field must contain a ScalaBuildTarget object. */
   export const Scala = "scala";
+
 }
 ```
 
 #### BuildTargetData
+
+
 
 ```ts
 export type BuildTargetData = any;
 ```
 
 #### OriginId
+
 
 Represents the identifier of a BSP request.
 
@@ -321,6 +335,7 @@ export type OriginId = string;
 ```
 
 #### TaskId
+
 
 The Task Id allows clients to _uniquely_ identify a BSP task and establish a client-parent relationship with another task id.
 
@@ -342,11 +357,14 @@ export interface TaskId {
 
 #### Identifier
 
+
+
 ```ts
 export type Identifier = string;
 ```
 
 #### StatusCode
+
 
 Included in notifications of tasks or requests to signal the completion state.
 
@@ -360,24 +378,29 @@ export enum StatusCode {
 
   /** Execution was cancelled. */
   Cancelled = 3,
+
 }
 ```
 
 #### EnvironmentVariables
 
+
+
 ```ts
 export type EnvironmentVariables = Map<string, string>;
 ```
+
 
 ## BSP Server remote interface
 
 ### BuildInitialize: request
 
+
 Like the language server protocol, the initialize request is sent as the first request from the client to the server.
 If the server receives a request or notification before the initialize request it should act as follows:
 
-- For a request the response should be an error with code: -32002. The message can be picked by the server.
-- Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
+* For a request the response should be an error with code: -32002. The message can be picked by the server.
+* Notifications should be dropped, except for the exit notification. This will allow the exit of a server without an initialize request.
 
 Until the server has responded to the initialize request with an InitializeBuildResult, the client must not send any additional
 requests or notifications to the server.
@@ -387,6 +410,8 @@ requests or notifications to the server.
 - result: `InitializeBuildResult`
 
 #### InitializeBuildParams
+
+
 
 ```ts
 export interface InitializeBuildParams {
@@ -415,6 +440,8 @@ export interface InitializeBuildParams {
 
 #### BuildClientCapabilities
 
+
+
 ```ts
 export interface BuildClientCapabilities {
   /** The languages that this client supports.
@@ -432,19 +459,26 @@ export interface BuildClientCapabilities {
 
 #### InitializeBuildParamsDataKind
 
+
+
 ```ts
 export type InitializeBuildParamsDataKind = string;
 
-export namespace InitializeBuildParamsDataKind {}
+export namespace InitializeBuildParamsDataKind {
+}
 ```
 
 #### InitializeBuildParamsData
+
+
 
 ```ts
 export type InitializeBuildParamsData = any;
 ```
 
 #### InitializeBuildResult
+
+
 
 ```ts
 export interface InitializeBuildResult {
@@ -469,6 +503,7 @@ export interface InitializeBuildResult {
 ```
 
 #### BuildServerCapabilities
+
 
 The capabilities of the build server.
 Clients can use these capabilities to notify users what BSP endpoints can and
@@ -536,6 +571,8 @@ export interface BuildServerCapabilities {
 
 #### CompileProvider
 
+
+
 ```ts
 export interface CompileProvider {
   languageIds: LanguageId[];
@@ -543,6 +580,8 @@ export interface CompileProvider {
 ```
 
 #### TestProvider
+
+
 
 ```ts
 export interface TestProvider {
@@ -552,6 +591,8 @@ export interface TestProvider {
 
 #### RunProvider
 
+
+
 ```ts
 export interface RunProvider {
   languageIds: LanguageId[];
@@ -559,6 +600,8 @@ export interface RunProvider {
 ```
 
 #### DebugProvider
+
+
 
 ```ts
 export interface DebugProvider {
@@ -568,19 +611,25 @@ export interface DebugProvider {
 
 #### InitializeBuildResultDataKind
 
+
+
 ```ts
 export type InitializeBuildResultDataKind = string;
 
-export namespace InitializeBuildResultDataKind {}
+export namespace InitializeBuildResultDataKind {
+}
 ```
 
 #### InitializeBuildResultData
+
+
 
 ```ts
 export type InitializeBuildResultData = any;
 ```
 
 ### OnBuildInitialized: notification
+
 
 Like the language server protocol, the initialized notification is sent from the
 client to the server after the client received the result of the initialize
@@ -593,6 +642,7 @@ The initialized notification may only be sent once.
 
 ### BuildShutdown: request
 
+
 Like the language server protocol, the shutdown build request is sent from the
 client to the server. It asks the server to shut down, but to not exit
 (otherwise the response might not be delivered correctly to the client). There
@@ -602,12 +652,14 @@ is a separate exit notification that asks the server to exit.
 
 ### OnBuildExit: notification
 
+
 Like the language server protocol, a notification to ask the server to exit its process. The server should exit with success code 0
 if the shutdown request has been received before; otherwise with error code 1.
 
 - method: `build/exit`
 
 ### WorkspaceBuildTargets: request
+
 
 The workspace build targets request is sent from the client to the server to ask
 for the list of all available build targets in the workspace.
@@ -616,6 +668,8 @@ for the list of all available build targets in the workspace.
 - result: `WorkspaceBuildTargetsResult`
 
 #### WorkspaceBuildTargetsResult
+
+
 
 ```ts
 export interface WorkspaceBuildTargetsResult {
@@ -627,6 +681,7 @@ export interface WorkspaceBuildTargetsResult {
 
 ### WorkspaceReload: request
 
+
 The `reload` request is sent from the client to instruct the build server to reload
 the build configuration. This request should be supported by build tools that keep
 their state in memory. If the `reload` request returns with an error, it's expected
@@ -635,6 +690,7 @@ that other requests respond with the previously known "good" state.
 - method: `workspace/reload`
 
 ### BuildTargetSources: request
+
 
 The build target sources request is sent from the client to the server to query
 for the list of text documents and directories that are belong to a build
@@ -647,6 +703,8 @@ workspace, see `buildTarget/dependencySources`.
 
 #### SourcesParams
 
+
+
 ```ts
 export interface SourcesParams {
   targets: BuildTargetIdentifier[];
@@ -655,6 +713,8 @@ export interface SourcesParams {
 
 #### SourcesResult
 
+
+
 ```ts
 export interface SourcesResult {
   items: SourcesItem[];
@@ -662,6 +722,8 @@ export interface SourcesResult {
 ```
 
 #### SourcesItem
+
+
 
 ```ts
 export interface SourcesItem {
@@ -677,6 +739,8 @@ export interface SourcesItem {
 ```
 
 #### SourceItem
+
+
 
 ```ts
 export interface SourceItem {
@@ -702,6 +766,8 @@ export interface SourceItem {
 
 #### SourceItemKind
 
+
+
 ```ts
 export enum SourceItemKind {
   /** The source item references a normal file. */
@@ -709,10 +775,13 @@ export enum SourceItemKind {
 
   /** The source item references a directory. */
   Directory = 2,
+
 }
 ```
 
 #### SourceItemDataKind
+
+
 
 ```ts
 export type SourceItemDataKind = string;
@@ -720,16 +789,20 @@ export type SourceItemDataKind = string;
 export namespace SourceItemDataKind {
   /** `data` field must contain a JvmSourceItemData object. */
   export const Jvm = "jvm";
+
 }
 ```
 
 #### SourceItemData
+
+
 
 ```ts
 export type SourceItemData = any;
 ```
 
 ### BuildTargetInverseSources: request
+
 
 The inverse sources request is sent from the client to the server to query for
 the list of build targets containing a text document. The server communicates
@@ -743,6 +816,8 @@ works for text documents and not directories.
 
 #### InverseSourcesParams
 
+
+
 ```ts
 export interface InverseSourcesParams {
   textDocument: TextDocumentIdentifier;
@@ -750,6 +825,8 @@ export interface InverseSourcesParams {
 ```
 
 #### TextDocumentIdentifier
+
+
 
 ```ts
 export interface TextDocumentIdentifier {
@@ -760,6 +837,8 @@ export interface TextDocumentIdentifier {
 
 #### InverseSourcesResult
 
+
+
 ```ts
 export interface InverseSourcesResult {
   targets: BuildTargetIdentifier[];
@@ -767,6 +846,7 @@ export interface InverseSourcesResult {
 ```
 
 ### BuildTargetDependencySources: request
+
 
 The build target dependency sources request is sent from the client to the
 server to query for the sources of build target dependencies that are external
@@ -784,6 +864,8 @@ dependency sources.
 
 #### DependencySourcesParams
 
+
+
 ```ts
 export interface DependencySourcesParams {
   targets: BuildTargetIdentifier[];
@@ -792,6 +874,8 @@ export interface DependencySourcesParams {
 
 #### DependencySourcesResult
 
+
+
 ```ts
 export interface DependencySourcesResult {
   items: DependencySourcesItem[];
@@ -799,6 +883,8 @@ export interface DependencySourcesResult {
 ```
 
 #### DependencySourcesItem
+
+
 
 ```ts
 export interface DependencySourcesItem {
@@ -813,6 +899,7 @@ export interface DependencySourcesItem {
 
 ### BuildTargetDependencyModules: request
 
+
 The build target dependency modules request is sent from the client to the
 server to query for the libraries of build target dependencies that are external
 to the workspace including meta information about library and their sources.
@@ -824,6 +911,8 @@ It's an extended version of `buildTarget/sources`.
 
 #### DependencyModulesParams
 
+
+
 ```ts
 export interface DependencyModulesParams {
   targets: BuildTargetIdentifier[];
@@ -832,6 +921,8 @@ export interface DependencyModulesParams {
 
 #### DependencyModulesResult
 
+
+
 ```ts
 export interface DependencyModulesResult {
   items: DependencyModulesItem[];
@@ -839,6 +930,8 @@ export interface DependencyModulesResult {
 ```
 
 #### DependencyModulesItem
+
+
 
 ```ts
 export interface DependencyModulesItem {
@@ -849,6 +942,8 @@ export interface DependencyModulesItem {
 ```
 
 #### DependencyModule
+
+
 
 ```ts
 export interface DependencyModule {
@@ -869,22 +964,28 @@ export interface DependencyModule {
 
 #### DependencyModuleDataKind
 
+
+
 ```ts
 export type DependencyModuleDataKind = string;
 
 export namespace DependencyModuleDataKind {
   /** `data` field must contain a MavenDependencyModule object. */
   export const Maven = "maven";
+
 }
 ```
 
 #### DependencyModuleData
+
+
 
 ```ts
 export type DependencyModuleData = any;
 ```
 
 ### BuildTargetResources: request
+
 
 The build target resources request is sent from the client to the server to
 query for the list of resources of a given list of build targets.
@@ -902,6 +1003,8 @@ view, for example.
 
 #### ResourcesParams
 
+
+
 ```ts
 export interface ResourcesParams {
   targets: BuildTargetIdentifier[];
@@ -910,6 +1013,8 @@ export interface ResourcesParams {
 
 #### ResourcesResult
 
+
+
 ```ts
 export interface ResourcesResult {
   items: ResourcesItem[];
@@ -917,6 +1022,8 @@ export interface ResourcesResult {
 ```
 
 #### ResourcesItem
+
+
 
 ```ts
 export interface ResourcesItem {
@@ -928,6 +1035,7 @@ export interface ResourcesItem {
 ```
 
 ### BuildTargetOutputPaths: request
+
 
 The build target output paths request is sent from the client to the server to
 query for the list of output paths of a given list of build targets.
@@ -942,6 +1050,8 @@ during the initialize handshake whether this method is supported or not.
 
 #### OutputPathsParams
 
+
+
 ```ts
 export interface OutputPathsParams {
   targets: BuildTargetIdentifier[];
@@ -950,6 +1060,8 @@ export interface OutputPathsParams {
 
 #### OutputPathsResult
 
+
+
 ```ts
 export interface OutputPathsResult {
   items: OutputPathsItem[];
@@ -957,6 +1069,8 @@ export interface OutputPathsResult {
 ```
 
 #### OutputPathsItem
+
+
 
 ```ts
 export interface OutputPathsItem {
@@ -969,6 +1083,8 @@ export interface OutputPathsItem {
 ```
 
 #### OutputPathItem
+
+
 
 ```ts
 export interface OutputPathItem {
@@ -984,6 +1100,8 @@ export interface OutputPathItem {
 
 #### OutputPathItemKind
 
+
+
 ```ts
 export enum OutputPathItemKind {
   /** The output path item references a normal file. */
@@ -991,10 +1109,12 @@ export enum OutputPathItemKind {
 
   /** The output path item references a directory. */
   Directory = 2,
+
 }
 ```
 
 ### BuildTargetCompile: request
+
 
 The compile build target request is sent from the client to the server to
 compile the given list of build targets. The server communicates during the
@@ -1007,6 +1127,8 @@ that all workspace sources typecheck correctly and are up-to-date.
 - result: `CompileResult`
 
 #### CompileParams
+
+
 
 ```ts
 export interface CompileParams {
@@ -1023,6 +1145,8 @@ export interface CompileParams {
 ```
 
 #### CompileResult
+
+
 
 ```ts
 export interface CompileResult {
@@ -1043,19 +1167,25 @@ export interface CompileResult {
 
 #### CompileResultDataKind
 
+
+
 ```ts
 export type CompileResultDataKind = string;
 
-export namespace CompileResultDataKind {}
+export namespace CompileResultDataKind {
+}
 ```
 
 #### CompileResultData
+
+
 
 ```ts
 export type CompileResultData = any;
 ```
 
 ### BuildTargetRun: request
+
 
 The run request is sent from the client to the server to run a build target. The
 server communicates during the initialize handshake whether this method is
@@ -1088,6 +1218,8 @@ If the client wishes to send input to the running process, it can do so by sendi
 
 #### RunParams
 
+
+
 ```ts
 export interface RunParams {
   /** The build target to run. */
@@ -1117,22 +1249,29 @@ export interface RunParams {
 
 #### RunParamsDataKind
 
+
+
 ```ts
 export type RunParamsDataKind = string;
 
 export namespace RunParamsDataKind {
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
+
 }
 ```
 
 #### RunParamsData
+
+
 
 ```ts
 export type RunParamsData = any;
 ```
 
 #### RunResult
+
+
 
 ```ts
 export interface RunResult {
@@ -1146,6 +1285,7 @@ export interface RunResult {
 
 ### BuildTargetTest: request
 
+
 The test build target request is sent from the client to the server to test the
 given list of build targets. The server communicates during the initialize
 handshake whether this method is supported or not.
@@ -1158,6 +1298,8 @@ this request as well.
 - result: `TestResult`
 
 #### TestParams
+
+
 
 ```ts
 export interface TestParams {
@@ -1188,6 +1330,8 @@ export interface TestParams {
 
 #### TestParamsDataKind
 
+
+
 ```ts
 export type TestParamsDataKind = string;
 
@@ -1200,16 +1344,21 @@ export namespace TestParamsDataKind {
 
   /** `data` field must contain a ScalaTestSuites object. */
   export const ScalaTestSuitesSelection = "scala-test-suites-selection";
+
 }
 ```
 
 #### TestParamsData
+
+
 
 ```ts
 export type TestParamsData = any;
 ```
 
 #### TestResult
+
+
 
 ```ts
 export interface TestResult {
@@ -1230,19 +1379,25 @@ export interface TestResult {
 
 #### TestResultDataKind
 
+
+
 ```ts
 export type TestResultDataKind = string;
 
-export namespace TestResultDataKind {}
+export namespace TestResultDataKind {
+}
 ```
 
 #### TestResultData
+
+
 
 ```ts
 export type TestResultData = any;
 ```
 
 ### DebugSessionStart: request
+
 
 The debug request is sent from the client to the server to debug build target(s). The
 server launches a [Microsoft DAP](https://microsoft.github.io/debug-adapter-protocol/) server
@@ -1253,6 +1408,8 @@ and returns a connection URI for the client to interact with.
 - result: `DebugSessionAddress`
 
 #### DebugSessionParams
+
+
 
 ```ts
 export interface DebugSessionParams {
@@ -1270,6 +1427,8 @@ export interface DebugSessionParams {
 
 #### DebugSessionParamsDataKind
 
+
+
 ```ts
 export type DebugSessionParamsDataKind = string;
 
@@ -1279,16 +1438,21 @@ export namespace DebugSessionParamsDataKind {
 
   /** `data` field must contain a ScalaMainClass object. */
   export const ScalaMainClass = "scala-main-class";
+
 }
 ```
 
 #### DebugSessionParamsData
+
+
 
 ```ts
 export type DebugSessionParamsData = any;
 ```
 
 #### DebugSessionAddress
+
+
 
 ```ts
 export interface DebugSessionAddress {
@@ -1298,6 +1462,7 @@ export interface DebugSessionAddress {
 ```
 
 ### BuildTargetCleanCache: request
+
 
 The clean cache request is sent from the client to the server to reset any state
 associated with a given build target. The state can live either in the build
@@ -1316,6 +1481,8 @@ The build tool defines the exact semantics of the clean cache request:
 
 #### CleanCacheParams
 
+
+
 ```ts
 export interface CleanCacheParams {
   /** The build targets to clean. */
@@ -1324,6 +1491,8 @@ export interface CleanCacheParams {
 ```
 
 #### CleanCacheResult
+
+
 
 ```ts
 export interface CleanCacheResult {
@@ -1339,6 +1508,7 @@ export interface CleanCacheResult {
 
 **Unstable** (may change in future versions)
 
+
 Notification sent from the client to the server when the user wants to send
 input to the stdin of the running target.
 
@@ -1348,6 +1518,8 @@ input to the stdin of the running target.
 #### ReadParams
 
 **Unstable** (may change in future versions)
+
+
 
 ```ts
 export interface ReadParams {
@@ -1368,6 +1540,7 @@ export interface ReadParams {
 
 ### OnBuildShowMessage: notification
 
+
 The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
 
 A build/showMessage notification is similar to LSP's window/showMessage, except for a few additions like id and originId.
@@ -1376,6 +1549,8 @@ A build/showMessage notification is similar to LSP's window/showMessage, except 
 - params: `ShowMessageParams`
 
 #### ShowMessageParams
+
+
 
 ```ts
 export interface ShowMessageParams {
@@ -1397,6 +1572,8 @@ export interface ShowMessageParams {
 
 #### MessageType
 
+
+
 ```ts
 export enum MessageType {
   /** An error message. */
@@ -1410,10 +1587,12 @@ export enum MessageType {
 
   /** A log message. */
   Log = 4,
+
 }
 ```
 
 ### OnBuildLogMessage: notification
+
 
 The log message notification is sent from a server to a client to ask the client to log a particular message in its console.
 
@@ -1423,6 +1602,8 @@ A build/logMessage notification is similar to LSP's window/logMessage, except fo
 - params: `LogMessageParams`
 
 #### LogMessageParams
+
+
 
 ```ts
 export interface LogMessageParams {
@@ -1444,6 +1625,7 @@ export interface LogMessageParams {
 
 ### OnBuildPublishDiagnostics: notification
 
+
 The Diagnostics notification are sent from the server to the client to signal results of validation runs.
 
 When reset is true, the client must clean all previous diagnostics associated with the same textDocument and
@@ -1463,6 +1645,8 @@ This field will be defined if the client defined it in the original request that
 - params: `PublishDiagnosticsParams`
 
 #### PublishDiagnosticsParams
+
+
 
 ```ts
 export interface PublishDiagnosticsParams {
@@ -1488,6 +1672,7 @@ export interface PublishDiagnosticsParams {
 ```
 
 #### Diagnostic
+
 
 Diagnostic is defined as it is in the LSP.
 
@@ -1532,6 +1717,8 @@ export interface Diagnostic {
 
 #### Range
 
+
+
 ```ts
 export interface Range {
   /** The range's start position. */
@@ -1544,13 +1731,15 @@ export interface Range {
 
 #### Position
 
+
+
 ```ts
 export interface Position {
   /** Line position in a document (zero-based). */
   line: Integer;
 
   /** Character offset on a line in a document (zero-based)
-   *
+   * 
    * If the character value is greater than the line length it defaults back
    * to the line length. */
   character: Integer;
@@ -1558,6 +1747,8 @@ export interface Position {
 ```
 
 #### DiagnosticSeverity
+
+
 
 ```ts
 export enum DiagnosticSeverity {
@@ -1572,10 +1763,12 @@ export enum DiagnosticSeverity {
 
   /** Reports a hint. */
   Hint = 4,
+
 }
 ```
 
 #### CodeDescription
+
 
 Structure to capture a description for an error code.
 
@@ -1588,24 +1781,28 @@ export interface CodeDescription {
 
 #### DiagnosticTag
 
+
+
 ```ts
 export type DiagnosticTag = number;
 
 export namespace DiagnosticTag {
   /** Unused or unnecessary code.
-   *
+   * 
    * Clients are allowed to render diagnostics with this tag faded out
    * instead of having an error squiggle. */
   export const Unnecessary = 1;
 
   /** Deprecated or obsolete code.
-   *
+   * 
    * Clients are allowed to rendered diagnostics with this tag strike through. */
   export const Deprecated = 2;
+
 }
 ```
 
 #### DiagnosticRelatedInformation
+
 
 Represents a related message and source code location for a diagnostic.
 This should be used to point to code locations that cause or are related to
@@ -1623,6 +1820,8 @@ export interface DiagnosticRelatedInformation {
 
 #### Location
 
+
+
 ```ts
 export interface Location {
   uri: URI;
@@ -1633,22 +1832,28 @@ export interface Location {
 
 #### DiagnosticDataKind
 
+
+
 ```ts
 export type DiagnosticDataKind = string;
 
 export namespace DiagnosticDataKind {
   /** `data` field must contain a ScalaDiagnostic object. */
   export const Scala = "scala";
+
 }
 ```
 
 #### DiagnosticData
+
+
 
 ```ts
 export type DiagnosticData = any;
 ```
 
 ### OnBuildTargetDidChange: notification
+
 
 The build target changed notification is sent from the server to the client to
 signal a change in a build target. The server communicates during the initialize
@@ -1659,6 +1864,8 @@ handshake whether this method is supported or not.
 
 #### DidChangeBuildTarget
 
+
+
 ```ts
 export interface DidChangeBuildTarget {
   changes: BuildTargetEvent[];
@@ -1666,6 +1873,8 @@ export interface DidChangeBuildTarget {
 ```
 
 #### BuildTargetEvent
+
+
 
 ```ts
 export interface BuildTargetEvent {
@@ -1685,6 +1894,7 @@ export interface BuildTargetEvent {
 
 #### BuildTargetEventKind
 
+
 The `BuildTargetEventKind` information can be used by clients to trigger
 reindexing or update the user interface with the new information.
 
@@ -1698,24 +1908,31 @@ export enum BuildTargetEventKind {
 
   /** The build target has been deleted. */
   Deleted = 3,
+
 }
 ```
 
 #### BuildTargetEventDataKind
 
+
+
 ```ts
 export type BuildTargetEventDataKind = string;
 
-export namespace BuildTargetEventDataKind {}
+export namespace BuildTargetEventDataKind {
+}
 ```
 
 #### BuildTargetEventData
+
+
 
 ```ts
 export type BuildTargetEventData = any;
 ```
 
 ### OnBuildTaskStart: notification
+
 
 The BSP server can inform the client on the execution state of any task in the
 build tool. The execution of some tasks, such as compilation or tests, must
@@ -1743,6 +1960,8 @@ request should reference the request's `originId` parent.
 
 #### TaskStartParams
 
+
+
 ```ts
 export interface TaskStartParams {
   /** Unique id of the task with optional reference to parent task id */
@@ -1768,6 +1987,7 @@ export interface TaskStartParams {
 
 #### TaskStartDataKind
 
+
 Task start notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
@@ -1787,16 +2007,20 @@ export namespace TaskStartDataKind {
 
   /** `data` field must contain a TestTask object. */
   export const TestTask = "test-task";
+
 }
 ```
 
 #### TaskStartData
+
+
 
 ```ts
 export type TaskStartData = any;
 ```
 
 ### OnBuildTaskProgress: notification
+
 
 After a `taskStart` and before `taskFinish` for a `taskId`, the server may send
 any number of progress notifications.
@@ -1805,6 +2029,8 @@ any number of progress notifications.
 - params: `TaskProgressParams`
 
 #### TaskProgressParams
+
+
 
 ```ts
 export interface TaskProgressParams {
@@ -1840,6 +2066,7 @@ export interface TaskProgressParams {
 
 #### TaskProgressDataKind
 
+
 Task progress notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
@@ -1847,16 +2074,20 @@ specified in the `dataKind` field.
 ```ts
 export type TaskProgressDataKind = string;
 
-export namespace TaskProgressDataKind {}
+export namespace TaskProgressDataKind {
+}
 ```
 
 #### TaskProgressData
+
+
 
 ```ts
 export type TaskProgressData = any;
 ```
 
 ### OnBuildTaskFinish: notification
+
 
 A `build/taskFinish` notification must always be sent after a `build/taskStart`
 with the same `taskId` was sent.
@@ -1865,6 +2096,8 @@ with the same `taskId` was sent.
 - params: `TaskFinishParams`
 
 #### TaskFinishParams
+
+
 
 ```ts
 export interface TaskFinishParams {
@@ -1894,6 +2127,7 @@ export interface TaskFinishParams {
 
 #### TaskFinishDataKind
 
+
 Task finish notifications may contain an arbitrary interface in their `data`
 field. The kind of interface that is contained in a notification must be
 specified in the `dataKind` field.
@@ -1913,10 +2147,13 @@ export namespace TaskFinishDataKind {
 
   /** `data` field must contain a TestReport object. */
   export const TestReport = "test-report";
+
 }
 ```
 
 #### TaskFinishData
+
+
 
 ```ts
 export type TaskFinishData = any;
@@ -1925,6 +2162,7 @@ export type TaskFinishData = any;
 ### OnRunPrintStdout: notification
 
 **Unstable** (may change in future versions)
+
 
 Notification sent from the server to the client when the target being run or tested
 prints something to stdout.
@@ -1935,6 +2173,8 @@ prints something to stdout.
 #### PrintParams
 
 **Unstable** (may change in future versions)
+
+
 
 ```ts
 export interface PrintParams {
@@ -1955,6 +2195,7 @@ export interface PrintParams {
 
 **Unstable** (may change in future versions)
 
+
 Notification sent from the server to the client when the target being run or tested
 prints something to stderr.
 
@@ -1964,12 +2205,12 @@ prints something to stderr.
 ## TaskFinishData kinds
 
 ### CompileReport
-
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"compile-report"`.
 
 #### CompileReport
+
 
 The completion of a compilation task should be signalled with a
 `build/taskFinish` notification. When the compilation unit is a build target,
@@ -2000,12 +2241,13 @@ export interface CompileReport {
 ```
 
 ### TestFinish
-
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-finish"`.
 
 #### TestFinish
+
+
 
 ```ts
 export interface TestFinish {
@@ -2032,6 +2274,8 @@ export interface TestFinish {
 
 #### TestStatus
 
+
+
 ```ts
 export enum TestStatus {
   /** The test passed successfully. */
@@ -2048,30 +2292,37 @@ export enum TestStatus {
 
   /** The was not included in execution. */
   Skipped = 5,
+
 }
 ```
 
 #### TestFinishDataKind
 
+
+
 ```ts
 export type TestFinishDataKind = string;
 
-export namespace TestFinishDataKind {}
+export namespace TestFinishDataKind {
+}
 ```
 
 #### TestFinishData
+
+
 
 ```ts
 export type TestFinishData = any;
 ```
 
 ### TestReport
-
 This structure is embedded in
 the `data?: TaskFinishData` field, when
 the `dataKind` field contains `"test-report"`.
 
 #### TestReport
+
+
 
 ```ts
 export interface TestReport {
@@ -2104,12 +2355,12 @@ export interface TestReport {
 ## TaskStartData kinds
 
 ### CompileTask
-
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"compile-task"`.
 
 #### CompileTask
+
 
 The beginning of a compilation unit may be signalled to the client with a
 `build/taskStart` notification. When the compilation unit is a build target, the
@@ -2123,12 +2374,13 @@ export interface CompileTask {
 ```
 
 ### TestStart
-
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-start"`.
 
 #### TestStart
+
+
 
 ```ts
 export interface TestStart {
@@ -2141,12 +2393,12 @@ export interface TestStart {
 ```
 
 ### TestTask
-
 This structure is embedded in
 the `data?: TaskStartData` field, when
 the `dataKind` field contains `"test-task"`.
 
 #### TestTask
+
 
 The beginning of a testing unit may be signalled to the client with a
 `build/taskStart` notification. When the testing unit is a build target, the
@@ -2158,3 +2410,5 @@ export interface TestTask {
   target: BuildTargetIdentifier;
 }
 ```
+
+

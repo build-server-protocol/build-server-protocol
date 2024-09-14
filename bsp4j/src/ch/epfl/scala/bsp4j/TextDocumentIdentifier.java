@@ -6,7 +6,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class TextDocumentIdentifier {
-  @NonNull private String uri;
+  @NonNull
+  private String uri;
 
   public TextDocumentIdentifier(@NonNull final String uri) {
     this.uri = uri;
@@ -30,18 +31,23 @@ public class TextDocumentIdentifier {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     TextDocumentIdentifier other = (TextDocumentIdentifier) obj;
     if (this.uri == null) {
-      if (other.uri != null) return false;
-    } else if (!this.uri.equals(other.uri)) return false;
+      if (other.uri != null)
+        return false;
+    } else if (!this.uri.equals(other.uri))
+      return false;
     return true;
   }
 
   @Override
   public int hashCode() {
-    return 31 * 1 + ((this.uri == null) ? 0 : this.uri.hashCode());
+    return 31 * 1 + ((this.uri== null) ? 0 : this.uri.hashCode());
   }
 }

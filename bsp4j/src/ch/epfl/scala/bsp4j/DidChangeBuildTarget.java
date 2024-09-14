@@ -7,7 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class DidChangeBuildTarget {
-  @NonNull private List<BuildTargetEvent> changes;
+  @NonNull
+  private List<BuildTargetEvent> changes;
 
   public DidChangeBuildTarget(@NonNull final List<BuildTargetEvent> changes) {
     this.changes = changes;
@@ -31,18 +32,23 @@ public class DidChangeBuildTarget {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     DidChangeBuildTarget other = (DidChangeBuildTarget) obj;
     if (this.changes == null) {
-      if (other.changes != null) return false;
-    } else if (!this.changes.equals(other.changes)) return false;
+      if (other.changes != null)
+        return false;
+    } else if (!this.changes.equals(other.changes))
+      return false;
     return true;
   }
 
   @Override
   public int hashCode() {
-    return 31 * 1 + ((this.changes == null) ? 0 : this.changes.hashCode());
+    return 31 * 1 + ((this.changes== null) ? 0 : this.changes.hashCode());
   }
 }

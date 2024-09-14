@@ -8,18 +8,17 @@ The following section contains Maven-specific extensions to the build server
 protocol.
 
 ## BSP version
-
 `2.2.0`
 
 ## DependencyModuleData kinds
 
 ### MavenDependencyModule
-
 This structure is embedded in
 the `data?: DependencyModuleData` field, when
 the `dataKind` field contains `"maven"`.
 
 #### MavenDependencyModule
+
 
 `MavenDependencyModule` is a basic data structure that contains maven-like
 metadata. This metadata is embedded in the `data: Option[Json]` field of the `DependencyModule` definition, when the `dataKind` field contains "maven".
@@ -45,6 +44,8 @@ export interface MavenDependencyModule {
 
 #### MavenDependencyModuleArtifact
 
+
+
 ```ts
 export interface MavenDependencyModuleArtifact {
   /** Path to jar */
@@ -54,3 +55,5 @@ export interface MavenDependencyModuleArtifact {
   classifier?: string;
 }
 ```
+
+

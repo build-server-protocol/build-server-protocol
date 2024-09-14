@@ -7,7 +7,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class CppOptionsResult {
-  @NonNull private List<CppOptionsItem> items;
+  @NonNull
+  private List<CppOptionsItem> items;
 
   public CppOptionsResult(@NonNull final List<CppOptionsItem> items) {
     this.items = items;
@@ -31,18 +32,23 @@ public class CppOptionsResult {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     CppOptionsResult other = (CppOptionsResult) obj;
     if (this.items == null) {
-      if (other.items != null) return false;
-    } else if (!this.items.equals(other.items)) return false;
+      if (other.items != null)
+        return false;
+    } else if (!this.items.equals(other.items))
+      return false;
     return true;
   }
 
   @Override
   public int hashCode() {
-    return 31 * 1 + ((this.items == null) ? 0 : this.items.hashCode());
+    return 31 * 1 + ((this.items== null) ? 0 : this.items.hashCode());
   }
 }

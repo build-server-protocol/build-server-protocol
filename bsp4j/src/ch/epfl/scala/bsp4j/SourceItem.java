@@ -8,21 +8,21 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
 @SuppressWarnings("all")
 public class SourceItem {
-  @NonNull private String uri;
+  @NonNull
+  private String uri;
 
-  @NonNull private SourceItemKind kind;
+  @NonNull
+  private SourceItemKind kind;
 
-  @NonNull private Boolean generated;
+  @NonNull
+  private Boolean generated;
 
   private String dataKind;
 
   @JsonAdapter(JsonElementTypeAdapter.Factory.class)
   private Object data;
 
-  public SourceItem(
-      @NonNull final String uri,
-      @NonNull final SourceItemKind kind,
-      @NonNull final Boolean generated) {
+  public SourceItem(@NonNull final String uri, @NonNull final SourceItemKind kind, @NonNull final Boolean generated) {
     this.uri = uri;
     this.kind = kind;
     this.generated = generated;
@@ -84,25 +84,38 @@ public class SourceItem {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     SourceItem other = (SourceItem) obj;
     if (this.uri == null) {
-      if (other.uri != null) return false;
-    } else if (!this.uri.equals(other.uri)) return false;
+      if (other.uri != null)
+        return false;
+    } else if (!this.uri.equals(other.uri))
+      return false;
     if (this.kind == null) {
-      if (other.kind != null) return false;
-    } else if (!this.kind.equals(other.kind)) return false;
+      if (other.kind != null)
+        return false;
+    } else if (!this.kind.equals(other.kind))
+      return false;
     if (this.generated == null) {
-      if (other.generated != null) return false;
-    } else if (!this.generated.equals(other.generated)) return false;
+      if (other.generated != null)
+        return false;
+    } else if (!this.generated.equals(other.generated))
+      return false;
     if (this.dataKind == null) {
-      if (other.dataKind != null) return false;
-    } else if (!this.dataKind.equals(other.dataKind)) return false;
+      if (other.dataKind != null)
+        return false;
+    } else if (!this.dataKind.equals(other.dataKind))
+      return false;
     if (this.data == null) {
-      if (other.data != null) return false;
-    } else if (!this.data.equals(other.data)) return false;
+      if (other.data != null)
+        return false;
+    } else if (!this.data.equals(other.data))
+      return false;
     return true;
   }
 
@@ -110,10 +123,10 @@ public class SourceItem {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
-    result = prime * result + ((this.kind == null) ? 0 : this.kind.hashCode());
-    result = prime * result + ((this.generated == null) ? 0 : this.generated.hashCode());
-    result = prime * result + ((this.dataKind == null) ? 0 : this.dataKind.hashCode());
-    return prime * result + ((this.data == null) ? 0 : this.data.hashCode());
+    result = prime * result + ((this.uri== null) ? 0 : this.uri.hashCode());
+    result = prime * result + ((this.kind== null) ? 0 : this.kind.hashCode());
+    result = prime * result + ((this.generated== null) ? 0 : this.generated.hashCode());
+    result = prime * result + ((this.dataKind== null) ? 0 : this.dataKind.hashCode());
+    return prime * result + ((this.data== null) ? 0 : this.data.hashCode());
   }
 }
