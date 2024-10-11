@@ -1,5 +1,4 @@
 package tests
-
 import ch.epfl.scala.bsp.testkit.gen.Bsp4jGenerators
 import ch.epfl.scala.bsp.testkit.gen.bsp4jArbitrary._
 import ch.epfl.scala.{bsp4j, bsp => bsp4s}
@@ -10,24 +9,19 @@ import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import org.eclipse.lsp4j.jsonrpc.json.adapters.EitherTypeAdapter
-
 import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-
 class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChecks {
-
   implicit val gson: Gson = new GsonBuilder()
     .registerTypeAdapterFactory(new EitherTypeAdapter.Factory)
     .setPrettyPrinting()
     .create()
-
   def assertSerializationRoundtrip[T4j, T4s](
       bsp4jValue: T4j
   )(implicit codec: JsonValueCodec[T4s]): Assertion = {
     val bsp4jJson = gson.toJson(bsp4jValue)
-
     val bsp4sValueDecoded = Try(readFromString(bsp4jJson)) match {
       case Failure(exception) =>
         Assertions.fail(exception.getMessage)
@@ -35,10 +29,8 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
     }
     val bsp4sJson = writeToString(bsp4sValueDecoded)
     val bsp4jValueDecoded = gson.fromJson[T4j](bsp4sJson, bsp4jValue.getClass)
-
     assert(bsp4jValue == bsp4jValueDecoded)
   }
-
   test("BspConnectionDetails") {
     forAll { bspConnectionDetails: bsp4j.BspConnectionDetails =>
       assertSerializationRoundtrip[bsp4j.BspConnectionDetails, bsp4s.BspConnectionDetails](

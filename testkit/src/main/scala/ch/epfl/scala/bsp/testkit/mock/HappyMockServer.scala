@@ -1,5 +1,4 @@
 package ch.epfl.scala.bsp.testkit.mock
-
 import java.io.File
 import java.net.URI
 import java.nio.file.Paths
@@ -10,38 +9,29 @@ import ch.epfl.scala.bsp.testkit.mock.HappyMockServer.ProtocolError
 import ch.epfl.scala.bsp4j._
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import org.eclipse.lsp4j.jsonrpc.messages.{ResponseError, ResponseErrorCode}
-
 import scala.collection.immutable.ListMap
 import scala.concurrent.duration._
 import scala.concurrent._
 import scala.jdk.CollectionConverters._
 import scala.util.Try
-
 object HappyMockServer {
   case object ProtocolError
 }
 
 /** Mock server that gives a happy successful result to any request. */
 class HappyMockServer(base: File) extends AbstractMockServer {
-
   override var client: BuildClient = _
-
   val isInitialized: Promise[Either[ProtocolError.type, Unit]] =
     scala.concurrent.Promise[Either[ProtocolError.type, Unit]]()
   val isShutdown: Promise[Either[ProtocolError.type, Unit]] =
     scala.concurrent.Promise[Either[ProtocolError.type, Unit]]()
-
   private val executor = Executors.newCachedThreadPool()
   private implicit val executionContext: ExecutionContextExecutor =
-    ExecutionContext.fromExecutor(executor)
-
-  // for easy override of individual parts of responses
+    ExecutionContext.fromExecutor(executor) // for easy override of individual parts of responses
   def name = "BSP Mock Server"
   def serverVersion = "1.0"
   def bspVersion = "2.0"
-
   def supportedLanguages: util.List[String] = List("java", "scala", "cpp", "python").asJava
-
   def capabilities: BuildServerCapabilities = {
     val c = new BuildServerCapabilities()
     c.setCompileProvider(new CompileProvider(supportedLanguages))
@@ -59,12 +49,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setJvmCompileClasspathProvider(true)
     c
   }
-
   val baseUri: URI = base.getCanonicalFile.toURI
   private val languageIds = List("scala").asJava
   private val cppLanguageId = List("cpp").asJava
   private val pythonLanguageId = List("python").asJava
-
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
@@ -79,7 +67,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List.empty.asJava,
     capabilities1
   )
-
   private val capabilities2 = new BuildTargetCapabilities()
   capabilities2.setCanCompile(true)
   capabilities2.setCanTest(true)
@@ -90,7 +77,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(targetId1).asJava,
     capabilities2
   )
-
   val capabilities3 = new BuildTargetCapabilities()
   capabilities3.setCanCompile(true)
   capabilities3.setCanRun(true)
@@ -101,7 +87,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List(targetId1).asJava,
     capabilities3
   )
-
   val capabilities4 = new BuildTargetCapabilities()
   capabilities4.setCanCompile(true)
   capabilities4.setCanRun(true)
@@ -112,7 +97,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List.empty.asJava,
     capabilities4
   )
-
   val capabilities5 = new BuildTargetCapabilities()
   capabilities5.setCanCompile(true)
   capabilities5.setCanRun(true)
@@ -123,7 +107,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     List.empty.asJava,
     capabilities5
   )
-
   val compileTargets: Map[BuildTargetIdentifier, BuildTarget] = ListMap(
     targetId1 -> target1,
     targetId2 -> target2,
@@ -131,13 +114,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     targetId4 -> target4,
     targetId5 -> target5
   )
-
   def uriInTarget(target: BuildTargetIdentifier, filePath: String): URI =
     new URI(target.getUri).resolve(filePath)
-
   private def asDirUri(path: URI): String =
     path.toString + "/"
-
   private def environmentItem(testing: Boolean) = {
     val classpath = List("scala-library.jar").asJava
     val jvmOptions = List("-Xms256m").asJava
@@ -162,7 +142,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new JvmRunEnvironmentResult(List(item1).asJava)
       Right(result)
     }
-
   override def buildTargetJvmTestEnvironment(
       params: JvmTestEnvironmentParams
   ): CompletableFuture[JvmTestEnvironmentResult] =
@@ -171,7 +150,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new JvmTestEnvironmentResult(List(item1).asJava)
       Right(result)
     }
-
   override def buildTargetJvmCompileClasspath(
       params: JvmCompileClasspathParams
   ): CompletableFuture[JvmCompileClasspathResult] =
@@ -181,7 +159,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new JvmCompileClasspathResult(List(item1).asJava)
       Right(result)
     }
-
   override def buildTargetScalacOptions(
       params: ScalacOptionsParams
   ): CompletableFuture[ScalacOptionsResult] =
@@ -197,7 +174,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new ScalacOptionsResult(List(item1, item2, item3).asJava)
       Right(result)
     }
-
   override def buildTargetJavacOptions(
       params: JavacOptionsParams
   ): CompletableFuture[JavacOptionsResult] = {
@@ -214,7 +190,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
-
   override def buildTargetCppOptions(
       params: CppOptionsParams
   ): CompletableFuture[CppOptionsResult] = {
@@ -227,7 +202,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
-
   override def buildTargetPythonOptions(
       params: PythonOptionsParams
   ): CompletableFuture[PythonOptionsResult] = {
@@ -238,7 +212,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
-
   override def buildTargetScalaTestClasses(
       params: ScalaTestClassesParams
   ): CompletableFuture[ScalaTestClassesResult] =
@@ -252,7 +225,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new ScalaTestClassesResult(testClassesItems)
       Right(result)
     }
-
   override def buildTargetScalaMainClasses(
       params: ScalaMainClassesParams
   ): CompletableFuture[ScalaMainClassesResult] =
@@ -270,7 +242,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new ScalaMainClassesResult(mainClassesItems)
       Right(result)
     }
-
   override def buildInitialize(
       params: InitializeBuildParams
   ): CompletableFuture[InitializeBuildResult] = {
@@ -279,21 +250,17 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
-
   override def onBuildInitialized(): Unit =
     handleBuildInitializeRequest { Right(isInitialized.success(Right(()))) }
-
   override def buildShutdown(): CompletableFuture[AnyRef] = {
     handleBuildShutdownRequest {
       isShutdown.success(Right())
       Right("boo")
     }
   }
-
   override def onBuildExit(): Unit = {
     Await.ready(isShutdown.future, 1.seconds)
   }
-
   override def workspaceBuildTargets(): CompletableFuture[WorkspaceBuildTargetsResult] =
     handleRequest {
       val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
@@ -323,45 +290,35 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target1.setBaseDirectory(targetId1.getUri)
       target1.setDataKind(BuildTargetDataKind.SCALA)
       target1.setData(scalaBuildTarget)
-
       target2.setDisplayName("target 2")
       target2.setBaseDirectory(targetId2.getUri)
       target2.setDataKind(BuildTargetDataKind.JVM)
       target2.setData(jvmBuildTarget)
-
       target3.setDisplayName("target 3")
       target3.setBaseDirectory(targetId3.getUri)
       target3.setDataKind(BuildTargetDataKind.SBT)
       target3.setData(sbtBuildTarget)
-
       target4.setDisplayName("target 4")
       target4.setBaseDirectory(targetId4.getUri)
       target4.setDataKind(BuildTargetDataKind.CPP)
       target4.setData(cppBuildTarget)
-
       target5.setDisplayName("target 5")
       target5.setBaseDirectory(targetId5.getUri)
       target5.setDataKind(BuildTargetDataKind.PYTHON)
       target5.setData(pythonBuildTarget)
-
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)
     }
-
   override def workspaceReload(): CompletableFuture[AnyRef] =
     CompletableFuture.completedFuture(null)
-
   override def buildTargetSources(params: SourcesParams): CompletableFuture[SourcesResult] =
     handleRequest {
-
       val sourceDir1 = new URI(targetId1.getUri).resolve("src/")
       val item1 = new SourceItem(asDirUri(sourceDir1), SourceItemKind.DIRECTORY, true)
       val items1 = new SourcesItem(targetId1, List(item1).asJava)
-
       val sourceDir2 = new URI(targetId2.getUri).resolve("src-gen/")
       val item2 = new SourceItem(asDirUri(sourceDir2), SourceItemKind.DIRECTORY, true)
       val items2 = new SourcesItem(targetId2, List(item2).asJava)
-
       val sourceDir3 = new URI(targetId3.getUri).resolve("sauce/")
       val sourceFile1 = new URI(targetId3.getUri).resolve("somewhere/sourcefile1")
       val sourceFile2 = new URI(targetId3.getUri).resolve("somewhere/below/sourcefile2")
@@ -371,11 +328,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item32 = new SourceItem(sourceFile2.toString, SourceItemKind.FILE, false)
       val item33 = new SourceItem(sourceFile3.toString, SourceItemKind.FILE, true)
       val items3 = new SourcesItem(targetId3, List(item3Dir, item31, item32, item33).asJava)
-
       val result = new SourcesResult(List(items1, items2, items3).asJava)
       Right(result)
     }
-
   override def buildTargetInverseSources(
       params: InverseSourcesParams
   ): CompletableFuture[InverseSourcesResult] =
@@ -383,12 +338,10 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new InverseSourcesResult(List(targetId1, targetId2, targetId3).asJava)
       Right(result)
     }
-
   override def buildTargetDependencySources(
       params: DependencySourcesParams
   ): CompletableFuture[DependencySourcesResult] =
     handleRequest {
-
       val target1Sources = List("lib/Library.scala", "lib/Helper.scala", "lib/some-library.jar")
         .map(uriInTarget(targetId1, _).toString)
         .asJava
@@ -399,22 +352,18 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val target3Sources = List("lib/App.scala", "lib/some-library.jar")
         .map(uriInTarget(targetId3, _).toString)
         .asJava
-
       val item1 = new DependencySourcesItem(targetId1, target1Sources)
       val item2 = new DependencySourcesItem(targetId2, target2Sources)
       val item3 = new DependencySourcesItem(targetId3, target3Sources)
       val result = new DependencySourcesResult(List(item1, item2, item3).asJava)
-
       Right(result)
     }
-
   override def buildTargetResources(params: ResourcesParams): CompletableFuture[ResourcesResult] =
     handleRequest {
       // TODO provide resources
       val result = new ResourcesResult(List.empty.asJava)
       Right(result)
     }
-
   override def buildTargetOutputPaths(
       params: OutputPathsParams
   ): CompletableFuture[OutputPathsResult] =
@@ -422,11 +371,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val outputDir1 = new URI(targetId1.getUri).resolve("log/")
       val item1 = new OutputPathItem(asDirUri(outputDir1), OutputPathItemKind.DIRECTORY)
       val items1 = new OutputPathsItem(targetId1, List(item1).asJava)
-
       val outputDir2 = new URI(targetId2.getUri).resolve("target/")
       val item2 = new OutputPathItem(asDirUri(outputDir2), OutputPathItemKind.DIRECTORY)
       val items2 = new OutputPathsItem(targetId2, List(item2).asJava)
-
       val outputDir3 = new URI(targetId3.getUri).resolve("work/")
       val outputFile1 = new URI(targetId3.getUri).resolve("tmp/file1")
       val outputFile2 = new URI(targetId3.getUri).resolve("tmp/below/file2")
@@ -436,11 +383,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val item32 = new OutputPathItem(outputFile2.toString, OutputPathItemKind.FILE)
       val item33 = new OutputPathItem(outputFile3.toString, OutputPathItemKind.FILE)
       val items3 = new OutputPathsItem(targetId3, List(item3Dir, item31, item32, item33).asJava)
-
       val result = new OutputPathsResult(List(items1, items2, items3).asJava)
       Right(result)
     }
-
   override def buildTargetCompile(params: CompileParams): CompletableFuture[CompileResult] =
     handleRequest {
       val uncompilableTargets = params.getTargets.asScala.filter(targetIdentifier => {
@@ -450,7 +395,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           case None => false
         }
       })
-
       if (uncompilableTargets.nonEmpty)
         Left(
           new ResponseError(
@@ -462,9 +406,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       else {
         val origin = params.getOriginId
         val compile1Id = new TaskId("compile1id")
-
         compileStart(compile1Id, Some(origin), "compile started: " + targetId1.getUri, targetId1)
-
         val subtaskParents = List(compile1Id.getId).asJava
         logMessage("spawning subtasks", task = Some(compile1Id), origin = Some(params.getOriginId))
         val subtask1Id = new TaskId("subtask1id")
@@ -476,29 +418,24 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         taskStart(subtask1Id, Some(origin), "resolving widgets", None, None)
         taskStart(subtask2Id, Some(origin), "memoizing datapoints", None, None)
         taskStart(subtask3Id, Some(origin), "unionizing beams", None, None)
-
         val compileme = new URI(targetId1.getUri).resolve("compileme.scala")
         val doc = new TextDocumentIdentifier(compileme.toString)
-
         val errorMessage = new Diagnostic(
           new Range(new Position(1, 10), new Position(1, 110)),
           "this is a compile error"
         )
         errorMessage.setSeverity(DiagnosticSeverity.ERROR)
-
         val warningMessage = new Diagnostic(
           new Range(new Position(2, 10), new Position(2, 20)),
           "this is a compile warning"
         )
         warningMessage.setSeverity(DiagnosticSeverity.WARNING)
-
         val infoMessage =
           new Diagnostic(
             new Range(new Position(3, 1), new Position(3, 33)),
             "this is a compile info"
           )
         infoMessage.setSeverity(DiagnosticSeverity.INFORMATION)
-
         publishDiagnostics(
           doc,
           targetId1,
@@ -506,7 +443,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           Option(params.getOriginId)
         )
         publishDiagnostics(doc, targetId1, List(infoMessage), Option(params.getOriginId))
-
         taskFinish(subtask1Id, Some(origin), "targets resolved", StatusCode.OK, None, None)
         taskFinish(subtask2Id, Some(origin), "datapoints forgotten", StatusCode.ERROR, None, None)
         taskFinish(
@@ -518,23 +454,18 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           None
         )
         showMessage("subtasks done", task = Some(compile1Id), origin = Option(params.getOriginId))
-
         compileReport(compile1Id, Some(origin), "compile failed", targetId1, StatusCode.ERROR)
-
         params.getTargets.asScala.foreach { target =>
           val compileId = new TaskId(UUID.randomUUID().toString)
           compileStart(compileId, Some(origin), "compile started: " + target.getUri, target)
           taskProgress(compileId, Some(origin), "compiling some files", 100, 23, None, None)
           compileReport(compileId, Some(origin), "compile complete", target, StatusCode.OK)
         }
-
         val result = new CompileResult(StatusCode.OK)
         result.setOriginId(params.getOriginId)
         Right(result)
       }
-
     }
-
   override def buildTargetTest(params: TestParams): CompletableFuture[TestResult] =
     handleRequest {
       val errorTargets = params.getTargets.asScala.filter(targetIdentifier => {
@@ -544,7 +475,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           case None => false
         }
       })
-
       if (errorTargets.nonEmpty)
         Left(
           new ResponseError(
@@ -561,7 +491,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         Right(result)
       }
     }
-
   override def buildTargetRun(params: RunParams): CompletableFuture[RunResult] =
     handleRequest {
       compileTargets.get(params.getTarget) match {
@@ -580,21 +509,18 @@ class HappyMockServer(base: File) extends AbstractMockServer {
           mockRunAnswer(params)
       }
     }
-
   private def mockRunAnswer(params: RunParams) = {
     // TODO some task notifications
     val result = new RunResult(StatusCode.OK)
     result.setOriginId(params.getOriginId)
     Right(result)
   }
-
   override def debugSessionStart(
       params: DebugSessionParams
   ): CompletableFuture[DebugSessionAddress] =
     handleRequest {
       Right(new DebugSessionAddress("tcp://127.0.0.1:51379"))
     }
-
   override def buildTargetCleanCache(
       params: CleanCacheParams
   ): CompletableFuture[CleanCacheResult] =
@@ -602,7 +528,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val result = new CleanCacheResult(true)
       Right(result)
     }
-
   override def buildTargetDependencyModules(
       params: DependencyModulesParams
   ): CompletableFuture[DependencyModulesResult] = {
@@ -629,11 +554,9 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         module.setDataKind("maven")
         module
       }
-
       val target1Modules = List(jvmModule(targetId1, "org.library1", "0.0.1", "jvm")).asJava
       val target2Modules = List(jvmModule(targetId2, "org.library2_2.13", "0.0.1", "jvm")).asJava
       val target3Modules = List(jvmModule(targetId3, "org.library3_2.13", "0.0.1", "jvm")).asJava
-
       val result = new DependencyModulesResult(
         List(
           new DependencyModulesItem(targetId1, target1Modules),
@@ -644,9 +567,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       Right(result)
     }
   }
-
   override def onRunReadStdin(params: ReadParams): Unit = {}
-
   private def handleRequest[T](
       f: => Either[ResponseError, T]
   ): CompletableFuture[T] = {
@@ -655,16 +576,13 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       _ <- checkShutdown
       res <- getValue(f)
     } yield res
-
     toCompletableFuture(result)
   }
-
   private def toCompletableFuture[T](either: Either[ResponseError, T]): CompletableFuture[T] =
     either match {
       case Left(value)  => completeExceptionally(value)
       case Right(value) => CompletableFuture.completedFuture(value)
     }
-
   private def checkInitialize[T]: Either[ResponseError, Unit] = {
     try {
       Await.result(isInitialized.future, 1.seconds)
@@ -679,7 +597,6 @@ class HappyMockServer(base: File) extends AbstractMockServer {
         Left(err)
     }
   }
-
   private def checkShutdown[T]: Either[ResponseError, Unit] =
     if (isShutdown.isCompleted) {
       val err = new ResponseError(
@@ -693,24 +610,20 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       )
       Left(err)
     } else Right(())
-
   private def getValue[T](f: => Either[ResponseError, T]): Either[ResponseError, T] =
     Try(f).toEither.left
       .map(exception =>
         new ResponseError(ResponseErrorCode.InternalError, exception.getMessage, null)
       )
       .joinRight
-
   private def handleBuildInitializeRequest[T](
       f: => Either[ResponseError, T]
   ): CompletableFuture[T] =
     toCompletableFuture(checkShutdown.flatMap(_ => getValue(f)))
-
   private def handleBuildShutdownRequest[T](
       f: => Either[ResponseError, T]
   ): CompletableFuture[T] =
     toCompletableFuture(checkInitialize.flatMap(_ => getValue(f)))
-
   private def completeExceptionally[T](error: ResponseError): CompletableFuture[T] = {
     val future = new CompletableFuture[T]()
     future.completeExceptionally(
@@ -720,5 +633,4 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     )
     future
   }
-
 }

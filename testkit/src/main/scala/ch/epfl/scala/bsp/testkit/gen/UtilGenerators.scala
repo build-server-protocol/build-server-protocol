@@ -1,10 +1,7 @@
 package ch.epfl.scala.bsp.testkit.gen
-
 import java.net.URI
 import java.nio.file.{Path, Paths}
-
 import org.scalacheck.Gen
-
 trait UtilGenerators {
 
   /** An uri string. */
@@ -36,7 +33,6 @@ trait UtilGenerators {
     segmentCount <- Gen.choose(1, 10)
     segments <- Gen.listOfN(segmentCount, Gen.identifier)
   } yield "file:///" + segments.mkString("/") // TODO windows paths
-
   /** Fully qualified class name. */
   lazy val genFQN: Gen[String] = for {
     packages <- Gen.nonEmptyListOf(Gen.identifier)
@@ -48,7 +44,5 @@ trait UtilGenerators {
     initial <- Gen.alphaChar
     rest <- Gen.identifier
   } yield s"$initial$rest"
-
 }
-
 object UtilGenerators extends UtilGenerators

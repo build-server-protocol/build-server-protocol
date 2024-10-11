@@ -1,8 +1,6 @@
 package tests
-
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
-
 trait Cancelable {
   def cancel(): Unit
 }
