@@ -1,22 +1,15 @@
 package ch.epfl.scala.bsp.testkit.gen
-
 import org.scalacheck.Shrink
 import org.scalacheck.Shrink._
 import ch.epfl.scala.bsp4j
 import ch.epfl.scala.bsp4j._
-
 import java.net.URI
 import java.util.{List => JList}
-
 import scala.collection.JavaConverters._
-
 import UtilGenerators._
-
 trait Bsp4jShrinkers extends UtilShrinkers {
-
   implicit def shrinkJavaList[T]: Shrink[JList[T]] =
     Shrink { list => shrink(list.asScala).map(_.asJava) }
-
   implicit def shrinkBspConnectionDetails: Shrink[BspConnectionDetails] = Shrink { details =>
     for {
       name <- shrink(details.getName)
@@ -26,11 +19,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       languages <- shrink(details.getLanguages)
     } yield new BspConnectionDetails(name, argv, version, bspVersion, languages)
   }
-
   implicit def shrinkBuildClientCapabilities: Shrink[BuildClientCapabilities] = Shrink { a =>
     shrink(a.getLanguageIds).map(new BuildClientCapabilities(_))
   }
-
   implicit def shrinkBuildServerCapabilities: Shrink[BuildServerCapabilities] = Shrink {
     capabilities =>
       for {
@@ -55,7 +46,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
         capabilities
       }
   }
-
   implicit def shrinkBuildTarget(
       sl: Shrink[JList[String]],
       s2: Shrink[JList[BuildTargetIdentifier]],
@@ -79,7 +69,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       shrinkTarget
     }
   }
-
   implicit def shrinkBuildTargetCapabilities: Shrink[BuildTargetCapabilities] = Shrink {
     capabilities =>
       for {
@@ -96,7 +85,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
         capabilities
       }
   }
-
   implicit def shrinkBuildTargetEvent: Shrink[BuildTargetEvent] = Shrink { event =>
     for {
       target <- shrink(event.getTarget)
@@ -111,17 +99,14 @@ trait Bsp4jShrinkers extends UtilShrinkers {
     val uri = new URI(id.getUri)
     shrink(uri).map(u => new BuildTargetIdentifier(u.toString))
   }
-
   implicit def shrinkCleanCacheParams: Shrink[CleanCacheParams] = Shrink { a =>
     shrink(a.getTargets).map(new CleanCacheParams(_))
   }
-
   implicit def shrinkCleanCacheResult: Shrink[CleanCacheResult] = Shrink { a =>
     for {
       cleaned <- shrink(a.getCleaned)
     } yield new CleanCacheResult(cleaned)
   }
-
   implicit def shrinkCompileParams: Shrink[CompileParams] = Shrink { params =>
     for {
       targets <- shrink(params.getTargets)
@@ -134,11 +119,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkCompileProvider: Shrink[CompileProvider] = Shrink { a =>
     shrink(a.getLanguageIds).map(new CompileProvider(_))
   }
-
   implicit def shrinkCompileReport(
       s1: Shrink[Int],
       s2: Shrink[Long],
@@ -157,7 +140,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       report
     }
   }
-
   implicit def shrinkCompileResult: Shrink[CompileResult] = Shrink { a =>
     for {
       originId <- shrink(a.getOriginId)
@@ -169,26 +151,21 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       result
     }
   }
-
   implicit def shrinkCompileTask: Shrink[CompileTask] = Shrink { a =>
     shrink(a.getTarget).map(new CompileTask(_))
   }
-
   implicit def shrinkDependencySourcesItem: Shrink[DependencySourcesItem] = Shrink { item =>
     for {
       target <- shrink(item.getTarget)
       sources <- shrink(item.getSources)
     } yield new DependencySourcesItem(target, sources)
   }
-
   implicit def shrinkDependencySourcesParams: Shrink[DependencySourcesParams] = Shrink { a =>
     shrink(a.getTargets).map(new DependencySourcesParams(_))
   }
-
   implicit def shrinkDependencySourcesResult: Shrink[DependencySourcesResult] = Shrink { a =>
     shrink(a.getItems).map(new DependencySourcesResult(_))
   }
-
   implicit def shrinkDiagnostic: Shrink[Diagnostic] = Shrink { a =>
     for {
       range <- shrink(a.getRange)
@@ -204,7 +181,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       diagnostic
     }
   }
-
   implicit def shrinkDiagnosticRelatedInformation: Shrink[DiagnosticRelatedInformation] = Shrink {
     a =>
       for {
@@ -212,11 +188,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
         message <- shrink(a.getMessage)
       } yield new DiagnosticRelatedInformation(location, message)
   }
-
   implicit def shrinkDidChangeBuildTarget: Shrink[DidChangeBuildTarget] = Shrink { a =>
     shrinkJavaList[BuildTargetEvent].shrink(a.getChanges).map(new DidChangeBuildTarget(_))
   }
-
   implicit def shrinkInitializeBuildParams: Shrink[InitializeBuildParams] = Shrink { a =>
     for {
       displayName <- shrink(a.getDisplayName)
@@ -231,7 +205,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkInitializeBuildResult: Shrink[InitializeBuildResult] = Shrink { a =>
     for {
       displayName <- shrink(a.getDisplayName)
@@ -244,22 +217,18 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       result
     }
   }
-
   implicit def shrinkInverseSourcesParams: Shrink[InverseSourcesParams] = Shrink { a =>
     shrink(a.getTextDocument).map(new InverseSourcesParams(_))
   }
-
   implicit def shrinkInverseSourcesResult: Shrink[InverseSourcesResult] = Shrink { a =>
     shrink(a.getTargets).map(new InverseSourcesResult(_))
   }
-
   implicit def shrinkLocation: Shrink[Location] = Shrink { a =>
     for {
       uri <- shrinkFileUriString.shrink(a.getUri)
       range <- shrink(a.getRange)
     } yield new Location(uri, range)
   }
-
   implicit def shrinkLogMessageParams: Shrink[LogMessageParams] = Shrink { a =>
     for {
       message <- shrink(a.getMessage)
@@ -272,14 +241,12 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkPosition: Shrink[Position] = Shrink { a =>
     for {
       line <- shrink(a.getLine)
       character <- shrink(a.getCharacter)
     } yield new Position(line, character)
   }
-
   implicit def shrinkPublishDiagnosticsParams: Shrink[PublishDiagnosticsParams] = Shrink { a =>
     for {
       textDocument <- shrink(a.getTextDocument)
@@ -293,29 +260,24 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkRange: Shrink[bsp4j.Range] = Shrink { a =>
     for {
       start <- shrink(a.getStart)
       end <- shrink(a.getEnd)
     } yield new Range(start, end)
   }
-
   implicit def shrinkResourcesItem: Shrink[ResourcesItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
       resources <- shrink(a.getResources)
     } yield new ResourcesItem(target, resources)
   }
-
   implicit def shrinkResourcesParams: Shrink[ResourcesParams] = Shrink { a =>
     shrink(a.getTargets).map(new ResourcesParams(_))
   }
-
   implicit def shrinkResourcesResult: Shrink[ResourcesResult] = Shrink { a =>
     shrink(a.getItems).map(new ResourcesResult(_))
   }
-
   implicit def shrinkRunParams: Shrink[RunParams] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
@@ -328,11 +290,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       runParams
     }
   }
-
   implicit def shrinkRunProvider: Shrink[RunProvider] = Shrink { a =>
     shrink(a.getLanguageIds).map(new RunProvider(_))
   }
-
   implicit def shrinkRunResult: Shrink[RunResult] = Shrink { a =>
     for {
       originId <- shrink(a.getOriginId)
@@ -342,7 +302,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       result
     }
   }
-
   implicit def shrinkJvmBuildTarget: Shrink[JvmBuildTarget] = Shrink { a =>
     for {
       javaHome <- shrink(a.getJavaHome)
@@ -354,7 +313,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       target
     }
   }
-
   implicit def shrinkSbtBuildTarget: Shrink[SbtBuildTarget] = Shrink { a =>
     for {
       sbtVersion <- shrink(a.getSbtVersion)
@@ -368,7 +326,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       target
     }
   }
-
   implicit def shrinkScalaBuildTarget: Shrink[ScalaBuildTarget] = Shrink { a =>
     for {
       scalaOrganization <- shrink(a.getScalaOrganization)
@@ -384,7 +341,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       target
     }
   }
-
   implicit def shrinkScalacOptionsItem: Shrink[ScalacOptionsItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
@@ -393,15 +349,12 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       classDirectory <- shrink(a.getClassDirectory)
     } yield new ScalacOptionsItem(target, options, classpath, classDirectory)
   }
-
   implicit def shrinkScalacOptionsParams: Shrink[ScalacOptionsParams] = Shrink { a =>
     shrink(a.getTargets).map(new ScalacOptionsParams(_))
   }
-
   implicit def shrinkScalacOptionsResult: Shrink[ScalacOptionsResult] = Shrink { a =>
     shrink(a.getItems).map(new ScalacOptionsResult(_))
   }
-
   implicit def shrinkScalaMainClass: Shrink[ScalaMainClass] = Shrink { a =>
     for {
       className <- shrink(a.getClassName)
@@ -414,14 +367,12 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       mainClass
     }
   }
-
   implicit def shrinkScalaMainClassesItem: Shrink[ScalaMainClassesItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
       classes <- shrink(a.getClasses)
     } yield new ScalaMainClassesItem(target, classes)
   }
-
   implicit def shrinkScalaMainClassesParams: Shrink[ScalaMainClassesParams] = Shrink { a =>
     for {
       targets <- shrink(a.getTargets)
@@ -432,18 +383,15 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkScalaMainClassesResult: Shrink[ScalaMainClassesResult] = Shrink { a =>
     shrink(a.getItems).map(new ScalaMainClassesResult(_))
   }
-
   implicit def shrinkScalaTestClassesItem: Shrink[ScalaTestClassesItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
       classes <- shrink(a.getClasses)
     } yield new ScalaTestClassesItem(target, classes)
   }
-
   implicit def shrinkScalaTestClassesParams: Shrink[ScalaTestClassesParams] = Shrink { a =>
     for {
       targets <- shrink(a.getTargets)
@@ -454,11 +402,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkScalaTestClassesResult: Shrink[ScalaTestClassesResult] = Shrink { a =>
     shrink(a.getItems).map(new ScalaTestClassesResult(_))
   }
-
   implicit def shrinkScalaTestParams: Shrink[ScalaTestParams] = Shrink { a =>
     for {
       items <- shrink(a.getTestClasses)
@@ -470,7 +416,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkShowMessageParams: Shrink[ShowMessageParams] = Shrink { a =>
     for {
       message <- shrink(a.getMessage)
@@ -483,50 +428,41 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkSourceItem: Shrink[SourceItem] = Shrink { a =>
     for {
       uri <- shrink(a.getUri)
       generated <- shrink(a.getGenerated)
     } yield new SourceItem(uri, a.getKind, generated)
   }
-
   implicit def shrinkSourcesItem: Shrink[SourcesItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
       sources <- shrink(a.getSources)
     } yield new SourcesItem(target, sources)
   }
-
   implicit def shrinkSourcesParams: Shrink[SourcesParams] = Shrink { a =>
     shrink(a.getTargets).map(new SourcesParams(_))
   }
-
   implicit def shrinkSourcesResult: Shrink[SourcesResult] = Shrink { a =>
     shrink(a.getItems).map(new SourcesResult(_))
   }
-
   implicit def shrinkOutputPathItem: Shrink[OutputPathItem] = Shrink { a =>
     for {
       uri <- shrink(a.getUri)
     } yield new OutputPathItem(uri, a.getKind)
   }
-
   implicit def shrinkOutputPathsItem: Shrink[OutputPathsItem] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
       outputPaths <- shrink(a.getOutputPaths)
     } yield new OutputPathsItem(target, outputPaths)
   }
-
   implicit def shrinkOutputPathsParams: Shrink[OutputPathsParams] = Shrink { a =>
     shrink(a.getTargets).map(new OutputPathsParams(_))
   }
-
   implicit def shrinkOutputPathsResult: Shrink[OutputPathsResult] = Shrink { a =>
     shrink(a.getItems).map(new OutputPathsResult(_))
   }
-
   implicit def shrinkTaskFinishParams: Shrink[TaskFinishParams] = Shrink { a =>
     for {
       taskId <- shrink(a.getTaskId)
@@ -541,7 +477,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkTaskId: Shrink[TaskId] = Shrink { a =>
     for {
       id <- shrink(a.getId)
@@ -552,7 +487,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       taskId
     }
   }
-
   implicit def shrinkTaskProgressParams: Shrink[TaskProgressParams] = Shrink { a =>
     for {
       taskId <- shrink(a.getTaskId)
@@ -573,7 +507,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkTaskStartParams: Shrink[TaskStartParams] = Shrink { a =>
     for {
       taskId <- shrink(a.getTaskId)
@@ -588,7 +521,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkTestFinish: Shrink[TestFinish] = Shrink { a =>
     for {
       displayName <- shrink(a.getDisplayName)
@@ -604,7 +536,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       testFinish
     }
   }
-
   implicit def shrinkTestParams: Shrink[TestParams] = Shrink { a =>
     for {
       targets <- shrink(a.getTargets)
@@ -619,11 +550,9 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       params
     }
   }
-
   implicit def shrinkTestProvider: Shrink[TestProvider] = Shrink { a =>
     shrink(a.getLanguageIds).map(new TestProvider(_))
   }
-
   implicit def shrinkTestReport: Shrink[TestReport] = Shrink { a =>
     for {
       target <- shrink(a.getTarget)
@@ -641,7 +570,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       report
     }
   }
-
   implicit def shrinkTestResult: Shrink[TestResult] = Shrink { a =>
     for {
       originId <- shrink(a.getOriginId)
@@ -653,7 +581,6 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       result
     }
   }
-
   implicit def shrinkTestStart: Shrink[TestStart] = Shrink { a =>
     for {
       displayName <- shrink(a.getDisplayName)
@@ -664,20 +591,15 @@ trait Bsp4jShrinkers extends UtilShrinkers {
       testStart
     }
   }
-
   implicit def shrinkTestTask: Shrink[TestTask] = Shrink { a =>
     shrink(a.getTarget).map(new TestTask(_))
   }
-
   implicit def shrinkTextDocumentIdentifier: Shrink[TextDocumentIdentifier] = Shrink { a =>
     shrink(a.getUri).map(new TextDocumentIdentifier(_))
   }
-
   implicit def shrinkWorkspaceBuildTargetsResult: Shrink[WorkspaceBuildTargetsResult] = Shrink {
     a =>
       shrink(a.getTargets).map(new WorkspaceBuildTargetsResult(_))
   }
-
 }
-
 object Bsp4jShrinkers extends Bsp4jShrinkers

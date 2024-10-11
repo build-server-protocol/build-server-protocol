@@ -1,5 +1,4 @@
 package tests
-
 import ch.epfl.scala.bsp.{endpoints => s}
 import ch.epfl.scala.bsp4j._
 import com.google.gson.Gson
@@ -19,12 +18,10 @@ import java.util
 import java.util.Collections
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.funsuite.AnyFunSuite
-
 import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Await
@@ -40,19 +37,14 @@ import jsonrpc4s.RpcSuccess
 import jsonrpc4s.RpcFailure
 import scala.util.Failure
 import scala.util.Success
-
-class TypoSuite extends AnyFunSuite {
-
-  // Constants for for incoming/outgoing messages.
+class TypoSuite extends AnyFunSuite { // Constants for for incoming/outgoing messages.
   val buildTargetUri = new BuildTargetIdentifier("build-target-identifier")
   val buildTargetUris: util.List[BuildTargetIdentifier] = Collections.singletonList(buildTargetUri)
   val textDocumentUri = "file:///Application.scala"
   val textDocumentIdentifier = new TextDocumentIdentifier("tti")
   val textDocumentIdentifiers: util.List[TextDocumentIdentifier] =
     Collections.singletonList(textDocumentIdentifier)
-  val outputPathUri = "file:///target/"
-
-  // Java build client that ignores all notifications.
+  val outputPathUri = "file:///target/" // Java build client that ignores all notifications.
   val silentJavaClient: BuildClient = new BuildClient {
     override def onBuildShowMessage(params: ShowMessageParams): Unit =
       ()
@@ -72,11 +64,8 @@ class TypoSuite extends AnyFunSuite {
       ()
     override def onRunPrintStderr(params: PrintParams): Unit =
       ()
-  }
-
-  // Java build server that responds with hardcoded constants
+  } // Java build server that responds with hardcoded constants
   val hardcodedJavaServer: BuildServer = new BuildServer {
-
     override def buildInitialize(
         params: InitializeBuildParams
     ): CompletableFuture[InitializeBuildResult] = {
@@ -97,10 +86,8 @@ class TypoSuite extends AnyFunSuite {
     }
     override def onBuildInitialized(): Unit =
       ()
-
     override def workspaceReload(): CompletableFuture[Object] =
       CompletableFuture.completedFuture(null)
-
     override def buildShutdown(): CompletableFuture[Object] = {
       CompletableFuture.completedFuture(null)
     }
@@ -185,14 +172,12 @@ class TypoSuite extends AnyFunSuite {
         new RunResult(StatusCode.ERROR)
       }
     }
-
     override def debugSessionStart(
         params: DebugSessionParams
     ): CompletableFuture[DebugSessionAddress] =
       CompletableFuture.completedFuture {
         new DebugSessionAddress("tcp://127.0.0.1:51379")
       }
-
     override def buildTargetCleanCache(
         params: CleanCacheParams
     ): CompletableFuture[CleanCacheResult] = {
@@ -200,7 +185,6 @@ class TypoSuite extends AnyFunSuite {
         new CleanCacheResult(true)
       }
     }
-
     override def buildTargetDependencyModules(
         params: DependencyModulesParams
     ): CompletableFuture[DependencyModulesResult] = {
@@ -222,11 +206,8 @@ class TypoSuite extends AnyFunSuite {
         new DependencyModulesResult(List(item).asJava)
       }
     }
-
     override def onRunReadStdin(params: ReadParams): Unit = ()
-  }
-
-  // extension methods to abstract over lsp4s service creation.
+  } // extension methods to abstract over lsp4s service creation.
   implicit class XtensionServices(services: Services) {
     def forwardRequest[A, B](endpoint: Endpoint[A, B])(implicit client: RpcClient): Services = {
       services.requestAsync(endpoint) { a =>
@@ -244,9 +225,7 @@ class TypoSuite extends AnyFunSuite {
     )(implicit client: RpcClient): Services = {
       services.notification(endpoint)(a => endpoint.notify(a))
     }
-  }
-
-  // Scala build client that records all notifications.
+  } // Scala build client that records all notifications.
   def silentScalaClient(implicit client: RpcClient): Services =
     Services
       .empty(scribe.Logger.root)
@@ -256,9 +235,9 @@ class TypoSuite extends AnyFunSuite {
       .ignoreNotification(s.Build.taskProgress)
       .ignoreNotification(s.Build.taskFinish)
       .ignoreNotification(s.Build.publishDiagnostics)
-      .ignoreNotification(s.BuildTarget.didChange)
-
-  // Scala build server that delegates all requests to a client.
+      .ignoreNotification(
+        s.BuildTarget.didChange
+      ) // Scala build server that delegates all requests to a client.
   def forwardingScalaServer(implicit client: RpcClient): Services = {
     Services
       .empty(scribe.Logger.root)
@@ -278,7 +257,6 @@ class TypoSuite extends AnyFunSuite {
       .forwardNotification(s.Build.initialized)
       .forwardNotification(s.Build.exit)
   }
-
   val gson: Gson = new GsonBuilder().setPrettyPrinting().create()
   val gsonParser = new JsonParser()
   def traceWriter(baos: ByteArrayOutputStream): PrintWriter = {
@@ -342,15 +320,12 @@ class TypoSuite extends AnyFunSuite {
       fail(diff)
     }
   }
-
   def startScalaConnection(in: InputStream, out: OutputStream)(
       fn: RpcClient => Services
   )(implicit s: Scheduler): Connection = {
     val logger = scribe.Logger.root
     Connection(new InputOutput(in, out), logger, logger)(fn)
-  }
-
-  // This test case asserts that every BSP request/notification/response is unchanged
+  } // This test case asserts that every BSP request/notification/response is unchanged
   // after the following roundtrip: ls4pj -> lsp4s -> lsp4j
   // Every request from the original lsp4j client is sent to a lsp4s server that delegates
   // the request to a lsp4j server that responds with a concrete message:
@@ -363,25 +338,20 @@ class TypoSuite extends AnyFunSuite {
   test("roundtrip") {
     implicit val scheduler: SchedulerService =
       Scheduler(Executors.newCachedThreadPool())
-
     val inJava1 = new PipedInputStream()
     val inJava2 = new PipedInputStream()
     val inScala1 = new PipedInputStream()
     val inScala2 = new PipedInputStream()
-
     val outJava1 = new PipedOutputStream(inScala1)
     val outScala1 = new PipedOutputStream(inJava1)
     val outJava2 = new PipedOutputStream(inScala2)
     val outScala2 = new PipedOutputStream(inJava2)
-
     val scala2Connection =
       startScalaConnection(inScala2, outScala2)(forwardingScalaServer(_))
     val scala1Connection =
       startScalaConnection(inScala1, outScala1)(_ => forwardingScalaServer(scala2Connection.client))
-
     val trace1 = new ByteArrayOutputStream()
     val trace2 = new ByteArrayOutputStream()
-
     val java1Launcher = new Launcher.Builder[BuildServer]()
       .setRemoteInterface(classOf[BuildServer])
       .setLocalService(silentJavaClient)
@@ -399,7 +369,6 @@ class TypoSuite extends AnyFunSuite {
     val java1Listening = java1Launcher.startListening()
     val java2Listening = java2Launcher.startListening()
     val scala1 = java1Launcher.getRemoteProxy
-
     val allResources = new OpenCancelable()
       .add(() => inJava1.close())
       .add(() => inJava2.close())
@@ -414,7 +383,6 @@ class TypoSuite extends AnyFunSuite {
       .add(() => scala1Connection.cancel())
       .add(() => scala2Connection.cancel())
       .add(() => scheduler.shutdown())
-
     try {
       val result: Future[Unit] = for {
         initialize <- {
