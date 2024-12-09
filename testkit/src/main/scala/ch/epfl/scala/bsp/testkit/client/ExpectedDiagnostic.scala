@@ -1,5 +1,7 @@
 package ch.epfl.scala.bsp.testkit.client
+
 import ch.epfl.scala.bsp4j.{Diagnostic, DiagnosticSeverity, Range}
+
 case class ExpectedDiagnostic(range: Range, severity: DiagnosticSeverity, code: String) {
   def isEqual(obj: Any): Boolean = {
     if (obj == null)

@@ -1,16 +1,19 @@
 package tests
+
 import ch.epfl.scala.bsp.testkit.mock.MockServer
 import ch.epfl.scala.bsp.testkit.mock.MockServer.LocalMockServer
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.scalatest.funsuite.AnyFunSuite
+
 import java.io.File
 import java.nio.file.{Files, Paths}
 import java.util
 import java.util.Collections
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
+
 trait MockBuildServer
     extends BuildServer
     with ScalaBuildServer
@@ -18,12 +21,16 @@ trait MockBuildServer
     with JavaBuildServer
     with CppBuildServer
     with PythonBuildServer
+
 class HappyMockSuite extends AnyFunSuite {
+
   def connectToBuildServer(
       localClient: BuildClient,
       baseDir: File
   ): (MockBuildServer, Cancelable) = {
+
     val LocalMockServer(runningMock, clientIn, clientOut) = MockServer.startMockServer(baseDir)
+
     val launcher = new Launcher.Builder[MockBuildServer]()
       // .traceMessages(new PrintWriter(System.out))
       .setRemoteInterface(classOf[MockBuildServer])
@@ -40,7 +47,9 @@ class HappyMockSuite extends AnyFunSuite {
     }
     (bsp, cancelable)
   }
+
   private val gson = new Gson()
+
   implicit class XtensionBuildTarget(buildTarget: BuildTarget) {
     def asTarget[T: ClassTag]: T = {
       gson.fromJson[T](
@@ -49,6 +58,7 @@ class HappyMockSuite extends AnyFunSuite {
       )
     }
   }
+
   def assertWorkspaceBuildTargets(server: MockBuildServer): Unit = {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
@@ -64,17 +74,21 @@ class HappyMockSuite extends AnyFunSuite {
     compareCppBuildTargets(cppBuildTarget)
     comparePythonBuildTarget(pythonBuildTarget)
   }
+
   def compareSbtBuildTarget(sbtBuildTarget: SbtBuildTarget): Unit = {
     assert(sbtBuildTarget.getSbtVersion == "1.0.0")
     assert(sbtBuildTarget.getAutoImports == List("task-key").asJava)
     compareScalaBuildTarget(sbtBuildTarget.getScalaBuildTarget)
   }
+
   def compareJvmBuildTarget(jvmBuildTarget: JvmBuildTarget): Unit = {
     val javaHome = sys.props.get("java.home").map(p => Paths.get(p).toUri.toString)
     val javaVersion = sys.props.get("java.vm.specification.version")
+
     assert(Option(jvmBuildTarget.getJavaHome) == javaHome)
     assert(Option(jvmBuildTarget.getJavaVersion) == javaVersion)
   }
+
   private def compareScalaBuildTarget(scalaBuildTarget: ScalaBuildTarget): Unit = {
     assert(scalaBuildTarget != null)
     assert(scalaBuildTarget.getScalaVersion == "2.12.7")
@@ -85,19 +99,24 @@ class HappyMockSuite extends AnyFunSuite {
     assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
     compareJvmBuildTarget(scalaBuildTarget.getJvmBuildTarget)
   }
+
   private def compareCppBuildTargets(cppBuildTarget: CppBuildTarget): Unit = {
     assert(cppBuildTarget.getVersion == "C++11")
     assert(cppBuildTarget.getCCompiler == "/usr/bin/gcc")
     assert(cppBuildTarget.getCppCompiler == "/usr/bin/g++")
   }
+
   private def comparePythonBuildTarget(pythonBuildTarget: PythonBuildTarget): Unit = {
     assert(pythonBuildTarget.getVersion == "3.9")
     assert(pythonBuildTarget.getInterpreter == "/usr/bin/python")
   }
+
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
     server.workspaceBuildTargets().get().getTargets.asScala.map(_.getId).asJava
+
   def getBuildTargets(server: MockBuildServer): util.List[BuildTarget] =
     server.workspaceBuildTargets().get().getTargets
+
   def assertScalacOptions(server: MockBuildServer): Unit = {
     val scalacOptionsParams = new ScalacOptionsParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.buildTargetScalacOptions(scalacOptionsParams).get
@@ -112,6 +131,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(classpath.exists(_.contains("scala-library")))
     }
   }
+
   def assertJavacOptions(server: MockBuildServer): Unit = {
     val javacOptionsParams = new JavacOptionsParams(getBuildTargetIds(server))
     val javacOptionsResult = server.buildTargetJavacOptions(javacOptionsParams).get
@@ -126,6 +146,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(classpath.exists(_.contains("guava")))
     }
   }
+
   def assertCppOptions(server: MockBuildServer): Unit = {
     val cppOptionsParams = new CppOptionsParams(getBuildTargetIds(server))
     val cppOptionsResult = server.buildTargetCppOptions(cppOptionsParams).get
@@ -143,6 +164,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(!item.getLinkshared)
     }
   }
+
   def assertPythonOptions(server: MockBuildServer): Unit = {
     val pythonOptionsParams = new PythonOptionsParams(getBuildTargetIds(server))
     val pythonOptionsResult = server.buildTargetPythonOptions(pythonOptionsParams).get
@@ -153,6 +175,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(options.exists(_.contains("-E")))
     }
   }
+
   def assertJvmTestEnvironment(server: MockBuildServer): Unit = {
     val jvmTestEnvironmentParams = new JvmTestEnvironmentParams(getBuildTargetIds(server))
     val scalacOptionsResult = server.buildTargetJvmTestEnvironment(jvmTestEnvironmentParams).get
@@ -169,6 +192,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(envVars.get("TESTING").contains("true"))
     }
   }
+
   def assertJvmRunEnvironment(server: MockBuildServer): Unit = {
     val jvmRunEnvironmentParams = new JvmRunEnvironmentParams(getBuildTargetIds(server))
     val testEnvResult = server.buildTargetJvmRunEnvironment(jvmRunEnvironmentParams).get
@@ -185,6 +209,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(envVars.get("TESTING").contains("false"))
     }
   }
+
   def assertSources(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new SourcesParams(getBuildTargetIds(server))
     val result = server.buildTargetSources(params).get()
@@ -196,6 +221,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(item.getTarget != null)
     }
   }
+
   def assertOutputPaths(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new OutputPathsParams(getBuildTargetIds(server))
     val result = server.buildTargetOutputPaths(params).get()
@@ -207,6 +233,7 @@ class HappyMockSuite extends AnyFunSuite {
       assert(item.getTarget != null)
     }
   }
+
   def assertDependencySources(server: MockBuildServer, client: TestBuildClient): Unit = {
     val params = new DependencySourcesParams(getBuildTargetIds(server))
     val result = server.buildTargetDependencySources(params).get()
@@ -219,14 +246,15 @@ class HappyMockSuite extends AnyFunSuite {
       assert(item.getTarget != null)
     }
   }
+
   def assertCompile(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val params = new CompileParams(getBuildTargetIds(server))
     params.setOriginId("origin")
     val compileResult = server.buildTargetCompile(params).get()
-    assert(
-      compileResult.getOriginId == params.getOriginId
-    ) // TODO in HappyMockServer: send some notifications in compile
+    assert(compileResult.getOriginId == params.getOriginId)
+
+    // TODO in HappyMockServer: send some notifications in compile
     assert(client.logMessages.nonEmpty)
     assert(client.showMessages.nonEmpty)
     assert(client.diagnostics.nonEmpty)
@@ -239,6 +267,7 @@ class HappyMockSuite extends AnyFunSuite {
     assert(client.compileReports.nonEmpty)
     assert(compileResult.getStatusCode == StatusCode.OK)
   }
+
   def assertTest(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val testableTargets =
@@ -251,26 +280,33 @@ class HappyMockSuite extends AnyFunSuite {
     // assert(client.testReports.nonEmpty)
     assert(testResult.getStatusCode == StatusCode.OK)
   }
+
   def assertRun(server: MockBuildServer, client: TestBuildClient): Unit = {
     client.reset()
     val targetToRun = getBuildTargets(server).asScala.find(_.getCapabilities.getCanRun).get
     val params = new RunParams(targetToRun.getId)
     val runResult = server.buildTargetRun(params).get()
+
     assert(runResult.getOriginId == params.getOriginId)
-    assert(runResult.getStatusCode == StatusCode.OK) // TODO in HappyMockServer: some actual run
+    assert(runResult.getStatusCode == StatusCode.OK)
+
+    // TODO in HappyMockServer: some actual run
     // assert(client.logMessages.exists(_.getMessage == "Hello world!"))
     // Compilation was triggered by `assertCompile`, so no diagnostics are found this time
     // assert(client.logMessages.nonEmpty)
   }
+
   def assertServerCapabilities(serverCapabilities: BuildServerCapabilities): Unit = {
     val compiles = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val runs = serverCapabilities.getCompileProvider.getLanguageIds.asScala
     val tests = serverCapabilities.getCompileProvider.getLanguageIds.asScala
+
     val languages = List("scala", "java", "cpp", "python").sorted
     assert(compiles.sorted == languages)
     assert(runs.sorted == languages)
     assert(tests.sorted == languages)
   }
+
   def assertServerEndpoints(server: MockBuildServer, client: TestBuildClient): Unit = {
     assertWorkspaceBuildTargets(server)
     assertScalacOptions(server)
@@ -288,8 +324,10 @@ class HappyMockSuite extends AnyFunSuite {
     // - buildTarget/mainClasses
     // - buildTarget/scalaMainClasses
   }
+
   test("end to end") {
     val testDirectory = Files.createTempDirectory("bsp.MockSuite")
+
     val client = new TestBuildClient
     val (server, cancel) = connectToBuildServer(client, testDirectory.toFile)
     try {

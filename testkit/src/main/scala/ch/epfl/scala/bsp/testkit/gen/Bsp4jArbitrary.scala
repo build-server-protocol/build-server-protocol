@@ -1,9 +1,12 @@
 package ch.epfl.scala.bsp.testkit.gen
+
 import org.scalacheck.Arbitrary
 import Bsp4jGenerators._
 import ch.epfl.scala.bsp4j
 import ch.epfl.scala.bsp4j._
+
 trait Bsp4jArbitrary {
+
   implicit val arbBspConnectionDetails: Arbitrary[BspConnectionDetails] = Arbitrary(
     genBspConnectionDetails
   )
@@ -191,4 +194,5 @@ trait Bsp4jArbitrary {
     genCancelRequestParams
   )
 }
+
 object Bsp4jArbitrary extends Bsp4jArbitrary

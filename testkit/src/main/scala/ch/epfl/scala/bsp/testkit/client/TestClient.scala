@@ -1,10 +1,12 @@
 package ch.epfl.scala.bsp.testkit.client
+
 import ch.epfl.scala.bsp.testkit.client.mock.{MockCommunications, MockSession}
 import ch.epfl.scala.bsp4j._
 import com.google.gson.{Gson, JsonElement}
 import de.danielbechler.diff.ObjectDifferBuilder
 import de.danielbechler.diff.node.{DiffNode, ToMapPrintingVisitor}
 import de.danielbechler.diff.path.NodePath
+
 import java.io.{File, InputStream, OutputStream}
 import java.util.concurrent.{CompletableFuture, Executors}
 import scala.collection.convert.ImplicitConversions._
@@ -16,18 +18,24 @@ import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent._
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
+
 class TestClient(
     serverBuilder: () => (OutputStream, InputStream, () => Unit),
     initializeBuildParams: InitializeBuildParams,
     timeoutDuration: Duration = 30.seconds
 ) {
+
   private val alreadySentDiagnosticsTimeout = 2.seconds
+
   private implicit val executionContext: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+
   private val gson: Gson = new Gson()
+
   def wrapTest(body: MockSession => Future[Any]): Unit = {
     val (out, in, cleanup) = serverBuilder()
     val session: MockSession = new MockSession(in, out, initializeBuildParams, cleanup)
+
     val test = testSessionInitialization(session)
       .flatMap(_ => body(session))
       .flatMap(_ => testShutdown(session, cleanup))
@@ -42,11 +50,13 @@ class TestClient(
         throw new TestFailedException(e)
     }
   }
+
   private def testIfSuccessful[T](value: CompletableFuture[T]): Future[T] = {
     value.toScala.recover { case _ =>
       throw new RuntimeException("Failed to compile targets that are compilable")
     }
   }
+
   private def testIfFailure[T](value: CompletableFuture[T]): Future[Unit] = {
     value.toScala
       .transformWith {
@@ -54,17 +64,23 @@ class TestClient(
           Future.unit
         case Success(_) =>
           throw new RuntimeException("Compiled successfully supposedly uncompilable targets")
+
       }
   }
+
   def testInitializeAndShutdown(): Unit = wrapTest(_ => Future.unit)
+
   def testTargetCapabilities(): Unit = wrapTest(targetCapabilities)
+
   def testTargetsCompileUnsuccessfully(): Unit =
     wrapTest(targetsCompileUnsuccessfully)
+
   def testTargetsCompileSuccessfully(
       targets: java.util.List[BuildTarget],
       withTaskNotifications: Boolean
   ): Unit =
     wrapTest(session => testTargetsCompileSuccessfully(session, withTaskNotifications, targets))
+
   def testTargetsCompileSuccessfully(
       withTaskNotifications: Boolean
   ): Unit =
@@ -78,6 +94,7 @@ class TestClient(
           )
         })
     )
+
   def testTargetsCompileSuccessfully(
       session: MockSession,
       withTaskNotifications: Boolean,
@@ -95,12 +112,15 @@ class TestClient(
           alreadySentDiagnosticsTimeout,
           (_: TaskStartParams) => true
         )
+
         Future.sequence(List(taskStartNotification, taskEndNotification))
       }
     })
+
   def testTargetsTestSuccessfully(targets: java.util.List[BuildTarget]): Unit = {
     wrapTest(session => targetsTestSuccessfully(targets.asScala, session))
   }
+
   def testTargetsTestSuccessfully(): Unit = {
     wrapTest(session =>
       getAllBuildTargets(session).flatMap(targets => {
@@ -108,18 +128,23 @@ class TestClient(
       })
     )
   }
+
   def testTargetsTestUnsuccessfully(): Unit =
     wrapTest(targetsTestUnsuccessfully)
+
   def testTargetsRunUnsuccessfully(): Unit =
     wrapTest(targetsRunUnsuccessfully)
+
   def testTargetsRunSuccessfully(targets: java.util.List[BuildTarget]): Unit =
     wrapTest(session => targetsRunSuccessfully(targets.asScala, session))
+
   def testTargetsRunSuccessfully(): Unit =
     wrapTest(session =>
       getAllBuildTargets(session).flatMap(targets => {
         targetsRunSuccessfully(targets, session)
       })
     )
+
   private def getAllBuildTargets(
       session: MockSession
   ): Future[mutable.Buffer[BuildTarget]] =
@@ -127,12 +152,14 @@ class TestClient(
       .workspaceBuildTargets()
       .toScala
       .map(targetsResult => targetsResult.getTargets.asScala)
+
   def testCompareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): Unit =
     wrapTest(session =>
       compareWorkspaceTargetsResults(expectedWorkspaceBuildTargetsResult, session)
     )
+
   def testDependencySourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceDependencySourcesResult: DependencySourcesResult
@@ -155,6 +182,7 @@ class TestClient(
         session
       )
     )
+
   def testResourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedResourcesResult: ResourcesResult
@@ -175,6 +203,7 @@ class TestClient(
         session
       )
     )
+
   def testInverseSourcesResults(
       textDocument: TextDocumentIdentifier,
       expectedInverseSourcesResult: InverseSourcesResult
@@ -190,10 +219,13 @@ class TestClient(
           )
         })
     })
+
   def testCleanCacheSuccessfully(): Unit =
     wrapTest(cleanCacheSuccessfully)
+
   def testCleanCacheUnsuccessfully(): Unit =
     wrapTest(cleanCacheUnsuccessfully)
+
   def testSessionInitialization(session: MockSession): Future[Unit] = {
     session.connection.server
       .buildInitialize(session.initializeBuildParams)
@@ -207,6 +239,7 @@ class TestClient(
         session.connection.server.onBuildInitialized()
       })
   }
+
   private def testShutdown(session: MockSession, cleanup: () => Unit): Future[Unit] = {
     session.connection.server
       .buildShutdown()
@@ -225,6 +258,7 @@ class TestClient(
           Future.unit
       }
   }
+
   def targetCapabilities(session: MockSession): Future[Any] = {
     session.connection.server
       .workspaceBuildTargets()
@@ -235,23 +269,27 @@ class TestClient(
           targets.partition(_.getCapabilities.getCanCompile)
         val (runnableTargets, unrunnableTargets) = targets.partition(_.getCapabilities.getCanRun)
         val (testableTargets, untestableTargets) = targets.partition(_.getCapabilities.getCanTest)
+
         val futures = ListBuffer[Future[Any]]()
         if (compilableTargets.nonEmpty)
           futures += testIfSuccessful(
             session.connection.server
               .buildTargetCompile(new CompileParams(compilableTargets.map(_.getId).asJava))
           )
+
         if (uncompilableTargets.nonEmpty)
           futures += testIfFailure(
             session.connection.server
               .buildTargetCompile(new CompileParams(uncompilableTargets.map(_.getId).asJava))
           )
+
         futures ++= runnableTargets.map(target =>
           testIfSuccessful(session.connection.server.buildTargetRun(new RunParams(target.getId)))
         )
         futures ++= unrunnableTargets.map(target =>
           testIfFailure(session.connection.server.buildTargetRun(new RunParams(target.getId)))
         )
+
         if (testableTargets.nonEmpty)
           futures += testIfSuccessful(
             session.connection.server
@@ -262,15 +300,18 @@ class TestClient(
             session.connection.server
               .buildTargetTest(new TestParams(untestableTargets.map(_.getId).asJava))
           )
+
         Future.sequence(futures)
       })
   }
+
   private def compileTarget(targets: mutable.Buffer[BuildTarget], session: MockSession) =
     testIfSuccessful(
       session.connection.server.buildTargetCompile(
         new CompileParams(targets.filter(_.getCapabilities.getCanCompile).map(_.getId).asJava)
       )
     )
+
   def targetsCompileSuccessfully(
       targets: java.util.List[BuildTarget],
       session: MockSession,
@@ -286,6 +327,7 @@ class TestClient(
         )
     })
   }
+
   def targetsCompileSuccessfully(
       session: MockSession,
       compileDiagnostics: List[ExpectedDiagnostic] = List.empty
@@ -293,6 +335,7 @@ class TestClient(
     getAllBuildTargets(session).flatMap(targets => {
       targetsCompileSuccessfully(targets.asJava, session, compileDiagnostics)
     })
+
   final private def obtainExpectedDiagnostic(
       expectedDiagnostic: ExpectedDiagnostic,
       session: MockSession
@@ -303,6 +346,7 @@ class TestClient(
       (diagnostics: PublishDiagnosticsParams) =>
         diagnostics.getDiagnostics.asScala.exists(expectedDiagnostic.isEqual)
     )
+
   final private def obtainExpectedNotification(
       expectedNotification: BuildTargetEventKind,
       session: MockSession
@@ -314,6 +358,7 @@ class TestClient(
         didChange.getChanges.asScala.exists(expectedNotification == _.getKind)
     )
   }
+
   private def targetsCompileUnsuccessfully(session: MockSession): Future[Unit] = {
     session.connection.server
       .workspaceBuildTargets()
@@ -328,12 +373,14 @@ class TestClient(
         )
       }
   }
+
   private def testTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
     testIfSuccessful(
       session.connection.server.buildTargetTest(
         new TestParams(targets.filter(_.getCapabilities.getCanCompile).map(_.getId).asJava)
       )
     )
+
   private def targetsTestSuccessfully(
       targets: mutable.Buffer[BuildTarget],
       session: MockSession
@@ -342,6 +389,7 @@ class TestClient(
       assert(testResult.getStatusCode == StatusCode.OK, "Tests to targets failed!")
     })
   }
+
   def targetsTestUnsuccessfully(session: MockSession): Future[Unit] =
     session.connection.server
       .workspaceBuildTargets()
@@ -355,6 +403,7 @@ class TestClient(
           "Tests pass when they should have failed!"
         )
       }
+
   private def targetsRunSuccessfully(
       targets: mutable.Buffer[BuildTarget],
       session: MockSession
@@ -365,6 +414,7 @@ class TestClient(
         "Target did not run successfully!"
       )
     })
+
   private def targetsRunUnsuccessfully(session: MockSession): Future[Unit] =
     session.connection.server
       .workspaceBuildTargets()
@@ -382,6 +432,7 @@ class TestClient(
           )
         })
       )
+
   private def runTargets(targets: mutable.Buffer[BuildTarget], session: MockSession) =
     Future.sequence(
       targets
@@ -394,16 +445,22 @@ class TestClient(
           )
         )
     )
+
   private def extractJdkData(data: JsonElement, gson: Gson): Option[JvmBuildTarget] =
     Option(gson.fromJson[JvmBuildTarget](data, classOf[JvmBuildTarget]))
+
   private def extractScalaSdkData(data: JsonElement, gson: Gson): Option[ScalaBuildTarget] =
     Option(gson.fromJson[ScalaBuildTarget](data, classOf[ScalaBuildTarget]))
+
   private def extractSbtData(data: JsonElement, gson: Gson): Option[SbtBuildTarget] =
     Option(gson.fromJson[SbtBuildTarget](data, classOf[SbtBuildTarget]))
+
   def extractCppData(data: JsonElement, gson: Gson): Option[CppBuildTarget] =
     Option(gson.fromJson[CppBuildTarget](data, classOf[CppBuildTarget]))
+
   def extractPythonData(data: JsonElement, gson: Gson): Option[PythonBuildTarget] =
     Option(gson.fromJson[PythonBuildTarget](data, classOf[PythonBuildTarget]))
+
   def convertJsonObjectToData(
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
   ): WorkspaceBuildTargetsResult = {
@@ -429,6 +486,7 @@ class TestClient(
     }
     new WorkspaceBuildTargetsResult(targets)
   }
+
   private def compareWorkspaceTargetsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       session: MockSession
@@ -448,6 +506,7 @@ class TestClient(
         )
         workspaceBuildTargetsResult
       })
+
   private def compareBuildTargets(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       workspaceBuildTargetsResult: WorkspaceBuildTargetsResult
@@ -469,6 +528,7 @@ class TestClient(
       .build()
       .compare(workspaceBuildTargetsResult, expectedWorkspaceBuildTargetsResult)
   }
+
   private def compareResults[T](
       getResults: java.util.List[BuildTargetIdentifier] => CompletableFuture[T],
       condition: T => Boolean,
@@ -489,6 +549,7 @@ class TestClient(
         )
       })
   }
+
   def testSourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceSourcesResult: SourcesResult
@@ -500,6 +561,7 @@ class TestClient(
         session
       )
     )
+
   def testSourcesResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceSourcesResult: SourcesResult,
@@ -528,6 +590,7 @@ class TestClient(
       session
     )
   }
+
   def testOutputPathsResults(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceOutputPathsResult: OutputPathsResult
@@ -539,6 +602,7 @@ class TestClient(
         session
       )
     )
+
   def testOutputPathsResult(
       expectedWorkspaceBuildTargetsResult: WorkspaceBuildTargetsResult,
       expectedWorkspaceOutputPathsResult: OutputPathsResult,
@@ -567,16 +631,19 @@ class TestClient(
       session
     )
   }
+
   def cleanCacheSuccessfully(session: MockSession): Future[Unit] = {
     cleanCache(session).map(cleanCacheResult => {
       assert(cleanCacheResult.getCleaned, "Did not clean cache successfully")
     })
   }
+
   def cleanCacheUnsuccessfully(session: MockSession): Future[Unit] = {
     cleanCache(session).map(cleanCacheResult => {
       assert(!cleanCacheResult.getCleaned, "Cleaned cache successfully, when it should have failed")
     })
   }
+
   private def cleanCache(session: MockSession): Future[CleanCacheResult] = {
     session.connection.server
       .workspaceBuildTargets()
@@ -592,11 +659,13 @@ class TestClient(
           .toScala
       })
   }
+
   def testDidChangeNotification(
       buildTargetEventKind: BuildTargetEventKind,
       session: MockSession
   ): Future[DidChangeBuildTarget] =
     obtainExpectedNotification(buildTargetEventKind, session)
+
   def testJvmRunEnvironment(
       params: JvmRunEnvironmentParams,
       expectedResult: JvmRunEnvironmentResult,
@@ -616,11 +685,13 @@ class TestClient(
         )
       })
   }
+
   def testJvmRunEnvironment(
       params: JvmRunEnvironmentParams,
       expectedResult: JvmRunEnvironmentResult
   ): Unit =
     wrapTest(session => testJvmRunEnvironment(params, expectedResult, session))
+
   def testJvmTestEnvironment(
       params: JvmTestEnvironmentParams,
       expectedResult: JvmTestEnvironmentResult,
@@ -640,11 +711,13 @@ class TestClient(
         )
       })
   }
+
   def testJvmTestEnvironment(
       params: JvmTestEnvironmentParams,
       expectedResult: JvmTestEnvironmentResult
   ): Unit =
     wrapTest(session => testJvmTestEnvironment(params, expectedResult, session))
+
   private def testJvmItems(
       items: java.util.List[JvmEnvironmentItem],
       expectedItems: java.util.List[JvmEnvironmentItem]
@@ -662,6 +735,7 @@ class TestClient(
       .build()
       .compare(items, expectedItems)
   }
+
   def testJavacOptions(
       params: JavacOptionsParams,
       expectedResult: JavacOptionsResult,
@@ -692,11 +766,13 @@ class TestClient(
         )
       })
   }
+
   def testJavacOptions(
       params: JavacOptionsParams,
       expectedResult: JavacOptionsResult
   ): Unit =
     wrapTest(session => testJavacOptions(params, expectedResult, session))
+
   def testScalacOptions(
       params: ScalacOptionsParams,
       expectedResult: ScalacOptionsResult,
@@ -727,11 +803,13 @@ class TestClient(
         )
       })
   }
+
   def testScalacOptions(
       params: ScalacOptionsParams,
       expectedResult: ScalacOptionsResult
   ): Unit =
     wrapTest(session => testScalacOptions(params, expectedResult, session))
+
   def testCppOptions(
       params: CppOptionsParams,
       expectedResult: CppOptionsResult,
@@ -753,11 +831,13 @@ class TestClient(
         )
       })
   }
+
   def testCppOptions(
       params: CppOptionsParams,
       expectedResult: CppOptionsResult
   ): Unit =
     wrapTest(session => testCppOptions(params, expectedResult, session))
+
   def testPythonOptions(
       params: PythonOptionsParams,
       expectedResult: PythonOptionsResult,
@@ -777,11 +857,13 @@ class TestClient(
         )
       })
   }
+
   def testPythonOptions(
       params: PythonOptionsParams,
       expectedResult: PythonOptionsResult
   ): Unit =
     wrapTest(session => testPythonOptions(params, expectedResult, session))
+
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult,
@@ -803,11 +885,13 @@ class TestClient(
         )
       })
   }
+
   def testScalaMainClasses(
       params: ScalaMainClassesParams,
       expectedResult: ScalaMainClassesResult
   ): Unit =
     wrapTest(session => testScalaMainClasses(params, expectedResult, session))
+
   def testScalaTestClasses(
       params: ScalaTestClassesParams,
       expectedResult: ScalaTestClassesResult,
@@ -838,21 +922,26 @@ class TestClient(
         )
       })
   }
+
   def testScalaTestClasses(
       params: ScalaTestClassesParams,
       expectedResult: ScalaTestClassesResult
   ): Unit =
     wrapTest(session => testScalaTestClasses(params, expectedResult, session))
+
   def testWorkspaceReload(session: MockSession): Future[AnyRef] = session.connection.server
     .workspaceReload()
     .toScala
+
   def testWorkspaceReload(): Unit =
     wrapTest(testWorkspaceReload)
+
   def testResolveProject(
       javacOptionsFlag: Boolean = false,
       scalacOptionsFlag: Boolean = false
   ): Unit =
     wrapTest(testResolveProject(_, javacOptionsFlag, scalacOptionsFlag))
+
   def testResolveProject(
       session: MockSession,
       javacOptionsFlag: Boolean,
@@ -860,6 +949,7 @@ class TestClient(
   ): Future[Unit] =
     getAllBuildTargets(session)
       .flatMap(testProjectTargetsImport(session, _, javacOptionsFlag, scalacOptionsFlag))
+
   private def testProjectTargetsImport(
       session: MockSession,
       targets: mutable.Buffer[BuildTarget],
@@ -868,68 +958,81 @@ class TestClient(
   ): Future[Unit] = {
     val bspServer = session.connection.server
     val targetIds = targets.map(_.getId).asJava
+
     val sources = fetchSources(bspServer, targetIds)
     val dependencySources = fetchDependencySources(bspServer, targetIds)
     val resources = fetchResources(bspServer, targetIds)
     val javacOptions = if (javacOptionsFlag) fetchJavacOptions(bspServer, targets) else Future.unit
     val scalacOptions =
       if (scalacOptionsFlag) fetchScalacOptions(bspServer, targets) else Future.unit
+
     Future
       .sequence(Seq(sources, dependencySources, resources, javacOptions, scalacOptions))
       .map(_ => ())
   }
+
   private def fetchSources(
       bspServer: MockSession.BspMockServer,
       targetIds: java.util.List[BuildTargetIdentifier]
   ): Future[Unit] = {
     val sourcesParams = new SourcesParams(targetIds)
+
     bspServer
       .buildTargetSources(sourcesParams)
       .toScala
       .map(_ => ())
   }
+
   private def fetchDependencySources(
       bspServer: MockSession.BspMockServer,
       targetIds: java.util.List[BuildTargetIdentifier]
   ): Future[Unit] = {
     val dependencySourcesParams = new DependencySourcesParams(targetIds)
+
     bspServer
       .buildTargetDependencySources(dependencySourcesParams)
       .toScala
       .map(_ => ())
   }
+
   private def fetchResources(
       bspServer: MockSession.BspMockServer,
       targetIds: java.util.List[BuildTargetIdentifier]
   ): Future[Unit] = {
     val resourcesParams = new ResourcesParams(targetIds)
+
     bspServer
       .buildTargetResources(resourcesParams)
       .toScala
       .map(_ => ())
   }
+
   private def fetchJavacOptions(
       bspServer: MockSession.BspMockServer,
       targets: mutable.Buffer[BuildTarget]
   ): Future[Unit] = {
     val javaTargetIds = getTargetsIdsForLanguage(targets, "java")
     val javacOptionsParams = new JavacOptionsParams(javaTargetIds)
+
     bspServer
       .buildTargetJavacOptions(javacOptionsParams)
       .toScala
       .map(_ => ())
   }
+
   private def fetchScalacOptions(
       bspServer: MockSession.BspMockServer,
       targets: mutable.Buffer[BuildTarget]
   ): Future[Unit] = {
     val scalaTargetIds = getTargetsIdsForLanguage(targets, "scala")
     val scalacOptionsParams = new ScalacOptionsParams(scalaTargetIds)
+
     bspServer
       .buildTargetScalacOptions(scalacOptionsParams)
       .toScala
       .map(_ => ())
   }
+
   private def getTargetsIdsForLanguage(
       targets: mutable.Buffer[BuildTarget],
       languageId: String
@@ -939,19 +1042,23 @@ class TestClient(
       .map(_.getId)
       .asJava
 }
+
 class TestFailedException(e: Throwable) extends Throwable(e) {
   override def printStackTrace(): Unit = {
     println("Test case failed!")
     e.printStackTrace()
   }
 }
+
 class OutOfTimeException extends Throwable {
   override def printStackTrace(): Unit = {
     println("Test failed to complete in time!")
     super.printStackTrace()
   }
 }
+
 object TestClient {
+
   def testInitialStructure(
       workspacePath: java.lang.String,
       customProperties: java.util.Map[String, String],
@@ -966,10 +1073,12 @@ object TestClient {
       failedConnections.isEmpty,
       s"Found configuration files with errors: ${failedConnections.mkString("\n - ", "\n - ", "\n")}"
     )
+
     assert(
       connectionFiles.nonEmpty,
       "No configuration files found"
     )
+
     val client =
       MockCommunications.connect(
         workspace,
@@ -980,14 +1089,17 @@ object TestClient {
       )
     client
   }
+
   def testInitialStructure(
       workspacePath: java.lang.String,
       customProperties: java.util.Map[String, String]
   ): TestClient = testInitialStructure(workspacePath, customProperties, 30.seconds.toJava)
+
   def apply(
       serverBuilder: () => (OutputStream, InputStream, () => Unit),
       initializeBuildParams: InitializeBuildParams
   ): TestClient = new TestClient(serverBuilder, initializeBuildParams)
+
   def apply(
       serverBuilder: () => (OutputStream, InputStream, () => Unit),
       initializeBuildParams: InitializeBuildParams,
