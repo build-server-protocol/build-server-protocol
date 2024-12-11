@@ -13,6 +13,8 @@ public class CompileParams {
 
   private List<String> arguments;
 
+  private List<String> buildToolArguments;
+
   public CompileParams(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = targets;
   }
@@ -42,12 +44,21 @@ public class CompileParams {
     this.arguments = arguments;
   }
 
+  public List<String> getBuildToolArguments() {
+    return this.buildToolArguments;
+  }
+
+  public void setBuildToolArguments(final List<String> buildToolArguments) {
+    this.buildToolArguments = buildToolArguments;
+  }
+
   @Override
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
+    b.add("buildToolArguments", this.buildToolArguments);
     return b.toString();
   }
 
@@ -66,6 +77,9 @@ public class CompileParams {
     if (this.arguments == null) {
       if (other.arguments != null) return false;
     } else if (!this.arguments.equals(other.arguments)) return false;
+    if (this.buildToolArguments == null) {
+      if (other.buildToolArguments != null) return false;
+    } else if (!this.buildToolArguments.equals(other.buildToolArguments)) return false;
     return true;
   }
 
@@ -75,6 +89,8 @@ public class CompileParams {
     int result = 1;
     result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
     result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
-    return prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
+    result = prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
+    return prime * result
+        + ((this.buildToolArguments == null) ? 0 : this.buildToolArguments.hashCode());
   }
 }

@@ -1192,6 +1192,9 @@ structure CompileParams {
 
     /// Optional arguments to the compilation process.
     arguments: Arguments
+
+    /// Optional arguments to the build tool.
+    buildToolArguments: Arguments
 }
 
 list Arguments {
@@ -1272,6 +1275,9 @@ structure TestParams {
 
     /// Optional arguments to the test execution engine.
     arguments: Arguments
+
+    /// Optional arguments to the build tool.
+    buildToolArguments: Arguments
 
     /// Optional environment variables to set before running the tests.
     environmentVariables: EnvironmentVariables
@@ -1404,6 +1410,9 @@ structure RunParams {
 
     /// Optional arguments to the executed application.
     arguments: Arguments
+
+    /// Optional arguments to the build tool.
+    buildToolArguments: Arguments
 
     /// Optional environment variables to set before running the application.
     environmentVariables: EnvironmentVariables
