@@ -30,13 +30,13 @@ _Current Maintainers_
 - Justin Kaeser (JetBrains) - [@jastice](https://github.com/jastice)
 - Marcin Abramowicz (JetBrains) - [@abrams27](https://github.com/abrams27)
 - Łukasz Wawrzyk (VirtusLab) - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
-- Tomasz Pasternak (JetBrains/VirtusLab) - [@tpasternak](https://github.com/tpasternak)
 
 _Former Maintainers_
 
 - Chris Kipp (ex-Lunatech) - [@ckipp01](https://github.com/ckipp01)
 - Jorge Vicente Cantero (ex-Scala Center) - [@jvican](https://github.com/jvican)
 - Ólafur Páll Geirsson (ex-Scala Center) - [@olafurpg](https://github.com/olafurpg)
+- Tomasz Pasternak (JetBrains/VirtusLab) - [@tpasternak](https://github.com/tpasternak)
 
 ## Protocol Changelog
 
