@@ -4,7 +4,7 @@
 
 This project is an effort to improve the integration between language
 server/editors and build tools. This effort is led by the [Scala
-Center](https://scala.epfl.ch/) and [JetBrains](https://www.jetbrains.com/),
+Center](https://scala.epfl.ch/)
 together with the help of other tooling developers in the Scala ecosystem and
 beyond.
 
@@ -26,9 +26,6 @@ If you'd like to contribute to the protocol, please check out our
 _Current Maintainers_
 
 - Adrien Piquerez (Scala Center) - [@adpi2](https://github.com/adpi2)
-- Andrzej Głuszak (JetBrains) - [@agluszak](https://github.com/agluszak)
-- Justin Kaeser (JetBrains) - [@jastice](https://github.com/jastice)
-- Marcin Abramowicz (JetBrains) - [@abrams27](https://github.com/abrams27)
 - Łukasz Wawrzyk (VirtusLab) - [@lukaszwawrzyk](https://github.com/lukaszwawrzyk)
 
 _Former Maintainers_
@@ -37,6 +34,9 @@ _Former Maintainers_
 - Jorge Vicente Cantero (ex-Scala Center) - [@jvican](https://github.com/jvican)
 - Ólafur Páll Geirsson (ex-Scala Center) - [@olafurpg](https://github.com/olafurpg)
 - Tomasz Pasternak (JetBrains/VirtusLab) - [@tpasternak](https://github.com/tpasternak)
+- Andrzej Głuszak (JetBrains) - [@agluszak](https://github.com/agluszak)
+- Justin Kaeser (JetBrains) - [@jastice](https://github.com/jastice)
+- Marcin Abramowicz (JetBrains) - [@abrams27](https://github.com/abrams27)
 
 ## Protocol Changelog
 
