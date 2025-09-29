@@ -766,6 +766,54 @@ export interface InverseSourcesResult {
 }
 ```
 
+### BuildTargetWrappedSources: request
+
+The wrapped sources request is sent from the client to the server to query for
+the list of build targets containing wrapped sources. Wrapped sources are script
+sources that are wrapped by the build tool with some top and bottom wrappers.
+The server communicates during the initialize handshake whether this method is
+supported or not.
+
+- method: `buildTarget/wrappedSources`
+- params: `WrappedSourcesParams`
+- result: `WrappedSourcesResult`
+
+#### WrappedSourcesParams
+
+```ts
+export interface WrappedSourcesParams {
+  targets: BuildTargetIdentifier[];
+}
+```
+
+#### WrappedSourcesResult
+
+```ts
+export interface WrappedSourcesResult {
+  items: WrappedSourcesItem[];
+}
+```
+
+#### WrappedSourcesItem
+
+```ts
+export interface WrappedSourcesItem {
+  target: BuildTargetIdentifier;
+  sources: WrappedSourceItem[];
+}
+```
+
+#### WrappedSourceItem
+
+```ts
+export interface WrappedSourceItem {
+  uri: URI;
+  generatedUri: URI;
+  topWrapper: string;
+  bottomWrapper: string;
+}
+```
+
 ### BuildTargetDependencySources: request
 
 The build target dependency sources request is sent from the client to the

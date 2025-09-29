@@ -42,6 +42,7 @@ service BuildServer {
         WorkspaceReload
         BuildTargetSources
         BuildTargetInverseSources
+        BuildTargetWrappedSources
         BuildTargetDependencySources
         BuildTargetDependencyModules
         BuildTargetResources
@@ -343,6 +344,18 @@ operation BuildTargetSources {
 operation BuildTargetInverseSources {
     input: InverseSourcesParams
     output: InverseSourcesResult
+}
+
+
+/// The wrapped sources request is sent from the client to the server to query for
+/// the list of build targets containing wrapped sources. Wrapped sources are script
+/// sources that are wrapped by the build tool with some top and bottom wrappers.
+/// The server communicates during the initialize handshake whether this method is
+/// supported or not.
+@jsonRequest("buildTarget/wrappedSources")
+operation BuildTargetWrappedSources {
+    input: WrappedSourcesParams
+    output: WrappedSourcesResult
 }
 
 /// The build target dependency sources request is sent from the client to the
@@ -951,6 +964,42 @@ structure InverseSourcesParams {
 }
 
 structure InverseSourcesResult {
+    @required
+    targets: BuildTargetIdentifiers
+}
+
+structure WrappedSourceItem {
+    @required
+    uri: String
+    @required
+    generatedUri: String
+    @required
+    topWrapper: String
+    @required
+    bottomWrapper: String
+}
+
+list WrappedSourceItems {
+    member: WrappedSourceItem
+}
+
+structure WrappedSourcesItem {
+    @required
+    target: BuildTargetIdentifier
+    @required
+    sources: WrappedSourceItems
+}
+
+list WrappedSourcesItems {
+    member: WrappedSourcesItem
+}
+
+structure WrappedSourcesParams {
+    @required
+    items: WrappedSourceItem
+}
+
+structure WrappedSourcesResult {
     @required
     targets: BuildTargetIdentifiers
 }
