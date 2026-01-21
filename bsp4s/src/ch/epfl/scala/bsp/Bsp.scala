@@ -152,7 +152,6 @@ final case class BuildTargetEvent(
     dataKind: Option[String],
     data: Option[RawJson]
 )
-
 object BuildTargetEvent {
   implicit val codec: JsonValueCodec[BuildTargetEvent] =
     JsonCodecMaker.makeWithRequiredCollectionFields
