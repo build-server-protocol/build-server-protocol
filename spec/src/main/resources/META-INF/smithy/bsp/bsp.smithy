@@ -324,6 +324,15 @@ operation OnBuildTargetDidChange {
     input: DidChangeBuildTarget
 }
 
+/// The build target destinations request is sent from the client to the server to
+/// query for the list of destinations that are supported by a build target.
+
+@jsonRequest("buildTarget/destinations")
+operation BuildTargetDestinations {
+    input: DestinationsParams
+    output: DestinationsResult
+}
+
 /// The build target sources request is sent from the client to the server to query
 /// for the list of text documents and directories that are belong to a build
 /// target. The sources response must not include sources that are external to the
@@ -886,6 +895,23 @@ intEnum BuildTargetEventKind {
     CHANGED = 2
     /// The build target has been deleted.
     DELETED = 3
+}
+
+structure DestinationsParams {
+    @required
+    target: BuildTargetIdentifier
+}
+
+structure DestinationsResult {
+    @required
+    destinations: Destinations
+}
+
+structure Destination {
+    @required
+    id: DestinationIdentifier;
+    @required
+    displayName: String;
 }
 
 structure SourcesParams {
