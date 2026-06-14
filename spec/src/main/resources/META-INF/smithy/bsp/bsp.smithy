@@ -564,6 +564,11 @@ structure BuildClientCapabilities {
     /// languages than those that appear in this list.
     @required
     languageIds: LanguageIds    
+    /// Mirror capability to BuildServerCapabilities.buildTargetDestinationsProvider
+    /// For clients that do not support target destinations, the server can choose to
+    /// supply destinations in another way. For example, the server can choose to supply a
+    /// target-destination pairs in workspace/buildTargets.
+    buildTargetDestinationsReceiver: Boolean = false
     /// Mirror capability to BuildServerCapabilities.jvmCompileClasspathProvider
     /// The client will request classpath via `buildTarget/jvmCompileClasspath` so
     /// it's safe to return classpath in ScalacOptionsItem empty.
@@ -610,6 +615,8 @@ structure BuildServerCapabilities {
     runProvider: RunProvider
     /// The languages the server supports debugging via method debugSession/start.
     debugProvider: DebugProvider
+    /// The server can provide a list of destinations for a build target via buildTarget/destinations.
+    buildTargetDestinationsProvider: Boolean = false
     /// The server can provide a list of targets that contain a
     /// single text document via the method buildTarget/inverseSources
     inverseSourcesProvider: Boolean = false
@@ -909,9 +916,20 @@ structure DestinationsResult {
 
 structure Destination {
     @required
-    id: DestinationIdentifier;
+    id: DestinationIdentifier
+
+    /// Name or description of the destination.
     @required
-    displayName: String;
+    displayName: String
+}
+
+list Destinations {
+    member: Destination
+}
+
+structure DestinationIdentifier {
+    @required
+    uri: URI
 }
 
 structure SourcesParams {
