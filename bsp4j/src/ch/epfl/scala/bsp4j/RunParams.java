@@ -12,6 +12,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 public class RunParams {
   @NonNull private BuildTargetIdentifier target;
 
+  private DestinationIdentifier destination;
+
   private String originId;
 
   private List<String> arguments;
@@ -36,6 +38,14 @@ public class RunParams {
 
   public void setTarget(@NonNull final BuildTargetIdentifier target) {
     this.target = Preconditions.checkNotNull(target, "target");
+  }
+
+  public DestinationIdentifier getDestination() {
+    return this.destination;
+  }
+
+  public void setDestination(final DestinationIdentifier destination) {
+    this.destination = destination;
   }
 
   public String getOriginId() {
@@ -90,6 +100,7 @@ public class RunParams {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("target", this.target);
+    b.add("destination", this.destination);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
     b.add("environmentVariables", this.environmentVariables);
@@ -108,6 +119,9 @@ public class RunParams {
     if (this.target == null) {
       if (other.target != null) return false;
     } else if (!this.target.equals(other.target)) return false;
+    if (this.destination == null) {
+      if (other.destination != null) return false;
+    } else if (!this.destination.equals(other.destination)) return false;
     if (this.originId == null) {
       if (other.originId != null) return false;
     } else if (!this.originId.equals(other.originId)) return false;
@@ -134,6 +148,7 @@ public class RunParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+    result = prime * result + ((this.destination == null) ? 0 : this.destination.hashCode());
     result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
     result =

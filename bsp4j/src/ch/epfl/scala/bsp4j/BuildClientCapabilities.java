@@ -9,6 +9,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 public class BuildClientCapabilities {
   @NonNull private List<String> languageIds;
 
+  private Boolean buildTargetDestinationsReceiver;
+
   private Boolean jvmCompileClasspathReceiver;
 
   public BuildClientCapabilities(@NonNull final List<String> languageIds) {
@@ -24,6 +26,14 @@ public class BuildClientCapabilities {
     this.languageIds = Preconditions.checkNotNull(languageIds, "languageIds");
   }
 
+  public Boolean getBuildTargetDestinationsReceiver() {
+    return this.buildTargetDestinationsReceiver;
+  }
+
+  public void setBuildTargetDestinationsReceiver(final Boolean buildTargetDestinationsReceiver) {
+    this.buildTargetDestinationsReceiver = buildTargetDestinationsReceiver;
+  }
+
   public Boolean getJvmCompileClasspathReceiver() {
     return this.jvmCompileClasspathReceiver;
   }
@@ -36,6 +46,7 @@ public class BuildClientCapabilities {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("languageIds", this.languageIds);
+    b.add("buildTargetDestinationsReceiver", this.buildTargetDestinationsReceiver);
     b.add("jvmCompileClasspathReceiver", this.jvmCompileClasspathReceiver);
     return b.toString();
   }
@@ -49,6 +60,10 @@ public class BuildClientCapabilities {
     if (this.languageIds == null) {
       if (other.languageIds != null) return false;
     } else if (!this.languageIds.equals(other.languageIds)) return false;
+    if (this.buildTargetDestinationsReceiver == null) {
+      if (other.buildTargetDestinationsReceiver != null) return false;
+    } else if (!this.buildTargetDestinationsReceiver.equals(other.buildTargetDestinationsReceiver))
+      return false;
     if (this.jvmCompileClasspathReceiver == null) {
       if (other.jvmCompileClasspathReceiver != null) return false;
     } else if (!this.jvmCompileClasspathReceiver.equals(other.jvmCompileClasspathReceiver))
@@ -61,6 +76,11 @@ public class BuildClientCapabilities {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.languageIds == null) ? 0 : this.languageIds.hashCode());
+    result =
+        prime * result
+            + ((this.buildTargetDestinationsReceiver == null)
+                ? 0
+                : this.buildTargetDestinationsReceiver.hashCode());
     return prime * result
         + ((this.jvmCompileClasspathReceiver == null)
             ? 0

@@ -12,6 +12,8 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 public class TestParams {
   @NonNull private List<BuildTargetIdentifier> targets;
 
+  private DestinationIdentifier destination;
+
   private String originId;
 
   private List<String> arguments;
@@ -36,6 +38,14 @@ public class TestParams {
 
   public void setTargets(@NonNull final List<BuildTargetIdentifier> targets) {
     this.targets = Preconditions.checkNotNull(targets, "targets");
+  }
+
+  public DestinationIdentifier getDestination() {
+    return this.destination;
+  }
+
+  public void setDestination(final DestinationIdentifier destination) {
+    this.destination = destination;
   }
 
   public String getOriginId() {
@@ -90,6 +100,7 @@ public class TestParams {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.add("targets", this.targets);
+    b.add("destination", this.destination);
     b.add("originId", this.originId);
     b.add("arguments", this.arguments);
     b.add("environmentVariables", this.environmentVariables);
@@ -108,6 +119,9 @@ public class TestParams {
     if (this.targets == null) {
       if (other.targets != null) return false;
     } else if (!this.targets.equals(other.targets)) return false;
+    if (this.destination == null) {
+      if (other.destination != null) return false;
+    } else if (!this.destination.equals(other.destination)) return false;
     if (this.originId == null) {
       if (other.originId != null) return false;
     } else if (!this.originId.equals(other.originId)) return false;
@@ -134,6 +148,7 @@ public class TestParams {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.targets == null) ? 0 : this.targets.hashCode());
+    result = prime * result + ((this.destination == null) ? 0 : this.destination.hashCode());
     result = prime * result + ((this.originId == null) ? 0 : this.originId.hashCode());
     result = prime * result + ((this.arguments == null) ? 0 : this.arguments.hashCode());
     result =

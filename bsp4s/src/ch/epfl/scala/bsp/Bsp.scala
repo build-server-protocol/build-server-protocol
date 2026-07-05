@@ -57,6 +57,7 @@ object BspConnectionDetails {
 
 final case class BuildClientCapabilities(
     languageIds: List[String],
+    buildTargetDestinationsReceiver: Option[Boolean],
     jvmCompileClasspathReceiver: Option[Boolean]
 )
 
@@ -73,6 +74,7 @@ final case class BuildServerCapabilities(
     testProvider: Option[TestProvider],
     runProvider: Option[RunProvider],
     debugProvider: Option[DebugProvider],
+    buildTargetDestinationsProvider: Option[Boolean],
     inverseSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     dependencyModulesProvider: Option[Boolean],
@@ -274,6 +276,7 @@ object CodeDescription {
 
 final case class CompileParams(
     targets: List[BuildTargetIdentifier],
+    destination: Option[DestinationIdentifier],
     originId: Option[String],
     arguments: Option[List[String]]
 )
@@ -402,6 +405,7 @@ object DebugSessionAddress {
 
 final case class DebugSessionParams(
     targets: List[BuildTargetIdentifier],
+    destination: Option[DestinationIdentifier],
     dataKind: Option[String],
     data: Option[RawJson]
 )
@@ -485,6 +489,42 @@ final case class DependencySourcesResult(
 
 object DependencySourcesResult {
   implicit val codec: JsonValueCodec[DependencySourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class Destination(
+    id: DestinationIdentifier,
+    displayName: String
+)
+
+object Destination {
+  implicit val codec: JsonValueCodec[Destination] = JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class DestinationIdentifier(
+    uri: Uri
+)
+
+object DestinationIdentifier {
+  implicit val codec: JsonValueCodec[DestinationIdentifier] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class DestinationsParams(
+    target: BuildTargetIdentifier
+)
+
+object DestinationsParams {
+  implicit val codec: JsonValueCodec[DestinationsParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class DestinationsResult(
+    destinations: List[Destination]
+)
+
+object DestinationsResult {
+  implicit val codec: JsonValueCodec[DestinationsResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 
@@ -1020,6 +1060,7 @@ object ResourcesResult {
 
 final case class RunParams(
     target: BuildTargetIdentifier,
+    destination: Option[DestinationIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
     environmentVariables: Option[Map[String, String]],
@@ -1732,6 +1773,7 @@ object TestFinishDataKind {}
 
 final case class TestParams(
     targets: List[BuildTargetIdentifier],
+    destination: Option[DestinationIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
     environmentVariables: Option[Map[String, String]],
