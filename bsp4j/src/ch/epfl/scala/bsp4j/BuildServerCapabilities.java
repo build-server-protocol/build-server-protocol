@@ -16,6 +16,8 @@ public class BuildServerCapabilities {
 
   private DebugProvider debugProvider;
 
+  private Boolean buildTargetDestinationsProvider;
+
   private Boolean inverseSourcesProvider;
 
   private Boolean dependencySourcesProvider;
@@ -70,6 +72,14 @@ public class BuildServerCapabilities {
 
   public void setDebugProvider(final DebugProvider debugProvider) {
     this.debugProvider = debugProvider;
+  }
+
+  public Boolean getBuildTargetDestinationsProvider() {
+    return this.buildTargetDestinationsProvider;
+  }
+
+  public void setBuildTargetDestinationsProvider(final Boolean buildTargetDestinationsProvider) {
+    this.buildTargetDestinationsProvider = buildTargetDestinationsProvider;
   }
 
   public Boolean getInverseSourcesProvider() {
@@ -167,6 +177,7 @@ public class BuildServerCapabilities {
     b.add("testProvider", this.testProvider);
     b.add("runProvider", this.runProvider);
     b.add("debugProvider", this.debugProvider);
+    b.add("buildTargetDestinationsProvider", this.buildTargetDestinationsProvider);
     b.add("inverseSourcesProvider", this.inverseSourcesProvider);
     b.add("dependencySourcesProvider", this.dependencySourcesProvider);
     b.add("dependencyModulesProvider", this.dependencyModulesProvider);
@@ -199,6 +210,10 @@ public class BuildServerCapabilities {
     if (this.debugProvider == null) {
       if (other.debugProvider != null) return false;
     } else if (!this.debugProvider.equals(other.debugProvider)) return false;
+    if (this.buildTargetDestinationsProvider == null) {
+      if (other.buildTargetDestinationsProvider != null) return false;
+    } else if (!this.buildTargetDestinationsProvider.equals(other.buildTargetDestinationsProvider))
+      return false;
     if (this.inverseSourcesProvider == null) {
       if (other.inverseSourcesProvider != null) return false;
     } else if (!this.inverseSourcesProvider.equals(other.inverseSourcesProvider)) return false;
@@ -250,6 +265,11 @@ public class BuildServerCapabilities {
     result = prime * result + ((this.testProvider == null) ? 0 : this.testProvider.hashCode());
     result = prime * result + ((this.runProvider == null) ? 0 : this.runProvider.hashCode());
     result = prime * result + ((this.debugProvider == null) ? 0 : this.debugProvider.hashCode());
+    result =
+        prime * result
+            + ((this.buildTargetDestinationsProvider == null)
+                ? 0
+                : this.buildTargetDestinationsProvider.hashCode());
     result =
         prime * result
             + ((this.inverseSourcesProvider == null) ? 0 : this.inverseSourcesProvider.hashCode());
