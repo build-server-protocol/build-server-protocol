@@ -278,7 +278,8 @@ final case class CompileParams(
     targets: List[BuildTargetIdentifier],
     destination: Option[DestinationIdentifier],
     originId: Option[String],
-    arguments: Option[List[String]]
+    arguments: Option[List[String]],
+    buildToolArguments: Option[List[String]]
 )
 
 object CompileParams {
@@ -1063,6 +1064,7 @@ final case class RunParams(
     destination: Option[DestinationIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    buildToolArguments: Option[List[String]],
     environmentVariables: Option[Map[String, String]],
     workingDirectory: Option[Uri],
     dataKind: Option[String],
@@ -1776,6 +1778,7 @@ final case class TestParams(
     destination: Option[DestinationIdentifier],
     originId: Option[String],
     arguments: Option[List[String]],
+    buildToolArguments: Option[List[String]],
     environmentVariables: Option[Map[String, String]],
     workingDirectory: Option[Uri],
     dataKind: Option[String],
