@@ -76,6 +76,7 @@ final case class BuildServerCapabilities(
     debugProvider: Option[DebugProvider],
     buildTargetDestinationsProvider: Option[Boolean],
     inverseSourcesProvider: Option[Boolean],
+    wrappedSourcesProvider: Option[Boolean],
     dependencySourcesProvider: Option[Boolean],
     dependencyModulesProvider: Option[Boolean],
     resourcesProvider: Option[Boolean],
@@ -650,6 +651,46 @@ final case class InverseSourcesResult(
 
 object InverseSourcesResult {
   implicit val codec: JsonValueCodec[InverseSourcesResult] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class WrappedSourcesParams(
+    targets: List[BuildTargetIdentifier]
+)
+
+object WrappedSourcesParams {
+  implicit val codec: JsonValueCodec[WrappedSourcesParams] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class WrappedSourceItem(
+    uri: String,
+    generatedUri: String,
+    topWrapper: String,
+    bottomWrapper: String
+)
+
+object WrappedSourceItem {
+  implicit val codec: JsonValueCodec[WrappedSourceItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class WrappedSourcesItem(
+    target: BuildTargetIdentifier,
+    sources: List[WrappedSourceItem]
+)
+
+object WrappedSourcesItem {
+  implicit val codec: JsonValueCodec[WrappedSourcesItem] =
+    JsonCodecMaker.makeWithRequiredCollectionFields
+}
+
+final case class WrappedSourcesResult(
+    items: List[WrappedSourcesItem]
+)
+
+object WrappedSourcesResult {
+  implicit val codec: JsonValueCodec[WrappedSourcesResult] =
     JsonCodecMaker.makeWithRequiredCollectionFields
 }
 

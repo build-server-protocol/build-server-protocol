@@ -49,6 +49,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
     c.setRunProvider(new RunProvider(supportedLanguages))
     c.setDebugProvider(new DebugProvider(supportedLanguages))
     c.setInverseSourcesProvider(true)
+    c.setWrappedSourcesProvider(true)
     c.setDependencySourcesProvider(true)
     c.setResourcesProvider(true)
     c.setBuildTargetChangedProvider(true)
@@ -381,6 +382,16 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   ): CompletableFuture[InverseSourcesResult] =
     handleRequest {
       val result = new InverseSourcesResult(List(targetId1, targetId2, targetId3).asJava)
+      Right(result)
+    }
+
+  override def buildTargetWrappedSources(
+      params: WrappedSourcesParams
+  ): CompletableFuture[WrappedSourcesResult] =
+    handleRequest {
+      params.targets.map(target =>
+        new WrappedSourcesResult(List(WrappedSourcesItem(target, List.empty)))
+      )
       Right(result)
     }
 

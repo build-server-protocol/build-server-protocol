@@ -186,6 +186,16 @@ class SerializationPropertySuite extends AnyFunSuite with ScalaCheckPropertyChec
       assertSerializationRoundtrip[bsp4j.InverseSourcesResult, bsp4s.InverseSourcesResult](a)
     }
   }
+  test("WrappedSourcesParams") {
+    forAll { a: bsp4j.WrappedSourcesParams =>
+      assertSerializationRoundtrip[bsp4j.WrappedSourcesParams, bsp4s.WrappedSourcesParams](a)
+    }
+  }
+  test("WrappedSourcesResult") {
+    forAll { a: bsp4j.WrappedSourcesResult =>
+      assertSerializationRoundtrip[bsp4j.WrappedSourcesResult, bsp4s.WrappedSourcesResult](a)
+    }
+  }
   test("Location") {
     forAll { a: bsp4j.Location =>
       assertSerializationRoundtrip[bsp4j.Location, bsp4s.Location](a)
