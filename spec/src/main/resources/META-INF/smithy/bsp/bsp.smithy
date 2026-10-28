@@ -1490,6 +1490,11 @@ structure DebugSessionParams {
     /// Language-specific metadata for this execution.
     /// See ScalaMainClass as an example.
     data: DebugSessionParamsData
+
+    /// Optional working directory in which the debugged application should be
+    /// launched. When not provided, the build server chooses the working
+    /// directory (typically the workspace or project directory).
+    workingDirectory: URI
 }
 
 structure DebugSessionAddress {

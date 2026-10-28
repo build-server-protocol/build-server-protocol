@@ -407,7 +407,8 @@ final case class DebugSessionParams(
     targets: List[BuildTargetIdentifier],
     destination: Option[DestinationIdentifier],
     dataKind: Option[String],
-    data: Option[RawJson]
+    data: Option[RawJson],
+    workingDirectory: Option[Uri]
 )
 
 object DebugSessionParams {
